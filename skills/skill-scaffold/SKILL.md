@@ -52,6 +52,8 @@ A scaffold teaches by example, not by placeholder. A concrete, internally consis
 
 The five steps are non-negotiable; skipping any step produces a skill that lints in your editor but breaks on someone else's machine.
 
+**Step 0 (precondition):** Before authoring, check the redundancy registry at [`_meta/REDUNDANT-SKILLS.md`](../../_meta/REDUNDANT-SKILLS.md) (in the sibling broader library). It lists skills that have been authored, evaluated via comprehension grading, and judged redundant or harmful by the grader. If your intended subject matches an entry in that registry, either skip authoring (the model already knows the topic) or document the new grounding evidence that justifies a fresh attempt — re-authoring a tombstoned skill without contradicting evidence wastes context and risks regressing on measured quality.
+
 1. **Copy** `examples/skill-metadata-template.md` to `skills/<your-skill-name>/SKILL.md`. Do not rename in-place; the template stays as the canonical specimen.
 2. **Rename** identity fields: `name`, `description`, `category` (if used), `keywords`, `examples`, `anti_examples`, `paths` (if applicable), and the body title. Every reference to "skill-metadata-template" should be gone.
 3. **Adapt** body sections to your skill's subject. Match the `## H2` layout to your declared archetype per `docs/skill-metadata-protocol.md § Archetype section map`. Remove sections that do not apply — do not keep them with placeholder content.
