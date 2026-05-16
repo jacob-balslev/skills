@@ -18,7 +18,7 @@ metadata:
   routing_eval: absent
   comprehension_state: present
   stability: experimental
-  keywords: "[\"mental models\",\"mental model\",\"gulf of execution\",\"gulf of evaluation\",\"user model\",\"system model\",\"designer model\",\"conceptual model\",\"metaphor\",\"analogy\",\"model-system fit\",\"hidden invariant\",\"model drift\",\"shared understanding\",\"cognitive tool\"]"
+  keywords: "[\"mental models\",\"mental model\",\"gulf of execution\",\"gulf of evaluation\",\"user model\",\"system model\",\"designer model\",\"conceptual model\",\"metaphor\",\"analogy\",\"model-system fit\",\"hidden invariant\",\"model drift\",\"shared understanding\",\"cognitive tool\",\"progressive disclosure\",\"race conditions in concurrent code\"]"
   triggers: "[\"how do I think about\",\"users expect X but the system does Y\",\"this is confusing\",\"the user's model doesn't match\",\"why is this surprising\",\"what's the right metaphor\"]"
   examples: "[\"users keep trying to drag a row to reorder but the table doesn't support drag — diagnose the model mismatch\",\"explain why race conditions across parallel tool calls are hard for developers to anticipate\",\"decide on the right metaphor for a feature that combines folders and tags\",\"the team disagrees on what 'workspace' means in the product — surface the divergent mental models\"]"
   anti_examples: "[\"draw the boxes-and-arrows diagram of the system (use knowledge-modeling)\",\"name the React hook for managing form state (tactical implementation choice)\",\"write user-research interview questions (use user-research)\",\"teach a junior engineer about distributed-systems consistency models (use teaching-patterns)\"]"

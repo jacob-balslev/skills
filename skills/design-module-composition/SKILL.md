@@ -15,7 +15,7 @@ metadata:
   eval_state: unverified
   routing_eval: absent
   stability: experimental
-  keywords: "[\"component composition\",\"compound components\",\"slot api\",\"headless components\",\"render props\",\"polymorphic components\",\"asChild pattern\",\"children as api\",\"composition over configuration\",\"component contract design\",\"component module patterns\"]"
+  keywords: "[\"component composition\",\"compound components\",\"slot api\",\"headless components\",\"render props\",\"polymorphic components\",\"asChild pattern\",\"children as api\",\"composition over configuration\",\"component contract design\",\"component module patterns\",\"selectable rows sortable columns\",\"primitives composites templates\"]"
   triggers: "[\"compound component\",\"composition over configuration\",\"headless component\",\"slot pattern\",\"asChild\"]"
   examples: "[\"Design a Dialog component whose trigger, content, and close button are addressable by consumers\",\"Refactor a Card with 14 boolean props into a composition-based API\",\"Build a headless table primitive that exposes state and behavior without imposing markup\"]"
   anti_examples: "[\"Choose the border radius value for cards\",\"Decide where the OrderDetailPage component lives in the folder structure\",\"Pick the brand font for headings\"]"

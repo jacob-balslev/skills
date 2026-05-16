@@ -18,7 +18,7 @@ metadata:
   routing_eval: absent
   comprehension_state: present
   stability: experimental
-  keywords: "[\"streaming\",\"stream\",\"backpressure\",\"SSE\",\"server-sent events\",\"chunked transfer\",\"HTTP/2\",\"WebSocket\",\"WHATWG Streams\",\"ReadableStream\",\"TransformStream\",\"gRPC streaming\",\"RSC streaming\",\"flow control\",\"reactive streams\"]"
+  keywords: "[\"streaming\",\"stream\",\"backpressure\",\"SSE\",\"server-sent events\",\"chunked transfer\",\"HTTP/2\",\"WebSocket\",\"WHATWG Streams\",\"ReadableStream\",\"TransformStream\",\"gRPC streaming\",\"RSC streaming\",\"flow control\",\"reactive streams\",\"streaming model output to browser\",\"stream LLM response\"]"
   triggers: "[\"how should this endpoint stream\",\"should this be SSE or WebSocket\",\"is the consumer slow\",\"what's the backpressure story\",\"partial result delivery\"]"
   examples: "[\"design the response shape for an endpoint that returns 50,000 rows incrementally\",\"decide between SSE and WebSocket for a live progress feed\",\"diagnose why a fast producer is exhausting memory when the consumer falls behind\",\"explain why an RSC-streamed page renders out of order and how the boundary resolves\"]"
   anti_examples: "[\"design the JSON shape of a single response payload (use api-design)\",\"implement the model→tool message-history protocol (use tool-call-flow)\",\"design pub-sub topic structure (use event-driven-architecture)\"]"

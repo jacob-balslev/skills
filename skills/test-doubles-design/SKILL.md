@@ -18,7 +18,7 @@ metadata:
   routing_eval: absent
   comprehension_state: present
   stability: experimental
-  keywords: "[\"test double\",\"mock\",\"stub\",\"spy\",\"fake\",\"dummy\",\"test isolation\",\"interaction verification\",\"state verification\",\"mockist\",\"classicist\",\"in-memory fake\",\"sociable test\",\"solitary test\"]"
+  keywords: "[\"test double\",\"mock\",\"stub\",\"spy\",\"fake\",\"dummy\",\"test isolation\",\"interaction verification\",\"state verification\",\"mockist\",\"classicist\",\"in-memory fake\",\"sociable test\",\"solitary test\",\"mocking external API calls\",\"testing code that calls an API\"]"
   triggers: "[\"should this be a mock or a stub\",\"are we using mocks correctly\",\"the test is brittle when I refactor\",\"do we need a fake here\",\"is this test really testing anything\"]"
   examples: "[\"decide between a mock, a stub, and a fake for a database collaborator in a test\",\"explain why over-mocking produces fragile tests that change with every refactor\",\"diagnose a passing test that mirrors the implementation rather than specifying behavior\",\"design an in-memory fake for a repository interface that supports both classicist tests and integration tests\"]"
   anti_examples: "[\"decide which test levels (unit/integration/e2e) the project should invest in (use testing-strategy)\",\"set up a production feature flag (use feature-gating)\",\"configure a specific mocking library — Jest, Sinon, Mockito (library docs)\"]"

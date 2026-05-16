@@ -18,7 +18,7 @@ metadata:
   routing_eval: absent
   comprehension_state: present
   stability: experimental
-  keywords: "[\"tool call\",\"tool use\",\"function calling\",\"MCP\",\"Model Context Protocol\",\"tool result\",\"parallel tool calls\",\"tool schema\",\"JSON Schema\",\"assistant turn\",\"tool runtime\",\"tool router\"]"
+  keywords: "[\"tool call\",\"tool use\",\"function calling\",\"MCP\",\"Model Context Protocol\",\"tool result\",\"parallel tool calls\",\"tool schema\",\"JSON Schema\",\"assistant turn\",\"tool runtime\",\"tool router\",\"tool definitions\",\"agent calling tools\"]"
   triggers: "[\"how does tool calling actually work\",\"what's the message shape for a tool result\",\"MCP vs function calling vs Anthropic tools\",\"can the model call tools in parallel\",\"where do tool errors live in the message history\"]"
   examples: "[\"design the message-shape contract between a model and a tool runtime\",\"explain why a tool result must be appended to the message history before the next assistant turn\",\"decide whether to expose a capability as a tool, an MCP server, or an inline API\",\"diagnose why a model keeps re-calling the same tool with the same arguments\"]"
   anti_examples: "[\"decide whether to call a tool or write a script (use tool-call-strategy)\",\"choose a multi-agent coordination pattern (use agent-engineering)\",\"design an eval suite that tests tool-call correctness (use agent-eval-design)\"]"

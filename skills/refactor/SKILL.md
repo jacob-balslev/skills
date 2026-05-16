@@ -17,7 +17,7 @@ metadata:
   eval_state: passing
   routing_eval: present
   stability: experimental
-  keywords: "[\"refactor\",\"cleanup\",\"simplify\",\"extract function\",\"reduce duplication\",\"clean this up\",\"simplify this\",\"rename this\",\"split this file\",\"too long function\",\"duplicated logic\",\"decompose function\",\"decompose code\",\"decompose long\",\"split by responsibility\",\"behavior preserving\",\"rename module\",\"rename utils\",\"messy code\",\"messy suite\",\"extract helper\",\"extract duplicated\",\"consolidate logic\",\"tighten structure\"]"
+  keywords: "[\"refactor\",\"cleanup\",\"simplify\",\"extract function\",\"reduce duplication\",\"clean this up\",\"simplify this\",\"rename this\",\"split this file\",\"too long function\",\"duplicated logic\",\"decompose function\",\"decompose code\",\"decompose long\",\"split by responsibility\",\"behavior preserving\",\"rename module\",\"rename utils\",\"messy code\",\"messy suite\",\"extract helper\",\"extract duplicated\",\"consolidate logic\",\"tighten structure\",\"large component refactor\",\"make sure refactor preserves behavior\"]"
   triggers: "[\"refactor-skill\"]"
   examples: "[\"this 600-line function is hard to reason about — decompose it while keeping tests green\",\"extract the duplicated validation logic from these three handlers into a helper\",\"rename this module from `utils` to something that describes what it actually does\",\"split this file by responsibility; no behavior changes, tests must still pass\"]"
   anti_examples: "[\"the test is failing after my edit — what did I break?\",\"write an architecture note explaining this pattern for new team members\",\"reproduce why this function retries three times on transient network errors\"]"

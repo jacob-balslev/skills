@@ -15,7 +15,7 @@ metadata:
   eval_state: unverified
   routing_eval: absent
   stability: experimental
-  keywords: "[\"color palette design\",\"semantic color tokens\",\"wcag contrast ratio\",\"apca contrast\",\"oklch color space\",\"perceptual uniformity\",\"color scales\",\"light dark parity\",\"color accessibility\",\"p3 color gamut\",\"color-mix\"]"
+  keywords: "[\"color palette design\",\"semantic color tokens\",\"wcag contrast ratio\",\"apca contrast\",\"oklch color space\",\"perceptual uniformity\",\"color scales\",\"light dark parity\",\"color accessibility\",\"p3 color gamut\",\"color-mix\",\"color palette light dark mode\",\"pick color scheme\"]"
   triggers: "[\"color system\",\"color palette\",\"color tokens\",\"wcag contrast\",\"oklch\"]"
   examples: "[\"Build a 10-step color scale from a brand seed color with perceptually even lightness steps\",\"Map semantic intents (success, warning, danger, info) to scale colors with WCAG AA contrast against both light and dark surfaces\",\"Audit an existing palette for AA contrast failures and propose minimal changes\"]"
   anti_examples: "[\"Pick the brand's primary color from scratch with no constraints\",\"Implement the prefers-color-scheme media query and toggle UI\",\"Choose spacing values for the layout grid\"]"
