@@ -4,7 +4,7 @@ description: "Use when reasoning about the I in ACID — the isolation level a d
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"acid-fundamentals\",\"cap-theorem-tradeoffs\",\"data-modeling\",\"query-optimization\"],\"boundary\":[{\"skill\":\"acid-fundamentals\",\"reason\":\"acid-fundamentals owns the four-property ACID frame as a whole; this skill owns the I axis specifically — the choice and semantics of isolation levels as a tunable. The two compose: acid-fundamentals names isolation as one of four guarantees; this skill makes the I axis operational.\"},{\"skill\":\"cap-theorem-tradeoffs\",\"reason\":\"cap-theorem-tradeoffs owns distributed-replica agreement (CAP's C); this skill owns single-cluster transaction isolation (ACID's I). The two C/I letters concern different layers of the system.\"},{\"skill\":\"query-optimization\",\"reason\":\"query-optimization owns the performance dimension of query execution; this skill owns the correctness dimension of concurrent execution. Optimizations that change locking behavior can shift anomaly exposure; the two interact.\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns schema and access-pattern design; this skill owns the concurrency-correctness contract under whichever schema and access pattern are chosen.\"}],\"verify_with\":[\"acid-fundamentals\",\"query-optimization\"]}"
   concept: "{\"definition\":\"Transaction isolation is the property — and the configurable choice — that determines whether concurrent transactions appear to execute serially or are permitted to observe each other's intermediate effects. The SQL standard defines four isolation levels (read uncommitted, read committed, repeatable read, serializable) by enumerating the anomalies each level may or may not permit (dirty reads, non-repeatable reads, phantom reads). Snapshot isolation, ubiquitous in modern MVCC databases, is a fifth practical level that the standard did not define. Stronger isolation eliminates more anomalies at the cost of concurrency (more transactions block or retry); weaker isolation admits anomalies that the application must handle, either by tolerating them, by upgrading the isolation level, or by using explicit locking. The discipline is choosing the isolation level by *naming the anomalies the application cannot tolerate*, not by reflex.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/transaction-isolation/SKILL.md
 ---

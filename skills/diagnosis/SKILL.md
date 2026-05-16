@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Language- and stack-agnostic. The classification taxonomy, evidence protocol, and confidence ladder apply to any software failure investigation; specific technique names (git bisect, EXPLAIN plans, HMAC verification) are illustrative — substitute the equivalents of your stack."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/diagnosis/SKILL.md
 ---

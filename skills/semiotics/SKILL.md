@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Stack-agnostic sign-system analysis. The Peirce / Saussure / Barthes models, color-as-sign rules, iconography principles, and affordance taxonomy apply to any UI; example surfaces use generic e-commerce framings — substitute the equivalents from your domain."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.1.0"
   type: capability
   category: design
@@ -27,7 +27,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   concept: "{\"definition\":\"Semiotics is the study of *sign systems* — how signifiers (perceivable forms: icons, colors, shapes, positions, words) point to signifieds (concepts, states, actions) via convention, resemblance, or causal connection. Applied to interfaces, it is the discipline of designing and auditing the multi-channel sign systems through which a product communicates with its users. Drawing from Peirce's icon/index/symbol trichotomy, Saussure's signifier/signified dyad, Barthes' denotation/connotation/myth layering, and Norman's affordance theory, it treats every interface element as a sign whose meaning is constructed, not given.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/semiotics/SKILL.md
 ---

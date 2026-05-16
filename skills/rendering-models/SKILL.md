@@ -4,7 +4,7 @@ description: "Use when reasoning about how a web UI is produced and delivered: c
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"frontend-architecture\",\"client-server-boundary\",\"http-semantics\",\"performance-engineering\",\"vercel-composition-patterns\"],\"boundary\":[{\"skill\":\"frontend-architecture\",\"reason\":\"frontend-architecture owns how the codebase is organized; rendering-models owns where and when the UI is produced. A route's architecture and its rendering model are independent decisions.\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the serialization frontier (what can cross between server and client code). rendering-models owns the staging of work across build/request/stream/interaction.\"},{\"skill\":\"http-semantics\",\"reason\":\"http-semantics owns the wire protocol (caching headers, status codes, content negotiation). rendering-models is upstream — it decides what HTML and JS exist; http-semantics decides how they are delivered and cached.\"},{\"skill\":\"performance-engineering\",\"reason\":\"performance-engineering owns measurement, profiling, and optimization across the stack. rendering-models is one input — the choice of model bounds what performance numbers are achievable on a given route.\"}],\"verify_with\":[\"performance-engineering\",\"frontend-architecture\"]}"
   concept: "{\"definition\":\"A rendering model is the strategy by which a web user interface is produced and delivered, defined by two axes: when the work happens (build time, request time, response stream, or user interaction) and where it executes (server, edge, or client). The choice of model determines first-paint latency, time-to-interactive, server cost, cache behavior, and which content can be indexed by crawlers.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/rendering-models/SKILL.md
 ---

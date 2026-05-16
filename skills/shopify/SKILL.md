@@ -3,7 +3,7 @@ name: shopify
 description: "Use when working with Shopify — Admin API, Storefront API, OAuth scopes, HMAC SHA-256 webhook verification, GraphQL query-cost handling, Online Store 2.0 themes (sections, blocks, Liquid), metafields and metaobjects, and App Proxy. Do NOT use for generic e-commerce design, non-Shopify storefronts, or internal event-contract design."
 license: CC-BY-4.0
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -22,7 +22,7 @@ metadata:
   anti_examples: "[\"Design the event payload schema for our internal order-processing pipeline\",\"Implement Stripe Connect onboarding for a marketplace\",\"Refactor a generic shopping cart component that isn't Shopify-specific\"]"
   relations: "{\"related\":[\"webhook-integration\",\"api-design\",\"printify\"],\"boundary\":[{\"skill\":\"webhook-integration\",\"reason\":\"webhook-integration covers vendor-agnostic delivery, retries, and signing; this skill handles Shopify's specific topic names, X-Shopify-* header contract, and the 5-second response deadline before retry.\"},{\"skill\":\"event-contract-design\",\"reason\":\"Hand off to event-contract-design when modeling internal events downstream of Shopify webhooks — the contract surface there is your own system, not Shopify's.\"}]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/shopify/SKILL.md
 ---

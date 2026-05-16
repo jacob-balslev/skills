@@ -4,7 +4,7 @@ description: "Use when declaring, measuring, or enforcing performance thresholds
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"performance-engineering\",\"rendering-models\",\"observability-modeling\",\"testing-strategy\",\"http-semantics\"],\"boundary\":[{\"skill\":\"performance-engineering\",\"reason\":\"performance-engineering owns the activity of measuring, profiling, and improving performance. performance-budgets owns the threshold-and-consequence contract. The two compose: budgets define the failure conditions; engineering produces the improvements that prevent breach.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the choice of when and where the UI is produced. performance-budgets sits downstream — the chosen rendering model bounds which budgets are achievable on a given route.\"},{\"skill\":\"observability-modeling\",\"reason\":\"observability-modeling owns the design of telemetry signals (spans, metrics, logs). performance-budgets consumes signals as evidence of breach but does not design the signals themselves.\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns runtime-correctness verification. performance-budgets is an analogous discipline for non-functional properties — a budget breach is the same kind of CI failure as a failing test.\"}],\"verify_with\":[\"performance-engineering\",\"observability-modeling\"]}"
   concept: "{\"definition\":\"A performance budget is a declared, measurable threshold for a user-affecting property of a system — load time, interaction latency, layout stability, bundle size, request count — treated as a contract the system must satisfy. A budget has four parts: the metric (what is measured), the threshold (the maximum or minimum acceptable value), the percentile (whose experience the threshold describes), and the consequence (what happens when the threshold is breached). Without all four, the number is an aspiration, not a budget.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/performance-budgets/SKILL.md
 ---

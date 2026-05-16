@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Provider-agnostic. The zone model, 80% rule, persistence hierarchy, and token-reduction techniques apply across Anthropic, OpenAI, Google, and open-weight contexts of any size. Specific token figures are illustrative — substitute the figures of the model you actually run."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: agent
@@ -25,7 +25,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":180,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/context-window/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract

@@ -4,7 +4,7 @@ description: "Use when diagnosing and tuning a specific slow query in a relation
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"indexing-strategy\",\"data-modeling\",\"transaction-isolation\",\"schema-evolution\"],\"boundary\":[{\"skill\":\"indexing-strategy\",\"reason\":\"indexing-strategy owns the design of which indexes the database has; this skill owns the diagnosis and tuning of specific slow queries. The two compose: query-optimization diagnoses; indexing-strategy is one of the response tools.\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns schema and access-pattern design; this skill owns the tuning of queries against the existing schema. Sometimes the diagnosis is 'the schema is wrong for this query'; the response is then in data-modeling's scope.\"},{\"skill\":\"transaction-isolation\",\"reason\":\"transaction-isolation owns concurrency correctness; this skill owns single-query performance. Sometimes a slow query is slow because of lock contention from isolation; the disciplines intersect on those cases.\"}],\"verify_with\":[\"indexing-strategy\",\"data-modeling\"]}"
   concept: "{\"definition\":\"Query optimization is the discipline of diagnosing and tuning a specific slow query. The unit of work is one query that the application or a user reported as slow; the goal is identifying the root cause and applying a response (rewrite the SQL, add an index, refresh statistics, denormalize the schema, change the access pattern). The mental model is the query planner — the database component that takes the SQL string, parses it, applies rewrites, considers possible plans, estimates each plan's cost using statistics and a cost model, picks the cheapest, and executes it. EXPLAIN and EXPLAIN ANALYZE expose the planner's choices and their actual cost; reading these is the central diagnostic skill. The work is largely interpretation: knowing what each plan-node type means, what its cost implies, what cardinality misestimation looks like, and which response (rewrite, index, statistics, schema) addresses the diagnosis.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/query-optimization/SKILL.md
 ---

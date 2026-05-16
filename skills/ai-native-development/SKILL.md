@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Provider- and runtime-agnostic. The autonomy-slider levels and quality-gate sequence apply to any LLM-coding harness (Claude Code, OpenCode, Cursor, Aider, Copilot Workspace, Continue) that supports a deterministic verify step between agent output and merge."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: agent
@@ -25,7 +25,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":180,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/ai-native-development/SKILL.md
 ---

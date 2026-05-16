@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Theory-level skill. Applies to any AI-coding workspace that maintains structured knowledge artefacts: skill libraries, reference docs, decision records, runbooks, agent memory systems, RAG/GraphRAG pipelines."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.1.0"
   type: capability
   category: foundations
@@ -27,7 +27,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   concept: "{\"definition\":\"Knowledge modeling is the discipline of choosing a *representation paradigm* — knowledge graph, frames, production rules, semantic network, concept map, procedural ontology, or a hybrid — that fits how the resulting knowledge will be queried, reasoned over, and maintained. Drawing from Brachman & Levesque's knowledge-representation tradition and Newell's knowledge-level account, it treats representation as a strategic choice with explicit expressiveness-tractability trade-offs rather than as a default.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/knowledge-modeling/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract

@@ -3,7 +3,7 @@ name: design-thinking
 description: "Use when orchestrating a full human-centered design process across discovery, definition, ideation, prototyping, and testing — when uncertain which stage of the arc a team is in, when deciding whether to loop back, or when routing to the right stage-specific sibling skill. Do NOT use for single-stage execution (go directly to problem-framing, user-research, research-synthesis, journey-mapping, ideation, prototyping, or usability-testing) or for engineering domain discovery (use event-storming)."
 license: CC-BY-4.0
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: design
@@ -21,7 +21,7 @@ metadata:
   anti_examples: "[\"Run a single crazy-8s round on this specific how-might-we.\",\"Write the React component for the dashboard widget.\",\"Model the bounded contexts for the order-fulfillment domain.\"]"
   relations: "{\"related\":[\"problem-framing\",\"user-research\",\"research-synthesis\",\"journey-mapping\",\"ideation\",\"prototyping\",\"usability-testing\"],\"boundary\":[{\"skill\":\"event-storming\",\"reason\":\"event-storming is a collaborative engineering discovery practice for mapping domain events, commands, and aggregates with developers and domain experts. design-thinking orchestrates a human-centered design arc with users at the center. Both are 'discovery' practices but they differ in subject (system vs. human), participants, and output.\"},{\"skill\":\"problem-locating-solving\",\"reason\":\"problem-locating-solving handles concrete code-level bug localization. design-thinking handles the upstream open-ended question of what should be designed at all — different problem class entirely.\"}]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/design-thinking/SKILL.md
 ---

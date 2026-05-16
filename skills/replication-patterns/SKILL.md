@@ -4,7 +4,7 @@ description: "Use when designing how a database keeps multiple copies of its dat
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"cap-theorem-tradeoffs\",\"acid-fundamentals\",\"sharding-strategy\",\"transaction-isolation\"],\"boundary\":[{\"skill\":\"cap-theorem-tradeoffs\",\"reason\":\"cap-theorem-tradeoffs owns the theoretical frame for the consistency-availability trade-off; this skill owns the operational topologies and protocols that realize a chosen position on that trade-off. The two compose: CAP names the choice; replication-patterns is one of the realizations.\"},{\"skill\":\"sharding-strategy\",\"reason\":\"sharding-strategy owns horizontal partitioning of data across nodes (different nodes hold different data); this skill owns replication of the same data across nodes (multiple nodes hold the same data). The two often combine in production systems but answer different questions.\"},{\"skill\":\"acid-fundamentals\",\"reason\":\"acid-fundamentals owns the single-system transactional model; this skill owns the multi-node replication patterns that distributed systems use to scale, replicate, and survive failure. Replication often relaxes some ACID properties (most notably durability and isolation in async modes).\"}],\"verify_with\":[\"cap-theorem-tradeoffs\",\"sharding-strategy\"]}"
   concept: "{\"definition\":\"Replication is the discipline of keeping multiple copies of the same data on multiple nodes so that the system can serve reads from any copy, survive the failure of any node, or both. The three foundational topologies are single-leader (primary-replica; one node accepts writes, others receive a stream of changes), multi-leader (multi-primary; multiple nodes accept writes and reconcile), and leaderless (quorum; clients write to a quorum of nodes directly). Each topology has its own consistency, availability, conflict-handling, and operational properties; choosing among them is choosing the system's CAP/PACELC position and accepting the operational complexity that comes with it. Synchronous vs asynchronous replication is an orthogonal choice within each topology, trading durability/consistency against latency. The discipline is matching the topology and the synchrony choice to the workload's actual requirements for read scaling, write availability, recovery point objective (RPO), and recovery time objective (RTO).\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/replication-patterns/SKILL.md
 ---

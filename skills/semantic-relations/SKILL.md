@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Vocabulary-layer skill, stack- and storage-agnostic. The relation taxonomy and the substitution / property tests apply to any knowledge graph, concept map, taxonomy, or naming system; downstream implementation skills (ontology, ER modeling, relational mapping) consume the typed relations defined here."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.1.0"
   type: capability
   category: foundations
@@ -27,7 +27,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   concept: "{\"definition\":\"Semantic relations are the *typed connections* between concepts in a meaning structure: IS-A (hypernymy/hyponymy), PART-OF (holonymy/meronymy), synonymy, antonymy, polysemy, homonymy, metonymy, and the thematic role relations (agent, patient, instrument, location, source, goal, cause, result). Drawn from lexical semantics (Lyons, Cruse), Princeton WordNet, the W3C SKOS vocabulary, and cognitive-semantics work on thematic roles (Fillmore 1968, Jackendoff 1990), it treats every edge in a knowledge graph, concept map, or hierarchy as a relation of a *named kind* rather than a generic association.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/semantic-relations/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract

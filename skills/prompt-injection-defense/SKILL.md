@@ -4,7 +4,7 @@ description: "Use when reasoning about systems that pass untrusted content to a 
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"tool-call-flow\",\"http-semantics\",\"type-safety\",\"api-design\"],\"boundary\":[{\"skill\":\"tool-call-flow\",\"reason\":\"tool-call-flow owns the protocol cycle by which a model invokes a tool; this skill owns the security property the cycle must preserve when any message carries untrusted content.\"},{\"skill\":\"type-safety\",\"reason\":\"type-safety owns preventing type errors at compile time; this skill owns preventing command-execution errors at the data-vs-instruction boundary. Both are validate-at-the-boundary problems with different threat models.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the request/response surface contract; this skill owns the constraint that no field carrying user content may be treated as commands by a downstream model.\"},{\"skill\":\"http-semantics\",\"reason\":\"http-semantics owns transport meaning (cache, idempotency, content type); this skill owns the threat that arrives over correct HTTP and is still harmful because the model interprets it as a command.\"}],\"verify_with\":[\"api-design\",\"tool-call-flow\"]}"
   concept: "{\"definition\":\"This attack class describes systems where untrusted content placed within a language model's input causes the model to follow attacker-controlled directives instead of, or in addition to, the application's legitimate ones. It is a structural property of how transformer-based language models consume their input — every token in the context window contributes to the next-token prediction, and the model has no reliable mechanism to distinguish 'directives from the application developer' from 'directives in a document the application happens to have loaded.' Defense, therefore, is not elimination of the vulnerability but architectural containment of its blast radius.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/prompt-injection-defense/SKILL.md
 ---

@@ -4,7 +4,7 @@ description: "Use when reasoning about code coverage as a strategic measurement 
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"testing-strategy\",\"mutation-testing\",\"test-driven-development\",\"eval-driven-development\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the question of what to test at which level; this skill owns the measurement of how much of the code those tests actually exercise and at what granularity.\"},{\"skill\":\"mutation-testing\",\"reason\":\"mutation-testing owns the stronger signal of whether tests would *catch* a defect; this skill owns the structural signal of whether tests *reach* the code at all. Coverage is a necessary-not-sufficient precondition for mutation tests to even apply.\"},{\"skill\":\"test-driven-development\",\"reason\":\"TDD produces high coverage as a side effect; this skill explains why that coverage is a side effect rather than a target, and why pursuing the metric directly produces worse tests.\"}],\"verify_with\":[\"testing-strategy\",\"mutation-testing\"]}"
   concept: "{\"definition\":\"Test coverage is the family of structural measurements that report which parts of the production code were exercised by the test suite. Coverage criteria differ in granularity — function, statement, line, branch, decision, condition, modified-condition/decision (MC/DC), path — and each higher criterion subsumes the lower ones. Coverage is a *structural* property: it answers 'did the test reach this code,' not 'did the test verify this behavior.' The strategic discipline of test coverage is using coverage as a diagnostic signal about gaps in the test suite while resisting the Goodhart-Law failure mode of treating the coverage number as the target. Coverage is a floor (below this level, the test suite definitely misses things) not a ceiling (above this level, the test suite is necessarily good).\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/test-coverage-strategy/SKILL.md
 ---

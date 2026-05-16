@@ -4,7 +4,7 @@ description: "Use when reasoning about the line at which execution context chang
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"rendering-models\",\"http-semantics\",\"frontend-architecture\",\"type-safety\",\"api-design\"],\"boundary\":[{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the staging of work across build/request/stream/interaction. client-server-boundary owns the serialization frontier — what can cross between server code and client code. The two compose: any rendering model that emits a server-produced artifact for client consumption faces a boundary.\"},{\"skill\":\"http-semantics\",\"reason\":\"http-semantics owns the wire protocol (verbs, status codes, headers, caching). client-server-boundary is upstream — it decides what data exists at the boundary and how it is encoded into request and response bodies.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external API surface (versioning, REST/GraphQL choice, endpoint shape). client-server-boundary owns the in-program boundary between a unified frontend codebase's server and client halves — a tighter, framework-mediated boundary than a public API.\"},{\"skill\":\"type-safety\",\"reason\":\"type-safety owns the discipline of compile-time type checking. client-server-boundary is one of the places where the type system stops — values crossing the boundary lose their type until parsed.\"}],\"verify_with\":[\"type-safety\",\"api-design\"]}"
   concept: "{\"definition\":\"The client-server boundary is the line in a unified codebase at which execution context changes — between a server runtime (full filesystem, secret access, database connections) and a client runtime (browser, no filesystem, no server secrets, untrusted by the server). Anything that crosses the boundary must be serialized: encoded as bytes on one side, decoded into a value on the other. The boundary is marked by directives, enforced by the framework, and made invisible to the developer who treats it correctly.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/client-server-boundary/SKILL.md
 ---

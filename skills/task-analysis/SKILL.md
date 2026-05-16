@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Stack-agnostic. The actor / scenario / top-task model, the five friction dimensions, the breakpoint taxonomy, and the primary / secondary / supporting hierarchy apply to any UI under review; persona / journey YAML files are illustrative — substitute the equivalents (Notion, Confluence, in-repo Markdown, Figma annotations) of your team."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: workflow
   category: foundations
@@ -25,7 +25,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/task-analysis/SKILL.md
 ---

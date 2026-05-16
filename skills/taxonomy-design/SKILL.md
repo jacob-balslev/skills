@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Portable taxonomy design discipline for skill libraries, product information architecture, documentation trees, and knowledge graphs."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.1.0"
   type: capability
   category: foundations
@@ -27,7 +27,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   concept: "{\"definition\":\"Taxonomy design is the discipline of constructing a controlled classification system — a category tree (possibly augmented by facets) that organizes a set of items so they can be browsed, found, and reasoned about. Drawing from Ranganathan's faceted classification, Aristotelian genus-species hierarchy, and the SKOS data model, it treats classification as a *retrieval contract* between the system that organizes and the readers who navigate, not as a private mental map of the author.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/taxonomy-design/SKILL.md
 ---

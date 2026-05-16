@@ -4,7 +4,7 @@ description: "Use when reasoning about Test-Driven Development as a design disci
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"testing-strategy\",\"test-doubles-design\",\"eval-driven-development\",\"refactor\",\"type-safety\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the question 'what should we test, at which level, with what evidence' for a given change; this skill owns the design discipline of writing the test before the code that satisfies it. The two compose — testing-strategy decides the surface; TDD prescribes the rhythm — but they answer different questions.\"},{\"skill\":\"test-doubles-design\",\"reason\":\"test-doubles-design owns mocks/stubs/fakes/spies as a construct; this skill owns the discipline that places them (London-school heavily, Detroit-school lightly). The schools differ on how much test-doubles design matters to the practice.\"},{\"skill\":\"eval-driven-development\",\"reason\":\"eval-driven-development owns the LLM analog of TDD where the unit of judgment is pass-rate over a sample rather than binary per-test pass/fail. The disciplines share the iteration-first-then-implement spirit but the math underneath differs.\"},{\"skill\":\"refactor\",\"reason\":\"refactor owns behavior-preserving structural change; this skill prescribes refactor as the third beat of red-green-refactor. The skills compose: TDD calls refactor on every green; refactor owns how to do it without breaking behavior.\"}],\"verify_with\":[\"testing-strategy\",\"refactor\"]}"
   concept: "{\"definition\":\"Test-Driven Development is a software design discipline in which the test for a behavior is written before the production code that satisfies the test, then production code is written until the test passes, then the code is restructured to improve its shape while the test continues to pass. The cycle — red (failing test), green (passing test), refactor (clean code, still passing) — is the unit of work, and the test suite is the design pressure that shapes the production code. TDD is not 'writing tests first' as a procedural rule; it is using the act of writing a test as the moment to design the interface, decompose the responsibility, and discover what the code should be. The tests are a beneficial side effect of doing design through the test-writing lens; mistaking the side effect for the purpose is the most common failure mode.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/test-driven-development/SKILL.md
 ---

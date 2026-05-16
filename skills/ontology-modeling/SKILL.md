@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Portable ontology modeling guidance; implementation can be Markdown, RDF, JSON-LD, OWL, SHACL, or an internal schema language."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.1.0"
   type: capability
   category: foundations
@@ -27,7 +27,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   concept: "{\"definition\":\"Ontology modeling is the discipline of formalizing the meaning of a domain into classes, properties, and axioms whose semantics is precise enough for automated reasoning, validation, or cross-system interoperability. Drawing from Aristotle's categories, Gruber's information-systems definition of ontology, and Guarino's formal ontology tradition, it treats meaning as something that can be specified — a *commitment to a conceptualization* — and the specification as a contract that downstream consumers can compute over.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/ontology-modeling/SKILL.md
 ---

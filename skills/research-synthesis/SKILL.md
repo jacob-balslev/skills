@@ -3,7 +3,7 @@ name: research-synthesis
 description: "Use when turning raw qualitative research output (interview transcripts, field notes, diary entries, observation logs) into themes, patterns, insight statements, and design-ready artifacts via affinity mapping, empathy maps, and jobs-to-be-done framing. Do NOT use for collecting new research, quantitative analysis, statistical inference, or summarizing a single document — synthesis specifically operates on a corpus of qualitative evidence."
 license: CC-BY-4.0
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: design
@@ -21,7 +21,7 @@ metadata:
   anti_examples: "[\"Run more interviews with five additional participants.\",\"Calculate the response rate of the survey.\",\"Summarize this single PDF document.\"]"
   relations: "{\"related\":[\"user-research\",\"journey-mapping\",\"problem-framing\",\"design-thinking\"],\"boundary\":[{\"skill\":\"user-research\",\"reason\":\"user-research collects primary qualitative data. research-synthesis transforms that data into design-ready themes. Both are needed, in that order.\"},{\"skill\":\"conceptual-modeling\",\"reason\":\"conceptual-modeling synthesizes domain entities and their relationships for engineering. research-synthesis synthesizes human behavior and need patterns for design — different output shapes, different audiences.\"}]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/research-synthesis/SKILL.md
 ---

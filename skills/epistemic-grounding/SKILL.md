@@ -4,7 +4,7 @@ description: "Use when authoring any artifact that makes claims — skill conten
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: foundations
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"methodology\",\"reasoning\",\"semantics\"],\"boundary\":[{\"skill\":\"methodology\",\"reason\":\"methodology enforces output-level completeness and step-level evidence receipts; epistemic-grounding is the upstream discipline that decides what counts as evidence in the first place.\"},{\"skill\":\"semantics\",\"reason\":\"semantics owns the rules for naming and meaning-making; epistemic-grounding owns the rules for grounding a claim to a verifiable source.\"},{\"skill\":\"reasoning\",\"reason\":\"reasoning is the cognitive primitive of drawing inferences; epistemic-grounding is the discipline of distinguishing inference from observation and labeling the difference.\"}],\"verify_with\":[\"methodology\",\"evaluation\"]}"
   concept: "{\"definition\":\"Epistemic grounding is the discipline of binding every assertion to a verifiable source, marking the modality (strength) of the claim, and making the warrant (the inference from source to claim) explicit. It is the practice that turns a generated statement into a defended statement.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/epistemic-grounding/SKILL.md
 ---

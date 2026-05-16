@@ -4,7 +4,7 @@ description: "Use when reasoning about building language-model-integrated system
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: agent
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"tool-call-flow\",\"prompt-injection-defense\",\"testing-strategy\",\"type-safety\",\"agent-eval-design\",\"evaluation\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns deterministic-software testing where every run is binary pass/fail; this skill owns LLM evaluation where every run is a sample from a distribution and pass-rate is the unit of judgment. The disciplines share vocabulary (suite, gate, regression) but the math underneath differs.\"},{\"skill\":\"tool-call-flow\",\"reason\":\"tool-call-flow owns the protocol cycle by which a model invokes tools; this skill owns the discipline of measuring whether that cycle produces correct behavior. Tool-call evals are a specialization of the general pattern.\"},{\"skill\":\"prompt-injection-defense\",\"reason\":\"prompt-injection-defense owns the security property; this skill owns the measurement of whether the property holds. Red-team evals against an injection corpus are one application of eval-driven-development.\"},{\"skill\":\"agent-eval-design\",\"reason\":\"agent-eval-design owns the construction of evals — task sets, rubrics, graders, hard negatives, traces; this skill owns the development discipline that uses constructed evals to gate every change to prompt, model, retrieval, scaffolding, or tooling. The two compose: agent-eval-design produces the suite; this skill applies it.\"},{\"skill\":\"type-safety\",\"reason\":\"type-safety owns the compile-time property of programs; this skill owns the runtime-distributional property of LLM outputs. They are both validate-at-the-boundary disciplines with different threat models.\"}],\"verify_with\":[\"testing-strategy\",\"agent-eval-design\"]}"
   concept: "{\"definition\":\"Eval-driven development is the practice of building language-model-integrated systems by writing evaluations before and alongside the system, where each evaluation defines a behavioral criterion the system must satisfy on a representative input set, and the suite's aggregated pass-rate signal gates every change to the prompt, model, retrieval, scaffolding, or tooling. Evals are the LLM analog of automated tests for deterministic software with one fundamental difference: LLM evals are statistical (pass-rate over a sampled population) rather than binary (pass/fail per run), because the system under test is itself stochastic. The discipline is the rigorous separation of generation (what the system produces) from judgment (how it is scored) with explicit accounting for the uncertainty in both.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/eval-driven-development/SKILL.md
 ---

@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Markdown, Git, any codebase"
 allowed-tools: Read Grep Bash
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: workflow
   category: engineering
@@ -24,7 +24,7 @@ metadata:
   relations: "{\"boundary\":[{\"skill\":\"documentation\",\"reason\":\"documentation is durable reference prose; debugging is transient failure-chasing\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy plans what to test before a failure exists; debugging chases a specific observed failure\"},{\"skill\":\"refactor\",\"reason\":\"refactor is behavior-preserving code change with green tests; debugging is invoked because tests or behavior are NOT green\"}],\"verify_with\":[\"testing-strategy\"]}"
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/debugging/SKILL.md
 ---

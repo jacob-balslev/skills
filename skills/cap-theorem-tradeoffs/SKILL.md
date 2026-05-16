@@ -4,7 +4,7 @@ description: "Use when reasoning about the consistency-availability-partition-to
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"acid-fundamentals\",\"transaction-isolation\",\"replication-patterns\",\"sharding-strategy\"],\"boundary\":[{\"skill\":\"acid-fundamentals\",\"reason\":\"acid-fundamentals owns the single-system transactional frame; this skill owns the distributed-system frame. CAP's C (replica agreement) is not ACID's C (constraint satisfaction); conflating them is the most common misconception in this space.\"},{\"skill\":\"transaction-isolation\",\"reason\":\"transaction-isolation owns single-cluster concurrency-correctness; this skill owns multi-replica consistency under network partition. The two layers can compose (a CP system may run at serializable isolation locally) but address different threats.\"},{\"skill\":\"replication-patterns\",\"reason\":\"replication-patterns owns the design patterns for multi-replica systems (primary-replica, multi-primary, leaderless quorum); this skill owns the C/A/P trade-off that motivates choosing among them. The two compose: this is the theoretical frame; replication-patterns is the operational realization.\"},{\"skill\":\"sharding-strategy\",\"reason\":\"sharding-strategy owns horizontal partitioning of data across nodes; this skill owns the C/A trade-off when those shards must coordinate or recover from network partition between them.\"}],\"verify_with\":[\"acid-fundamentals\",\"replication-patterns\"]}"
   concept: "{\"definition\":\"CAP is the theorem (Brewer 2000 as a conjecture; Gilbert & Lynch 2002 as a formal proof) that, in a distributed data system, you cannot simultaneously guarantee all three of: Consistency (every read returns the most recent write or an error), Availability (every request receives a non-error response), Partition tolerance (the system continues despite arbitrary message loss between nodes). Since real-world networks can and do partition, P is not optional — the choice is between C and A *during a partition*. A CP system refuses to serve some requests during partition to preserve consistency; an AP system serves all requests but may return stale data. PACELC (Abadi 2010) extends CAP by naming the *Else* case: even without partition, the system must trade Latency against Consistency, because synchronous replication for strong consistency takes time. The discipline is choosing C-vs-A *intentionally per workload*, knowing that P is given by physics and that even outside partition, latency-vs-consistency is a continuous choice.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/cap-theorem-tradeoffs/SKILL.md
 ---

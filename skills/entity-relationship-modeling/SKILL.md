@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -24,7 +24,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/entity-relationship-modeling/SKILL.md
 ---

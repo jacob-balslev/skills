@@ -3,7 +3,7 @@ name: dark-mode-implementation
 description: "Use when implementing dark mode — prefers-color-scheme detection, theme persistence, flash-of-unstyled-theme prevention, color token mirroring, image and asset variants, and meta theme-color updates. Do NOT use for designing the dark palette itself, designing the token architecture, or generic theme-switching across more than two themes."
 license: CC-BY-4.0
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: design
@@ -22,7 +22,7 @@ metadata:
   anti_examples: "[\"Pick the dark mode color palette values\",\"Design the three-tier token architecture\",\"Build a multi-brand theme system with five themes\"]"
   relations: "{\"related\":[\"theme-system-design\",\"color-system-design\",\"a11y\",\"frontend-architecture\"],\"boundary\":[{\"skill\":\"theme-system-design\",\"reason\":\"theme-system-design defines the token layering that makes dark mode a token-mapping change; this skill handles the integration mechanics on top of that foundation.\"},{\"skill\":\"color-system-design\",\"reason\":\"The dark palette and its contrast pairings are color-system-design's responsibility; this skill consumes them.\"}]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/dark-mode-implementation/SKILL.md
 ---

@@ -3,7 +3,7 @@ name: prototyping
 description: "Use when building an artifact whose purpose is to answer a specific question — paper sketch, wireframe, clickable mockup, wizard-of-oz, role-play, service prototype, or code spike — at the lowest fidelity sufficient to produce that learning. Do NOT use for production-grade component construction, design-system contribution, or building the actual ship-ready feature — those are design-module-composition and engineering implementation."
 license: CC-BY-4.0
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: design
@@ -21,7 +21,7 @@ metadata:
   anti_examples: "[\"Build the production React component for the new dashboard widget.\",\"Add this component to the design system library.\",\"Write the migration script for the production database.\"]"
   relations: "{\"related\":[\"ideation\",\"usability-testing\",\"design-thinking\"],\"boundary\":[{\"skill\":\"design-module-composition\",\"reason\":\"design-module-composition produces durable design-system components meant to ship and be reused. prototyping produces disposable artifacts whose only purpose is learning — different lifecycle, different quality bar, different audience.\"},{\"skill\":\"interaction-patterns\",\"reason\":\"interaction-patterns is a reference catalog of established UI behaviors. prototyping is the activity of building a thing to test a question — it may use interaction patterns but is not itself a pattern library.\"}]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/prototyping/SKILL.md
 ---

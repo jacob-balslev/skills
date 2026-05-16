@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Cross-domain naming and meaning skill, stack-agnostic. The naming-smells catalogue, SemVer rules, conventional-commit format, three-layer token architecture, HTTP-status semantics, REST/GraphQL conventions, and anti-pattern catalog apply to any codebase; example identifiers use generic e-commerce framings — substitute the equivalents from your domain."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.1.0"
   type: capability
   category: foundations
@@ -27,7 +27,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   concept: "{\"definition\":\"Semantics — applied to software — is the discipline of *meaning encoding* in identifiers and signals: function names, variable names, design tokens, HTTP status codes, version numbers, commit messages, branded types, and the small textual artefacts that communicate intent to humans and machines. Drawing from Domain-Driven Design's *ubiquitous language* (Evans 2003), Don Norman's affordance theory, semantic versioning, and the broader tradition that treats names as contracts, it commits to the view that every visible identifier is a micro-decision whose meaning compounds across the codebase.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/semantics/SKILL.md
 ---

@@ -4,7 +4,7 @@ description: "Use when designing indexes for a relational or NoSQL database: the
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"query-optimization\",\"data-modeling\",\"schema-evolution\",\"transaction-isolation\"],\"boundary\":[{\"skill\":\"query-optimization\",\"reason\":\"query-optimization owns the diagnosis and tuning of specific slow queries; this skill owns the *design* of which indexes the database has. The two compose: query-optimization diagnoses; this skill is one of the responses.\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns the schema and access patterns; this skill owns the auxiliary search structures that make access patterns efficient. The schema determines what indexes can exist; the access patterns determine which should.\"},{\"skill\":\"schema-evolution\",\"reason\":\"schema-evolution owns how the database changes shape over time; this skill owns the indexes that must change with it. Adding or removing an index is itself a schema change.\"}],\"verify_with\":[\"query-optimization\",\"data-modeling\"]}"
   concept: "{\"definition\":\"Indexing strategy is the discipline of designing auxiliary data structures that let the database find rows quickly without scanning every row. An index is a precomputed lookup structure (B-tree, hash, bitmap, inverted index, LSM-tree, BRIN, GiST, GIN) that maps one or more column values to the rows containing those values. Every index speeds up some queries (those whose WHERE / JOIN / ORDER BY clauses match the index's structure) and slows down every write (the index must be updated on every INSERT, UPDATE that touches indexed columns, and DELETE). The strategic question is not 'which columns deserve an index' considered in isolation; it is the *whole-database* trade-off between read speed and write cost, given the actual access patterns the workload produces.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/indexing-strategy/SKILL.md
 ---

@@ -4,7 +4,7 @@ description: "Use when reasoning about the pattern where a language model emits,
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: agent
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"tool-call-flow\",\"rendering-models\",\"client-server-boundary\",\"prompt-injection-defense\",\"api-design\",\"type-safety\"],\"boundary\":[{\"skill\":\"tool-call-flow\",\"reason\":\"tool-call-flow owns the protocol cycle by which a model invokes external capabilities and receives results; this skill owns the pattern where the model's output is itself a UI specification rendered by the application. The two compose — a UI spec may be emitted via a tool-call-flow-shaped mechanism — but the conceptual surfaces differ.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the page-level rendering taxonomy (CSR/SSR/SSG/RSC/streaming); this skill owns the model→spec→component pipeline that operates inside any of those rendering models. They compose.\"},{\"skill\":\"prompt-injection-defense\",\"reason\":\"prompt-injection-defense owns the security property that a system must preserve against attacker-controlled directives in model input; this skill owns the rendering pattern whose threat surface includes rendering attacker-influenced output. The two skills are read together for security analysis.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external HTTP request/response surface; this skill owns the model-to-renderer schema surface. Both are typed contracts, but between different actors.\"},{\"skill\":\"design-system-architecture\",\"reason\":\"design-system-architecture owns the component library and its tokens; this skill consumes a design system as the component palette the model can draw from.\"}],\"verify_with\":[\"api-design\",\"type-safety\",\"prompt-injection-defense\"]}"
   concept: "{\"definition\":\"Generative UI is the pattern in which a language model emits, as structured output constrained by a typed schema, a specification of a UI component or sub-tree that an application then renders for the user. The model's output is not a chat response, not a tool call asking for execution, and not raw code — it is a typed instance of a component-vocabulary schema. The application owns the rendering, the interaction layer, and the visual design; the model owns the choice of which components to compose and with what data. The pattern depends on three contracts holding simultaneously: the schema (the typed component vocabulary the model and application share), the generation constraint (the model's emission is restricted to valid instances of the schema), and the render policy (the application renders only what the schema describes, with no escape to model-authored markup or code).\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/generative-ui/SKILL.md
 ---

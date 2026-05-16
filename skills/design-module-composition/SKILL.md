@@ -3,7 +3,7 @@ name: design-module-composition
 description: "Use when designing reusable component modules — composition patterns, compound components, slot/children APIs, render props, headless component contracts, and the choice between configuration and composition. Do NOT use for application-level architecture, single-use feature components, or visual styling decisions."
 license: CC-BY-4.0
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: design
@@ -21,7 +21,7 @@ metadata:
   anti_examples: "[\"Choose the border radius value for cards\",\"Decide where the OrderDetailPage component lives in the folder structure\",\"Pick the brand font for headings\"]"
   relations: "{\"related\":[\"design-system-architecture\",\"frontend-architecture\",\"interaction-patterns\",\"a11y\"],\"boundary\":[{\"skill\":\"frontend-architecture\",\"reason\":\"frontend-architecture covers application-level organization; this skill covers the internal API of a reusable module that the application composes.\"},{\"skill\":\"a11y\",\"reason\":\"Composition choices affect accessibility (focus management, ARIA wiring); when the question is whether a pattern meets WCAG requirements, hand off to a11y.\"}]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/design-module-composition/SKILL.md
 ---

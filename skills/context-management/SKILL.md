@@ -5,7 +5,7 @@ license: MIT
 compatibility: Runtime-agnostic. The intake-triage / loop / drift / handoff discipline applies to any LLM-coding harness regardless of context window size or compaction implementation.
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: agent
@@ -25,7 +25,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/context-management/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract

@@ -4,7 +4,7 @@ description: "Use when reasoning about systems that emit a sequence of values ov
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"tool-call-flow\",\"client-server-boundary\",\"rendering-models\",\"performance-budgets\",\"api-design\"],\"boundary\":[{\"skill\":\"tool-call-flow\",\"reason\":\"tool-call-flow owns the message-history protocol between a model and a tool runtime; streaming-architecture owns the lower-level pattern of incremental value emission with backpressure that streaming tool-call responses are a specialization of.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the request/response surface for one round-trip; streaming-architecture owns the multi-value-over-time surface where one logical response is delivered as N chunks.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the page-rendering taxonomy (CSR/SSR/SSG/RSC); streaming-architecture owns the incremental-delivery primitive that streaming SSR and RSC are built on.\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the serialization frontier; streaming-architecture is what makes the frontier traversable over time rather than only once per request.\"}],\"verify_with\":[\"api-design\",\"performance-budgets\"]}"
   concept: "{\"definition\":\"A streaming architecture is one where a producer emits a sequence of values over time and a consumer processes them incrementally, with an explicit flow-control signal (backpressure) regulating the rate between them. The architecture decouples production speed from consumption speed and makes partial results observable before the producer finishes — or before the producer is even known to terminate.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/streaming-architecture/SKILL.md
 ---

@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Architecture-level skill. Applies to any agent-coding workspace that has more than one skill / doc-routing / memory artifact and any way to traverse them — Claude Code, OpenCode, Cursor, Aider, Continue, Copilot Workspace, or a custom harness. The four-graph model and the orphan / connectivity metrics are independent of the specific runtime."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: agent
@@ -26,7 +26,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/context-graph/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract

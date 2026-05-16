@@ -3,7 +3,7 @@ name: typography-system
 description: "Use when designing a typography system — typeface selection and pairing, modular type scale, vertical rhythm, line-height and measure rules, and web font delivery (subsetting, font-display, variable fonts). Do NOT use for body copy writing, single-headline font pairing, or non-text design tokens."
 license: CC-BY-4.0
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: design
@@ -21,7 +21,7 @@ metadata:
   anti_examples: "[\"Write the headline copy for the landing page\",\"Pick the brand's primary color\",\"Decide where the headline component lives in the folder structure\"]"
   relations: "{\"related\":[\"visual-hierarchy\",\"visual-design-foundations\",\"theme-system-design\",\"layout-composition\"],\"boundary\":[{\"skill\":\"visual-hierarchy\",\"reason\":\"visual-hierarchy decides how to deploy type as an ordering signal on a given surface; this skill defines the scale and faces that get deployed.\"},{\"skill\":\"theme-system-design\",\"reason\":\"theme-system-design covers how typography tokens are layered and switched; this skill produces the typographic decisions inside them.\"}]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/typography-system/SKILL.md
 ---

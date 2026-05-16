@@ -3,7 +3,7 @@ name: frontend-architecture
 description: "Use when organizing a frontend codebase — module boundaries, component layering, state ownership, data-flow direction, and the separation between feature code and shared primitives. Do NOT use for visual design decisions, specific framework migration tactics, or backend API contract design."
 license: CC-BY-4.0
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -22,7 +22,7 @@ metadata:
   anti_examples: "[\"Pick the brand color palette for a marketing site\",\"Design the REST endpoint shape for the orders resource\",\"Decide whether to use CSS-in-JS or Tailwind\"]"
   relations: "{\"related\":[\"design-system-architecture\",\"design-module-composition\",\"refactor\",\"testing-strategy\"],\"boundary\":[{\"skill\":\"design-system-architecture\",\"reason\":\"design-system-architecture covers token layering, primitive component contracts, and library publishing; this skill covers application-side organization that consumes those primitives.\"},{\"skill\":\"api-design\",\"reason\":\"API contract shape lives in api-design; this skill takes the API as given and structures the frontend around it.\"}]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/frontend-architecture/SKILL.md
 ---

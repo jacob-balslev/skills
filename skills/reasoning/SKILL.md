@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.1.0"
   type: capability
   category: foundations
@@ -26,7 +26,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   concept: "{\"definition\":\"Reasoning is the deliberate generation, evaluation, and selection of inferences over a problem space. Reasoning calibration is the meta-skill of matching reasoning depth to problem difficulty — engaging sustained multi-step deliberation when a problem requires it, and skipping straight to action or lookup when it does not. Drawn from dual-process accounts of cognition (Kahneman 2011, Stanovich & West 2000) and bounded-rationality theory (Simon 1955), it treats reasoning as an expensive operation that pays back only when the problem cannot be solved by cheaper means.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/reasoning/SKILL.md
 ---

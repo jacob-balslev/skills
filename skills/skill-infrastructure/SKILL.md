@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Library- and harness-agnostic. Patterns apply to any skill-style library (Skill Graph, Claude skills, Cursor rules, custom in-house skill systems). Specific tool names in this skill (skill-lint, generate-manifest, routing-eval, drift-sentinel) are concrete examples from the Skill Graph reference implementation -- substitute your library's equivalents."
 allowed-tools: Read Grep Bash Edit Write
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: agent
@@ -26,7 +26,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/skill-infrastructure/SKILL.md
 ---

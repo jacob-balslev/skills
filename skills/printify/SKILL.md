@@ -3,7 +3,7 @@ name: printify
 description: "Use when working with Printify — the print-on-demand REST API, catalog model (blueprints, print providers, variants, print areas), product creation and publish lifecycle to connected channels, order routing, shipping cost queries, and HMAC SHA-256 webhook verification. Do NOT use for non-Printify POD vendors, generic Shopify storefront work, or print-file (artwork) generation."
 license: CC-BY-4.0
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -22,7 +22,7 @@ metadata:
   anti_examples: "[\"Generate the artwork PNG file that gets uploaded as a print file\",\"Implement the Shopify side of the Printify-to-Shopify sync\",\"Design a generic POD-vendor-agnostic product schema\"]"
   relations: "{\"related\":[\"shopify\",\"webhook-integration\",\"api-design\"],\"boundary\":[{\"skill\":\"shopify\",\"reason\":\"Printify publishes to Shopify (and other channels) but the Shopify-side concerns — theme display, Shopify webhooks, Admin API — belong in the shopify skill.\"},{\"skill\":\"webhook-integration\",\"reason\":\"webhook-integration covers vendor-neutral signing/retry patterns; this skill handles Printify's specific event types and signature scheme.\"}]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/printify/SKILL.md
 ---

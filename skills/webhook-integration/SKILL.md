@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Provider-agnostic. Examples reference HMAC-SHA256 (the dominant scheme), SDK-style verification helpers (Stripe-style, where the provider ships a library that takes raw body + header + secret), and round-trip verification APIs (PayPal-style, where the receiver POSTs the event back to the provider for validation). Substitute each provider's specific header names, hashing algorithm, and retry-status-code contract from their docs."
 allowed-tools: Read Grep Bash Edit
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/webhook-integration/SKILL.md
 ---

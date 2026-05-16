@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Operating-model-agnostic. Applies whether the constraint is a single solo developer operating multiple agents, a small team where one senior engineer reviews everything, or a larger team where review capacity is the limiting factor. The framework adapts as the constraint identity changes."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.1.0"
   type: capability
   category: foundations
@@ -27,7 +27,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   concept: "{\"definition\":\"Constraint awareness is the discipline of identifying the single resource that limits a system's throughput at any given time, and routing all improvement work through that resource. Drawn from Eliyahu Goldratt's Theory of Constraints (1984), it treats systems as throughput pipelines whose total output is bounded by their narrowest section — and treats local optimization of non-constraints as effort that produces no system-level gain.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/constraint-awareness/SKILL.md
 ---

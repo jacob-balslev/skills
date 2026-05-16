@@ -4,7 +4,7 @@ description: "Use when designing tests that verify the interaction between two o
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"testing-strategy\",\"test-doubles-design\",\"test-driven-development\",\"e2e-test-design\",\"contract-testing\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of how much of each test level to invest in; this skill owns the design of integration-level tests specifically.\"},{\"skill\":\"test-doubles-design\",\"reason\":\"test-doubles-design owns the construction of mocks/stubs/fakes; this skill owns the per-dependency real-vs-faked decision in integration scope. Integration tests use real collaborators where practical and fakes only at true external boundaries.\"},{\"skill\":\"e2e-test-design\",\"reason\":\"e2e-test-design owns user-journey-scope tests that exercise the full stack including UI; this skill owns scope below that — interaction of units inside the system, often without UI.\"},{\"skill\":\"contract-testing\",\"reason\":\"contract-testing owns consumer-driven contract verification between services; this skill owns the in-system interaction of modules. Contract tests verify the *interface*; integration tests verify the *implementation through* the interface.\"}],\"verify_with\":[\"testing-strategy\",\"e2e-test-design\"]}"
   concept: "{\"definition\":\"Integration test design is the discipline of designing tests that verify the interaction of two or more units of a system — modules within a process, services across processes, layers within an architecture — to catch defects that emerge only at the boundaries between those units. The unit of judgment is the *boundary*: whether type-mapped, serialized, transactional, contract-bound, or simply called across a function boundary, the integration test's value is exercising the *real* interaction between the parts rather than the *mocked* interaction a unit test would exercise. The scope choice — which units are real, which are faked, which are out of scope — is the central design decision and the source of most fragile integration test suites: too narrow and the test is a unit test in disguise; too broad and the test is an end-to-end test in disguise; in between, the test is what its name says.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/integration-test-design/SKILL.md
 ---

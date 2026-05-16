@@ -4,7 +4,7 @@ description: "Use when reasoning about snapshot testing as a tactical technique:
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"testing-strategy\",\"property-based-testing\",\"test-driven-development\",\"code-review\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what to test at which level; this skill owns one tactical technique (capture-and-compare) within that strategy.\"},{\"skill\":\"property-based-testing\",\"reason\":\"property-based-testing asserts universal claims about output structure; snapshot testing captures a specific output and asserts equality to a baseline. The two complement: PBT for universal contracts, snapshots for complex structural outputs that are easier to capture than specify.\"},{\"skill\":\"test-driven-development\",\"reason\":\"TDD prescribes writing the test before the code; snapshot testing requires the code to exist before the snapshot can be captured. Snapshot testing fits poorly with strict TDD on greenfield code and well with characterization of existing code.\"},{\"skill\":\"code-review\",\"reason\":\"Snapshot diffs surface change evidence that code review must read and approve; the approval cycle of snapshot testing is operationally part of the review process the code-review discipline owns.\"}],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
   concept: "{\"definition\":\"Snapshot testing is a tactical testing technique in which the output of a system under test is captured on a known-good run, stored as an artifact (the snapshot), and compared against fresh output on each subsequent test run. A mismatch is the test failure. The snapshot itself is the assertion — there is no hand-written claim about what the output should be; the claim is 'the output should equal what it was last time, until someone deliberately approves a new baseline.' The discipline is in the *approval cycle*: when the output legitimately changes, a human reviews the diff and accepts the new baseline; when the change is unexpected, the test failure surfaces the regression. A snapshot test without disciplined approval review is not a test; it is a record of whatever the output happened to be on the day the snapshot was last updated.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/snapshot-testing/SKILL.md
 ---

@@ -4,7 +4,7 @@ description: "Use when reasoning about the protocol-level cycle by which a langu
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: agent
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"tool-call-strategy\",\"agent-engineering\",\"api-design\",\"type-safety\",\"client-server-boundary\"],\"boundary\":[{\"skill\":\"tool-call-strategy\",\"reason\":\"tool-call-strategy owns the decision of when, how many, and which tools to call (token cost, redundancy, parallelization, decision gate). tool-call-flow owns the protocol-level cycle that makes any call possible. The two compose: strategy decides what to do; flow describes the mechanism that carries it out.\"},{\"skill\":\"agent-engineering\",\"reason\":\"agent-engineering owns multi-agent and multi-step system architecture (orchestrator/worker, consensus, sequential chains). tool-call-flow is one cycle inside a single agent — the protocol for a single model-to-runtime interaction.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external API surface that tools may wrap. tool-call-flow owns the model-facing contract: how the tool is declared to the model, how the result is encoded back to it, and how the cycle is structured.\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the serialization frontier between server and client code. tool-call-flow is an analogous frontier between a language model (which produces structured intent) and a runtime (which executes the intent) — the trust direction is different but the discipline of explicit serialization is identical.\"}],\"verify_with\":[\"tool-call-strategy\",\"agent-eval-design\"]}"
   concept: "{\"definition\":\"A tool-call flow is the multi-turn protocol by which a language model uses external capabilities. It has four phases — declaration (the runtime tells the model which tools exist and their parameter schemas), request (the model emits a structured tool-call message specifying tool name and arguments), execution (the runtime invokes the underlying capability and produces a result), continuation (the runtime appends the result to the message history and re-prompts the model, which either continues with another tool call or produces a final answer). The state of the cycle lives in the message history; the model is stateless across calls.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/tool-call-flow/SKILL.md
 ---

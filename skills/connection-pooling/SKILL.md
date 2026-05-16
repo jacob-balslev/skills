@@ -4,7 +4,7 @@ description: "Use when reasoning about how an application manages its database c
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"query-optimization\",\"replication-patterns\",\"sharding-strategy\",\"transaction-isolation\"],\"boundary\":[{\"skill\":\"query-optimization\",\"reason\":\"query-optimization owns the cost of individual query work; this skill owns the cost of having a connection at all. A workload contending on connections has different symptoms than a workload contending on query work, and the diagnostic discipline differs.\"},{\"skill\":\"replication-patterns\",\"reason\":\"replication-patterns owns the routing of reads and writes across replicas; this skill owns the connection layer beneath that routing. They compose: a pooled architecture often pools to each replica separately.\"},{\"skill\":\"sharding-strategy\",\"reason\":\"sharding-strategy owns how data is partitioned across nodes; this skill owns how application connections to those nodes are pooled. A sharded architecture multiplies the pool-sizing surface — one pool per shard.\"},{\"skill\":\"transaction-isolation\",\"reason\":\"transaction-isolation owns the per-transaction concurrency-correctness contract; this skill owns the connection-level mechanics that determine whether a transaction's connection is held, released, or shared. PgBouncer's transaction mode in particular interacts with isolation level and session state.\"}],\"verify_with\":[\"query-optimization\",\"replication-patterns\"]}"
   concept: "{\"definition\":\"Connection pooling is the discipline of managing a finite set of database connections shared across many application threads, requests, or processes, because opening a database connection is expensive (network round-trips, authentication, session setup) and every open connection consumes server resources (a process or thread, memory for buffers and catalog state, locks on shared structures). The pool's job is to keep a small, sized-for-workload number of connections open, hand them out to application units of work for the brief time they need them, and return them to the pool. Pooling can happen at the application layer (in-process pool like HikariCP, pgx pool, node-postgres Pool) or at the proxy layer (an external service like PgBouncer or ProxySQL that multiplexes many client connections onto a smaller set of upstream database connections). The pooling mode (session, transaction, statement) determines what feature compatibility the pool preserves and what failure modes the application must handle. The pool size is a *throughput cap*, not a resource budget; sizing it correctly per Little's Law (concurrency = throughput × latency) is the central operational decision.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/connection-pooling/SKILL.md
 ---

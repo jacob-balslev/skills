@@ -4,7 +4,7 @@ description: "Use when designing or reviewing HTTP-based systems where method se
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"api-design\",\"webhook-integration\",\"system-interface-contracts\"],\"boundary\":[{\"skill\":\"api-design\",\"reason\":\"api-design owns the surface shape (routes, request/response schemas, pagination); http-semantics owns the protocol-level method/status/header contract that any HTTP API builds on.\"},{\"skill\":\"webhook-integration\",\"reason\":\"webhook-integration owns inbound provider mechanics (signing, retry, vendor-specific topics); http-semantics owns vendor-neutral HTTP method and status semantics.\"},{\"skill\":\"system-interface-contracts\",\"reason\":\"system-interface-contracts owns cross-boundary contract shapes regardless of transport; http-semantics is HTTP-specific.\"}],\"verify_with\":[\"api-design\",\"code-review\"]}"
   concept: "{\"definition\":\"HTTP semantics is the IETF-standardized contract layer (RFC 9110, 9111, 9112) that defines method meanings, status code families, request/response metadata, conditional requests, content negotiation, and caching — independent of any specific framework or language. It is the wire-level meaning that every HTTP API inherits.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/http-semantics/SKILL.md
 ---

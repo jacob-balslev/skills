@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Language- and stack-agnostic. The recognition loop, clustering method, eval pipeline, and 5-Whys ladder apply to any codebase; the grep patterns and example detection rules are illustrative — substitute the equivalents of your stack."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.1.0"
   type: capability
   category: foundations
@@ -27,7 +27,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   concept: "{\"definition\":\"Pattern recognition is the cognitive and methodological discipline of identifying recurring structures across instances — separating signal from noise, naming the structure once detected, and elevating it into durable, transmissible knowledge. Drawing from Gestalt perception (Wertheimer 1923), expert intuition research (Klein 1998, Chase & Simon 1973), and the software-pattern tradition (Alexander 1977, Gamma et al. 1994), it treats pattern as a class noun: a regularity worth naming because it explains many observations through one structure.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/pattern-recognition/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract

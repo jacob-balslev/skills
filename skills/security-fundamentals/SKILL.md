@@ -4,7 +4,7 @@ description: "Use when reasoning about the security properties any application m
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"type-safety\",\"api-design\",\"http-semantics\",\"prompt-injection-defense\"],\"boundary\":[{\"skill\":\"type-safety\",\"reason\":\"type-safety provides compile-time guarantees about the SHAPE of data inside the program; security-fundamentals provides the runtime discipline that decides what to trust and what to validate at the system's TRUST BOUNDARIES. The two compose: validate at the boundary, then trust the type inside.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external surface contract (endpoints, methods, schemas); this skill owns the security properties any such surface must enforce regardless of design choices (authn, authz, input validation, rate limiting).\"},{\"skill\":\"prompt-injection-defense\",\"reason\":\"prompt-injection-defense owns the LLM-specific threat class where untrusted text is interpreted as instructions by a model; this skill owns the general security framing that prompt injection specializes from. Prompt injection is one row in the OWASP LLM Top 10; this skill covers the broader discipline.\"},{\"skill\":\"http-semantics\",\"reason\":\"http-semantics owns the protocol-level meaning of methods, status codes, and headers; this skill owns the security properties that protocol must enforce at every endpoint (authn, authz, rate limiting, validation). They compose: HTTP gives the protocol; this skill gives the security discipline applied to it.\"}],\"verify_with\":[\"type-safety\",\"api-design\"]}"
   concept: "{\"definition\":\"Security fundamentals are the cross-cutting design principles, threat-modeling discipline, and recurring vulnerability classes that determine whether a system can be trusted to handle data, identity, and authority safely under adversarial conditions. The discipline is upstream of any specific vulnerability or vendor tool: it asks 'what are we protecting,' 'from whom,' 'what could go wrong,' and 'what's the cost if it does' before any implementation choice is made. Security fundamentals are not a feature added after the system works; they are a property of the design from the first commit, encoded in trust boundaries, validation choices, default permissions, and the placement of authentication and authorization checks. The discipline acknowledges that perfect security is impossible (any system can be attacked given sufficient resources and time), so the goal is to make attacks expensive, traceable, and limited in blast radius — defense in depth rather than perimeter security, least privilege rather than convenience, secure defaults rather than opt-in protections.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/security-fundamentals/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract

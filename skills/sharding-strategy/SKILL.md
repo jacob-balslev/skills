@@ -4,7 +4,7 @@ description: "Use when reasoning about horizontal partitioning of data across no
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"replication-patterns\",\"cap-theorem-tradeoffs\",\"indexing-strategy\",\"data-modeling\"],\"boundary\":[{\"skill\":\"replication-patterns\",\"reason\":\"replication-patterns owns copying the same data across nodes; this skill owns splitting different data across nodes. The two compose: a sharded system can replicate each shard. They answer different questions.\"},{\"skill\":\"cap-theorem-tradeoffs\",\"reason\":\"cap-theorem-tradeoffs owns the theoretical consistency-availability frame; this skill owns the operational partitioning that often interacts with it (cross-shard transactions have stronger consistency requirements than single-shard ones).\"},{\"skill\":\"indexing-strategy\",\"reason\":\"indexing-strategy owns within-node retrieval; this skill owns how data is divided across nodes. Indexes within a shard are designed normally; cross-shard secondary indexes are a separate, harder problem.\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns schema and access-pattern design; this skill owns the partitioning of that schema across nodes. The shard key is a schema design decision with operational consequences.\"}],\"verify_with\":[\"replication-patterns\",\"data-modeling\"]}"
   concept: "{\"definition\":\"Sharding (horizontal partitioning) is the discipline of dividing a database's data across multiple nodes such that each node holds a subset (a shard) of the data. The unit of judgment is the *shard key*: the column or columns the system uses to route each row to a specific shard. Three foundational schemes exist — **range partitioning** (rows with shard-key values in a contiguous range go to the same shard), **hash partitioning** (the shard-key value is hashed; the hash determines the shard), and **directory / lookup partitioning** (an explicit map records which shard owns each key or key-range). Each scheme has its own access-pattern fit, resharding complexity, and hot-shard risk profile. The strategic discipline of sharding is choosing the shard key and scheme such that (a) the per-shard load is balanced, (b) common queries can be answered by a single shard (no cross-shard scatter-gather), and (c) the system can be resharded (add nodes, rebalance data) without unacceptable downtime.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/sharding-strategy/SKILL.md
 ---

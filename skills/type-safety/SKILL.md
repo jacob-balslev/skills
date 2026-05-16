@@ -4,7 +4,7 @@ description: "Use when reasoning about types as a quality property of code: what
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"api-design\",\"testing-strategy\",\"code-review\"],\"boundary\":[{\"skill\":\"api-design\",\"reason\":\"api-design owns the external request/response surface; type-safety owns the discipline of expressing internal program correctness as types.\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the runtime verification of behavior; type-safety owns the compile-time verification of structure. They cover different failure modes.\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns persistence and entity shape; type-safety owns the in-memory type contracts that consume that shape.\"}],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
   concept: "{\"definition\":\"Type safety is the property of a program in which type errors — operations applied to values of the wrong kind — are detected before they cause incorrect behavior. A type system provides type safety to the extent that it formally rules out classes of errors at compile time. A sound type system rules out all errors of the kinds it tracks; an unsound system rules out some but allows others through escape hatches.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/type-safety/SKILL.md
 ---

@@ -5,7 +5,7 @@ license: MIT
 compatibility: "PostgreSQL 12+ (covers concurrent index, NOT VALID foreign keys, generated columns). Connection examples target raw `psql` and the unpooled side of any PgBouncer-style pooler. Branching examples reference `neonctl` as one provider — substitute the equivalent CLI for Supabase, Xata, or self-hosted clones if your platform supports branched databases."
 allowed-tools: Read Grep Bash Edit
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/database-migration/SKILL.md
 ---

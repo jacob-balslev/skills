@@ -4,7 +4,7 @@ description: "Use when reasoning about mutation testing as a behavioral signal o
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"test-coverage-strategy\",\"test-driven-development\",\"testing-strategy\",\"eval-driven-development\"],\"boundary\":[{\"skill\":\"test-coverage-strategy\",\"reason\":\"test-coverage-strategy owns the structural signal of which code the test suite reaches; mutation-testing owns the behavioral signal of whether the test suite would catch a defect at that code location. The two compose: coverage is a necessary precondition for mutation testing to apply (an uncovered mutant trivially survives); mutation is the next layer of test-quality signal.\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what to test at which level; this skill owns one measurement of how good the tests at any level actually are.\"},{\"skill\":\"test-driven-development\",\"reason\":\"TDD produces tests with high behavioral specificity as a side effect; mutation testing is one way to measure whether that specificity is in fact present in a given test suite.\"}],\"verify_with\":[\"test-coverage-strategy\",\"testing-strategy\"]}"
   concept: "{\"definition\":\"Mutation testing is a behavioral test-suite quality measurement in which the production code is automatically modified by small, syntactically-valid changes (mutants) and the test suite is run against each modified version. If the test suite fails on a mutant, the mutant is 'killed' — the tests caught the change. If the test suite still passes, the mutant 'survived' — the tests did not catch the change, which means the tests do not actually verify the behavior at that code location. The mutation score is the ratio of killed mutants to total (excluding equivalent mutants, which produce no observable behavior change despite the syntactic modification). Unlike code coverage, which measures whether the tests *reach* a piece of code, mutation testing measures whether the tests *verify* it.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/mutation-testing/SKILL.md
 ---

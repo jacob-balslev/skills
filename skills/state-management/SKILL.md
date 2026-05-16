@@ -4,7 +4,7 @@ description: "Use when deciding where state lives, how it propagates, and how it
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"rendering-models\",\"client-server-boundary\",\"frontend-architecture\",\"api-design\",\"state-machine-modeling\"],\"boundary\":[{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the line between code-that-runs-where (server components, client components, the serialization boundary); this skill owns the orthogonal question of which side owns which piece of state. They compose: the boundary skill says what code runs where; this skill says what state lives where.\"},{\"skill\":\"state-machine-modeling\",\"reason\":\"state-machine-modeling owns finite-state representation of workflows (states, transitions, guards); this skill owns the decision of where state of any kind lives. The two compose when a workflow has a finite state space whose value still has to live somewhere — the machine names the values, this skill names the location.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external request/response shape; this skill owns where the response data lives once it arrives, and how it's invalidated. Server state cache management (React Query / SWR doctrine) is in scope of this skill; the API surface itself is not.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the question of when content is generated (SSR, RSC, CSR, ISR); this skill owns the question of where data backing that content lives. The two intersect in 'server state' — data fetched on the server that the client needs.\"}],\"verify_with\":[\"rendering-models\",\"api-design\"]}"
   concept: "{\"definition\":\"State management is the architectural discipline of deciding, for each distinct piece of data that an application reads or writes, where that data lives, who owns it, how it propagates to the components that need it, and how it stays consistent across changes. The discipline is upstream of any specific state library: it asks 'should this be local, lifted, global, server-cached, URL-encoded, or persisted' before asking 'which library do I use to hold it.' State is not a single thing; it is a category with at least four distinct kinds (server state, client UI state, URL state, persistent state), each with different lifetimes, invalidation rules, and consistency requirements. The discipline is the recognition that treating all state the same — putting all of it in one global store, or scattering it across every component — produces the recurring frontend problems of prop drilling, stale data, broken back-buttons, and tests that pass while users are confused.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/state-management/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract

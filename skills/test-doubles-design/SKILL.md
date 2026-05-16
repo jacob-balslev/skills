@@ -4,7 +4,7 @@ description: "Use when designing or reviewing test doubles — the stand-in obje
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"testing-strategy\",\"test-driven-development\",\"refactor\",\"api-design\",\"type-safety\"],\"boundary\":[{\"skill\":\"test-driven-development\",\"reason\":\"test-driven-development owns the design discipline of writing the test before the production code; this skill owns the design of the stand-in objects those tests use. The two compose: TDD prescribes the rhythm; test-doubles-design prescribes the stand-ins.\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what to test at which level; this skill owns the tactical construction of the stand-ins that make a given test possible.\"},{\"skill\":\"refactor\",\"reason\":\"refactor owns behavior-preserving structural change; this skill owns the doubles whose over-use produces refactor-fragile tests. The two skills are read together when a test suite resists refactoring.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the design of an interface as a production contract; this skill owns the doubles that exercise that interface in tests. When test doubles drive interface decisions (London-school TDD), this skill and api-design overlap heavily.\"}],\"verify_with\":[\"test-driven-development\",\"refactor\"]}"
   concept: "{\"definition\":\"A test double is a stand-in object that replaces a real collaborator in a test so the test can run without the collaborator's real behavior. The term, from Meszaros's *xUnit Test Patterns*, generalizes a family of stand-ins — dummies, stubs, spies, fakes, and mocks — each defined by what the test expects of it. Doubles exist because real collaborators are often unavailable (external services), nondeterministic (time, network, randomness), slow (databases, file systems), expensive (paid APIs), or have side effects unacceptable in a test (sending email, charging cards). The discipline of test-doubles design is choosing the right kind of double for each test's purpose, recognizing that the choice determines what the test actually verifies — state or interaction — and what the test will reveal under refactoring.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/test-doubles-design/SKILL.md
 ---

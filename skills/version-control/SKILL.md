@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Git-centric. Patterns translate to other DAG-based version-control systems (Mercurial, Jujutsu) with tool-specific syntax substitutions. Centralized systems (SVN, CVS) lack cheap branching and most of this skill's discipline does not apply."
 allowed-tools: Read Grep Bash Edit
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/version-control/SKILL.md
 ---

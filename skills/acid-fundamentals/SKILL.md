@@ -4,7 +4,7 @@ description: "Use when reasoning about the four ACID properties of database tran
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"transaction-isolation\",\"cap-theorem-tradeoffs\",\"data-modeling\",\"replication-patterns\"],\"boundary\":[{\"skill\":\"transaction-isolation\",\"reason\":\"transaction-isolation owns the choice and semantics of isolation levels (read uncommitted, read committed, repeatable read, serializable, snapshot) — the 'I' of ACID specifically as a tunable. This skill owns ACID as the four-property foundational frame; transaction-isolation owns one of the four in operational depth.\"},{\"skill\":\"cap-theorem-tradeoffs\",\"reason\":\"cap-theorem-tradeoffs owns the distributed-systems frame (consistency, availability, partition tolerance) which uses 'consistency' in a different sense than the C in ACID. This skill owns the single-system transactional frame; cap-theorem-tradeoffs owns the distributed frame; conflating them is the most common misconception in this space.\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns schema design and entity structure; this skill owns the transactional-guarantee semantics that any data model relies on at runtime.\"},{\"skill\":\"replication-patterns\",\"reason\":\"replication-patterns owns the patterns for keeping multiple replicas in agreement; this skill owns the single-node transactional model from which distributed replication is a generalization (and often a relaxation of).\"}],\"verify_with\":[\"transaction-isolation\",\"cap-theorem-tradeoffs\"]}"
   concept: "{\"definition\":\"ACID is the acronym for four properties that a database transaction either provides or does not provide, defining the contract between the database and the application using it: Atomicity (the transaction either entirely happens or entirely does not — there is no partial state visible after a failure), Consistency (the transaction takes the database from one valid state to another valid state per the database's defined integrity constraints), Isolation (concurrent transactions do not see each other's intermediate states; each transaction observes the database as if it were the only transaction), Durability (once the transaction commits, its effects survive any subsequent failure including power loss). The four properties were codified by Härder and Reuter (1983) based on Jim Gray's earlier transaction model and have become the foundational vocabulary for relational and many NoSQL database systems. The strategic value of the ACID frame is that it names the four orthogonal guarantees the application can rely on, so that when a database advertises 'ACID compliance' or claims to relax some property, the conversation has precise vocabulary.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/acid-fundamentals/SKILL.md
 ---

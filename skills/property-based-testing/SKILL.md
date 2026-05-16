@@ -4,7 +4,7 @@ description: "Use when reasoning about tests that specify universal properties o
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: quality
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"testing-strategy\",\"test-driven-development\",\"type-safety\",\"mutation-testing\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what test levels to invest in; this skill owns one tactical technique (generative tests with universal properties) within that strategy. Property-based testing is a complement to example-based tests, not a replacement.\"},{\"skill\":\"mutation-testing\",\"reason\":\"mutation-testing measures whether the test suite catches code-level defects; property-based testing is one source of high-mutation-killing tests because universal properties tend to be specific about behavior across many inputs. They compose: PBT writes the tests; mutation testing measures their effectiveness.\"},{\"skill\":\"type-safety\",\"reason\":\"type-safety constrains the input space at compile time; property-based testing samples the runtime input space within the type-constraint envelope. Stronger types reduce the property-test surface needed; PBT is most valuable where types alone cannot encode the invariants (algorithmic correctness, business rules, round-trips).\"}],\"verify_with\":[\"testing-strategy\",\"mutation-testing\"]}"
   concept: "{\"definition\":\"Property-based testing is a tactical technique in which a test specifies a universal property — a claim that must hold for all inputs in a domain — and a test framework generates many random inputs in the domain and checks the property holds. When the property fails on some input, the framework shrinks the input to the smallest failing case to make the bug legible. The unit of specification is a forall-quantified claim, not a single example. Properties typically take three shapes: invariants (a property the output must always have, independent of the input), oracles (the output must equal what an alternative implementation computes), and round-trips (encoding then decoding produces the original value). Property-based testing supplements example-based testing rather than replacing it: examples specify particular behaviors; properties specify the universal contract.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/property-based-testing/SKILL.md
 ---

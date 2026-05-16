@@ -4,7 +4,7 @@ description: "Use when reasoning about how a system, user, or designer's interna
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: foundations
@@ -25,7 +25,7 @@ metadata:
   relations: "{\"related\":[\"reasoning\",\"conceptual-modeling\",\"knowledge-modeling\",\"user-research\",\"semantics\"],\"boundary\":[{\"skill\":\"conceptual-modeling\",\"reason\":\"conceptual-modeling owns the FORMAL representation of a domain (entities, attributes, relationships) for downstream use by schemas and APIs; this skill owns the COGNITIVE construct (how a mind represents the system), which is upstream of any formalism.\"},{\"skill\":\"knowledge-modeling\",\"reason\":\"knowledge-modeling owns the choice of representation paradigm (graphs, frames, rules, networks); this skill owns the discipline of reasoning about model-system fit before any paradigm is chosen.\"},{\"skill\":\"user-research\",\"reason\":\"user-research owns the methods for eliciting and validating user mental models empirically; this skill owns the framing of what a mental model is and how to reason about its accuracy.\"},{\"skill\":\"reasoning\",\"reason\":\"reasoning is the cognitive primitive of drawing inferences; mental models are the structures over which that reasoning operates. Reasoning uses models; this skill builds and audits them.\"}],\"verify_with\":[\"user-research\",\"reasoning\"]}"
   concept: "{\"definition\":\"A mental model is the internal representation a person carries of how a system, domain, or set of relationships behaves — used to predict outcomes, plan actions, and interpret feedback. Mental models are constructed (from experience, instruction, analogy, and inference), private (each mind holds its own), and partial (no model captures the full complexity of its referent). They are the cognitive scaffolding that makes the world tractable; they are also the silent source of most surprise, frustration, and bug-shaped misunderstanding. The discipline of mental-models is the explicit study of how these representations are built, where they diverge from the systems they represent, and how to bring multiple models into alignment when collaborators, users, and systems are working from different ones.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/mental-models/SKILL.md
 ---

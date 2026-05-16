@@ -4,7 +4,7 @@ description: "Use when reasoning about how a database schema changes over time w
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "4"
+  schema_version: "5"
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,7 +25,7 @@ metadata:
   anti_examples: "[\"execute one ALTER TABLE migration mechanically (use database-migration)\",\"design a schema from scratch (use data-modeling)\",\"diagnose a slow query (use query-optimization)\"]"
   concept: "{\"definition\":\"Schema evolution is the discipline of changing a database schema over time in a way that keeps deployed application code working. The unit of work is a *change to the schema* (add a column, rename a column, change a type, add a constraint, drop a column) that must be applied to a database serving an application that does not stop running. The central technique is expand/contract (Ambler & Sadalage 2006; also called parallel change): introduce the new shape *additively* without removing the old shape (expand), migrate the application to use the new shape, then remove the old shape (contract). The discipline is the *ordering* across migrations and deploys, the backwards-and-forwards-compatibility envelope each intermediate state must satisfy, and the rollback discipline that keeps the system recoverable when any step fails. The mechanical execution of any single migration is the concern of database-migration; the *sequence* of migrations and their relationship to application deploys is this skill's concern.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v4
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/schema-evolution/SKILL.md
 ---
