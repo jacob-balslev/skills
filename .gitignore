@@ -1,0 +1,8 @@
+# Ignore everything at the root level except the committed exports
+/*
+!/.gitignore
+!/README.md
+!/skills/
+node_modules/
+*.log
+.DS_Store

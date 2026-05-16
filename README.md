@@ -1,17 +1,36 @@
-# Skill Graph Marketplace Export
+# skills
 
-This directory is generated from the canonical Skill Metadata Protocol source in `skills/`.
-Do not edit generated files here by hand; run `node scripts/export-marketplace-skills.js` from the canonical repo.
+> Public open-source skill library for AI agent systems. Submit to [skills.sh](https://skills.sh).
 
-Canonical source repo: https://github.com/jacob-balslev/skill-graph
-Release target repo: jacob-balslev/skills
-Generated public skills: 133
+**137 skills** · Apache-2.0 · Maintained by [@jacob-balslev](https://github.com/jacob-balslev)
 
-Each skill under `skills/<name>/SKILL.md` is a plain Agent Skills-compatible export.
-Protocol fields are preserved as string values under `metadata`, with factual Skill Graph provenance.
+Each skill under `skills/<name>/SKILL.md` is a plain Agent Skills-compatible export in [Skill Metadata Protocol](https://github.com/jacob-balslev/skill-metadata-protocol) format.
 
-After the release target is published, install with:
+## Install
 
 ```bash
 npx skills add jacob-balslev/skills
 ```
+
+## Ecosystem
+
+| Repo | Purpose |
+|------|---------|
+| [skill-metadata-protocol](https://github.com/jacob-balslev/skill-metadata-protocol) | Protocol spec + JSON schemas |
+| [skill-graph](https://github.com/jacob-balslev/skill-graph) | Library tooling: lint, manifest, router, drift |
+| [skill-audit-loop](https://github.com/jacob-balslev/skill-audit-loop) | 5-phase audit procedure |
+| **skills** *(this repo)* | Public open-source skill library |
+
+## Generating skills
+
+Skills are exported from [skill-graph](https://github.com/jacob-balslev/skill-graph):
+
+```bash
+cd skill-graph && npm run marketplace:export
+```
+
+Then copy the output from `marketplace/skills/` into `skills/` in this repo and commit.
+
+## License
+
+Apache-2.0
