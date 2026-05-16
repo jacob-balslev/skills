@@ -18,7 +18,7 @@ metadata:
   routing_eval: absent
   comprehension_state: present
   stability: experimental
-  keywords: "[\"generative UI\",\"generative interface\",\"structured output\",\"component schema\",\"typed UI spec\",\"JSON Schema\",\"function calling UI\",\"RSC streaming UI\",\"model-rendered components\",\"assistant UI\",\"chat UI components\",\"widget palette\"]"
+  keywords: "[\"generative UI\",\"generative interface\",\"structured output\",\"component schema\",\"typed UI spec\",\"JSON Schema\",\"function calling UI\",\"RSC streaming UI\",\"model-rendered components\",\"assistant UI\",\"chat UI components\"]"
   triggers: "[\"the assistant should show a chart not a paragraph\",\"how does the model render a card\",\"structured output for UI\",\"is it safe to render what the model returned\",\"should this be a tool call or a UI emission\"]"
   examples: "[\"design the component schema for an assistant that can render a date picker, a chart, or a confirmation card depending on the question\",\"decide whether the model should emit a UI spec or call a tool that returns prerendered HTML\",\"explain why the model's output must be schema-validated before rendering\",\"design the interaction loop so a user clicking a button in a model-rendered card produces a follow-up turn the model can reason about\"]"
   anti_examples: "[\"design the JSON shape of an HTTP API endpoint (use api-design)\",\"decide the page-level rendering model (CSR vs SSR vs RSC) (use rendering-models)\",\"design the design-system component library itself (use design-system-architecture)\"]"

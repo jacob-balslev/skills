@@ -18,7 +18,7 @@ metadata:
   eval_state: unverified
   routing_eval: absent
   stability: experimental
-  keywords: "[\"command-palette\",\"command\",\"palette\"]"
+  keywords: "[\"command palette\",\"Cmd+K menu\",\"Cmd+K shortcut\",\"keyboard-driven navigation\",\"quick actions menu\",\"fuzzy search launcher\",\"cmdk library\"]"
   triggers: "[\"command-palette-skill\",\"cmd-k-skill\",\"keyboard-navigation-skill\",\"power-user-skill\",\"fuzzy-search-skill\"]"
   relations: "{\"related\":[\"information-architecture\"]}"
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
