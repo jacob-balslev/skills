@@ -2,7 +2,8 @@
 name: merge-queue
 description: "Use when serializing merges across multiple agent branches, resolving conflicts between agent outputs, or cleaning stale task branches. Covers atomic locking, idempotency checks, non-fast-forward handling, and worktree cleanup. Do NOT use for ordinary git operations outside an agent merge queue (use `version-control`)."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

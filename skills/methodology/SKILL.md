@@ -2,7 +2,8 @@
 name: methodology
 description: "Use when planning multi-step implementations, designing quality gates, establishing verification protocols, or building agent checklists calibrated to known failure modes. Covers methodology/method/process distinctions, Cleanroom, PSP/TSP, hypothesis-driven development, DMAIC, checklist design, V&V frameworks, EDDOps, quality gates, and PDCA. Do NOT use for code-review verdicts (use `code-review`), behavior-preserving implementation work (use `refactor`), or test strategy (use `testing-strategy`)."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

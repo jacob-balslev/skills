@@ -2,7 +2,8 @@
 name: guardrails
 description: "Use when planning or executing operations that touch protected files, credentials, destructive git commands, destructive SQL, PII, secrets, or irreversible system mutations. Covers proactive policy plus reactive pattern blocking for dangerous operations, data exfiltration, and unsafe mutations. Do NOT use for application input validation, user RBAC, or general code logic review (use `code-review`)."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

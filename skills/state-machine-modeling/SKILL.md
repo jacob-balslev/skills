@@ -2,7 +2,8 @@
 name: state-machine-modeling
 description: "Use when modeling lifecycle states, transitions, guards, events, side effects, invalid states, retries, and state invariants for workflows or domain objects. Do NOT use for broad event discovery (use `event-storming`), database schema design (use `data-modeling`), or observability instrumentation after the lifecycle already exists (use `observability-modeling`)."
 license: MIT
-compatibility: "Portable state-machine discipline for product workflows, domain lifecycles, retries, background jobs, and UI flow control."
+compatibility:
+  notes: "Portable state-machine discipline for product workflows, domain lifecycles, retries, background jobs, and UI flow control."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

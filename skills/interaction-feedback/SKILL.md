@@ -2,7 +2,8 @@
 name: interaction-feedback
 description: "Use when designing UI feedback around user actions and system state: loading, skeletons, optimistic updates, progress, success, errors, empty states, retries, disabled/pending states, autosave, undo, and perceived latency. Do NOT use for the words inside feedback (use `microcopy`), accessibility announcement mechanics (use `a11y`), business lifecycle modeling (use `state-machine-modeling`), or performance optimization (use `performance-engineering`)."
 license: MIT
-compatibility: Portable feedback-state design for web and app UI. Applies before framework-specific implementation and after task or interaction pattern selection.
+compatibility:
+  notes: "Portable feedback-state design for web and app UI. Applies before framework-specific implementation and after task or interaction pattern selection."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

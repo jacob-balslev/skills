@@ -2,7 +2,8 @@
 name: content-monitor
 description: "Use when building or operating multi-source intelligence pipelines across video, GitHub, Reddit, curated lists, search, and RSS feeds. Covers source adapters, discovery/transcription/summarization/evaluation phases, deduplication, schedules, model-stage choice, and actionable brief generation. Do NOT use for SEO keyword research (use `keywords`) or competitive product analysis (use `user-research`)."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

@@ -2,7 +2,8 @@
 name: a11y
 description: "Use when building or reviewing interactive UI, forms, navigation, or dynamic content. Covers semantic HTML, keyboard access, focus management, labeling, state-change announcement, and reduced-motion / high-contrast preferences. Do NOT use for color-palette creation, visual branding, feedback-state staging, or prose reading-level accessibility - those belong to `visual-design-foundations`, `interaction-feedback`, and documentation respectively."
 license: MIT
-compatibility: "Markdown, Git, any web stack"
+compatibility:
+  notes: "Markdown, Git, any web stack"
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

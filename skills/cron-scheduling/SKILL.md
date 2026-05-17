@@ -2,7 +2,8 @@
 name: cron-scheduling
 description: "This skill provides cron job architecture patterns for web applications: Inngest schedule integration, Vercel Cron configuration, retry logic, monitoring and alerting for failed crons, and idempotency requirements. Load when designing scheduled tasks, configuring cron triggers, debugging missed or duplicate executions, or implementing monitoring for recurring jobs."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

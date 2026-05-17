@@ -2,7 +2,8 @@
 name: refactor
 description: "Use when reorganizing existing code without changing external behavior — extracting functions, reducing duplication, renaming for clarity, splitting modules, or tightening structure. Covers behavior preservation, duplication reduction, decomposition, naming improvements, structural reorganization, and before/after verification. Do NOT use for bug investigation, adding new product behavior, or writing documentation (even when the docs describe the refactored code)."
 license: MIT
-compatibility: "Markdown, Git, any codebase"
+compatibility:
+  notes: "Markdown, Git, any codebase"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

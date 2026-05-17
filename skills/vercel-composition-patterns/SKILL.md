@@ -2,7 +2,8 @@
 name: vercel-composition-patterns
 description: "This skill provides React composition patterns that scale — compound components, render props, context providers, lifted state, and React 19 API changes. It applies when refactoring components with boolean prop proliferation, designing flexible component APIs, building reusable libraries, or reviewing component architecture — triggered by phrases like \\\"this component has too many props,\\\" \\\"design a compound component,\\\" \\\"make this more composable,\\\" \\\"refactor with render props,\\\" or \\\"component API design.\\\" Do NOT use for performance optimization — use react-best-practices instead."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

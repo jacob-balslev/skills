@@ -2,7 +2,8 @@
 name: debugging
 description: "Use when behavior is broken, a test is failing, or runtime output contradicts expectations. Covers failure reproduction, scope reduction by bisection, evidence capture at the moment of failure, root-cause isolation (not symptom patching), fix verification against the same evidence path, and regression-test creation. Do NOT use for feature planning, architectural design, or behavior-preserving refactor."
 license: MIT
-compatibility: "Markdown, Git, any codebase"
+compatibility:
+  notes: "Markdown, Git, any codebase"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

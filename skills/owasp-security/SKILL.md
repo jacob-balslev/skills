@@ -2,7 +2,8 @@
 name: owasp-security
 description: "Use when reviewing code for security vulnerabilities, threat-modelling a new feature, implementing authentication or authorization, handling user input, or auditing a codebase against the OWASP Top 10 (2021). Covers injection (SQL, NoSQL, command, LDAP, XSS), broken access control, cryptographic failures, insecure design, security misconfiguration, vulnerable dependencies, identification and authentication failures, software and data integrity failures, logging and monitoring failures, and server-side request forgery. Do NOT use for general code review (use `code-review` for the holistic per-PR pass), for chasing a known production bug (use `debugging`), or for writing a security policy doc (use `documentation`)."
 license: MIT
-compatibility: Language-agnostic; OWASP Top 10 2021 reference
+compatibility:
+  notes: "Language-agnostic; OWASP Top 10 2021 reference"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

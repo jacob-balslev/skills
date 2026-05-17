@@ -2,7 +2,8 @@
 name: form-ux-architecture
 description: "Use when designing or auditing form structure and validation UX: field grouping, required vs optional inputs, validation timing, client/server validation split, submission lifecycle, recovery, multi-step forms, and high-risk data entry. Do NOT use for labels and announcements alone (use `a11y`), validation-message wording (use `microcopy`), API schema design (use `api-design`), or stored data modeling (use `data-modeling`)."
 license: MIT
-compatibility: Portable form UX guidance for web and app forms. Client-side validation improves UX; server-side validation remains mandatory for trust and security.
+compatibility:
+  notes: "Portable form UX guidance for web and app forms. Client-side validation improves UX; server-side validation remains mandatory for trust and security."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

@@ -2,7 +2,8 @@
 name: agent-eval-design
 description: "Use when designing evaluations for AI agents, skills, routers, prompts, tool-use policies, or multi-step workflows: task sets, rubrics, graders, hard negatives, regression cases, traces, and acceptance thresholds. Do NOT use for application test planning (use `testing-strategy`), skill-library health tooling (use `skill-infrastructure`), or live debugging of a failed run (use `debugging`)."
 license: MIT
-compatibility: "Portable eval-design discipline for agent workflows, skill routers, prompt systems, and tool-use policies."
+compatibility:
+  notes: "Portable eval-design discipline for agent workflows, skill routers, prompt systems, and tool-use policies."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

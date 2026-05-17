@@ -2,7 +2,8 @@
 name: performance-engineering
 description: "Use when measuring, diagnosing, budgeting, or improving performance: latency, throughput, Core Web Vitals, database queries, caching, bundle size, concurrency, resource use, and regression prevention. Do NOT use for telemetry schema design alone (use `observability-modeling`), error capture setup (use `error-tracking`), or premature micro-optimization without a measured bottleneck."
 license: MIT
-compatibility: "Portable performance discipline for frontend, backend, databases, jobs, APIs, and agent tooling."
+compatibility:
+  notes: "Portable performance discipline for frontend, backend, databases, jobs, APIs, and agent tooling."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

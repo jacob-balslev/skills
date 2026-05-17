@@ -2,7 +2,8 @@
 name: project-knowledge-extraction
 description: "Use when extracting durable project knowledge from code, docs, issues, incidents, reports, screenshots, or conversations into reusable context such as skills, ADRs, glossaries, context docs, or memory. Do NOT use for writing a new skill contract (use `skill-scaffold`), maintaining library tooling (use `skill-infrastructure`), or generic documentation polish (use `documentation`)."
 license: MIT
-compatibility: Portable extraction workflow for turning project evidence into durable agent context without hallucinated project claims.
+compatibility:
+  notes: "Portable extraction workflow for turning project evidence into durable agent context without hallucinated project claims."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

@@ -2,7 +2,8 @@
 name: event-storming
 description: "Use when discovering a domain through events, commands, actors, policies, aggregates, read models, external systems, and temporal workflows before implementation. Do NOT use for event schema/topic contracts (use `event-contract-design`), webhook handler implementation (use `webhook-integration`), generic state transition modeling (use `state-machine-modeling`), or persistence schema design (use `data-modeling`)."
 license: MIT
-compatibility: "Portable event-storming discipline for product discovery, domain modeling, event-driven architecture, and workflow analysis."
+compatibility:
+  notes: "Portable event-storming discipline for product discovery, domain modeling, event-driven architecture, and workflow analysis."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

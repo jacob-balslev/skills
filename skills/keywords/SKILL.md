@@ -2,7 +2,8 @@
 name: keywords
 description: "Use when performing keyword research, building keyword strategy, optimizing product or marketplace listings, selecting terms for content, detecting cannibalization, or planning topical clusters. Covers seed expansion, intent mapping, topical clustering, marketplace keyword limits, long-tail POD/merch strategy, and tracking methodology. Do NOT use for full SEO implementation strategy (use `seo-strategy`), product copywriting (use `writing-humanizer`), or information architecture (use `information-architecture`)."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

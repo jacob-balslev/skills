@@ -2,7 +2,8 @@
 name: architecture-decision-records
 description: "Use when writing, reviewing, or updating Architecture Decision Records: context, decision, options rejected, consequences, status, supersession, and follow-up verification. Do NOT use for general documentation prose (use `documentation`), code review findings (use `code-review`), or choosing between frameworks before a decision exists (use `framework-fit-analysis`)."
 license: MIT
-compatibility: "Portable ADR discipline for Markdown decision logs, repo docs, design docs, and architecture governance."
+compatibility:
+  notes: "Portable ADR discipline for Markdown decision logs, repo docs, design docs, and architecture governance."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

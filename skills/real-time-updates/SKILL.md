@@ -2,7 +2,8 @@
 name: real-time-updates
 description: "This skill provides live data update patterns for web applications: webhook-to-UI push patterns, Server-Sent Events for dashboard updates, polling fallback strategies, optimistic updates, and stale data indicators. Load when implementing live dashboards, push notifications to the browser, real-time data refresh, or deciding between SSE, WebSocket, and polling."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

@@ -2,7 +2,8 @@
 name: skill-scaffold
 description: "Use when creating a new SKILL.md from scratch, adapting an existing skill to a different archetype, or teaching another author the canonical Skill Metadata Protocol frontmatter and body structure. Covers schema-conformant frontmatter, archetype-aware body layout, semantic-layer discipline (description vs Coverage), teaching-layer mechanics (TEMPLATE NOTE blockquotes), the lint-first authoring gate, and the routing-eval honesty rule. Do NOT use when modifying an already-written skill (edit it directly), when writing general technical documentation (use `documentation`), or when fixing a malformed skill detected by lint (use `graph-audit` for systematic library health, not authoring scaffold help)."
 license: MIT
-compatibility: "Markdown, YAML, JSON Schema"
+compatibility:
+  notes: "Markdown, YAML, JSON Schema"
 allowed-tools: Read Grep Bash Write Edit
 metadata:
   schema_version: 6

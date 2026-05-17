@@ -2,7 +2,8 @@
 name: prompt-craft
 description: "Use when writing, structuring, evaluating, or improving a prompt for an LLM — whether for one-shot completion, agent dispatch, sub-agent spawning, eval grading, or prompt-engineered tools. Covers role and instruction layering, context insertion order, few-shot example selection, output-format constraints, the negative-instruction principle, defence against adversarial input, and iterative prompt-improvement evaluation. Do NOT use when the task is reviewing AI-generated code (use `code-review`), authoring a SKILL.md (use `skill-scaffold`), or selecting which agent to dispatch (use `skill-router` for cross-skill dispatch decisions)."
 license: MIT
-compatibility: "Provider-agnostic; principles apply across Anthropic, OpenAI, Google, open-weight models"
+compatibility:
+  notes: "Provider-agnostic; principles apply across Anthropic, OpenAI, Google, open-weight models"
 allowed-tools: Read Grep Bash Edit
 metadata:
   schema_version: 6

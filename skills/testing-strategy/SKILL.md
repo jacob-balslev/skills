@@ -2,7 +2,8 @@
 name: testing-strategy
 description: "Use when planning tests for a bug fix, feature, or refactor — deciding what deserves a test, at which level, with what evidence. Covers test-scope decisions, test-level selection (unit / integration / contract / e2e), effort-to-risk matching, regression targeting, evidence quality, and failure-case coverage. Do NOT use for chasing a known failure (that is `debugging`), for pure doc writing (that is `documentation`), or for conceptual architecture discussion with no verification target (no dedicated skill — treat as strategy, not testing)."
 license: MIT
-compatibility: "Markdown, Git, any codebase"
+compatibility:
+  notes: "Markdown, Git, any codebase"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

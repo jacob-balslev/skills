@@ -2,7 +2,8 @@
 name: data-modeling
 description: "Use when designing logical or physical data structures: entities as stored data, keys, constraints, normalization, denormalization, provenance, lifecycle, indexing implications, and schema tradeoffs. Do NOT use for pre-implementation business concept discovery (use `conceptual-modeling`), migrations against an existing database (use `database-migration`), or formal ontology semantics (use `ontology-modeling`)."
 license: MIT
-compatibility: "Portable data-modeling discipline across relational, document, graph, event-sourced, and warehouse-style systems."
+compatibility:
+  notes: "Portable data-modeling discipline across relational, document, graph, event-sourced, and warehouse-style systems."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

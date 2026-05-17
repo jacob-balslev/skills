@@ -2,7 +2,8 @@
 name: conceptual-modeling
 description: "Use when translating business requirements into a structured domain model before database schemas, API endpoints, or DDD aggregates are named. Covers entities, attributes, relationships, cardinality, specialization/generalization, aggregation/composition, roles, abstraction levels, stakeholder validation, and modeling anti-patterns such as implementation leakage, god entities, phantom relationships, premature normalization, attribute-as-entity, and unnamed relationships. Do NOT use for database ER diagrams with keys and normalization, formal ontology axioms with OWL/RDFS, or DDD tactical design; use those dedicated skills instead."
 license: MIT
-compatibility: "Domain- and language-agnostic. The conceptual / logical / physical ladder applies across relational, document, graph, and event-sourced systems."
+compatibility:
+  notes: "Domain- and language-agnostic. The conceptual / logical / physical ladder applies across relational, document, graph, and event-sourced systems."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

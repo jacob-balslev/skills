@@ -2,7 +2,8 @@
 name: spec-driven-development
 description: "This skill provides Spec Driven Development (SDD) expertise for AI engineering: the Specify → Plan → Tasks → Implement lifecycle. Use when starting any non-trivial task, refactoring a core module, or when an agent loop has stalled due to ambiguous requirements. Do NOT use for one-line edits or README fixes."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

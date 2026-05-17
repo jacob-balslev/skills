@@ -2,7 +2,8 @@
 name: mobile-responsive-ux
 description: "This skill provides mobile-specific UX patterns for SaaS dashboards: touch-friendly targets (44px minimum), thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, and pull-to-refresh. Load when designing for mobile users, implementing touch interactions, building responsive dashboard layouts, or optimizing for the Side Hustler persona who checks on mobile."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

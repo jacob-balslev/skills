@@ -2,7 +2,8 @@
 name: linguistics
 description: "Use when choosing names for files/functions/variables/types/columns, writing or reviewing UI copy/error/onboarding text, disambiguating overloaded terms, or matching tone to end-user/agent/developer audiences. Covers morphology, compound-word order, abbreviation policy, verb-noun rules, polysemy resolution, audience register, blame-free error-message structure, and cross-cultural product-copy awareness. Do NOT use for casing conventions (use naming-conventions), doc structure/type selection (use documentation), or call-site-wide renames (use refactor)."
 license: MIT
-compatibility: "Provider-/runtime-/stack-agnostic. The morphology, polysemy, register, and error-message rules apply to any software product written in any human-spoken language; the casing-convention table is illustrative for typical OSS stacks (TypeScript, SQL, CSS, Python) — substitute the conventions of your own stack."
+compatibility:
+  notes: "Provider-/runtime-/stack-agnostic. The morphology, polysemy, register, and error-message rules apply to any software product written in any human-spoken language; the casing-convention table is illustrative for typical OSS stacks (TypeScript, SQL, CSS, Python) — substitute the conventions of your own stack."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

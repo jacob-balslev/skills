@@ -2,7 +2,8 @@
 name: information-architecture
 description: "Use when structuring information for findability: navigation, page hierarchy, docs architecture, sitemap shape, labeling systems, wayfinding, and content grouping. Do NOT use for formal category-governance work (use `taxonomy-design`), responsive page composition (use `layout-composition`), component/token architecture (use `design-system-architecture`), or sentence-level UI text (use `microcopy`)."
 license: MIT
-compatibility: "Portable IA guidance for apps, documentation, dashboards, admin tools, and skill libraries."
+compatibility:
+  notes: "Portable IA guidance for apps, documentation, dashboards, admin tools, and skill libraries."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

@@ -2,7 +2,8 @@
 name: design-system-architecture
 description: "Use when designing or auditing a design system's architecture: token taxonomy, semantic tokens, component APIs, theming, accessibility contracts, documentation, governance, and migration strategy. Do NOT use for information hierarchy and navigation (use `information-architecture`), page-specific layout (use `layout-composition`), visual craft direction (use `visual-design-foundations`), sentence-level UI copy (use `microcopy`), or accessibility-only audits (use `a11y`)."
 license: MIT
-compatibility: "Portable design-system architecture guidance for web and app component systems, token systems, and multi-theme UI libraries."
+compatibility:
+  notes: "Portable design-system architecture guidance for web and app component systems, token systems, and multi-theme UI libraries."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

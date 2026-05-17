@@ -2,7 +2,8 @@
 name: system-interface-contracts
 description: "Use when defining or reviewing contracts between systems, modules, services, agents, jobs, events, APIs, or teams: ownership, inputs, outputs, invariants, compatibility, errors, idempotency, and versioning. Do NOT use for REST resource design alone (use `api-design`), async event contract detail (use `event-contract-design`), database schemas (use `data-modeling`), or post-failure debugging (use `debugging`)."
 license: MIT
-compatibility: "Portable contract-design discipline across code modules, services, queues, APIs, webhooks, jobs, and agent interfaces."
+compatibility:
+  notes: "Portable contract-design discipline across code modules, services, queues, APIs, webhooks, jobs, and agent interfaces."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

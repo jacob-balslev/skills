@@ -2,7 +2,8 @@
 name: background-jobs
 description: "This skill provides background job patterns for web applications: job queue architecture, long-running sync operations, progress tracking and reporting, failure handling and retry, job prioritization, and concurrency management. Load when implementing async processing, building job queues, designing progress indicators for long operations, or handling failure recovery for background work."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

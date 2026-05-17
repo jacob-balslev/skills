@@ -2,7 +2,8 @@
 name: semantics
 description: "Use when naming artifacts across code, APIs, design tokens, commits, HTTP/status signals, UI labels, error codes, or branded types, especially when a name feels ambiguous or misleading. Covers cross-domain meaning-encoding: naming smells, DDD ubiquitous language, SemVer, conventional commits, branded types, semantic design tokens/CSS/APIs, semantic UI affordances, and naming anti-patterns. Do NOT use for word morphology/polysemy (use linguistics), casing formats (use naming-conventions), typed concept relations (use semantic-relations), or in-product UI-text patterns (use microcopy)."
 license: MIT
-compatibility: "Cross-domain naming and meaning skill, stack-agnostic. The naming-smells catalogue, SemVer rules, conventional-commit format, three-layer token architecture, HTTP-status semantics, REST/GraphQL conventions, and anti-pattern catalog apply to any codebase; example identifiers use generic e-commerce framings — substitute the equivalents from your domain."
+compatibility:
+  notes: "Cross-domain naming and meaning skill, stack-agnostic. The naming-smells catalogue, SemVer rules, conventional-commit format, three-layer token architecture, HTTP-status semantics, REST/GraphQL conventions, and anti-pattern catalog apply to any codebase; example identifiers use generic e-commerce framings — substitute the equivalents from your domain."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

@@ -2,7 +2,8 @@
 name: observability-modeling
 description: "Use when designing telemetry semantics before or during implementation: logs, metrics, traces, events, spans, attributes, correlation IDs, SLOs, alert signals, and diagnostic questions. Do NOT use for domain/business event contracts (use `event-contract-design`), configuring an error tracker alone (use `error-tracking`), performance optimization (use `performance-engineering`), or debugging a current incident (use `debugging`)."
 license: MIT
-compatibility: "Portable observability modeling discipline for applications, integrations, jobs, queues, APIs, and agent workflows."
+compatibility:
+  notes: "Portable observability modeling discipline for applications, integrations, jobs, queues, APIs, and agent workflows."
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

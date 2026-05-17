@@ -2,7 +2,8 @@
 name: graph-audit
 description: "Use when checking that every SKILL.md conforms to the schema, that manifest entries match authored frontmatter, or that relation targets point at real sibling skills. Covers schema conformance, manifest sync, relation integrity, eval-artifact coherence, grounding presence, and name-directory parity. Do NOT use for general code review, runtime agent debugging, or auditing non-skill files."
 license: MIT
-compatibility: "Markdown, JSON Schema, Node.js"
+compatibility:
+  notes: "Markdown, JSON Schema, Node.js"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

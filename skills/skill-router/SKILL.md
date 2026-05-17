@@ -2,7 +2,8 @@
 name: skill-router
 description: "Use when routing an agent request across multiple skills, building or auditing a routing table, detecting routing coverage gaps, or answering questions like 'which skill handles this?', 'who routes X?', or 'why did skill A activate instead of B?'. Covers trigger-label matching, file-path matching, keyword matching, description-based semantic matching, scope/type tiebreakers, and coverage-gap detection. Do NOT use when the target skill is already known (load it directly), when authoring a new skill (use `skill-metadata-template` instead), or when evaluating a SINGLE skill's quality (use `graph-audit`)."
 license: MIT
-compatibility: "Markdown, YAML, any agent runtime"
+compatibility:
+  notes: "Markdown, YAML, any agent runtime"
 allowed-tools: Read Grep
 metadata:
   schema_version: 6

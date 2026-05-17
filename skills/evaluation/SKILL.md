@@ -2,7 +2,8 @@
 name: evaluation
 description: "This skill provides a structured framework for automated agentic evaluation and human feedback loops. It defines the 'Critic' persona, the 5-point quality scale, and the mandatory 'Evaluation-Revision' loop for all critical work."
 license: MIT
-compatibility: "Markdown, Git, agent-skill runtimes"
+compatibility:
+  notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
 metadata:
   schema_version: 6

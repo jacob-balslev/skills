@@ -2,7 +2,8 @@
 name: naming-conventions
 description: "Use when naming a new file, function, variable, type, route, database column, environment variable, or any other code or system artifact. Covers identifier morphology (verb-noun choice, plural vs singular, prefix/suffix conventions), kebab-case vs camelCase vs snake_case vs PascalCase per artifact kind, abbreviation rules, name-vs-path semantics, the rename-coordination workflow, and detection of names that lie. Do NOT use for content writing (use `documentation`), for restructuring already-named code (use `refactor`), or for human-language copy in product UI (separate skill, not in this library)."
 license: MIT
-compatibility: Language-agnostic
+compatibility:
+  notes: "Language-agnostic"
 allowed-tools: Read Grep Bash Edit
 metadata:
   schema_version: 6
