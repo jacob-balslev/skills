@@ -5,6 +5,39 @@ license: MIT
 compatibility:
   notes: "Library- and harness-agnostic. Patterns apply to any skill-style library (Skill Graph, Claude skills, Cursor rules, custom in-house skill systems). Specific tool names in this skill (skill-lint, generate-manifest, routing-eval, drift-sentinel) are concrete examples from the Skill Graph reference implementation -- substitute your library's equivalents."
 allowed-tools: Read Grep Bash Edit Write
+grounding:
+  domain_object: "Deterministic health tooling for Skill Graph libraries"
+  grounding_mode: "hybrid"
+  truth_sources:
+    - package.json
+    - bin/skill-graph.js
+    - scripts/skill-lint.js
+    - scripts/lib/roots.js
+    - scripts/check-protocol-consistency.js
+    - scripts/generate-manifest.js
+    - scripts/skill-graph-drift.js
+    - scripts/skill-overlap.js
+    - scripts/skill-graph-routing-eval.js
+    - docs/manifest-field-mapping.md
+  failure_modes:
+    - health_tooling_categories_missing_from_ci
+    - protocol_mapping_drift
+    - eval_thresholds_become_self_attested
+    - overlap_or_drift_checks_not_run_after_batch_changes
+  evidence_priority: "repo_code_first"
+drift_check:
+  last_verified: "2026-05-18"
+  truth_source_hashes:
+    "package.json": "2f480e50b8eecaa022caf065b5bb98db5db407f4e3ff8553a092a3f70750edba"
+    "bin/skill-graph.js": "3048b6e2d9e648a25efa38152578217eaf230716c1dabc921e8f8d944164ec8b"
+    "scripts/skill-lint.js": "e5de8a822b88172079263c8316b173e688b71498c9ed6a8a54dd0fba6aa9fd66"
+    "scripts/lib/roots.js": "49085fc54b2c6ff0ad23a2dffe25b5ab2b3d1e8d14a8d5b1e1eefb53a30f20de"
+    "scripts/check-protocol-consistency.js": "22f1f747b6b578e83ae371ac3f9af4b6906d94529f383d1785ed3303b4c5a008"
+    "scripts/generate-manifest.js": "ec4ad89e21e44c272676846377679f59a272c193f0b0d448a7b6d881b0b9effc"
+    "scripts/skill-graph-drift.js": "350f624a6e82bb488cd9abd3be4d832ca7892ce1c7f27d39efd97326e1f04db6"
+    "scripts/skill-overlap.js": "ed642cbc677cc76ec1321300b37d6752337b6b5541c7a9f558fd315d6f934e4b"
+    "scripts/skill-graph-routing-eval.js": "fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb"
+    "docs/manifest-field-mapping.md": "8de06aa16e23c219da1f5f2ec38b5b29aa912ad577377c8422e2300cdd77ee90"
 metadata:
   schema_version: 6
   version: "1.0.0"

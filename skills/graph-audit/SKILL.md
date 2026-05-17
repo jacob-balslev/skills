@@ -5,6 +5,36 @@ license: MIT
 compatibility:
   notes: "Markdown, JSON Schema, Node.js"
 allowed-tools: Read Grep Bash
+grounding:
+  domain_object: "Skill Metadata Protocol and Skill Graph manifest consistency"
+  grounding_mode: "repo_specific"
+  truth_sources:
+    - schemas/skill.schema.json
+    - schemas/manifest.schema.json
+    - docs/skill-metadata-protocol.md
+    - scripts/skill-lint.js
+    - scripts/lib/alias-contract.js
+    - scripts/check-protocol-consistency.js
+    - scripts/generate-manifest.js
+    - examples/evals/graph-audit.json
+  failure_modes:
+    - schema_drift
+    - manifest_sample_out_of_sync
+    - broken_relation_targets
+    - eval_artifacts_mismatch
+    - name_directory_mismatch
+  evidence_priority: "repo_code_first"
+drift_check:
+  last_verified: "2026-05-18"
+  truth_source_hashes:
+    "schemas/skill.schema.json": "f9fc4fc8f61999c18d5c1c534f9642101b0ee7173f261e28f9470aeb03b68e5b"
+    "schemas/manifest.schema.json": "94f2e990cc81b7a9aa26ea9855de1dbe1535a127feb5e5c74629c9e1dad2ee1a"
+    "docs/skill-metadata-protocol.md": "300bbdaf87754298ca19e581b587d2fac901ab57b8c4c75d33e11bebc24a5fe4"
+    "scripts/skill-lint.js": "e5de8a822b88172079263c8316b173e688b71498c9ed6a8a54dd0fba6aa9fd66"
+    "scripts/lib/alias-contract.js": "d2a9831fef1ab06d2ea37b9d41e000d8b3a9a327357b62063ad00102cd2763cf"
+    "scripts/check-protocol-consistency.js": "22f1f747b6b578e83ae371ac3f9af4b6906d94529f383d1785ed3303b4c5a008"
+    "scripts/generate-manifest.js": "ec4ad89e21e44c272676846377679f59a272c193f0b0d448a7b6d881b0b9effc"
+    "examples/evals/graph-audit.json": "4fc0fa157b363c9d5675112bfe860ed48a599d05c41720b387aa2d8798eab5a3"
 metadata:
   schema_version: 6
   version: "1.0.0"

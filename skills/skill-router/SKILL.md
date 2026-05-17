@@ -5,6 +5,27 @@ license: MIT
 compatibility:
   notes: "Markdown, YAML, any agent runtime"
 allowed-tools: Read Grep
+grounding:
+  domain_object: "Skill Graph reference routing behavior"
+  grounding_mode: "repo_specific"
+  truth_sources:
+    - scripts/skill-graph-route.js
+    - scripts/skill-graph-routing-eval.js
+    - examples/evals/skill-router.json
+    - examples/evals/skill-router.routing.json
+  failure_modes:
+    - negation_paths_score_as_positive_matches
+    - routing_eval_claim_without_harness_pass
+    - boundary_exclusion_removes_stronger_match
+    - coverage_gap_silently_falls_back
+  evidence_priority: "repo_code_first"
+drift_check:
+  last_verified: "2026-05-18"
+  truth_source_hashes:
+    "scripts/skill-graph-route.js": "7c29b1bc2420887f32809b8f52f5bd448c1234542672e669a68247942dd77df4"
+    "scripts/skill-graph-routing-eval.js": "fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb"
+    "examples/evals/skill-router.json": "fccabcbc5f9d8057536f397fb0fc71a567371f75fb9a21afda343b197af30293"
+    "examples/evals/skill-router.routing.json": "c4dc88db1e746bea78a7cf96b50c6c84532a07eda42da2e35d790c8928d4da8c"
 metadata:
   schema_version: 6
   version: "1.0.0"

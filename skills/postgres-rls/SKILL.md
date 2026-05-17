@@ -5,6 +5,32 @@ license: MIT
 compatibility:
   notes: "Targets PostgreSQL 15+ with Neon serverless driver. The security_invoker view pattern requires PG15+. The SET LOCAL / set_config(key, val, true) pattern applies to any connection-pooled PostgreSQL setup. Core ENABLE+FORCE+USING+WITH CHECK rules are PG version-independent."
 allowed-tools: Read Grep Glob Bash
+grounding:
+  domain_object: "PostgreSQL Row Level Security implementation in Sales Hub"
+  grounding_mode: "repo_specific"
+  truth_sources:
+    - ../sales-hub/apps/web/src/lib/db.ts
+    - ../sales-hub/db/migrations/20260218_rls_hardening.sql
+    - ../sales-hub/db/migrations/20260314_rls_expansion.sql
+    - ../sales-hub/db/migrations/20260314_rls_with_check_and_security_invoker.sql
+    - ../sales-hub/db/migrations/20260315_enable_rls_all.sql
+  failure_modes:
+    - security_leak
+    - incorrect_isolation
+    - missing_force_rls
+    - missing_with_check
+    - superuser_bypass
+    - connection_pool_context_leakage
+    - view_security_invoker_missing
+  evidence_priority: "repo_code_first"
+drift_check:
+  last_verified: "2026-05-18"
+  truth_source_hashes:
+    "../sales-hub/apps/web/src/lib/db.ts": "d1d9988d1da4545c58f76b5f44dbd12d5323409b777920d31d5f496db31ad7cb"
+    "../sales-hub/db/migrations/20260218_rls_hardening.sql": "b5fb6dc74e78a3fb7e77c669af4e4b4303a4e995eaf4993cb6bdcbe7bdca424f"
+    "../sales-hub/db/migrations/20260314_rls_expansion.sql": "406e2c419b09a6866f10c508e4ff6dc1f7a1ee82b788c5e2515186561c30ffb5"
+    "../sales-hub/db/migrations/20260314_rls_with_check_and_security_invoker.sql": "2edcb51debd4ab4e7306eb6f8908c7a725217b19962e1429728e911fc57e88fb"
+    "../sales-hub/db/migrations/20260315_enable_rls_all.sql": "c8de6823684f84b54376284a3a51bb6b52e38acd4f5c29664be26e89e5d39570"
 metadata:
   schema_version: 6
   version: "1.1.0"
