@@ -4,7 +4,7 @@ description: "Use when designing or reviewing React Server Components: what an R
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "5"
+  schema_version: 6
   version: "1.0.0"
   type: capability
   category: engineering

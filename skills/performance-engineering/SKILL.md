@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Portable performance discipline for frontend, backend, databases, jobs, APIs, and agent tooling."
 allowed-tools: Read Grep
 metadata:
-  schema_version: "5"
+  schema_version: 6
   version: "1.0.0"
   type: capability
   category: quality

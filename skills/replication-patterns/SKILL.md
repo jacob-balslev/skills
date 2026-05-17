@@ -4,7 +4,7 @@ description: "Use when designing how a database keeps multiple copies of its dat
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "5"
+  schema_version: 6
   version: "1.0.0"
   type: capability
   category: engineering

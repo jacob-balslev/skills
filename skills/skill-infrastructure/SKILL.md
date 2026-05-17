@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Library- and harness-agnostic. Patterns apply to any skill-style library (Skill Graph, Claude skills, Cursor rules, custom in-house skill systems). Specific tool names in this skill (skill-lint, generate-manifest, routing-eval, drift-sentinel) are concrete examples from the Skill Graph reference implementation -- substitute your library's equivalents."
 allowed-tools: Read Grep Bash Edit Write
 metadata:
-  schema_version: "5"
+  schema_version: 6
   version: "1.0.0"
   type: capability
   category: agent

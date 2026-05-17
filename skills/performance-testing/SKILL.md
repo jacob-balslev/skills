@@ -4,7 +4,7 @@ description: "Use when measuring a system's non-functional properties — latenc
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: "5"
+  schema_version: 6
   version: "1.0.0"
   type: capability
   category: quality

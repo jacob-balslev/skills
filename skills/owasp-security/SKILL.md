@@ -5,7 +5,7 @@ license: MIT
 compatibility: Language-agnostic; OWASP Top 10 2021 reference
 allowed-tools: Read Grep Bash
 metadata:
-  schema_version: "5"
+  schema_version: 6
   version: "1.0.0"
   type: capability
   category: quality

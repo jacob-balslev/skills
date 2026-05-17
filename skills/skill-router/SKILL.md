@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Markdown, YAML, any agent runtime"
 allowed-tools: Read Grep
 metadata:
-  schema_version: "5"
+  schema_version: 6
   version: "1.0.0"
   type: router
   category: agent

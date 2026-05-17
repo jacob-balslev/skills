@@ -5,7 +5,7 @@ license: MIT
 compatibility: Portable form UX guidance for web and app forms. Client-side validation improves UX; server-side validation remains mandatory for trust and security.
 allowed-tools: Read Grep
 metadata:
-  schema_version: "5"
+  schema_version: 6
   version: "1.0.0"
   type: capability
   category: design

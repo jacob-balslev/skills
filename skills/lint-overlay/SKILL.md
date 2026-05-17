@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Markdown, Git, any codebase with a lint tool"
 allowed-tools: Read Grep Bash
 metadata:
-  schema_version: "5"
+  schema_version: 6
   version: "1.0.0"
   type: overlay
   category: quality
