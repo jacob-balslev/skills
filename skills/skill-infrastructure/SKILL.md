@@ -40,15 +40,15 @@ drift_check:
     "docs/manifest-field-mapping.md": "8de06aa16e23c219da1f5f2ec38b5b29aa912ad577377c8422e2300cdd77ee90"
 metadata:
   schema_version: 6
-  version: "1.0.0"
+  version: "1.1.0"
   type: capability
   category: agent
   domain: agent/skill-system
   scope: portable
   owner: skill-graph-maintainer
-  freshness: "2026-05-13"
-  drift_check: "{\"last_verified\":\"2026-05-13\",\"truth_source_hashes\":{\"package.json\":\"7a3410a004aea78a2065092e289c0f3cf3c082298804dda6c5829eff22c14b62\",\"bin/skill-graph.js\":\"113a1e01ac7276ac1b5d77a1c32e35a73113da93fc33cfd0caf6db842d2d679f\",\"scripts/skill-lint.js\":\"3a78f75f8921542b91dc619cd41bde29bf379de3c16bdcf3653c854ecbe9fa29\",\"scripts/lib/roots.js\":\"e742efa57b6c33ff1c87034b16a689d1499f6d53c1e6b740f3e9783db7fd557f\",\"scripts/check-protocol-consistency.js\":\"0ff39406d36e7a9e51c176f657f4f426d8bd5a3fe6411d28b9e9a93dc7d89f29\",\"scripts/generate-manifest.js\":\"9d7bbbdae440fdb1763d61ffa7bda10c9efae92359d1c2139d0e971582d59e0e\",\"scripts/skill-graph-drift.js\":\"6b69c25b59c16b477a377e5ab40adb6ff30f72d5a12947772053a6cd16b1f409\",\"scripts/skill-overlap.js\":\"ed642cbc677cc76ec1321300b37d6752337b6b5541c7a9f558fd315d6f934e4b\",\"scripts/skill-graph-routing-eval.js\":\"fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb\",\"docs/manifest-field-mapping.md\":\"aca0b7f2d4631be24a3e7daed1a1d207b488f253164a7d514b9db7af21c6177f\"}}"
-  eval_artifacts: planned
+  freshness: "2026-05-18"
+  drift_check: "{\"last_verified\":\"2026-05-18\",\"truth_source_hashes\":{\"package.json\":\"7a3410a004aea78a2065092e289c0f3cf3c082298804dda6c5829eff22c14b62\",\"bin/skill-graph.js\":\"113a1e01ac7276ac1b5d77a1c32e35a73113da93fc33cfd0caf6db842d2d679f\",\"scripts/skill-lint.js\":\"3a78f75f8921542b91dc619cd41bde29bf379de3c16bdcf3653c854ecbe9fa29\",\"scripts/lib/roots.js\":\"e742efa57b6c33ff1c87034b16a689d1499f6d53c1e6b740f3e9783db7fd557f\",\"scripts/check-protocol-consistency.js\":\"0ff39406d36e7a9e51c176f657f4f426d8bd5a3fe6411d28b9e9a93dc7d89f29\",\"scripts/generate-manifest.js\":\"9d7bbbdae440fdb1763d61ffa7bda10c9efae92359d1c2139d0e971582d59e0e\",\"scripts/skill-graph-drift.js\":\"6b69c25b59c16b477a377e5ab40adb6ff30f72d5a12947772053a6cd16b1f409\",\"scripts/skill-overlap.js\":\"ed642cbc677cc76ec1321300b37d6752337b6b5541c7a9f558fd315d6f934e4b\",\"scripts/skill-graph-routing-eval.js\":\"fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb\",\"docs/manifest-field-mapping.md\":\"aca0b7f2d4631be24a3e7daed1a1d207b488f253164a7d514b9db7af21c6177f\"}}"
+  eval_artifacts: present
   eval_state: unverified
   routing_eval: absent
   stability: experimental
@@ -266,6 +266,10 @@ Every eval case with an `expectations` array must include at least one expectati
 | `edge-case` | Tests unusual inputs or rare conditions |
 | `business-model` | Tests domain-specific logic (e.g. SaaS billing rules, e-commerce fulfilment) |
 | `negative` | Tests refusal or correct non-action |
+
+## Evals
+
+This skill ships `evals/evals.json` with scenario coverage for the five health-tooling categories, negative-expectation discipline, dirty-tree manifest writes, imperative-conflict triage, routing-gap hygiene, drift states, and boundary routing. The evals are portable by design: they test the skill-system discipline rather than one repository's implementation details.
 
 ## Maintenance Workflows
 
