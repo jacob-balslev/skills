@@ -187,10 +187,18 @@ The defence:
 
 ```bash
 # Right — for tracked files: build a temporary index from these paths only
-git commit --only -- path/one path/two -m "..."
+git commit --only -m "..." -- path/one path/two
 
 # Right — for new files: add first, then commit with --only
 git add path/one path/two
+git commit --only -m "..." -- path/one path/two
+
+# Right — for multi-line messages: use -F with a temp file
+printf 'subject\n\nbody\n' > /tmp/msg
+git commit --only -F /tmp/msg -- path/one path/two
+
+# Wrong — `-m` AFTER `--` is parsed as a pathspec, not a flag.
+# git fails with: error: pathspec '-m' did not match any file(s) known to git
 git commit --only -- path/one path/two -m "..."
 
 # Wrong — picks up whatever a parallel session has staged
@@ -199,6 +207,8 @@ git commit -m "..."
 ```
 
 `--only` builds a transient index containing only the listed paths and commits from that. Whatever a parallel session has in the real index is left untouched for that session to commit. The safety window closes at the `git commit --only` call, not at the `git add`.
+
+**Flag ordering rule:** Everything after `--` is a path to git. Put `-m`, `-F`, and other flags BEFORE `--`, paths AFTER it. Both Tier 1 solvers in the 2026-05-18 post-v0.5.7 skill-graph cleanup hit the `-m`-after-`--` failure; Issue 3 worked around with `-F /tmp/file`.
 
 After every commit, verify the file list:
 
