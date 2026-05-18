@@ -7,15 +7,15 @@ compatibility:
 allowed-tools: Read Grep
 metadata:
   schema_version: 6
-  version: "1.1.0"
+  version: "1.2.0"
   type: capability
   category: design
   domain: design/semantics
   scope: portable
   owner: skill-graph-maintainer
-  freshness: "2026-05-16"
-  drift_check: "{\"last_verified\":\"2026-05-16\"}"
-  eval_artifacts: present
+  freshness: "2026-05-18"
+  drift_check: "{\"last_verified\":\"2026-05-18\"}"
+  eval_artifacts: planned
   eval_state: unverified
   routing_eval: absent
   comprehension_state: present
@@ -37,11 +37,12 @@ metadata:
   analogy: "Semiotics is to interface design what choreography is to a play — the words are the script, but the actor's stance, hand position, gaze direction, and proximity to other actors are the choreography. A line that lands flat with the wrong choreography lands well with the right one; same words, different signs. A disabled button that uses only a paler color (signifier too quiet) is a stage actor whispering an exit cue the audience cannot hear."
   misconception: |
     The wrong mental model is that *visual design is taste* and that sign-system audits are aesthetic preferences. They are not — *every interface element is communicating something whether the designer intended or not*, and the question is whether the communication is intentional and coherent. Adjacent misconceptions: that *color alone can signal state* (it cannot — the never-color-alone rule is not preference but accessibility and clarity: ~8% of males have deuteranopia; the WCAG 1.4.1 success criterion codifies this; pair with icon, text, or shape); that *direction equals judgment* (it does not — Barthes' denotation/connotation distinction: an *increase* is direction; *good* is judgment; in financial UI, a 30% increase in COGS is denotationally an increase but connotationally bad; using green-up-arrow conflates them); that *one icon means one thing universally* (it does not — icon polysemy is the most common UI sign failure; the gear icon means "settings" in one product and "preferences" in another and "build" in yet another; either follow strong existing convention or pair with text); that *abstract marks gain meaning with exposure* (they sometimes do, but require pairing-with-text until learned; the floppy-disk save icon was symbol once, learned for decades, now obsolete metaphor — users under 25 don't recognize the referent); that *disabled states need only a color change* (they do not — disabled states need a *strong anti-affordance*: greying alone is too subtle, and combined with hover effects can read as "loading" rather than "unavailable"); and that *code naming and visual signs are separate concerns* (they are not — `processData()` is a signifier failure for the same reason the gear icon's polysemy is: the sign forces inference rather than transferring meaning).
-  concept: "{\"definition\":\"Semiotics is the study of *sign systems* — how signifiers (perceivable forms: icons, colors, shapes, positions, words) point to signifieds (concepts, states, actions) via convention, resemblance, or causal connection. Applied to interfaces, it is the discipline of designing and auditing the multi-channel sign systems through which a product communicates with its users. Drawing from Peirce's icon/index/symbol trichotomy, Saussure's signifier/signified dyad, Barthes' denotation/connotation/myth layering, and Norman's affordance theory, it treats every interface element as a sign whose meaning is constructed, not given.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  concept: "{\"definition\":\"Semiotics is the study of sign systems: how signifiers such as icons, colors, shapes, positions, words, names, and interaction cues point to signified concepts, states, actions, or judgments through resemblance, causal trace, convention, and cultural association.\",\"mental_model\":\"Treat an interface as a layered sign system. Peirce helps classify icon, index, and symbol; Saussure separates signifier from signified; Barthes separates denotation, connotation, and myth; Norman's signifiers connect perceivable cues to expected action. A good surface aligns those layers so the user reads the intended meaning without extra inference.\",\"purpose\":\"It makes implicit communication explicit before users misread the product. The goal is to prevent sign drift, color-only state signaling, icon polysemy, misleading affordances, and code/API names that force readers to inspect implementation before they understand intent.\",\"boundary\":\"It owns sign-to-meaning analysis across visual and textual systems, not the final wording, visual craft, accessibility compliance, formal ontology, database modeling, or morphology rules.\",\"taxonomy\":\"Core lenses include Peircean icon/index/symbol, Saussurean signifier/signified, Barthesian denotation/connotation/myth, affordance/signifier/anti-affordance, color-as-sign, shape/position channels, icon-system coherence, and code/API signifiers.\",\"analogy\":\"Semiotics is like stage direction for an interface: the words matter, but gesture, placement, lighting, costume, and timing tell the audience what the scene means before anyone explains it.\",\"misconception\":\"The common mistake is treating sign-system failures as taste or polish. They are communication failures: if green signals good in one place and bad in another, or a non-interactive label looks clickable, the system is teaching users the wrong language.\"}"
+  grounding: "{\"domain_object\":\"Interface sign-system analysis for icons, color, badges, affordances, visual metaphors, and code/API signifiers\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://plato.stanford.edu/archives/spr2024/entries/peirce-semiotics/\",\"https://openlibrary.org/books/OL23291521M/Course_in_general_linguistics.\",\"https://openlibrary.org/books/OL21215289M/Mythologies\",\"https://jnd.org/signifiers-not-affordances/\",\"https://www.nngroup.com/articles/icon-usability/\",\"https://www.w3.org/WAI/WCAG22/Understanding/use-of-color\"],\"failure_modes\":[\"icon_polysemy_masked_as_style_issue\",\"color_connotation_conflated_with_metric_direction\",\"disabled_state_lacks_anti_affordance\",\"abstract_icon_unpaired_before_convention_is_learned\",\"identifier_or_api_name_forces_reader_to_open_implementation\"],\"evidence_priority\":\"equal\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/semiotics/SKILL.md
+  skill_graph_canonical_skill: skills/design/semiotics/SKILL.md
 ---
 
 # Semiotics
@@ -223,7 +224,7 @@ Use this checklist when reviewing a surface:
 
 ## Evals
 
-This skill ships a comprehension-eval artifact at [`examples/evals/semiotics.json`](https://github.com/jacob-balslev/skill-graph/blob/main/examples/evals/semiotics.json). The checklist below is the authoring gate for sign-system decisions; the eval file is the grader surface.
+This public skill does not bundle a runnable eval artifact. The Skill Graph tooling repo has an early semiotics eval draft at [`examples/evals/semiotics.json`](https://github.com/jacob-balslev/skill-graph/blob/main/examples/evals/semiotics.json), but keep `eval_state: unverified` until a current eval with at least seven realistic scenarios, negative expectations, and resolved truth sources is added and run. The checklist below is the authoring gate for sign-system decisions.
 
 ## Verification
 
