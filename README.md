@@ -2,7 +2,7 @@
 
 > Public open-source skill library for AI agent systems. Submit to [skills.sh](https://skills.sh).
 
-**141 skills** · Apache-2.0 · Maintained by [@jacob-balslev](https://github.com/jacob-balslev)
+**142 skills** · Apache-2.0 · Maintained by [@jacob-balslev](https://github.com/jacob-balslev)
 
 Each skill under `skills/<name>/SKILL.md` is a plain Agent Skills-compatible export in [Skill Metadata Protocol](https://github.com/jacob-balslev/skill-metadata-protocol) format.
 
