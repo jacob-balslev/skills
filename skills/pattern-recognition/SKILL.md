@@ -7,15 +7,15 @@ compatibility:
 allowed-tools: Read Grep
 metadata:
   schema_version: 6
-  version: "1.1.0"
+  version: "1.2.0"
   type: capability
   category: foundations
   domain: foundations/cognition
   scope: portable
   owner: skill-graph-maintainer
-  freshness: "2026-05-16"
-  drift_check: "{\"last_verified\":\"2026-05-16\"}"
-  eval_artifacts: planned
+  freshness: "2026-05-18"
+  drift_check: "{\"last_verified\":\"2026-05-18\"}"
+  eval_artifacts: present
   eval_state: unverified
   routing_eval: absent
   comprehension_state: present
@@ -362,6 +362,10 @@ Every recognized pattern should become a testable eval. This is how patterns sur
 ### Why the eval step is non-optional
 
 A skill section documents a pattern for human readers. An eval tests whether an agent can apply the pattern reliably under new inputs. Without the eval, a skill section about "null-vs-zero confusion" may be read and then misapplied on the next input — the agent learned the name but not the detection logic. The eval closes that gap.
+
+## Evals
+
+This skill ships `evals/evals.json` with scenarios for recurrence thresholds, convention drift, error clustering, board-health patterns, root-cause depth, pattern lifecycle states, and negative routing boundaries. The eval artifact is intentionally kept as ordinary scenario JSON rather than a repo-specific fixture suite because the skill is portable and teaches a cross-codebase method.
 
 ## 8. Root Cause vs Symptom Recognition
 
