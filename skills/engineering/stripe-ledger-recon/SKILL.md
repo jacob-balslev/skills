@@ -2,10 +2,14 @@
 name: stripe-ledger-recon
 description: "Stripe payment reconciliation for Sales Hub: webhook lifecycle (signature verification, idempotency, PII-redacted raw event storage, order linking, ledger projection, normalization queueing), fee allocation from balance transactions, refund/dispute handling, currency conversion via fx_rates_daily, GDPR erasure, and the gateway allocator registry. Covers stripe_events_raw, stripe_payments_raw, stripe_order_links, and the `stripe_balance_transactions` fee-allocation read path used by jobs. Use when reconciling Stripe charges against platform orders, allocating Stripe fees to order line items, handling refunds or disputes from Stripe, debugging stripe_order_links mismatches, implementing payment-to-order linkage, or building financial event views. Do NOT use for Shopify Payments fee allocation (use shopify / gateway-specific finance logic), full 8-component profit formula (use data-reconciliation skill), or subscription billing management (use billing-subscription)."
 metadata:
+  schema_version: 6
   type: capability
   version: "3.0.0"
-  scope: operational
+  scope: codebase
   category: engineering
+  eval_artifacts: present
+  eval_state: passing
+  routing_eval: present
   triggers: "[\"stripe-skill\",\"reconciliation-skill\",\"payment-skill\",\"stripe-fee-skill\",\"stripe-webhook-skill\",\"stripe-refund-skill\",\"stripe-dispute-skill\",\"payment-reconciliation-skill\"]"
   keywords: "[\"stripeEventMapper\",\"stripe-event-mapper\",\"stripe event mapper\",\"stripe webhook event\",\"stripe_order_links\",\"payout reconciliation\",\"payout matching\",\"balance transaction\"]"
   owner: claude

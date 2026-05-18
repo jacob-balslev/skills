@@ -2,10 +2,14 @@
 name: autonomous-loop-patterns
 description: "This skill consolidates autonomous AI agent loop patterns: the Ralph Wiggum exit-code-2 pattern, our manage-loop (manage-continuation.json + manage-loop-hook.py), grind-loop.sh supervisor, completion detection strategies, safety caps, stall detection, and the tradeoffs between simple loops and sophisticated orchestration. Use when designing or debugging autonomous agent loops, choosing between loop approaches, or implementing safety limits. Do NOT use for choosing which command to run (use ai-coding-agents) or for task management (use linear)."
 metadata:
+  schema_version: 6
   type: capability
   version: "1.2.0"
-  scope: operational
+  scope: portable
   category: agent
+  eval_artifacts: present
+  eval_state: passing
+  routing_eval: present
   triggers: "[\"autonomous-loop-skill\",\"loop-patterns-skill\"]"
   keywords: "[\"autonomous loop\",\"ralph wiggum\",\"grind loop\",\"manage loop\",\"agent respawn\",\"completion detection\",\"safety cap\"]"
   owner: claude
