@@ -1,0 +1,55 @@
+name: Bug report
+description: Report a problem with a specific skill or the library structure
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Skills in this repo are exported from [skill-graph](https://github.com/jacob-balslev/skill-graph) — if the bug is in the tooling that generated the skill, please file it there instead.
+  - type: input
+    id: skill-name
+    attributes:
+      label: Skill name
+      description: Which skill is affected? (Folder name under the repo root.)
+      placeholder: "e.g. webhook-integration"
+    validations:
+      required: true
+  - type: dropdown
+    id: bug-type
+    attributes:
+      label: Bug type
+      options:
+        - Content is wrong or outdated
+        - Content is missing
+        - Skill activates on irrelevant queries
+        - Skill fails to activate on relevant queries
+        - Broken link or stale reference
+        - Schema / frontmatter problem
+        - Install / fetch problem (npx skills add)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What is wrong?
+      description: Quote the offending section if relevant, or describe the missing/incorrect behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      placeholder: |
+        - Agent runtime: Claude Code 4.7 / Codex / Gemini / ...
+        - Install method: npx skills add jacob-balslev/skills / git clone / ...
+        - Date you installed
+    validations:
+      required: false

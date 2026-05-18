@@ -1,0 +1,48 @@
+name: Feature request
+description: Suggest a new skill, an improvement to an existing skill, or a library-level enhancement
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a feature. Please describe the **problem** before the solution.
+
+        **Note:** Skills are authored in [skill-graph](https://github.com/jacob-balslev/skill-graph) and exported to this repo. Proposals for new skill content can land here, but the actual authoring workflow lives in the tooling repo.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem are you trying to solve? Who is affected? What is the current friction?
+      placeholder: |
+        Agents working on X don't have a skill for Y, so they currently improvise.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What new skill or change is being proposed? Include a draft `name`, `description`, and `category` if relevant.
+    validations:
+      required: true
+  - type: input
+    id: skill-name
+    attributes:
+      label: Proposed skill name (if applicable)
+      placeholder: "e.g. webhook-integration"
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Existing skills considered
+      description: Did you check whether an existing skill already covers this? Which ones did you look at?
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      placeholder: Mockups, links, prior art, related issues, related repos in the Skill Graph ecosystem
+    validations:
+      required: false

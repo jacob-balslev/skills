@@ -1,8 +1,16 @@
-# Ignore everything at the root level except the committed exports
+# Ignore everything at the root level except the committed exports and OSS trust files.
 /*
 !/.gitignore
+!/.github/
 !/README.md
+!/LICENSE
+!/NOTICE
+!/CHANGELOG.md
+!/CONTRIBUTING.md
+!/CODE_OF_CONDUCT.md
+!/SECURITY.md
 !/skills/
+!/skills.manifest.json
 node_modules/
 *.log
 .DS_Store

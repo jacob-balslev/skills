@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Skill Graph Discussions
+    url: https://github.com/jacob-balslev/skill-metadata-protocol/discussions
+    about: Ask questions, share ideas, discuss the protocol and the four-repo ecosystem.
+  - name: Authoring a new skill
+    url: https://github.com/jacob-balslev/skill-graph#readme
+    about: Skills are authored in skill-graph and exported here. Start there for authoring questions.
+  - name: Security advisory
+    url: https://github.com/jacob-balslev/skills/security/advisories/new
+    about: Report a security vulnerability privately (do NOT open a public issue).
