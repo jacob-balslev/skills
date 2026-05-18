@@ -5,6 +5,7 @@ metadata:
   type: capability
   version: "1.2.0"
   scope: operational
+  category: agent
   triggers: "[\"autonomous-loop-skill\",\"loop-patterns-skill\"]"
   keywords: "[\"autonomous loop\",\"ralph wiggum\",\"grind loop\",\"manage loop\",\"agent respawn\",\"completion detection\",\"safety cap\"]"
   owner: claude

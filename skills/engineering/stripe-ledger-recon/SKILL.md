@@ -5,6 +5,7 @@ metadata:
   type: capability
   version: "3.0.0"
   scope: operational
+  category: engineering
   triggers: "[\"stripe-skill\",\"reconciliation-skill\",\"payment-skill\",\"stripe-fee-skill\",\"stripe-webhook-skill\",\"stripe-refund-skill\",\"stripe-dispute-skill\",\"payment-reconciliation-skill\"]"
   keywords: "[\"stripeEventMapper\",\"stripe-event-mapper\",\"stripe event mapper\",\"stripe webhook event\",\"stripe_order_links\",\"payout reconciliation\",\"payout matching\",\"balance transaction\"]"
   owner: claude

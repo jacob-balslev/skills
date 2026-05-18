@@ -1,0 +1,316 @@
+{
+  "skill_name": "task-path-optimization",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to fix a typo in a button label. How should I approach this?",
+      "expected_output": "Act immediately — this is a one-sentence diff.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "basic",
+      "expectations": [
+        "Recommends acting immediately without planning",
+        "Identifies this as a single-file, clear-scope change",
+        "Does NOT suggest creating a plan or exploring the codebase",
+        "Suggests finding the file with a targeted grep, editing, and verifying"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 2,
+      "prompt": "I need to refactor the authentication system to support multi-tenant SSO. How should I approach this?",
+      "expected_output": "Explore-Plan-Execute (3-phase RIPER) with orchestrator-worker pattern for subtasks.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies this as high-complexity requiring exploration before planning",
+        "Recommends understanding the current auth system before proposing changes",
+        "Suggests breaking work into subtasks after exploration",
+        "Mentions risk assessment (security-critical, hard to reverse)",
+        "Does NOT recommend acting immediately"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 3,
+      "prompt": "I've tried fixing this bug twice and both attempts failed with different errors. What should I do?",
+      "expected_output": "Stop, clear context, write a brief of what was tried, and start fresh.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Invokes the two-failure rule",
+        "Recommends clearing context or starting a fresh session",
+        "Suggests writing down what was tried and why it failed before restarting",
+        "Does NOT recommend a third attempt on the same approach",
+        "Mentions context pollution as a compounding risk"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 4,
+      "prompt": "I have 5 independent test files to create for different modules. What's the most efficient approach?",
+      "expected_output": "Parallelize — use subagents or a script to create all 5 simultaneously.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies the tasks as independent (no shared state or file dependencies)",
+        "Recommends parallelization",
+        "Suggests either subagents or a batch script",
+        "Does NOT recommend creating them sequentially one at a time"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 5,
+      "prompt": "Should I plan first or just start coding for adding a new API endpoint that follows existing patterns?",
+      "expected_output": "Lightweight plan: list the files and changes, then execute. Known pattern means low risk.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "basic",
+      "expectations": [
+        "Recognizes this as a medium-complexity task with known patterns",
+        "Recommends a lightweight plan (not full RIPER, not act-immediately)",
+        "Suggests identifying the pattern to follow from existing endpoints",
+        "Lists the files that will be changed before starting",
+        "Does NOT over-apply this skill outside its documented boundaries or owner scope."
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 6,
+      "prompt": "I need to implement a feature but I don't know which files to modify. What's the optimal path?",
+      "expected_output": "You're not ready to plan — you need to explore first. Start with targeted search.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies that exploration must precede planning",
+        "Does NOT recommend jumping into implementation",
+        "Suggests targeted codebase search (grep/glob) to find relevant files",
+        "Recommends the Explore-Plan-Execute pattern"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 7,
+      "prompt": "When should I use the evaluator-optimizer pattern vs prompt chaining?",
+      "expected_output": "Evaluator-optimizer when quality is measurable and iterative improvement helps. Prompt chaining when steps are fixed and sequential.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Correctly distinguishes evaluator-optimizer (iterative quality improvement) from prompt chaining (fixed sequential steps)",
+        "Gives concrete examples of when each applies",
+        "Mentions that evaluator-optimizer requires a measurable quality signal",
+        "Mentions that prompt chaining works when output of A feeds B",
+        "Does NOT over-apply this skill outside its documented boundaries or owner scope."
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 8,
+      "prompt": "What's the METR finding and how should it affect my use of AI coding agents?",
+      "expected_output": "METR's RCT found experienced open-source developers took 19% longer with early-2025 AI tools despite expecting a 24% speedup. Treat it as a caution about hidden overhead, not as a universal claim; match autonomy to task clarity and local evidence.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "basic",
+      "expectations": [
+        "Cites the METR finding: 19% slower despite predicting 24% faster",
+        "Frames the result as one RCT in a specific experienced open-source setting",
+        "Recommends matching agent autonomy to task clarity and local verification evidence",
+        "Does NOT claim AI tools always make developers faster or always make developers slower"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 9,
+      "prompt": "I want to add a new database migration AND update the frontend component that uses the new column. How should I sequence this?",
+      "expected_output": "Sequential — migration must complete before frontend can use the new column (data dependency).",
+      "type": "edge-case",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies the data dependency between migration and frontend",
+        "Recommends sequential execution (migration first)",
+        "Does NOT recommend parallelizing these two tasks",
+        "May suggest that lint/typecheck can run in parallel with either step"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 10,
+      "prompt": "I just need to update some CSS. Should I use task-path-optimization or just edit the file?",
+      "expected_output": "Just edit the file — this is a one-sentence diff that doesn't need strategic planning.",
+      "type": "contradiction-check",
+      "grounding": "skill-specific",
+      "difficulty": "basic",
+      "expectations": [
+        "Recognizes this as below the complexity threshold for this skill",
+        "Recommends direct action without strategic planning",
+        "Does NOT over-apply the skill to trivial tasks",
+        "May mention the complexity-first triage: one-sentence-diff = act immediately"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 11,
+      "prompt": "I receive different types of requests: bug reports, feature requests, and documentation updates. Each needs a completely different workflow. What pattern should I use?",
+      "expected_output": "Routing pattern. Classify the input type first, then dispatch each to its specialized handler.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies this as a routing pattern (distinct categories need different treatment)",
+        "Recommends classification before dispatch",
+        "Does NOT recommend prompt chaining or parallelization",
+        "May mention that routing is appropriate when input classification determines the handler"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 12,
+      "prompt": "I need to refactor a module but I don't know how many files are affected or what the subtasks will be. The scope keeps expanding as I explore. Which agent pattern fits?",
+      "expected_output": "Orchestrator-worker. Subtasks can't be predicted in advance — you need dynamic decomposition with a coordinator that dispatches work as scope emerges.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies orchestrator-worker as the correct pattern for unpredictable scope",
+        "Explains that subtask discovery happens during execution, not before",
+        "Distinguishes from prompt chaining (steps NOT known in advance)",
+        "Does NOT recommend parallelization (can't parallelize what you haven't discovered)"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 13,
+      "prompt": "I've been reading files and running searches for 20 minutes. My context is filling up with exploration results and I haven't started implementing yet. What should I do?",
+      "expected_output": "Context pollution from exploration. Delegate remaining exploration to a subagent, have it report a summary, then implement in clean context.",
+      "type": "edge-case",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies context pollution from unbounded exploration",
+        "Recommends subagent delegation for remaining exploration",
+        "Suggests /clear or fresh context before implementation if exploration is complete",
+        "References the context budget awareness section: exploration in separate context, summary returned",
+        "Does NOT recommend continuing to read files in the same polluted context"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 14,
+      "prompt": "While fixing a button alignment bug, I noticed the entire form component has broken validation. Should I fix that too?",
+      "expected_output": "No — file a Linear task for the validation bug. One task per context. Scope creep is the primary cause of task failure.",
+      "type": "edge-case",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Invokes the scope management rule: adjacent issues go to Linear",
+        "Recommends filing the validation bug as a separate task",
+        "Does NOT recommend fixing both issues in the same session",
+        "References 'one task per context' and the scope creep warning",
+        "Only exception: if the adjacent issue directly blocks the current task"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 15,
+      "prompt": "I'm about to make a security-critical change to the auth middleware. The change is irreversible once deployed. How should I structure the review?",
+      "expected_output": "Use the Writer/Reviewer pattern. Implement in one context, review in a fresh context with no implementation bias.",
+      "type": "knowledge",
+      "grounding": "skill-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Recommends the Writer/Reviewer pattern for high-stakes work",
+        "Explains that the reviewer needs fresh context to avoid implementation bias",
+        "Identifies security changes as a prime use case for two-context review",
+        "Mentions that correctness matters more than speed for this task type",
+        "Does NOT recommend self-reviewing in the same context"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 16,
+      "prompt": "My test is failing with an assertion error and I need to figure out why. Should I use task-path-optimization to decide my approach?",
+      "expected_output": "No — this is a debugging problem. Use diagnosis to classify the failure, then troubleshooting to investigate. Task-path-optimization is for pre-execution strategy, not failure investigation.",
+      "type": "negative",
+      "grounding": "skill-specific",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes debugging to diagnosis and/or troubleshooting",
+        "Does NOT provide debugging guidance from this skill",
+        "Clarifies the boundary: task-path-optimization is pre-execution strategy, not reactive investigation",
+        "May mention that diagnosis handles 'which debugging approach' and troubleshooting handles execution"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    }
+  ]
+}
