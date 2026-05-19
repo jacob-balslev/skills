@@ -1,0 +1,316 @@
+{
+  "skill_name": "seo-strategy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Plan a comparison page cluster for our SaaS product. We want to rank for '[us] vs [competitor]' searches.",
+      "expected_output": "Should produce a template structure with programmatic SEO patterns for generating comparison pages at scale. Should recommend an honest comparison approach (acknowledge competitor strengths, highlight genuine differentiators). Should specify CTA placement at the end of the comparison, not mid-content. Should include URL pattern (/compare/[us]-vs-[them]), page template sections (feature matrix, pricing comparison, use case fit), and internal linking from the hub comparison page.",
+      "assertions": [
+        "Produces a template structure for comparison pages",
+        "Recommends programmatic SEO patterns for scale",
+        "Recommends honest comparison approach (acknowledge competitor strengths)",
+        "Specifies CTA placement at end, not mid-content",
+        "Includes URL pattern like /compare/[us]-vs-[them]",
+        "Includes page template sections (feature matrix, pricing, use cases)",
+        "Includes internal linking strategy from hub page"
+      ],
+      "files": [],
+      "type": "knowledge",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "expectations": [
+        "Produces a template structure for comparison pages",
+        "Recommends programmatic SEO patterns for scale",
+        "Recommends honest comparison approach (acknowledge competitor strengths)",
+        "Specifies CTA placement at end, not mid-content",
+        "Includes URL pattern like /compare/[us]-vs-[them]",
+        "Includes page template sections (feature matrix, pricing, use cases)",
+        "Includes internal linking strategy from hub page",
+        "Does NOT present a one-off page plan without a scalable cluster structure"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal"
+    },
+    {
+      "id": 2,
+      "prompt": "How do I optimize my Etsy listings to rank higher in Etsy search?",
+      "expected_output": "Must use current Etsy-specific search visibility guidance rather than Google SEO assumptions. Should cover shop, listing, and customer-service quality; average review rating, message response rate, case rate, on-time shipping/tracking; high-quality photos, return policy, shipping price where applicable, keyword relevance, and buyer filters. Should NOT present unsupported recency boost, Category Relevance Score, backlinks, meta descriptions, or Core Web Vitals as Etsy ranking levers.",
+      "assertions": [
+        "References Etsy shop quality as a visibility area",
+        "References Etsy listing quality as a visibility area",
+        "References Etsy customer-service quality as a visibility area",
+        "Mentions average review rating, message response rate, case rate, and on-time shipping/tracking",
+        "Mentions listing photos, return policy, and shipping price where applicable",
+        "Mentions keyword relevance and buyer filters as search variables",
+        "Does NOT apply Google SEO rules to Etsy",
+        "Does NOT mention backlinks as an Etsy ranking factor",
+        "Does NOT mention Core Web Vitals for Etsy",
+        "Does NOT rely on unsupported recency boost or Category Relevance Score claims"
+      ],
+      "files": [],
+      "type": "knowledge",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "expectations": [
+        "References Etsy shop quality as a visibility area",
+        "References Etsy listing quality as a visibility area",
+        "References Etsy customer-service quality as a visibility area",
+        "Mentions average review rating, message response rate, case rate, and on-time shipping/tracking",
+        "Mentions listing photos, return policy, and shipping price where applicable",
+        "Mentions keyword relevance and buyer filters as search variables",
+        "Does NOT apply Google SEO rules to Etsy",
+        "Does NOT mention backlinks as an Etsy ranking factor",
+        "Does NOT mention Core Web Vitals for Etsy",
+        "Does NOT rely on unsupported recency boost or Category Relevance Score claims"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal"
+    },
+    {
+      "id": 3,
+      "prompt": "We want to build 500 city-specific landing pages for our local service. How do we do this without getting penalized?",
+      "expected_output": "Should address the thin content risk of programmatic local pages. Should require unique, valuable content per page beyond just swapping city names in a template. Should specify guardrails against variable-swap-only pages: each page needs local data, testimonials, service area details, or FAQs specific to that city. Should recommend starting with a smaller batch and monitoring Search Console for indexation signals before scaling to 500.",
+      "assertions": [
+        "Addresses thin content risk explicitly",
+        "Requires unique content per page beyond variable swaps",
+        "Specifies guardrails against template-only pages",
+        "Recommends local data, testimonials, or city-specific content",
+        "Recommends starting with a smaller batch before scaling",
+        "Mentions monitoring Search Console for indexation signals",
+        "Does NOT present 500 variable-swap pages as acceptable"
+      ],
+      "files": [],
+      "type": "knowledge",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "expectations": [
+        "Addresses thin content risk explicitly",
+        "Requires unique content per page beyond variable swaps",
+        "Specifies guardrails against template-only pages",
+        "Recommends local data, testimonials, or city-specific content",
+        "Recommends starting with a smaller batch before scaling",
+        "Mentions monitoring Search Console for indexation signals",
+        "Does NOT present 500 variable-swap pages as acceptable"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal"
+    },
+    {
+      "id": 4,
+      "prompt": "Add Product schema markup to our Shopify product pages. What JSON-LD should we use?",
+      "expected_output": "Should provide correct Product + Offer JSON-LD structure with required fields (name, image, description, offers with price, priceCurrency, availability). Should mention AggregateRating only if the store has real visible product reviews. Should recommend rendered-page validation with an appropriate structured-data validator or Rich Results Test where supported, and should not rely on curl/web_fetch alone for JavaScript-injected schema.",
+      "assertions": [
+        "Provides correct Product JSON-LD structure",
+        "Includes Offer schema with price, priceCurrency, availability",
+        "Mentions AggregateRating if reviews exist",
+        "Notes rendered-page validation is needed for JavaScript-injected schema",
+        "Provides a complete JSON-LD code example",
+        "Uses @type Product and @type Offer correctly",
+        "Includes required fields (name, image, description)"
+      ],
+      "files": [],
+      "type": "knowledge",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "expectations": [
+        "Provides correct Product JSON-LD structure",
+        "Includes Offer schema with price, priceCurrency, availability",
+        "Mentions AggregateRating if reviews exist",
+        "Provides a complete JSON-LD code example",
+        "Uses @type Product and @type Offer correctly",
+        "Includes required fields (name, image, description)",
+        "Does NOT use FAQ or Article schema as the primary schema for product pages",
+        "Recommends rendered-page validation instead of relying on curl or static HTML only"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal"
+    },
+    {
+      "id": 5,
+      "prompt": "How do we optimize our content for AI Overviews and ChatGPT citations?",
+      "expected_output": "Should cover AI-feature readiness without inventing special requirements: foundational SEO, helpful visible content, entity clarity, direct answer sections, internal links, useful structured data that matches visible text, and Search Console/Web traffic measurement. Should explicitly avoid claiming special schema.org markup, AI-only files, or guaranteed AI Overview/ChatGPT citations.",
+      "assertions": [
+        "Covers AI-feature readiness without special markup requirements",
+        "Recommends concise answer paragraphs",
+        "Recommends entity clarity and consistent naming",
+        "Recommends structured data for entity reinforcement",
+        "Recommends citation-worthy, data-backed statements",
+        "Recommends FAQ format for common questions",
+        "Explains how AI search differs from traditional SERP ranking"
+      ],
+      "files": [],
+      "type": "knowledge",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "expectations": [
+        "Covers AI-feature readiness without special markup requirements",
+        "Recommends concise answer paragraphs",
+        "Recommends entity clarity and consistent naming",
+        "Recommends citation-worthy, data-backed statements",
+        "Recommends FAQ format for common questions",
+        "Explains how AI search differs from traditional SERP ranking",
+        "Does NOT treat AI Overviews as identical to classic blue-link SEO",
+        "States that Google AI Overviews/AI Mode do not require special schema or machine-readable files",
+        "Does NOT guarantee AI Overview or chatbot citations"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal"
+    },
+    {
+      "id": 6,
+      "prompt": "Our blog gets a lot of organic traffic but nobody converts to our paid product.",
+      "expected_output": "Should defer deep CRO analysis to the CRO/product analytics workflow. Within SEO strategy scope, should provide a content-to-product linking strategy: contextual internal links from blog posts to product/feature pages, content upgrades that lead to signup, and CTA placement optimization within content. Should recommend reviewing whether blog content targets the right intent stage (informational vs commercial) and whether there is a clear path from awareness content to conversion pages.",
+      "assertions": [
+        "Defers deep CRO analysis to CRO/product analytics workflow",
+        "Provides content-to-product internal linking strategy",
+        "Recommends CTA placement within blog content",
+        "Addresses intent stage alignment (informational vs commercial)",
+        "Recommends a path from awareness content to conversion pages",
+        "Does NOT attempt a full conversion rate optimization audit",
+        "Stays within SEO strategy scope"
+      ],
+      "files": [],
+      "type": "knowledge",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "expectations": [
+        "Defers deep CRO analysis to CRO/product analytics workflow",
+        "Provides content-to-product internal linking strategy",
+        "Recommends CTA placement within blog content",
+        "Addresses intent stage alignment (informational vs commercial)",
+        "Recommends a path from awareness content to conversion pages",
+        "Does NOT attempt a full conversion rate optimization audit",
+        "Stays within SEO strategy scope"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal"
+    },
+    {
+      "id": 7,
+      "prompt": "What schema markup should we add to our SaaS pricing page?",
+      "expected_output": "Should recommend SoftwareApplication schema with Offer sub-schema when the pricing page visibly describes a software app and pricing tiers. Should mention FAQPage only if the pricing page has visible single-answer FAQs, and should warn that Google FAQ rich results no longer appear as of May 7, 2026. Should provide JSON-LD structure with @type SoftwareApplication, applicationCategory, and offers array.",
+      "assertions": [
+        "Recommends SoftwareApplication schema",
+        "Includes Offer schema for pricing tiers",
+        "Suggests FAQ schema for pricing FAQs if present",
+        "Provides JSON-LD structure with correct @type",
+        "Includes applicationCategory field",
+        "Notes schema detection limitation",
+        "Provides a complete, implementable code example"
+      ],
+      "files": [],
+      "type": "knowledge",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "expectations": [
+        "Recommends SoftwareApplication schema",
+        "Includes Offer schema for pricing tiers",
+        "Suggests FAQ schema for pricing FAQs if present",
+        "Provides JSON-LD structure with correct @type",
+        "Includes applicationCategory field",
+        "Provides a complete, implementable code example",
+        "Does NOT use Product schema as the main schema for a SaaS pricing page",
+        "Warns that Google FAQ rich results no longer appear after the May 7, 2026 deprecation",
+        "Does NOT present FAQPage as a Google rich-result growth tactic"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal"
+    },
+    {
+      "id": 8,
+      "prompt": "Plan a content strategy to build topical authority in e-commerce analytics.",
+      "expected_output": "Should produce a pillar page structure with the main pillar covering 'e-commerce analytics' comprehensively. Should define cluster topics (conversion tracking, revenue attribution, customer analytics, funnel analysis, etc.). Should emphasize E-E-A-T signals: author credentials, data-backed claims, original research or case studies. Should describe the internal link architecture: pillar links to all clusters, clusters link back to pillar and cross-link where relevant.",
+      "assertions": [
+        "Produces a pillar page structure",
+        "Defines specific cluster topics for e-commerce analytics",
+        "Emphasizes E-E-A-T signals (author credentials, data-backed claims)",
+        "Recommends original research or case studies",
+        "Describes internal link architecture (pillar to clusters and back)",
+        "Recommends cross-linking between related clusters",
+        "Covers topical authority building strategy"
+      ],
+      "files": [],
+      "type": "knowledge",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "expectations": [
+        "Produces a pillar page structure",
+        "Defines specific cluster topics for e-commerce analytics",
+        "Emphasizes E-E-A-T signals (author credentials, data-backed claims)",
+        "Recommends original research or case studies",
+        "Describes internal link architecture (pillar to clusters and back)",
+        "Recommends cross-linking between related clusters",
+        "Covers topical authority building strategy",
+        "Does NOT rely only on generic blog volume without an authority-building cluster plan"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal"
+    },
+    {
+      "id": 9,
+      "type": "negative",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "prompt": "Our organic traffic dropped after a site migration. What went wrong?",
+      "expected_output": "Routes migration traffic-drop and crawl/indexing diagnosis to a technical SEO or audit workflow. seo-strategy builds page systems and release strategy; diagnostics must verify Search Console, redirects, canonicalization, crawl access, migration changes, and analytics evidence.",
+      "expectations": [
+        "Routes migration traffic-drop diagnosis away from seo-strategy",
+        "Explains the boundary: seo-strategy builds strategy; technical audit diagnoses problems"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal",
+      "assertions": [
+        "Routes migration traffic-drop diagnosis away from seo-strategy",
+        "Explains the boundary: seo-strategy builds strategy; technical audit diagnoses problems"
+      ]
+    },
+    {
+      "id": 10,
+      "type": "negative",
+      "grounding": "generic",
+      "difficulty": "applied",
+      "prompt": "Design the page hierarchy and URL structure for our new documentation site.",
+      "expected_output": "Routes IA and hierarchy design to information-architecture. seo-strategy may contribute search-demand page candidates, but navigation, wayfinding, sitemap hierarchy, and content architecture remain IA work.",
+      "expectations": [
+        "Routes IA and hierarchy design to information-architecture",
+        "Explains seo-strategy can supply search-demand inputs without owning navigation/IA"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "strategy",
+      "criticality": "normal",
+      "assertions": [
+        "Routes IA and hierarchy design to information-architecture",
+        "Explains seo-strategy can supply search-demand inputs without owning navigation/IA"
+      ]
+    }
+  ]
+}
