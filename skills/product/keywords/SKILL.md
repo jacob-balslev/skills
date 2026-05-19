@@ -32,7 +32,7 @@ drift_check:
   last_verified: "2026-05-19"
 metadata:
   schema_version: 6
-  version: "1.1.0"
+  version: "1.2.0"
   type: capability
   category: product
   domain: product/search
