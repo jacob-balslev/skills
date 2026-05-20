@@ -1,0 +1,47 @@
+[
+  {
+    "query": "Reason from first principles about whether this onboarding step is necessary",
+    "should_trigger": true,
+    "note": "Core assumption-stripping use case"
+  },
+  {
+    "query": "Rebuild this architecture decision from primitive constraints instead of copying the old pattern",
+    "should_trigger": true,
+    "note": "Technical design from fundamentals"
+  },
+  {
+    "query": "Strip the inherited assumptions from our pricing model",
+    "should_trigger": true,
+    "note": "Product strategy from primitives"
+  },
+  {
+    "query": "What are the irreducible truths and constraints behind this workflow?",
+    "should_trigger": true,
+    "note": "Primitive identification trigger"
+  },
+  {
+    "query": "Stop reasoning by analogy to competitors and derive what the user actually needs",
+    "should_trigger": true,
+    "note": "Analogy replacement with primitives"
+  },
+  {
+    "query": "This deployment caused an outage, find the root cause",
+    "should_trigger": false,
+    "note": "Observed failure belongs to debugging or problem-locating-solving"
+  },
+  {
+    "query": "Update my confidence after seeing this new evidence",
+    "should_trigger": false,
+    "note": "Probability update belongs to bayesian-reasoning"
+  },
+  {
+    "query": "Which option has the highest probability-weighted payoff?",
+    "should_trigger": false,
+    "note": "Option scoring belongs to expected-value"
+  },
+  {
+    "query": "Imagine this plan failed and list the reasons why",
+    "should_trigger": false,
+    "note": "Failure-path reversal belongs to inversion or pre-mortem"
+  }
+]
