@@ -6,7 +6,7 @@ compatibility:
   notes: "Runtime-agnostic. The intake-triage / loop / drift / handoff discipline applies to any LLM-coding harness regardless of context window size or compaction implementation."
 allowed-tools: Read Grep
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.0.0"
   type: capability
   category: agent
@@ -31,6 +31,10 @@ metadata:
   skill_graph_canonical_skill: skills/context-management/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1322"
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Context Management

@@ -6,7 +6,7 @@ compatibility:
   notes: "Language- and stack-agnostic. The recognition loop, clustering method, eval pipeline, and 5-Whys ladder apply to any codebase; the grep patterns and example detection rules are illustrative — substitute the equivalents of your stack."
 allowed-tools: Read Grep
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.2.0"
   type: capability
   category: foundations
@@ -44,6 +44,10 @@ metadata:
   skill_graph_canonical_skill: skills/pattern-recognition/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1041"
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Pattern Recognition

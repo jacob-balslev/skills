@@ -1,10 +1,10 @@
 ---
 name: ref-patterns
-description: "Use when designing or reviewing React ref usage: the distinction between refs (mutable handle that survives renders without triggering them) and state (reactive value that triggers renders when changed), the `useRef` hook for DOM access and mutable instance values, ref callbacks for fine-grained mount/unmount hooks, `forwardRef` for passing refs through component boundaries (and the React 19 ref-as-prop change that retires it for new code), `useImperativeHandle` for exposing a controlled imperative surface to parent refs, ref forwarding through compound-component primitives (the Radix `Slot` / Headless UI pattern), and the design rule that refs are an escape hatch — for DOM access, integration with non-React DOM libraries, focus management, animation, measurement, and exposing imperative APIs sparingly, never as a substitute for state. Do NOT use for the broader hook discipline — Rules of Hooks, dependency arrays, custom hooks (use hooks-patterns), for the cross-product component-layering question — primitives/composites/headless-vs-styled (use component-architecture), for state location and ownership decisions (use state-management), for the `'use client'` / `'use server'` boundary mechanics (use client-server-boundary), or for form-state and validation patterns (use form-ux-architecture)."
+description: "Use when designing or reviewing React ref usage: `useRef` for DOM access and mutable instance values, ref callbacks, `forwardRef`, React 19 ref-as-prop, `useImperativeHandle`, ref forwarding through compound primitives, and the distinction between refs as non-reactive mutable handles and state as render-driving data. Do NOT use for broader hook discipline (use hooks-patterns), component-library layering (use component-architecture), state ownership decisions (use state-management), client/server serialization boundaries (use client-server-boundary), or form validation/state UX (use form-ux-architecture)."
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.0.0"
   type: capability
   category: engineering
@@ -37,6 +37,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/ref-patterns/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Ref Patterns

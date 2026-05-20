@@ -39,7 +39,7 @@ drift_check:
     "scripts/skill-graph-routing-eval.js": "fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb"
     "docs/manifest-field-mapping.md": "8de06aa16e23c219da1f5f2ec38b5b29aa912ad577377c8422e2300cdd77ee90"
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.1.0"
   type: capability
   category: agent
@@ -63,6 +63,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/skill-infrastructure/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Skill Infrastructure

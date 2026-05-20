@@ -3,7 +3,7 @@ name: usability-testing
 description: "Use when observing real users attempting tasks on a prototype or live product to surface usability issues — moderated or unmoderated, think-aloud protocol, task scenarios, severity rating, sample sizing per Nielsen's heuristics. Do NOT use for automated test suites, code coverage analysis, CI pipelines, unit/integration testing, or any engineering verification — those are testing-strategy concerns, not human-behavior observation."
 license: CC-BY-4.0
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.0.0"
   type: capability
   category: design
@@ -24,6 +24,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/usability-testing/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Usability Testing

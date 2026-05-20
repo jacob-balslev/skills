@@ -3,7 +3,7 @@ name: printify
 description: "Use when working with Printify — the print-on-demand REST API, catalog model (blueprints, print providers, variants, print areas), product creation and publish lifecycle to connected channels, order routing, shipping cost queries, and HMAC SHA-256 webhook verification. Do NOT use for non-Printify POD vendors, generic Shopify storefront work, or print-file (artwork) generation."
 license: CC-BY-4.0
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.0.0"
   type: capability
   category: engineering
@@ -25,6 +25,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/printify/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Printify

@@ -6,7 +6,7 @@ compatibility:
   notes: "Language- and stack-agnostic. The locate-to-solve loop, boundary-localization techniques, and verification rules apply to any software bug investigation; specific tool names (binary search, git bisect, MRE) are illustrative — substitute the equivalents of your stack."
 allowed-tools: Read Grep
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.0.0"
   type: workflow
   category: engineering
@@ -31,6 +31,10 @@ metadata:
   skill_graph_canonical_skill: skills/problem-locating-solving/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1130"
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Problem Locating and Solving

@@ -1,287 +1,266 @@
 ---
 name: version-control
-description: "Use when designing or maintaining repository history shape: branching model, rebase vs merge policy, atomic commit boundaries, path-limited commits, tracker provenance, release tags, hotfix branches, worktree isolation, force-push safety, and ordinary merge-conflict strategy. Covers trunk-based development, short-lived feature branches, commit transaction boundaries, annotated release tags, SemVer-tag discipline, hotfix flow, worktree lifecycle, and recovery from stale or contaminated history. Do NOT use for commit-message wording or Conventional Commit type semantics (use semantics or naming-conventions), merge-queue serialization (use merge-queue), PR content review (use code-review), patch interpretation (use diff-analysis), destructive-command authorization (use guardrails or intent-recognition), or release-pipeline debugging (use debugging)."
+description: "Use when designing or maintaining the shape of a repository's git history — choosing a branching model, deciding rebase vs merge, sizing commits, linking commits to tracker tickets, tagging releases, running parallel work across worktrees, and resolving the merge conflicts that arise from any of the above. Covers trunk-based development, short-lived feature branches, atomic commit discipline, linear-history conventions (rebase + squash), release tagging with annotated tags and SemVer, hotfix flows from tags, and worktree lifecycle for parallel agents or contributors. Do NOT use for the words inside the commit message (Conventional Commits format, identifier naming — use `naming-conventions`), for chasing a release-pipeline failure (use `debugging`), or for reviewing a PR's content (use `code-review`)."
 license: MIT
 compatibility:
-  notes: "Git-centric and provider-agnostic. Patterns translate to other DAG-based version-control systems with tool-specific substitutions. Centralized systems without cheap branching, local commits, or DAG rewriting need a different operational model. Substitute local default branch names, ticket formats, forge settings, and release policies."
-allowed-tools: Read Grep Bash
-grounding:
-  domain_object: "Repository history, branch integration, release tagging, and worktree isolation discipline"
-  grounding_mode: "universal"
-  truth_sources:
-    - https://git-scm.com/docs/git-commit
-    - https://git-scm.com/docs/git-worktree.html
-    - https://git-scm.com/docs/git-tag.html
-    - https://git-scm.com/docs/git-push.html
-    - https://semver.org/
-    - https://trunkbaseddevelopment.com/short-lived-feature-branches/
-  failure_modes:
-    - multi_purpose_commit_cannot_be_reverted_cleanly
-    - long_lived_branch_drift_creates_large_integration_cost
-    - unverified_force_push_overwrites_remote_history
-    - standard_commit_includes_unrelated_staged_files
-    - release_tag_is_lightweight_or_untraceable
-    - hotfix_not_reconciled_back_to_mainline
-    - worktree_cleanup_or_branch_delete_loses_unmerged_work
-  evidence_priority: "equal"
-drift_check:
-  last_verified: "2026-05-19"
+  notes: "Git-centric. Patterns translate to other DAG-based version-control systems (Mercurial, Jujutsu) with tool-specific syntax substitutions. Centralized systems (SVN, CVS) lack cheap branching and most of this skill's discipline does not apply."
+allowed-tools: Read Grep Bash Edit
 metadata:
-  schema_version: 6
-  version: "1.2.0"
+  schema_version: 7
+  version: "1.0.0"
   type: capability
   category: engineering
   domain: engineering/version-control
   scope: portable
   owner: skill-graph-maintainer
-  freshness: "2026-05-19"
-  drift_check: '{"last_verified":"2026-05-19"}'
+  freshness: "2026-05-06"
+  drift_check: "{\"last_verified\":\"2026-05-06\"}"
   eval_artifacts: planned
   eval_state: unverified
   routing_eval: absent
-  comprehension_state: present
   stability: experimental
-  keywords: '["version control","git workflow","repository history","history shape","branching strategy","trunk-based development","short-lived branch","feature branch","merge vs rebase","rebase branch","squash merge","linear history","atomic commit","commit boundary","path-limited commit","git commit --only","staged files contamination","tracker provenance","release tag","annotated tag","semantic version tag","SemVer release","hotfix branch","cherry-pick hotfix","force-with-lease","git worktree","worktree cleanup","parallel branch development","merge conflict strategy","protected branch policy","mainline integration"]'
-  triggers: '["version-control","version-control-skill","git workflow","branching strategy","merge vs rebase","atomic commit","path-limited commit","release tagging","hotfix workflow","worktree isolation"]'
-  examples: '["set up trunk-based development for a four-person team","this branch is two weeks behind main -- rebase, merge, or recreate it?","split this commit plan into atomic commits before merge","two agents are sharing one repo and staged files leaked into the wrong commit","use path-limited commits so unrelated staged files do not land","tag the v1.2.0 release with provenance back to the release record","design a hotfix workflow from the last release tag and reconcile it to main","should this feature branch squash, rebase, or merge into main?","clean up an abandoned worktree without deleting unmerged work","when is force-with-lease acceptable after a rebase?"]'
-  anti_examples: '["write the Conventional Commit subject for this change","choose whether this is a feat or fix commit type","review this PR for correctness before merge","read this git diff and summarize the behavior change","serialize ten ready branches through a merge queue","is it safe to run git reset --hard right now?","debug why the release pipeline failed after tag creation","name this branch or database column"]'
-  relations: '{"boundary":[{"skill":"semantics","reason":"semantics owns Conventional Commit type meaning, SemVer compatibility meaning, and whether a version bump accurately communicates API change; version-control owns the repository history and tag workflow that carries those signals."},{"skill":"naming-conventions","reason":"naming-conventions owns the words and format inside commit messages, branch names, and identifiers; version-control owns commit boundaries, branch lifecycle, and history shape."},{"skill":"merge-queue","reason":"merge-queue owns serialized integration of multiple ready branches into a protected target branch; version-control owns ordinary branch strategy, rebase/squash policy, path-limited commits, tags, and one-off conflict handling."},{"skill":"code-review","reason":"code-review evaluates change content before merge; version-control evaluates the shape and traceability of the history that will remain after merge."},{"skill":"diff-analysis","reason":"diff-analysis interprets an already-produced patch; version-control decides how that patch should be committed, rebased, split, tagged, or integrated."},{"skill":"guardrails","reason":"guardrails blocks or escalates high-risk git actions such as hard reset, branch deletion, and destructive force-push; version-control describes routine git discipline and safer defaults."},{"skill":"intent-recognition","reason":"intent-recognition classifies the risk of a specific tool action immediately before execution; version-control provides the workflow model behind routine git choices."},{"skill":"debugging","reason":"debugging investigates failures after a git, CI, or release action breaks; version-control designs the history and release workflow before failure."}],"related":["merge-queue","semantics","naming-conventions","code-review","diff-analysis","guardrails","intent-recognition","debugging"],"verify_with":["code-review","guardrails","semantics"]}'
-  grounding: '{"domain_object":"Repository history, branch integration, release tagging, and worktree isolation discipline","grounding_mode":"universal","truth_sources":["https://git-scm.com/docs/git-commit","https://git-scm.com/docs/git-worktree.html","https://git-scm.com/docs/git-tag.html","https://git-scm.com/docs/git-push.html","https://semver.org/","https://trunkbaseddevelopment.com/short-lived-feature-branches/"],"failure_modes":["multi_purpose_commit_cannot_be_reverted_cleanly","long_lived_branch_drift_creates_large_integration_cost","unverified_force_push_overwrites_remote_history","standard_commit_includes_unrelated_staged_files","release_tag_is_lightweight_or_untraceable","hotfix_not_reconciled_back_to_mainline","worktree_cleanup_or_branch_delete_loses_unmerged_work"],"evidence_priority":"equal"}'
-  portability: '{"readiness":"scripted","targets":["skill-md"]}'
-  lifecycle: '{"stale_after_days":180,"review_cadence":"quarterly"}'
-  mental_model: |
-    Version control is the transaction log of a codebase. Each commit, branch, tag, and rewrite should preserve three things future maintainers need under pressure: what changed, why it changed, and how to reverse or replay it without dragging unrelated work along.
-  purpose: |
-    This skill keeps repository history useful as operational evidence. It helps agents and developers choose branch lifetimes, commit boundaries, integration method, tag form, hotfix path, worktree isolation, and safe rewrite behavior before history becomes expensive to repair.
-  boundary: |
-    This skill owns repository history shape and routine Git workflow decisions. It does not own commit-message wording, semantic version meaning, queue serialization, PR correctness review, patch interpretation, destructive-action authorization, or CI/release failure debugging.
-  analogy: "Version control is accounting for code changes: each commit is a ledger entry, each tag is a period close, and each rewrite needs controls so the books still reconcile."
-  misconception: "The common mistake is treating Git as file backup. Git is coordination infrastructure; messy history, long-lived branches, unsafe force pushes, and mixed-purpose commits create future operational risk."
-  concept: '{"definition":"Version-control discipline designs the shape, provenance, and recoverability of repository history: branches, commits, tags, worktrees, rebases, merges, force pushes, and hotfix paths.","mental_model":"Treat each commit as an atomic transaction and each branch as temporary integration debt. The longer the branch lives and the more mixed the commit, the higher the future merge, review, and rollback cost.","purpose":"It makes history readable, reversible, auditable, and safe for parallel contributors or agents.","boundary":"It does not own commit wording, SemVer meaning, PR content review, merge queue serialization, diff interpretation, destructive-command authorization, or release-pipeline debugging.","taxonomy":"Surfaces: branches, commits, tags, worktrees, remotes, merge conflicts, force pushes, hotfixes. Decisions: branch model, branch lifetime, commit boundaries, path scope, integration method, tag type, release reconciliation, cleanup safety.","analogy":"It is accounting for code changes: every ledger entry should balance and be traceable.","misconception":"A green branch or successful local commit is not enough; the history must remain readable, reversible, and safe to integrate."}'
+  keywords: "[\"version control\",\"git workflow\",\"branching strategy\",\"trunk-based development\",\"git flow\",\"short-lived branch\",\"feature branch\",\"merge vs rebase\",\"linear history\",\"atomic commit\",\"squash commit\",\"cherry-pick\",\"release tag\",\"annotated tag\",\"SemVer release\",\"hotfix branch\",\"git worktree\",\"parallel branch development\",\"commit provenance\",\"merge conflict resolution\",\"protected branch\"]"
+  examples: "[\"set up trunk-based development for a four-person team\",\"the main branch has 50 merge commits before release — clean up the history\",\"two agents are working in the same repo and clobbering each other's uncommitted changes — set up worktrees\",\"tag the v1.2.0 release with provenance back to the closing tracker milestone\",\"the feature branch is two weeks old and three weeks behind main — rebase or recreate?\",\"design the hotfix workflow for an urgent production patch off a release tag\",\"every commit must link back to a tracker ticket — what's the right enforcement layer?\",\"should we squash, rebase, or merge when integrating a feature branch?\"]"
+  anti_examples: "[\"draft a Conventional Commits message for this change\",\"the release pipeline failed at the tag-creation step — find out why\",\"review this PR before we merge it\",\"explain our git policy to new contributors in the docs\",\"decide if this branching-rule change needs a regression test\",\"refactor the git helper scripts in our tooling repo\"]"
+  relations: "{\"boundary\":[{\"skill\":\"code-review\",\"reason\":\"code-review evaluates the *content* of a change before merge; version-control owns the *shape* of history that change leaves behind\"},{\"skill\":\"refactor\",\"reason\":\"refactor reorganizes code without changing external behavior; version-control reorganizes history without changing the code's content (rebase, squash, cherry-pick)\"},{\"skill\":\"naming-conventions\",\"reason\":\"naming-conventions owns commit-message wording (Conventional Commits prefix, scope, subject); version-control owns commit *boundaries* (what counts as one commit) and history *shape*\"}],\"related\":[\"code-review\",\"refactor\",\"naming-conventions\",\"debugging\"],\"verify_with\":[\"code-review\"]}"
+  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/engineering/version-control/SKILL.md
+  skill_graph_canonical_skill: skills/version-control/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Version Control
 
 ## Coverage
 
-Use this skill for repository history and Git workflow decisions: branching model, branch lifetime, rebase vs merge, commit boundaries, path-limited commits, provenance links, annotated release tags, hotfix branches, worktree isolation, force-push safety, and ordinary merge-conflict strategy.
-
-The skill is about the shape and recoverability of history, not the prose inside a commit message. A complete version-control decision names the branch model, the integration method, the commit boundary rule, the provenance convention, the release/tag policy if relevant, and the safety gate for any history rewrite.
+- Branching strategy selection: trunk-based development (default for product teams), Git Flow (only for shipped libraries with multiple supported versions), and the warning signs that a chosen model is failing
+- Atomic commit discipline: one logical change per commit, the test that distinguishes "atomic" from "small," and how to split a commit that snuck two changes together
+- History shape: rebase over merge for feature integration, squash on merge for keeping main linear, when to allow merge commits (rare — release branches with parallel hotfix history)
+- Provenance: the convention that every commit references its originating tracker ticket, and the enforcement options (commit-message hook, CI check, social convention)
+- Release tagging: annotated tags with provenance, SemVer 2.0.0 mapping, hotfix flow from a tag without polluting main
+- Worktree lifecycle: when to use worktrees, how to keep them clean, and the multi-agent failure mode worktrees prevent (parallel-session index contamination)
+- Path-limited commits: the `git commit --only -- <paths>` discipline that prevents a parallel session from injecting unrelated staged files into your commit
+- Conflict resolution: structural conflicts (one side renamed, one side edited) versus content conflicts; when to abandon a rebase and recreate the branch
 
 ## Philosophy
 
-Repository history is a decision log. When the log is noisy - accidental merge commits, mixed-purpose commits, missing provenance, month-old branches, lightweight release tags, or force pushes without a lease - the team loses the ability to answer two pressure questions: why did this change, and can I reverse only this change without taking unrelated work with it?
+A repository's history is a *decision log*. When the log is noisy — merge commits where rebases would have been cleaner, multi-purpose commits that mix a fix with a feature, missing tracker IDs, branches that lived for a month — the team loses the ability to answer two questions that matter under pressure: *"why did this change?"* and *"can I revert just this without taking everything else with it?"* Both questions become archaeology rather than lookup.
 
-Every commit is a transaction future maintainers may need to read or revert in a hurry. The discipline is to keep transactions small, attributed, and reversible. A commit that combines a refactor with a bug fix cannot be reverted cleanly when the fix is wrong; a commit without provenance forces later readers into archaeology.
+The correct mental model is: every commit is a transaction the future will need to read, often in a hurry, often by someone who was not in the meeting. The discipline is to keep transactions small, attributed, and reversible. A commit that combines a refactor with a bug fix cannot be reverted cleanly when the fix turns out to be wrong; a commit without a tracker ID forces the next reader into git-blame archaeology to reconstruct intent.
 
-History cleanup has asymmetric cost. Cleanup before merge is cheap: split commits, rebase, squash, edit local branch history, or recreate an old branch. Cleanup after merge is expensive: coordinated rewrites, force pushes, broken references, and possible data loss. Push history hygiene left while the branch is still private or review-bound.
+The second principle is *cost asymmetry*. Cleaning up history *before* merge is cheap — squash, rebase, edit messages, split commits, all local operations on a feature branch. Cleaning up history *after* merge is expensive — it requires force-pushes, coordinated rewrites, and risks losing other people's work. Push the cleanup left to the moment the cost is lowest.
 
-Parallel-agent and multi-session work adds one more invariant: the Git index is shared inside one working tree. A normal commit can pick up unrelated staged files from another session. In shared or dirty repos, use path-limited commits and verify the committed file list.
+The third principle, specific to multi-agent and multi-session work: the git index is a *process-shared mutex*. Two agents in the same repo share `.git/index`, which means a `git add` in one session lands in the other session's `git diff --cached`. The standard `git commit` command picks up everything currently staged. The defence is path-limited commits (`git commit --only -- <paths>`) that build a temporary index from explicitly-named paths only, ignoring whatever else a parallel session has staged. Without this discipline, multi-agent work produces commits with surprise files.
 
-## Grounding
+## Branching Strategy: Trunk-Based by Default
 
-This skill is grounded in public Git and release-management behavior:
+Trunk-based development is the right default for almost every product codebase: a single long-lived branch (`main`), short-lived feature branches that integrate frequently (every 1-2 days), and incomplete features merged behind feature flags rather than parked on long-running branches.
 
-- Git commit documentation says committing named pathspecs records the current content of those paths and ignores other staged index content, which grounds path-limited commit discipline.
-- Git worktree documentation models linked worktrees as separate working directories with private worktree metadata, which grounds parallel branch isolation and cleanup requirements.
-- Git tag documentation distinguishes annotated release tags from lightweight temporary labels, which grounds release-tag policy.
-- Git push documentation defines --force-with-lease as a ref expectation check and warns that plain --force can lose commits, which grounds rewrite safety.
-- SemVer 2.0.0 defines MAJOR.MINOR.PATCH compatibility signaling; version-control owns where that signal is carried as a tag, while semantics owns whether the bump meaning is correct.
-- Trunk-based development guidance treats short-lived branches as the default integration model and warns that branches lasting more than a couple of days become long-lived drift.
-
-Use these as constraints. Local repositories may choose different branch names, ticket formats, forge merge buttons, protected-branch rules, or release automation, but the history must remain readable, reversible, and auditable.
-
-## Branching Strategy
-
-Prefer trunk-based development for product work: one protected mainline branch, short-lived feature branches, frequent integration, and incomplete features hidden behind feature flags or configuration gates.
-
-| Situation | Default decision | Risk to watch |
-|---|---|---|
-| Small product team | Short-lived branches into mainline | Branches silently live for a week and become integration projects. |
-| Large or regulated product team | Short-lived branches plus protected-branch checks and review gates | Review latency turns short-lived branches into long-lived branches. |
-| Library with multiple supported major versions | Release branches may be justified | Git Flow is copied into a product repo without the multi-version need. |
-| Emergency production fix | Branch from the relevant release tag, then reconcile back to mainline | Fix ships on a tag but never returns to mainline. |
-| Experimental work | Branch or fork with explicit expiry and cleanup criteria | Prototype branch becomes an undeclared product branch. |
-
-A branch lifetime rule should be concrete. A useful default is: aim for under two days, treat one week as an exception requiring explicit review, and recreate branches that have diverged structurally from mainline.
-
-## Commit Boundaries
-
-A commit is atomic when reverting it leaves no broken intermediate state, no unrelated rollback, and no half-finished feature. The practical test is simple: if the reason the commit exists requires the word "and", split it.
-
-| Mixed change | Split into |
+| Rule | Why |
 |---|---|
-| Bug fix and opportunistic refactor | One fix commit, one refactor commit. |
-| Feature and formatting sweep | One feature commit, one formatting commit. |
-| Schema migration and UI wiring | Migration commit plus application commit unless they must land atomically. |
-| Rename and behavior change | Rename-only commit, then behavior commit. |
-| Test harness repair and product change | Harness repair commit, then product change commit. |
+| Branches live < 48 hours | Forces small PRs, prevents drift from main, keeps merge cost low |
+| PRs target < 400 changed lines | Larger PRs review poorly; reviewer attention drops sharply past 400 lines |
+| Incomplete features ship behind flags | Lets you merge often without exposing half-built work to users |
+| `main` is always shippable | CI is the gate; nobody pushes broken code to main |
 
-Commit-message wording, type prefixes, and scope names belong to semantics or naming-conventions. Version-control owns whether the commit should exist as one transaction at all.
+The anti-pattern is a long-lived `develop` branch (Git Flow) used as if it were trunk: drift accumulates, integration becomes its own project, and "merging develop to main" becomes a quarterly event with thousands of changed files. Git Flow exists for a different problem — shipping libraries with multiple supported major versions, where you genuinely need parallel release branches. If you are not maintaining `v1.x` and `v2.x` simultaneously, you do not need Git Flow.
 
-## Provenance
+## Commit Authoring: One Change, One Commit
 
-Every meaningful commit should point to the reason it exists. The reason might be a tracker ID, issue number, ADR, incident record, release note, or written task brief. Use the local convention consistently.
+A commit is "atomic" when reverting it produces no broken intermediate state, no accidentally-reverted unrelated work, and no half-finished features. The test:
 
-Common portable forms:
+> *If a senior reviewer asks "why does this commit exist?" and the answer requires the word "and," split the commit.*
 
-~~~text
-feat(export): add order CSV export (TASK-1234)
+A commit titled "fix order rounding bug AND clean up the order utils file" is two commits. Run `git rebase -i HEAD~1` and split before merging.
 
-Refs: TASK-1234
-Decision: docs/decisions/0017-export-format.md
-~~~
+The commit-message wording (verb tense, prefix conventions, character limits) is *naming* — see `naming-conventions` for that. Version-control owns the commit *boundaries*: what counts as one commit, where one ends and the next begins, and whether the commit can stand alone if every later commit is reverted.
 
-The provenance convention should answer:
+### Provenance: Linking Commits to Tracker Tickets
 
-- What task, bug, incident, or decision caused this change?
-- Where can a future reader find the acceptance criteria or rationale?
-- Is the link visible in one-line history, structured trailers, or both?
-- Is enforcement social, hook-based, CI-based, or forge-based?
+Every commit on a feature branch should link to the tracker ticket that produced it. The format is convention-driven; common forms:
 
-Do not hard-code a private tracker prefix into a public skill. Substitute the local ticket or issue format.
+```
+feat(orders): add CSV export button (PROJ-1234)
 
-## Integration Method
+Implements the export button on the order list. Output mirrors the
+table columns; encoding is UTF-8 with BOM for spreadsheet compatibility.
+```
 
-Choose the integration method by the shape of the branch:
+The tracker ID may live in the subject (visible in `git log --oneline`) or in a structured trailer (`Refs: PROJ-1234`, machine-parseable for automated cross-linking). Pick one and apply it consistently — mixing both fragments the searchable history.
 
-| Branch state | Preferred integration | Reason |
-|---|---|---|
-| One polished commit | Rebase-and-merge or fast-forward | Preserves the commit as a useful transaction. |
-| Several noisy WIP commits that form one logical change | Squash-and-merge | Keeps mainline readable while preserving PR discussion elsewhere. |
-| Several polished commits that each stand alone | Rebase-and-merge | Preserves useful commit sequence without merge noise. |
-| Release branch or long-lived support branch with independent history | Explicit merge commit may be appropriate | The branch relationship is semantically meaningful. |
-| Branch is old and conflicts repeat across many commits | Recreate from current mainline and re-author/cherry-pick | Rebase cost has exceeded the value of preserving branch history. |
+If the change implements an architecture decision, reference the decision document in the commit body so future readers can find the why:
 
-Avoid "merge main into my feature branch" as routine history maintenance when a clean rebase or branch recreation would communicate the same work more clearly. If a repository intentionally allows merge commits, document when they are meaningful and verify that reviewers can still follow the history.
+```
+refactor(persistence): replace ad-hoc SQL with repository pattern (PROJ-1290)
+
+Implements the data-access pattern decided in docs/decisions/0017-repository-pattern.md.
+The change is mechanical; behavior is preserved by the existing integration tests.
+```
+
+## History Shape: Rebase, Squash, Linear
+
+For feature-branch integration into main, prefer this order:
+
+1. **Rebase the feature branch onto main** before merging. This re-applies your commits on top of the latest main, replacing "merge main into feature" noise with a clean linear history.
+2. **Squash on merge** if the feature branch has multiple commits that only make sense together. The PR becomes one commit on main; the feature-branch detail lives in the PR description and the squashed commit body.
+3. **Allow real merge commits** only when both branches have valuable independent history (rare — usually a release branch and a hotfix branch).
+
+```bash
+# Local workflow, on a feature branch
+git fetch origin
+git rebase origin/main          # replay your commits on top of latest main
+# resolve any conflicts, run tests, push
+git push --force-with-lease     # safe force: rejects if remote moved since your last fetch
+
+# Merging the PR into main (in your forge UI or CLI)
+# Pick "Squash and merge" if the branch has noisy WIP commits
+# Pick "Rebase and merge" if every commit is publishable on its own
+# Avoid "Create a merge commit" by default
+```
+
+`--force-with-lease` is the safe variant of `--force`: it pushes only if the remote branch is at the SHA you last fetched, refusing if a collaborator pushed in between. Plain `--force` overwrites whatever is there, which destroys other people's work.
+
+## Release Tagging
+
+Releases are *annotated* tags (`git tag -a`), not lightweight tags. Annotated tags carry a tagger identity, a date, and a message — they are first-class objects in the git store and survive history rewrites that would orphan a lightweight tag.
+
+```bash
+git tag -a v1.2.0 -m "Release v1.2.0 — closes Milestone 4 (PROJ-MS-4)"
+git push origin v1.2.0
+```
+
+Tag names follow SemVer 2.0.0 (`MAJOR.MINOR.PATCH`, optional pre-release suffix `-rc.1` or `-beta.2`). Patch tags are cheap; cut one per shipped fix.
+
+### Hotfix Flow
+
+When production has a bug that cannot wait for the next scheduled release:
+
+```bash
+# 1. Branch from the latest release tag, not from main
+git checkout -b hotfix/v1.2.1 v1.2.0
+
+# 2. Apply the minimal fix; test; commit
+git commit -m "fix(orders): rounding error in tax calculation (PROJ-1305)"
+
+# 3. Tag the patch
+git tag -a v1.2.1 -m "Hotfix v1.2.1 — tax rounding (PROJ-1305)"
+git push origin v1.2.1
+
+# 4. Cherry-pick the fix back to main so the bug doesn't return next release
+git checkout main
+git cherry-pick <hotfix-commit-sha>
+git push origin main
+```
+
+The hotfix branch can be deleted after the cherry-pick. The discipline is to keep `main`'s history linear *and* keep the hotfix tag pointing at the minimal fix, not at a snapshot of main.
+
+## Worktrees: Parallel Work Without Contamination
+
+Worktrees let multiple checkouts of the same repository coexist on different branches in different filesystem directories — without the cost of a full clone and without the conflict of a single working tree being on multiple branches.
+
+```bash
+# Create a worktree for a parallel feature
+git worktree add ../my-repo-feature-A feature/A
+
+# List current worktrees
+git worktree list
+
+# Remove a worktree after the work is merged
+git worktree remove ../my-repo-feature-A
+```
+
+Worktrees are essential when:
+
+- Multiple agents or contributors are working in the same repo simultaneously and would otherwise overwrite each other's uncommitted changes
+- You want to run a long task (test suite, build) on one branch while editing on another
+- You need to inspect a release tag's tree without disrupting your in-progress work
+
+The cleanup discipline matters: an abandoned worktree directory does not free its branch lock; `git worktree list --porcelain` and `git worktree prune` are the cleanup tools.
 
 ## Path-Limited Commits
 
-In a dirty or shared working tree, do not trust the global index. A standard git commit records whatever is staged, including files staged by another session. A path-limited commit records only named paths.
+In any repository where multiple processes or sessions share the working tree, the standard `git commit` is unsafe. The git index is a process-shared mutex; another session's `git add` lands in your `git diff --cached`, and a later `git commit` picks it up.
 
-~~~bash
-# Tracked files: commit only these paths, ignoring other staged changes.
-git commit --only -m "subject" -- path/one path/two
+The defence:
 
-# New files: add them first so Git knows them, then commit only those paths.
-git add path/new-file
-git commit --only -m "subject" -- path/new-file
+```bash
+# Right — for tracked files: build a temporary index from these paths only
+git commit --only -m "..." -- path/one path/two
 
-# Multi-line message from a file.
-git commit --only -F /tmp/commit-message -- path/one path/two
-~~~
+# Right — for new files: add first, then commit with --only
+git add path/one path/two
+git commit --only -m "..." -- path/one path/two
 
-Flag ordering matters: commit-message flags come before --; paths come after --. Anything after -- is a pathspec.
+# Right — for multi-line messages: use -F with a temp file
+printf 'subject\n\nbody\n' > /tmp/msg
+git commit --only -F /tmp/msg -- path/one path/two
 
-After every path-limited commit, verify the file list:
+# Wrong — `-m` AFTER `--` is parsed as a pathspec, not a flag.
+# git fails with: error: pathspec '-m' did not match any file(s) known to git
+git commit --only -- path/one path/two -m "..."
 
-~~~bash
-git show --name-only --format='%H%n%s' HEAD
-~~~
+# Wrong — picks up whatever a parallel session has staged
+git add path/one
+git commit -m "..."
+```
 
-If unintended files appear, stop. The recovery depends on repo policy and whether the commit was published; do not rewrite shared history without guardrails and intent-recognition.
+`--only` builds a transient index containing only the listed paths and commits from that. Whatever a parallel session has in the real index is left untouched for that session to commit. The safety window closes at the `git commit --only` call, not at the `git add`.
 
-## Release Tags And Hotfixes
+**Flag ordering rule:** Everything after `--` is a path to git. Put `-m`, `-F`, and other flags BEFORE `--`, paths AFTER it. Both Tier 1 solvers in the 2026-05-18 post-v0.5.7 skill-graph cleanup hit the `-m`-after-`--` failure; Issue 3 worked around with `-F /tmp/file`.
 
-Use annotated tags for releases. Annotated tags carry release metadata and are meant for release use; lightweight tags are better treated as temporary labels.
+After every commit, verify the file list:
 
-~~~bash
-git tag -a v1.2.0 -m "Release v1.2.0"
-git push origin v1.2.0
-~~~
+```bash
+git show --stat HEAD
+```
 
-The tag name may include a leading v, while the semantic version itself is the numeric MAJOR.MINOR.PATCH value. Let semantics decide whether a change is major, minor, patch, pre-release, or build metadata; this skill decides how the chosen version is represented in Git and reconciled into history.
+If files you did not intend to commit appeared, a parallel session staged them between your `git add` and your `git commit`. The recovery is `git reset --soft HEAD^` and a retry with `--only`.
 
-Hotfix flow:
+## Merge Conflict Resolution
 
-1. Identify the release tag that contains the production bug.
-2. Create a hotfix branch from that tag.
-3. Apply the smallest safe fix and verify it.
-4. Create a new patch tag or release tag according to the local release policy.
-5. Reconcile the fix back to mainline by cherry-pick, merge, or re-authoring so the bug does not return in the next release.
-6. Record the release, fix provenance, and any divergence from mainline.
+Conflicts come in two shapes:
 
-Do not fix only on the release tag path and forget mainline. That creates a regression waiting for the next release.
+**Content conflicts** — both sides edited the same lines. Resolution is line-by-line judgment, often informed by reading the surrounding context to understand what each side was trying to achieve.
 
-## Worktrees
+**Structural conflicts** — one side renamed a file, moved a function, or changed a dependency boundary while the other side edited the old shape. Git frequently reports these as "added by us / deleted by them" or "modified by both" with surprising contents. The resolution is rarely a textual merge; it is a re-application of the smaller change against the new shape.
 
-Use worktrees when one repository needs multiple simultaneous working directories: parallel agents, one branch running a long test while another is edited, release-tag inspection, or separate hotfix and feature work.
+When a rebase produces conflicts on every replayed commit (a sign the branch and main have diverged structurally), the right move is often to abandon the rebase, recreate the branch from current main, and cherry-pick or re-author the changes:
 
-~~~bash
-git worktree add ../repo-feature-a feature/a
-git worktree list
-git worktree remove ../repo-feature-a
-~~~
+```bash
+git rebase --abort
+git checkout main && git pull
+git checkout -b feature/x-redo
+# re-author the changes against the current main shape
+```
 
-Worktree guardrails:
-
-- Keep worktree directories outside each other; sibling directories are easier to reason about.
-- Name the branch and directory by the work item or purpose.
-- Run git worktree list before cleanup.
-- Use git worktree remove rather than deleting the directory by hand.
-- Use git worktree prune only after verifying no live worktree or unmerged branch still depends on that metadata.
-- Do not assume one worktree's config, sparse checkout, or ignored files apply to all worktrees.
-
-Worktrees isolate working directories, not judgment. You still need path-limited commits, branch freshness checks, and explicit cleanup evidence.
-
-## Force Push And History Rewrite
-
-Prefer not to rewrite shared history. When rewriting is appropriate - usually a private or review branch after rebase or commit cleanup - use --force-with-lease, not plain --force.
-
---force-with-lease is not magic safety. It protects against overwriting a remote ref that no longer matches the expected value, but background fetches or broad remote updates can weaken the default lease form. For high-risk rewrites, record the expected remote ref explicitly or use the repository's approved forge workflow.
-
-Before any force push, verify:
-
-- The branch is not protected mainline or a shared release branch.
-- The rewrite is intentional and authorized.
-- The remote branch has not moved unexpectedly.
-- A safer path is not available, such as a revert, new commit, or new branch.
-- The command is scoped to the intended branch only.
-
-Plain git push --force belongs behind guardrails; it can lose commits.
-
-## Merge Conflict Strategy
-
-Conflicts are either content conflicts or structural conflicts.
-
-| Conflict type | Signal | Strategy |
-|---|---|---|
-| Content conflict | Both sides changed the same lines | Read both intents, resolve line-by-line, run focused tests. |
-| Rename/edit conflict | One side moved or renamed while another edited old path | Reapply the smaller change onto the new structure. |
-| Repeated rebase conflict | Same conflict appears across many commits | Abort and recreate branch from current mainline. |
-| Generated-file conflict | Generated artifact changed on both sides | Regenerate from source if possible; do not hand-merge opaque output unless required. |
-| Dependency-lock conflict | Lockfile changed on both sides | Re-run the package manager resolution and inspect resulting package changes. |
-
-Do not auto-resolve conflicts inside a merge queue; use merge-queue for queued integration and stop for human or focused conflict handling when the queue encounters conflicts.
+A rebase that requires resolving the same conflict in five replayed commits is a signal — the branch is too old and the cleanup cost has crossed the recreate threshold.
 
 ## Verification
 
-- [ ] Branching model is named explicitly and actual behavior matches it.
-- [ ] Feature branches are short-lived; old branches are rebased, recreated, or explicitly justified.
-- [ ] Each commit is atomic: revertable without removing unrelated work.
-- [ ] Commit provenance links to a task, issue, decision, incident, or release record by local convention.
-- [ ] Commit-message wording and SemVer meaning were handed to semantics or naming-conventions when needed.
-- [ ] Integration method is chosen deliberately: fast-forward, rebase-and-merge, squash, or meaningful merge commit.
-- [ ] Dirty/shared repos use path-limited commits and verify committed file lists.
-- [ ] Release tags are annotated and traceable to the release record.
-- [ ] Hotfixes from release tags are reconciled back to mainline.
-- [ ] Worktree cleanup is verified before branch or directory removal.
-- [ ] Force pushes use --force-with-lease or a stricter approved alternative; plain --force is treated as high-risk.
-- [ ] Merge conflicts are classified as content, structural, generated, lockfile, or repeated-rebase conflicts before resolution.
+- [ ] Branching model is named explicitly (trunk-based or Git Flow), and the team's actual behavior matches the named model
+- [ ] Feature branches stay short-lived (under 48 hours typical, under one week absolute)
+- [ ] Every commit on a feature branch is atomic — reverts cleanly without taking unrelated work
+- [ ] Every commit links to a tracker ticket via convention (subject suffix or `Refs:` trailer), enforced by hook or CI when feasible
+- [ ] PRs are integrated via rebase-and-merge or squash-and-merge by default; explicit merge commits only for cross-branch releases
+- [ ] Releases are annotated tags following SemVer 2.0.0
+- [ ] Hotfixes branch from the relevant release tag, are tagged with a patch increment, and are cherry-picked back to main
+- [ ] Worktrees are used for any work that runs alongside other in-progress work in the same repo
+- [ ] Commits in multi-session repos use `git commit --only -- <paths>` to prevent parallel-session index contamination
+- [ ] `git push --force-with-lease` is the only force-push form ever used; plain `--force` is treated as a destructive operation
 
 ## Do NOT Use When
 
 | Use instead | When |
 |---|---|
-| semantics | Choosing Conventional Commit type, SemVer bump meaning, breaking-change signal, or compatibility meaning. |
-| naming-conventions | Naming a branch, commit scope, file, type, variable, route, or other identifier. |
-| merge-queue | Serializing multiple ready branches through a protected target branch or operating a queue/train. |
-| code-review | Reviewing PR content for correctness, security, performance, or maintainability. |
-| diff-analysis | Reading a patch to summarize semantic changes or risk before review. |
-| guardrails | Authorizing or blocking destructive git actions such as hard reset, branch deletion, or unsafe force push. |
-| intent-recognition | Classifying the risk of a specific command immediately before tool execution. |
-| debugging | Investigating a failed release pipeline, broken tag job, or git error after it happens. |
+| `naming-conventions` | Writing the commit message itself (Conventional Commits prefix, scope, subject wording, identifier names) |
+| `documentation` | Drafting the contributor-docs page that explains your version-control policy |
+| `code-review` | Reviewing a PR's content for correctness, style, or design |
+| `refactor` | Reorganizing the code that the commits touch — version-control reorganizes the *commits*, refactor reorganizes the *code* |
+| `debugging` | Chasing a release-pipeline failure or a broken hotfix tag |
+| `testing-strategy` | Deciding whether a change to the branching policy itself needs a regression test |

@@ -6,7 +6,7 @@ compatibility:
   notes: "Markdown, Git, any codebase with a lint tool"
 allowed-tools: Read Grep Bash
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.0.0"
   type: overlay
   category: quality
@@ -20,7 +20,7 @@ metadata:
   stability: experimental
   extends: testing-strategy
   keywords: "[\"lint\",\"linting\",\"lint rules\",\"lint integration\",\"static analysis\",\"eslint\",\"format check\",\"add eslint rule\",\"lint is failing\",\"add lint check\",\"rule migration\",\"lint gate\",\"migrate legacy\",\"migrate lint\",\"phased migration\",\"phased gates\",\"legacy violations\",\"legacy lint violations\",\"noimplicitany\",\"pre-commit vs ci\",\"pre-commit gate\",\"ci gate\",\"introduce lint rule\",\"rule pre-commit\",\"rule runs pre-commit\"]"
-  triggers: "[\"lint-overlay\"]"
+  triggers: "[\"lint-overlay\",\"which lint rules should block CI and which should warn-only for now?\"]"
   examples: "[\"plan ESLint rule introduction for a monorepo that has never had linting\",\"which lint rules should block CI and which should warn-only for now?\",\"migrate these legacy noImplicitAny violations in phased gates\",\"decide whether this new rule runs pre-commit or in CI only\"]"
   anti_examples: "[\"this specific ESLint error is blocking my commit — why?\",\"decide whether to unit-test or integration-test this handler\",\"extract this repeated code pattern into a shared util\"]"
   relations: "{\"boundary\":[{\"skill\":\"debugging\",\"reason\":\"debugging fixes a specific failing lint result; lint-overlay plans rule selection and gate placement\"},{\"skill\":\"refactor\",\"reason\":\"refactor changes behavior-preserving code shape; lint-overlay is verification-plan authoring, not code modification\"},{\"skill\":\"testing-strategy\",\"reason\":\"base testing-strategy owns unit-vs-integration scope selection; lint-overlay extends it only for lint-specific gate placement\"}]}"
@@ -30,6 +30,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/lint-overlay/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Lint Overlay

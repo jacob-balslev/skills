@@ -6,7 +6,7 @@ compatibility:
   notes: "Applies to any web application codebase using TypeScript, React, and Next.js App Router. The cross-domain enforcement priorities (security, a11y, performance, design system, testing, DevOps, AI/LLM) are framework-agnostic; the Next.js section is specific to the App Router pattern."
 allowed-tools: Read Grep Bash
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.2.0"
   type: capability
   category: quality
@@ -30,6 +30,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/best-practice/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Best Practice — Cross-Cutting Quality Enforcement
@@ -81,7 +85,7 @@ As the baseline enforcement layer, this skill connects:
 |------|-------------|
 | Self-documenting names | If a name needs a comment, rename it |
 | Comments explain WHY | Code explains what; comments explain intent, gotchas, business rules |
-| ADRs for decisions | `/sales-hub/docs/adr/` — Context, Decision, Alternatives, Consequences |
+| ADRs for decisions | `docs/adr/` — Context, Decision, Alternatives, Consequences |
 | TSDoc on public APIs | `@param`, `@returns`, `@throws` on exported functions |
 | No stale TODOs | Every `// TODO` must reference a ticket: `// TODO(SH-1234)` |
 

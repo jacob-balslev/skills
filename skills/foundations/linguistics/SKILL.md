@@ -30,7 +30,7 @@ grounding:
 drift_check:
   last_verified: "2026-05-19"
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.2.0"
   type: capability
   category: foundations
@@ -70,6 +70,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/foundations/linguistics/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Linguistics
@@ -192,7 +196,7 @@ Functions describe actions (verbs). Variables describe things (nouns). Mixing th
 | `delete` / `remove` | Destructive operations | `deleteAccount`, `removeLineItem` |
 | `handle` | Entry point for events/webhooks (and nothing else) | `handleIncomingWebhook` |
 | `process` | Multi-step pipeline execution | `processVerifiedWebhook` |
-| `extract` | Pull a subset from a larger structure | `extractOrderPii` |
+| `extract` | Pull a subset from a larger structure | `extractMatchingRecords` |
 | `format` | Produce a display string | `formatCurrencyDisplay` |
 | `build` | Assemble a complex object | `buildCanonicalOrder` |
 

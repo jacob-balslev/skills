@@ -1,10 +1,10 @@
 ---
 name: route-handler-design
-description: "Use when designing or reviewing Next.js Route Handlers (the `route.ts` file convention in App Router): when a Route Handler is the right surface vs Server Actions or Server Components, the HTTP-method-as-export contract (GET/POST/PUT/PATCH/DELETE/HEAD/OPTIONS), the Web-standard Request/Response interface (no Node `req`/`res`), the body-parsing primitives (`request.json`/`formData`/`text`/`blob`/`arrayBuffer`), the default caching behavior of GET responses and how to opt out (`dynamic = 'force-dynamic'`, `revalidate`, segment config), dynamic segments and search params, manual CORS, runtime selection (Edge vs Node), streaming via `ReadableStream`, status-code and header discipline, error responses, webhook-style handlers (signature verify before parse), and the design rule that a Route Handler is the right surface when the caller is not your own Next.js UI. Do NOT use for internal mutations triggered from your own UI (use server-actions-design), for the broader REST/contract/versioning discipline (use api-design), for HTTP method/status semantics in the abstract (use http-semantics), for request preprocessing across all routes (use middleware-patterns), or for the broader webhook reliability story — HMAC verification, idempotency, retries, queue handoff (use webhook-integration)."
+description: "Use when designing or reviewing Next.js App Router Route Handlers (`route.ts`): choosing Route Handler vs Server Action/Server Component, method exports, Web `Request`/`Response`, body parsing, GET caching and opt-outs, dynamic params, search params, CORS, Edge vs Node runtime, streaming responses, status/header discipline, errors, and webhook endpoint shape where raw-body signature verification matters. Do NOT use for internal UI mutations (use server-actions-design), broader REST contracts (use api-design), abstract HTTP semantics (use http-semantics), cross-route preprocessing (use middleware-patterns), or full webhook reliability design (use webhook-integration)."
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.0.0"
   type: capability
   category: engineering
@@ -39,6 +39,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/route-handler-design/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Route Handler Design

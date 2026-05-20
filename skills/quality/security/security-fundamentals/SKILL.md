@@ -4,7 +4,7 @@ description: "Use when reasoning about the security properties any application m
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.0.0"
   type: capability
   category: quality
@@ -39,6 +39,10 @@ metadata:
   skill_graph_canonical_skill: skills/security-fundamentals/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1212"
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Security Fundamentals

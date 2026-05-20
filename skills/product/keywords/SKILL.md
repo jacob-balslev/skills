@@ -31,7 +31,7 @@ grounding:
 drift_check:
   last_verified: "2026-05-19"
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.2.0"
   type: capability
   category: product
@@ -63,6 +63,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/product/keywords/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Keywords

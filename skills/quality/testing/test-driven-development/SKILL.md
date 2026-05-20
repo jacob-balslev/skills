@@ -4,7 +4,7 @@ description: "Use when reasoning about Test-Driven Development as a design disci
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.2.0"
   type: capability
   category: quality
@@ -42,6 +42,10 @@ metadata:
   skill_graph_canonical_skill: skills/quality/testing/test-driven-development/SKILL.md
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":180,\"review_cadence\":\"quarterly\"}"
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Test-Driven Development

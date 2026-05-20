@@ -6,7 +6,7 @@ compatibility:
   notes: "Provider-agnostic; abstract tool capabilities map to concrete tools across Claude Code, Cursor, Copilot, OpenCode, Aider, Continue. Specific tool names in this skill (read_file, grep_search, run_in_terminal, apply_patch) are concrete examples — substitute the equivalent in your harness."
 allowed-tools: Read Grep Bash Edit
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.1.0"
   type: capability
   category: engineering
@@ -37,6 +37,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/tool-call-strategy/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Tool Call Strategy

@@ -2,7 +2,7 @@
 name: autonomous-loop-patterns
 description: "This skill consolidates autonomous AI agent loop patterns: the Ralph Wiggum exit-code-2 pattern, our manage-loop (manage-continuation.json + manage-loop-hook.py), grind-loop.sh supervisor, completion detection strategies, safety caps, stall detection, and the tradeoffs between simple loops and sophisticated orchestration. Use when designing or debugging autonomous agent loops, choosing between loop approaches, or implementing safety limits. Do NOT use for choosing which command to run (use ai-coding-agents) or for task management (use linear)."
 metadata:
-  schema_version: 6
+  schema_version: 7
   type: capability
   version: "1.2.0"
   scope: portable
@@ -28,6 +28,10 @@ metadata:
   analogy: "Autonomous loop patterns are autopilot modes: each mode keeps moving, but each needs instruments, altitude limits, and a clear handoff back to the pilot."
   misconception: "The common mistake is treating autonomy as a loop that can run forever. A safe autonomous loop is defined by when it stops, what it persists, and how it proves progress between iterations."
   relations: "{\"adjacent\":[\"agent-governance\",\"ai-native-development\",\"hook-patterns\",\"agent-observability\",\"orchestration\"],\"boundary\":[\"ai-coding-agents\",\"linear\",\"task-execution\"],\"verify_with\":[\"agent-observability\",\"agent-control\"]}"
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Autonomous Loop Patterns

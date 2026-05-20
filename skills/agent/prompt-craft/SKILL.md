@@ -6,7 +6,7 @@ compatibility:
   notes: "Provider-agnostic prompt-design discipline for OpenAI, Anthropic, Google Gemini, open-weight models, and agent runtimes; provider-specific APIs, role names, structured-output features, and reasoning controls must be checked before implementation."
 allowed-tools: Read Grep Bash Edit
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.1.0"
   type: capability
   category: agent
@@ -38,6 +38,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/agent/prompt-craft/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Prompt Craft

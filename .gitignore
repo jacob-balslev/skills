@@ -1,16 +1,30 @@
-# Ignore everything at the root level except the committed exports and OSS trust files.
+# Public release repo (jacob-balslev/skills) — published to https://www.skills.sh/jacob-balslev/skills/
+#
+# SECURITY / PRIVACY BOUNDARY:
+# Only the curated `skills/` tree and governance files may be tracked here. The internal/flat
+# skill library (scope: operational, sales-hub-grounded), generated manifests, usage reports,
+# and scratch files must NEVER be committed — publishing them would expose internal architecture,
+# schema, and file paths to the public marketplace. (See the 2026-05-20 cleanup: 284 flat
+# `scope: operational` skills were sitting unpushed and would have published on a `git push`.)
+#
+# Model: ignore everything at the repo root, then re-include only the known-good public set.
+# Re-including the *directory* itself (e.g. `!/skills/`) makes its descendants trackable; this
+# avoids the git rule that a file cannot be re-included if its parent directory stays excluded.
+# Adding a new top-level file/dir to the public repo requires an explicit allow entry below.
 /*
-!/.gitignore
 !/.github/
-!/README.md
-!/LICENSE
-!/NOTICE
-!/CHANGELOG.md
-!/CONTRIBUTING.md
+!/.gitignore
 !/CODE_OF_CONDUCT.md
+!/CONTRIBUTING.md
+!/LICENSE
+!/README.md
 !/SECURITY.md
 !/skills/
-!/skills.manifest.json
-node_modules/
+
+# Belt-and-suspenders: never track secrets, env, or local build artifacts even under allowed dirs.
+*.env
+*.env.*
+*.local
 *.log
 .DS_Store
+node_modules/

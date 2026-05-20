@@ -26,7 +26,7 @@ grounding:
 drift_check:
   last_verified: "2026-05-19"
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.1.0"
   type: capability
   category: engineering
@@ -63,6 +63,10 @@ metadata:
   skill_graph_canonical_skill: skills/conceptual-modeling/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "600"
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Conceptual Modeling

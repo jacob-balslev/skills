@@ -6,7 +6,7 @@ compatibility:
   notes: "Cross-domain naming and meaning skill, stack-agnostic. The naming-smells catalogue, SemVer rules, conventional-commit format, semantic-token architecture, HTTP-status semantics, REST/GraphQL conventions, semantic type patterns, and anti-pattern catalog apply to any codebase; examples use generic commerce/order language and should be substituted for the user's domain."
 allowed-tools: Read Grep
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.2.0"
   type: capability
   category: foundations
@@ -37,6 +37,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/foundations/semantics/semantics/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Semantics

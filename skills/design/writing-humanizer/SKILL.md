@@ -6,7 +6,7 @@ compatibility:
   notes: "Stack-agnostic prose-humanization rules. The AI-tell catalog, voice-conversion decision tree, readability formulas, sentence-rhythm patterns, tone-mapping table, and responsible prose-fingerprint guidance apply to any human-readable text in any product domain — substitute the equivalents from your own audience and brand voice."
 allowed-tools: Read Grep Edit
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.1.0"
   type: capability
   category: design
@@ -36,6 +36,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/writing-humanizer/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Writing Humanizer

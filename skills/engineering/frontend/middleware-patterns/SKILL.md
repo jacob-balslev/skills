@@ -1,10 +1,10 @@
 ---
 name: middleware-patterns
-description: "Use when designing or reviewing Next.js middleware (the single `middleware.ts` file at the project root): the cross-cutting request/response transforms that run before route resolution, the Edge Runtime constraints that govern what middleware can and cannot do, the `matcher` config that decides which paths it runs on, the `NextRequest`/`NextResponse` API for cookies/geo/IP, the four response shapes (`next` / `rewrite` / `redirect` / direct response), the canonical patterns (auth gate, locale routing, A/B testing, header injection, geo-routing, bot blocking), the performance discipline (every matched request pays the cost), and the design rule that middleware is for cross-cutting concerns that apply across many routes — never for per-route business logic. Do NOT use for per-route HTTP endpoint logic (use route-handler-design), for the Server Action mutation surface (use server-actions-design), for the abstract HTTP method/status/header semantics middleware operates on (use http-semantics), for the Content Security Policy and broader hardening patterns it enforces (use security-fundamentals), or for the cross-cutting streaming model (use streaming-architecture)."
+description: "Use when designing or reviewing Next.js middleware (`middleware.ts`): cross-cutting request/response transforms before route resolution, Edge Runtime constraints, `matcher` config, `NextRequest`/`NextResponse`, response shapes (`next`, `rewrite`, `redirect`, direct response), auth gates, locale routing, A/B rewrites, header or CSP nonce injection, geo-routing, bot blocking, and performance discipline for code every matched request pays for. Do NOT use for per-route endpoint logic (use route-handler-design), internal UI mutations (use server-actions-design), abstract HTTP semantics (use http-semantics), CSP/security-policy design (use security-fundamentals), or streaming-system design (use streaming-architecture)."
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: 6
+  schema_version: 7
   version: "1.0.0"
   type: capability
   category: engineering
@@ -39,6 +39,10 @@ metadata:
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/middleware-patterns/SKILL.md
+  structural_verdict: UNVERIFIED
+  truth_verdict: UNVERIFIED
+  comprehension_verdict: UNVERIFIED
+  application_verdict: UNVERIFIED
 ---
 
 # Middleware Patterns
