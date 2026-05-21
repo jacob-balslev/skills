@@ -1,0 +1,138 @@
+{
+  "skill_name": "real-time-updates",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A dashboard shows operational metrics that can change every few seconds. The browser only needs server-to-browser updates and can refetch changed summaries. Apply the real-time-updates skill.",
+      "expected_output": "Define a freshness contract, prefer Server-Sent Events or adaptive polling over a bidirectional socket, send small invalidation or version events, and refetch authoritative state after each update.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Starts with freshness requirements before naming a transport",
+        "Chooses SSE or adaptive polling for one-way updates",
+        "Uses small invalidation/version messages plus authoritative refetch",
+        "Does NOT choose a bidirectional socket only because the feature is real-time"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "prompt": "A browser loses its EventSource connection during a deploy and reconnects automatically. The developer says built-in reconnect means no further work is needed. What should the skill require?",
+      "expected_output": "Built-in reconnect is not enough. The design needs last seen event ID, version, cursor, or timestamp tracking, then a catch-up fetch or full refetch before marking the view current.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies reconnect without catch-up as incomplete",
+        "Requires a last seen ID, version, cursor, timestamp, or equivalent marker",
+        "Requires missed-state recovery before clearing stale status",
+        "Does NOT assume the resumed stream includes every missed event"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A page has three widgets that each poll the same resource every five seconds, including when the tab is hidden. How should real-time-updates classify this?",
+      "expected_output": "This is duplicated fixed polling. Centralize polling or subscription ownership per resource, share the result through a cache or route-level provider, and reduce or pause polling when the tab is hidden.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Flags independent component polling as wasteful and inconsistent",
+        "Recommends a centralized polling or subscription owner",
+        "Uses visibility or activity to adapt polling interval",
+        "Does NOT leave every widget polling independently at a fixed interval"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "normal"
+    },
+    {
+      "id": 4,
+      "prompt": "A table auto-refreshes while the user is selecting rows and editing filters. New rows arrive and the selection disappears. What should the skill recommend?",
+      "expected_output": "Avoid disruptive auto-refresh during active interaction. Show a new-data banner or preserve selection, scroll, and filters before applying updates. Make freshness visible without stealing control.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies active interaction as a reason to avoid silent refresh",
+        "Recommends a new-data banner or state-preserving update",
+        "Keeps freshness visible while preserving user control",
+        "Does NOT silently reorder or replace the table during selection or filtering"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A designer wants a setting toggle to feel instant. The server may reject the change. What real-time update pattern applies?",
+      "expected_output": "Use optimistic UI only because the action is reversible. Show a pending state, keep previous state for rollback, show a failure recovery path, and reconcile with server state on success.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Allows optimistic UI for a reversible setting toggle",
+        "Requires pending state and rollback to previous state",
+        "Requires failure feedback and server reconciliation",
+        "Does NOT present speculative state as final before confirmation"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "normal"
+    },
+    {
+      "id": 6,
+      "prompt": "A long-running export has durable job progress already designed. The task is to decide how the browser learns about progress updates. Should real-time-updates own the whole job design?",
+      "expected_output": "No. The durable job state belongs to background-jobs. Real-time-updates should choose the browser freshness channel, stale indicators, reconnect catch-up, and UI behavior for progress visibility.",
+      "type": "contradiction-check",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Separates durable job execution from browser freshness transport",
+        "Routes job states, retries, and worker execution to background-jobs",
+        "Keeps ownership of progress visibility, transport choice, and reconnect behavior",
+        "Does NOT redesign the worker queue or retry policy as part of this skill"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "normal"
+    },
+    {
+      "id": 7,
+      "prompt": "A view displays a \"Live\" badge, but the last successful fetch was twelve minutes ago and the stream has been disconnected. What should the skill require?",
+      "expected_output": "Remove or downgrade the live claim. Show last successful update time, connection state, and stale warning or retry status until authoritative state has been refreshed.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Treats an unsupported live claim as misleading",
+        "Requires last successful update time or equivalent freshness indicator",
+        "Requires disconnected, retrying, or stale state to be visible",
+        "Does NOT keep showing a live badge when the connection is not current"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "high"
+    }
+  ]
+}
