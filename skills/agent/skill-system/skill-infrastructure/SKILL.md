@@ -26,18 +26,18 @@ grounding:
     - overlap_or_drift_checks_not_run_after_batch_changes
   evidence_priority: "repo_code_first"
 drift_check:
-  last_verified: "2026-05-18"
+  last_verified: "2026-05-21"
   truth_source_hashes:
-    "package.json": "2f480e50b8eecaa022caf065b5bb98db5db407f4e3ff8553a092a3f70750edba"
-    "bin/skill-graph.js": "3048b6e2d9e648a25efa38152578217eaf230716c1dabc921e8f8d944164ec8b"
-    "scripts/skill-lint.js": "e5de8a822b88172079263c8316b173e688b71498c9ed6a8a54dd0fba6aa9fd66"
-    "scripts/lib/roots.js": "49085fc54b2c6ff0ad23a2dffe25b5ab2b3d1e8d14a8d5b1e1eefb53a30f20de"
+    "package.json": "5e6f9585d5363327a58ecfb39822ebed6fe508c3a2db2d98ebf02c6da1a735ae"
+    "bin/skill-graph.js": "d1e096d4de72032dc9c6de42faeef79b6e0cf92112cf9a7b6c2745683f2705ca"
+    "scripts/skill-lint.js": "e24c1f950520eb350432f2213150552d7f0b23f251d18810d06ea244ceeafd4c"
+    "scripts/lib/roots.js": "88d53b3dad82a2510ea74a9d18310fb24c5a8c7754fec893272a1075a1d82508"
     "scripts/check-protocol-consistency.js": "22f1f747b6b578e83ae371ac3f9af4b6906d94529f383d1785ed3303b4c5a008"
-    "scripts/generate-manifest.js": "ec4ad89e21e44c272676846377679f59a272c193f0b0d448a7b6d881b0b9effc"
-    "scripts/skill-graph-drift.js": "350f624a6e82bb488cd9abd3be4d832ca7892ce1c7f27d39efd97326e1f04db6"
-    "scripts/skill-overlap.js": "ed642cbc677cc76ec1321300b37d6752337b6b5541c7a9f558fd315d6f934e4b"
+    "scripts/generate-manifest.js": "3db618ca6ee118d7ee5405ecd5806c8502a9e0c708688d559dc7a2f219c9294e"
+    "scripts/skill-graph-drift.js": "ac4c0571274e5a71d495081732d7a773ef4fa761ca1512dd5621b67dee571ce2"
+    "scripts/skill-overlap.js": "d5200a5ff88e82c5afdd482d191874511496bc6208882deb34be981c3db9d977"
     "scripts/skill-graph-routing-eval.js": "fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb"
-    "docs/manifest-field-mapping.md": "8de06aa16e23c219da1f5f2ec38b5b29aa912ad577377c8422e2300cdd77ee90"
+    "docs/manifest-field-mapping.md": "0f2488dcde5634b04f33ca543d99059819a1242aa43dffb6cce50c555240391a"
 metadata:
   schema_version: 7
   version: "1.1.0"
@@ -52,8 +52,8 @@ metadata:
   eval_state: unverified
   routing_eval: absent
   stability: experimental
-  keywords: "[\"skill library health\",\"skill system tooling\",\"skill library decay\",\"skill library maintenance\",\"skill census\",\"skill inventory\",\"frontmatter validation\",\"imperative conflict\",\"skill overlap detection\",\"skill conflict\",\"routing gap\",\"routing miss\",\"routing health\",\"eval threshold\",\"eval minimum\",\"contradiction check\",\"negative expectation\",\"drift sentinel\",\"truth source hash\",\"mirror parity\",\"skill graph health\",\"production skill library\",\"skill linter\",\"skill quality gate\",\"phantom ref\"]"
-  examples: "[\"our skill library is growing and we're getting silent decay — eval counts dropping, conflicts emerging — what tooling should we add?\",\"two of our skills give opposite instructions for the same function — how do we detect this automatically?\",\"we keep getting skill-router misses on real user queries — how do we surface and close routing gaps?\",\"design a health-check pipeline for a 200-skill library that runs in CI\",\"what's a reasonable minimum eval count per skill, and how do we enforce it?\",\"our skill mirror in `.claude/skills` keeps drifting from the source — what's the parity check?\",\"we want to add a contradiction-check eval pattern — what does it look like and when do we use it?\",\"skill-overlap-detector flagged 12 imperative conflicts — how do we triage which to fix vs suppress?\"]"
+  keywords: "[\"skill library health\",\"skill system tooling\",\"skill library decay\",\"skill library maintenance\",\"skill census\",\"skill inventory\",\"frontmatter validation\",\"imperative conflict\",\"skill overlap detection\",\"skill conflict\",\"routing gap\",\"routing miss\",\"routing health\",\"eval threshold\",\"eval minimum\",\"contradiction check\",\"negative expectation\",\"drift sentinel\",\"truth source hash\",\"mirror parity\",\"skill graph health\",\"production skill library\",\"skill linter\",\"skill quality gate\",\"phantom ref\",\"schema conformance\",\"audit skills\",\"audit my skills\",\"skill schema conformance\",\"skill schema validation\",\"audit skill metadata\"]"
+  examples: "[\"our skill library is growing and we're getting silent decay — eval counts dropping, conflicts emerging — what tooling should we add?\",\"two of our skills give opposite instructions for the same function — how do we detect this automatically?\",\"we keep getting skill-router misses on real user queries — how do we surface and close routing gaps?\",\"design a health-check pipeline for a 200-skill library that runs in CI\",\"what's a reasonable minimum eval count per skill, and how do we enforce it?\",\"our skill mirror in `.claude/skills` keeps drifting from the source — what's the parity check?\",\"we want to add a contradiction-check eval pattern — what does it look like and when do we use it?\",\"skill-overlap-detector flagged 12 imperative conflicts — how do we triage which to fix vs suppress?\",\"audit my skills for schema conformance\",\"check that my skill frontmatter conforms to the schema\"]"
   anti_examples: "[\"scaffold a new SKILL.md for our team's deploy procedure\",\"audit this Skill Graph repo for schema conformance and dangling relation targets\",\"the manifest sample drifted from the generator — find the mismatch\",\"improve this prompt's wording to get better outputs\",\"review this AI-generated PR for correctness\",\"set up ESLint for our TypeScript repo\",\"draft an architecture note explaining why we chose Postgres\"]"
   relations: "{\"boundary\":[{\"skill\":\"skill-scaffold\",\"reason\":\"skill-scaffold owns authoring methodology for one new SKILL.md; skill-infrastructure owns the deterministic health-tooling layer that watches the entire library after authoring\"},{\"skill\":\"graph-audit\",\"reason\":\"graph-audit is the operational audit of one specific library (Skill Graph), scope: codebase; skill-infrastructure is the portable discipline of designing health tooling for any skill library\"},{\"skill\":\"lint-overlay\",\"reason\":\"lint-overlay covers lint-rule selection and gate placement for general codebases; skill-infrastructure covers the skill-system-specific tooling category that includes lint but extends to overlap, routing-gap, drift, and mirror-parity\"}],\"related\":[\"skill-scaffold\",\"graph-audit\",\"testing-strategy\"],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
   grounding: "{\"domain_object\":\"Deterministic health tooling for Skill Graph libraries\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"package.json\",\"bin/skill-graph.js\",\"scripts/skill-lint.js\",\"scripts/lib/roots.js\",\"scripts/check-protocol-consistency.js\",\"scripts/generate-manifest.js\",\"scripts/skill-graph-drift.js\",\"scripts/skill-overlap.js\",\"scripts/skill-graph-routing-eval.js\",\"docs/manifest-field-mapping.md\"],\"failure_modes\":[\"health_tooling_categories_missing_from_ci\",\"protocol_mapping_drift\",\"eval_thresholds_become_self_attested\",\"overlap_or_drift_checks_not_run_after_batch_changes\"],\"evidence_priority\":\"repo_code_first\"}"
