@@ -40,6 +40,7 @@ owner: claude
 freshness: "2026-05-18"
 drift_check:
   last_verified: "2026-05-18"
+  truth_source_hashes: {}
 layer: meta
 primaryCategory: Agent System
 layerPrimary: meta
@@ -51,7 +52,7 @@ boundary: "This skill chooses the approach before execution. It does not execute
 analogy: "Task path optimization is like choosing a route before a trip: walking across the street needs no map, crossing a city needs traffic awareness, and crossing a mountain range needs checkpoints and fallback routes."
 misconception: "The common mistake is treating more process as safer. The safest path is the smallest path that still handles ambiguity, dependency, risk, and verification."
 relations:
-  adjacent:
+  related:
     - task-lifecycle
     - agents
     - task-sizing
