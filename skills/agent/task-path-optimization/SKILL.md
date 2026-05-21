@@ -27,12 +27,20 @@ keywords:
   - when to act immediately
   - fresh approach
   - task complexity assessment
+examples:
+  - "this task has failed twice, I need a fresh approach not another retry on the same path"
+  - "what is the shortest path to a solution here, plan vs act for this task"
+  - "assess this task's complexity and pick the lightest sufficient approach before I start"
+  - "is this work simple enough to just act, or should I plan the execution path first"
+anti_examples:
+  - "reduce the number of tool calls in this read-heavy step"
+  - "troubleshoot why the deployment keeps timing out"
+  - "execute the implementation plan we already agreed on"
 owner: claude
 freshness: "2026-05-18"
-eval_status: evals
-drift_check: "2026-05-18"
+drift_check:
+  last_verified: "2026-05-18"
 layer: meta
-family: agent-cognition
 primaryCategory: Agent System
 layerPrimary: meta
 routingRole: primary
@@ -51,9 +59,14 @@ relations:
     - codebase-search
     - task-execution
   boundary:
-    - tool-call-strategy
-    - diagnosis
-    - troubleshooting
+    - skill: tool-call-strategy
+      reason: "tool-call-strategy owns tool-level efficiency such as reducing or batching individual tool calls; task-path-optimization owns the higher-level choice of execution approach"
+    - skill: diagnosis
+      reason: "diagnosis owns systematic root-cause investigation of a concrete failure; task-path-optimization owns choosing the approach before work begins, not debugging a failure"
+    - skill: troubleshooting
+      reason: "troubleshooting owns resolving a specific broken behavior; task-path-optimization owns selecting the execution path, not fixing a live fault"
+    - skill: spec-driven-development
+      reason: "spec-driven-development owns writing and executing against a spec or plan; task-path-optimization owns the upstream plan-vs-act decision and approach selection, not executing the chosen plan"
   verify_with:
     - task-evaluation
     - code-review
