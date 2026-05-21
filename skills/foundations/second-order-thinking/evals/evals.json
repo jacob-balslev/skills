@@ -1,0 +1,157 @@
+{
+  "skill_name": "second-order-thinking",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A team wants to require two human approvals on every pull request to improve quality. Apply second-order thinking.",
+      "expected_output": "Name the first-order effect (more review coverage), then trace later effects: reviewer bottleneck, larger batched PRs, slower feedback, rubber-stamping, or shifted work. Convert material effects into guardrails such as PR-size limits, risk-based review, reviewer rotation, or delayed quality metrics.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Separates first-order review coverage from later effects",
+        "Models reviewer and author behavior changes",
+        "Converts second-order effects into guardrails or alternate policy design",
+        "Does NOT stop at 'more approvals improves quality'"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "prompt": "A product team celebrates a conversion lift from a more aggressive paywall. What should second-order thinking ask?",
+      "expected_output": "Ask what happens after the conversion lift: trust erosion, support contacts, refund requests, lower retention, weaker referrals, or changed customer mix. Add delayed metrics and guardrails before accepting the first-order win.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Names conversion lift as first-order only",
+        "Traces later trust, retention, support, refund, referral, or customer-mix effects",
+        "Requires delayed metrics or guardrails",
+        "Does NOT treat conversion alone as proof of success"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "The user asks: 'How could this launch plan fail?' Should second-order-thinking own it?",
+      "expected_output": "Route primarily to inversion because the user is asking to reverse the goal and find failure paths. Second-order thinking can contribute after specific interventions are proposed, by tracing how actors respond over time.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes goal-reversal failure-path work to inversion",
+        "Defines a limited complementary role for second-order thinking",
+        "Distinguishes reverse failure search from forward consequence tracing",
+        "Does NOT over-own inversion prompts"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 4,
+      "prompt": "A company cuts support staffing to reduce monthly cost. Use second-order thinking.",
+      "expected_output": "Trace first-order savings, then later effects: longer response times, churn, lower trust, more escalations, poorer product feedback, burnout, and higher replacement or acquisition costs. Compare short-term savings with delayed costs and add metrics or scope limits.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Names immediate cost saving separately",
+        "Traces delayed customer, team, feedback, and economic effects",
+        "Compares savings against delayed costs or adds guardrails",
+        "Does NOT analyze only the monthly expense line"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A team says a recurring bug pattern appears across many files and wants to cluster it. Is that second-order thinking?",
+      "expected_output": "No. That belongs to pattern-recognition because the task is clustering repeated observed issues. Second-order thinking is relevant only if evaluating downstream consequences of a proposed fix or prevention rule.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes repeated issue clustering to pattern-recognition",
+        "Distinguishes observed recurrence analysis from downstream consequence analysis",
+        "Mentions second-order thinking only for evaluating proposed interventions",
+        "Does NOT over-own pattern clustering"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 6,
+      "prompt": "A metric target rewards agents for closing tasks per day. What second-order effects should be considered?",
+      "expected_output": "Consider gaming and quality decay: smaller task slicing, premature closure, skipped verification, lower documentation quality, rework, or hidden backlog growth. Add quality guardrails, rework tracking, and delayed outcome metrics.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies incentive response and metric gaming",
+        "Names quality, verification, documentation, rework, or backlog consequences",
+        "Adds guardrail or delayed outcome metrics",
+        "Does NOT accept task-close count as complete throughput truth"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "An agent lists thirty speculative consequences of a decision, including asteroid impacts and macroeconomic collapse. Is that good second-order thinking?",
+      "expected_output": "No. Second-order thinking should trace plausible, material consequence chains with named mechanisms. Remote hypotheticals without causal linkage are noise and should be filtered out.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "adversarial",
+      "expectations": [
+        "Rejects infinite hypothetical listing",
+        "Requires plausible material chains with mechanisms",
+        "Keeps consequence analysis selective and decision-relevant",
+        "Does NOT reward more consequences for their own sake"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 8,
+      "prompt": "A proposal moves work from engineering to customer success to make delivery faster. Apply second-order thinking.",
+      "expected_output": "Trace bottleneck displacement: engineering queue shrinks first, then customer success workload rises, quality may vary, feedback loops change, customer-facing delays or burnout may grow. Decide whether to add training, automation, scope limits, or measure the downstream queue before accepting the speed gain.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies bottleneck displacement as a second-order effect",
+        "Models the downstream team response and workload",
+        "Converts the analysis into controls or delayed metrics",
+        "Does NOT celebrate upstream speed without checking downstream cost"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}
