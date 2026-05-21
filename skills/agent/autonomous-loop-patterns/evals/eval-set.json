@@ -1,77 +1,57 @@
 [
   {
-    "query": "I need to set up an autonomous loop that keeps running until a task is done",
+    "query": "Design an autonomous loop that keeps an AI agent running until a task is done",
     "should_trigger": true,
-    "note": "Core use case: designing an autonomous agent loop"
+    "note": "Core use case: autonomous loop design"
   },
   {
-    "query": "How does the Ralph Wiggum exit code 2 pattern work?",
+    "query": "How should an agent loop decide when to stop?",
     "should_trigger": true,
-    "note": "Direct reference to a named loop pattern"
+    "note": "Stop conditions are a core loop primitive"
   },
   {
-    "query": "My grind-loop keeps respawning and crashing — how do I add a safety cap?",
+    "query": "My agent keeps retrying the same failed test. How do I prevent a respawn storm?",
     "should_trigger": true,
-    "note": "Debugging a specific loop pattern with safety mechanism question"
+    "note": "Repeated failure and respawn control are core topics"
   },
   {
-    "query": "What is manage-continuation.json and how does the manage-loop use it?",
+    "query": "What should be stored in an agent checkpoint before a fresh session resumes work?",
     "should_trigger": true,
-    "note": "Direct reference to manage-loop checkpoint architecture"
+    "note": "Checkpoint-resume loop design is covered"
   },
   {
-    "query": "How should I detect when an agent loop has stalled and is not making progress?",
+    "query": "Which loop pattern fits many independent queue items with fresh context per item?",
     "should_trigger": true,
-    "note": "Stall detection is a core topic of this skill"
+    "note": "Supervisor respawn loop selection is covered"
   },
   {
-    "query": "Which loop pattern should I use for a 20-task backlog with Linear integration?",
+    "query": "How do I design a completion marker for a hook-based agent loop?",
     "should_trigger": true,
-    "note": "Pattern selection decision tree is central to this skill"
+    "note": "Sentinel continuation loops are covered"
   },
   {
-    "query": "How do I run two grind-loop instances in parallel without them colliding?",
+    "query": "What safety caps should an unattended agent loop have?",
     "should_trigger": true,
-    "note": "GRIND_INSTANCE isolation is covered in this skill"
+    "note": "Safety cap selection is a core topic"
   },
   {
-    "query": "What completion detection strategies are most reliable for autonomous loops?",
-    "should_trigger": true,
-    "note": "Completion detection ranking is a dedicated section"
-  },
-  {
-    "query": "The wrap-gate hook is blocking my task claims — what is going on?",
-    "should_trigger": true,
-    "note": "Wrap-gate enforcement is documented in this skill"
-  },
-  {
-    "query": "I need to create a Linear issue for a bug I found",
+    "query": "Write the exact prompt for my summarization worker",
     "should_trigger": false,
-    "note": "Linear issue management belongs to the linear skill, not loop patterns"
+    "note": "Prompt wording belongs to prompt-craft"
   },
   {
-    "query": "Which slash command should I use — /manage or /solve?",
+    "query": "How many tool calls should the worker batch before reading the next file?",
     "should_trigger": false,
-    "note": "Command selection belongs to ai-coding-agents skill"
+    "note": "Per-tool efficiency belongs to tool-call-strategy"
   },
   {
-    "query": "How do I write a PreToolUse hook that blocks dangerous file deletions?",
+    "query": "Design the event schema for loop telemetry",
     "should_trigger": false,
-    "note": "Hook implementation details belong to hook-patterns skill"
+    "note": "Telemetry semantics belong to observability-modeling"
   },
   {
-    "query": "How should I implement the CSV export feature for the orders page?",
+    "query": "Which product command starts a background agent in my IDE?",
     "should_trigger": false,
-    "note": "Task implementation belongs to task-execution, not loop architecture"
-  },
-  {
-    "query": "What budget caps should I set for a spawned agent?",
-    "should_trigger": false,
-    "note": "Budget and safety caps at the system level belong to the agent-control skill"
-  },
-  {
-    "query": "How do I configure the agent model router to use Sonnet for solvers?",
-    "should_trigger": false,
-    "note": "Model routing belongs to agents/agent-infrastructure, not loop patterns"
+    "note": "Product command selection belongs to product-specific docs"
   }
 ]

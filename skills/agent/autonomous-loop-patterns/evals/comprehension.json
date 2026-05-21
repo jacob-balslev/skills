@@ -2,81 +2,124 @@
   "skill_name": "autonomous-loop-patterns",
   "subject": "Autonomous Loop Patterns",
   "adjacent_concepts": [
-    "hook lifecycle",
-    "checkpoint state machines",
-    "agent control planes",
-    "agent observability",
-    "task orchestration",
-    "session handoff"
+    "agent engineering",
+    "prompt design",
+    "tool-call strategy",
+    "context management",
+    "observability modeling",
+    "human handoff"
   ],
   "evals": [
     {
       "id": 1,
       "dimension": "definition",
-      "prompt": "Define autonomous loop patterns for an AI agent system in 2-3 sentences. A correct answer must state that they are reusable control shapes for repeated agent execution, and must mention stop conditions, progress signals, checkpoint/respawn behavior, and safety caps.",
+      "prompt": "Define autonomous loop patterns for AI agent systems in 2-3 sentences.",
+      "expected_output": "They are reusable control shapes for running an agent repeatedly until an explicit stop condition, safety cap, or human handoff is reached. A correct definition mentions progress signals, durable state, stop conditions, and caps.",
+      "expectations": [
+        "Defines loops as control shapes, not just repeated prompting",
+        "Mentions stop condition, progress evidence, durable state, and safety cap",
+        "Does NOT define autonomy as permission to run indefinitely"
+      ],
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "truth_mode": "conceptual_correctness",
       "skill_type": "concept",
       "criticality": "high"
     },
     {
       "id": 2,
       "dimension": "mental_model",
-      "prompt": "Describe the mental model for autonomous loop patterns by naming at least four primitives and explaining how Ralph Wiggum, manage-loop, and grind-loop place those primitives differently. A correct answer must include trigger, worker session, progress signal, stop condition, and safety cap.",
+      "prompt": "Name the primitives in the mental model for autonomous loop patterns and explain how they fit together.",
+      "expected_output": "The primitives are trigger, worker agent, progress signal, stop condition, durable state, and safety cap. A trigger starts an iteration, the worker acts, progress evidence is recorded, durable state preserves resume context, the stop condition ends the loop, and the cap prevents unsafe continuation.",
+      "expectations": [
+        "Names at least five of the six primitives",
+        "Explains the relationships between primitives, not just a list",
+        "Does NOT omit the safety cap or durable state primitives"
+      ],
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "truth_mode": "conceptual_correctness",
       "skill_type": "concept",
       "criticality": "high"
     },
     {
       "id": 3,
       "dimension": "purpose",
-      "prompt": "Why do autonomous loop patterns exist as a named skill rather than ad hoc scripting? A correct answer must explain the failure mode of uncapped or uncheckpointed loops and how named patterns let the system pick the smallest safe loop shape.",
+      "prompt": "Why should an agent team use named loop patterns instead of ad hoc continue instructions?",
+      "expected_output": "Named loop patterns make termination, recovery, state persistence, and escalation explicit. They prevent uncapped retry, lost progress after restart, and silent stalls that ad hoc continue instructions cannot reliably handle.",
+      "expectations": [
+        "Explains the failure modes named patterns prevent",
+        "Connects the purpose to safety and recoverability",
+        "Does NOT claim prompt wording alone is enough for reliable loop control"
+      ],
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "truth_mode": "conceptual_correctness",
       "skill_type": "concept",
       "criticality": "high"
     },
     {
       "id": 4,
       "dimension": "boundary",
-      "prompt": "Autonomous loop patterns are often confused with command selection, task execution, agent control, and inter-agent messaging. Explain the boundary to each. A correct answer must route command choice to ai-coding-agents, implementation to task-execution, steering/budget to agent-control, and messaging to agent-to-agent or agent-messaging.",
+      "prompt": "Explain how autonomous-loop-patterns differs from prompt-craft, tool-call-strategy, agent-engineering, context-management, and observability-modeling.",
+      "expected_output": "Autonomous-loop-patterns owns repeated-execution control shape. Prompt-craft owns one worker instruction, tool-call-strategy owns per-tool efficiency, agent-engineering owns the broader system architecture, context-management owns what enters one worker context, and observability-modeling owns telemetry semantics.",
+      "expectations": [
+        "Routes each adjacent concept to the right neighboring skill",
+        "Keeps autonomous-loop-patterns focused on loop control shape",
+        "Does NOT let autonomous-loop-patterns over-own prompt writing, tool optimization, or telemetry schema design"
+      ],
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "truth_mode": "conceptual_correctness",
       "skill_type": "concept",
       "criticality": "high"
     },
     {
       "id": 5,
       "dimension": "taxonomy",
-      "prompt": "Classify Ralph Wiggum, manage-loop, and grind-loop by complexity, continuation mechanism, and best use case. A correct answer must identify Ralph Wiggum as simplest for one clear task, manage-loop as continuation-signal based for orchestrated backlog work, and grind-loop as an external supervisor for fresh-session respawn and throughput.",
+      "prompt": "Classify bounded single-run, sentinel continuation, checkpoint-resume, supervisor respawn, and human-gated loops by best use case.",
+      "expected_output": "Bounded single-run fits one clear task; sentinel continuation fits small repeated turns with a precise marker; checkpoint-resume fits multi-session work; supervisor respawn fits many independent queue items; human-gated loops fit risky or unclear work.",
+      "expectations": [
+        "Maps each pattern to a distinct use case",
+        "Recognizes human-gated loops as a safety pattern",
+        "Does NOT treat supervisor respawn as the default for every task"
+      ],
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "truth_mode": "conceptual_correctness",
       "skill_type": "concept",
       "criticality": "high"
     },
     {
       "id": 6,
       "dimension": "analogy",
-      "prompt": "Use the autopilot-mode analogy for autonomous loop patterns and map it to concrete repo mechanisms. A correct answer must map instruments to status/checkpoint/telemetry, altitude limits to iteration or bad-exit caps, and pilot handoff to stop conditions or human review.",
+      "prompt": "Use the autopilot analogy for autonomous loop patterns and map it to concrete loop primitives.",
+      "expected_output": "The worker agent is the aircraft, progress signals are instruments, durable state is the flight log, safety caps are altitude or fuel limits, stop conditions are route completion or abort rules, and human handoff is the pilot taking control.",
+      "expectations": [
+        "Preserves the control-system structure of the analogy",
+        "Maps at least four concrete loop primitives",
+        "Does NOT imply autopilot removes the need for human handoff or safety limits"
+      ],
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "truth_mode": "conceptual_correctness",
       "skill_type": "concept",
       "criticality": "medium"
     },
     {
       "id": 7,
       "dimension": "application",
-      "prompt": "Novel scenario: an agent must clear a small queue of 4 well-specified docs tasks overnight. Choose a loop pattern and list the required safety mechanisms. A correct answer must choose the simplest adequate pattern, explain when grind-loop would be justified instead, and include completion signals, a cap, persisted status, and observability evidence. It must not say an unbounded loop is acceptable.",
+      "prompt": "Novel scenario: an agent should review a small batch of five independent markdown files overnight, creating a short report for each. Choose a loop pattern and list required safety mechanisms.",
+      "expected_output": "A supervisor respawn loop is reasonable if each file is independent and fresh context per file matters; otherwise a bounded or checkpoint loop may be enough. Required safeguards include per-item status, timeout, consecutive-error cap, durable report path, and visible stop reason.",
+      "expectations": [
+        "Chooses a pattern based on independence and context needs",
+        "Includes durable status and safety caps",
+        "Explains when a simpler pattern would be enough",
+        "Does NOT approve an unattended loop without timeout or error cap"
+      ],
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "truth_mode": "conceptual_correctness",
       "skill_type": "concept",
       "criticality": "high"
     }
