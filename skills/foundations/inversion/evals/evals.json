@@ -1,0 +1,157 @@
+{
+  "skill_name": "inversion",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A team wants to improve first-week activation. Apply inversion.",
+      "expected_output": "State the forward goal, invert it into 'what would make first-week activation fail or produce low-quality activation?', enumerate concrete abandonment paths, then convert the material paths into prevention or detection controls.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "States the forward goal before inverting it",
+        "Uses an anti-goal prompt tied to activation failure",
+        "Converts failure paths into controls rather than leaving a risk list",
+        "Does NOT treat inversion as generic brainstorming"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 2,
+      "prompt": "An outage already happened after a deployment. The user asks why it happened. Should inversion take over?",
+      "expected_output": "No. Route to debugging or problem-locating-solving because the failure has occurred and needs evidence-based root-cause isolation. Inversion may later improve the prevention plan, but it is not the RCA workflow.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes post-failure investigation to debugging or problem-locating-solving",
+        "Distinguishes prospective inversion from root-cause analysis",
+        "Allows a later prevention role without over-owning the task",
+        "Does NOT use inversion as a substitute for evidence-based RCA"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 3,
+      "prompt": "A product team celebrates a rising engagement metric. Use inversion to test whether that could be bad.",
+      "expected_output": "Use metric inversion: ask how engagement could rise while user value, trust, revenue, or long-term retention worsens. Identify gaming, friction loops, addictive or low-value behavior, and then require guardrail metrics or a better value proxy.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Uses metric inversion rather than ordinary risk listing",
+        "Names ways the metric could improve while the real goal worsens",
+        "Recommends guardrail metrics or a better proxy",
+        "Does NOT assume metric improvement is automatically success"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "An architect wants to make a migration plan safer. What does inversion produce?",
+      "expected_output": "Invert the migration goal into concrete failure paths: irreversible cutover, stale compatibility assumptions, missing rollback, hidden data drift, delayed detection, or ownership gaps. Map each path to prevent, detect, buffer, rehearse, accept, or redesign.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Names concrete migration failure paths",
+        "Includes mundane operational failures as well as severe ones",
+        "Maps material paths to control categories",
+        "Does NOT stop at vague labels like 'rollback risk' or 'communication risk'"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A team wants a full facilitated exercise where everyone independently writes why a project failed one year from now. Is that inversion or another method?",
+      "expected_output": "Do not treat inversion as the full owner. Inversion is the underlying reasoning move, but the described facilitated assumed-future-failure process with independent generation belongs to a dedicated pre-mortem facilitation workflow.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes the facilitated team exercise to a dedicated pre-mortem workflow",
+        "Explains that inversion is a reasoning move, not the full group protocol",
+        "Preserves inversion as adjacent but not owner",
+        "Does NOT over-own pre-mortem facilitation"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 6,
+      "prompt": "A claim says a new policy will reduce support tickets. Use inversion to strengthen the claim.",
+      "expected_output": "Use opposite-hypothesis inversion: ask what would make support tickets increase instead, such as ambiguity, hidden workload, bad incentives, or delayed confusion. Then add tests, guardrails, or qualifiers to the claim.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Uses opposite-hypothesis testing for a claim",
+        "Names plausible conditions under which the opposite would occur",
+        "Turns the inverted result into tests, guardrails, or qualifiers",
+        "Does NOT simply restate confidence in the original claim"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 7,
+      "prompt": "An agent lists twenty catastrophic ways a plan could fail but changes nothing. Evaluate that inversion output.",
+      "expected_output": "It is incomplete. Inversion must convert material failure paths into controls or accepted risks. A scary list without plan changes, safeguards, tests, or accepted-risk rationale fails the method.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "adversarial",
+      "expectations": [
+        "Identifies failure to convert findings into action",
+        "Requires controls or accepted-risk rationale",
+        "Recognizes catastrophe-only output as insufficient",
+        "Does NOT accept a risk list as the deliverable"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 8,
+      "prompt": "A reliability engineer asks to enumerate every component failure mode and score S/O/D with RPN. Should inversion handle it?",
+      "expected_output": "No. Use a dedicated FMEA process because the request asks for component-level failure-mode enumeration and scoring. Inversion can help frame anti-goals, but S/O/D and RPN are FMEA's method.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes S/O/D and RPN scoring to FMEA",
+        "Distinguishes lightweight goal reversal from systematic component scoring",
+        "Allows inversion only as upstream framing if useful",
+        "Does NOT invent scoring inside inversion"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    }
+  ]
+}

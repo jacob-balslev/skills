@@ -1,0 +1,47 @@
+[
+  {
+    "query": "Invert this launch plan and tell me how it could fail",
+    "should_trigger": true,
+    "note": "Core plan inversion"
+  },
+  {
+    "query": "What would guarantee that activation gets worse instead of better?",
+    "should_trigger": true,
+    "note": "Anti-goal inversion"
+  },
+  {
+    "query": "Use the opposite hypothesis to test this recommendation",
+    "should_trigger": true,
+    "note": "Opposite-hypothesis testing"
+  },
+  {
+    "query": "How could this metric improve while the business gets worse?",
+    "should_trigger": true,
+    "note": "Metric inversion and Goodhart-risk surface"
+  },
+  {
+    "query": "What should we avoid doing if we want this project to succeed?",
+    "should_trigger": true,
+    "note": "Avoidance and prevention planning"
+  },
+  {
+    "query": "Break this decision down to irreducible premises",
+    "should_trigger": false,
+    "note": "Primitive decomposition belongs to first-principles-thinking"
+  },
+  {
+    "query": "The system failed in production yesterday; find the root cause",
+    "should_trigger": false,
+    "note": "Observed failure belongs to debugging or problem-locating-solving"
+  },
+  {
+    "query": "Run an FMEA with severity occurrence detectability and RPN",
+    "should_trigger": false,
+    "note": "Component scoring belongs to a dedicated FMEA process"
+  },
+  {
+    "query": "Facilitate a pre-mortem where everyone independently writes failure reasons",
+    "should_trigger": false,
+    "note": "Structured team process belongs to a dedicated pre-mortem workflow"
+  }
+]
