@@ -1,0 +1,53 @@
+name: Privacy Scan (ADR 0012 Layer 4)
+
+# ─── Trigger ───────────────────────────────────────────────────────────────────
+# Runs on every push and every pull request to the main branch so no commit
+# escapes the scan regardless of how it lands (direct push or merged PR).
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+# ─── Permissions ───────────────────────────────────────────────────────────────
+permissions:
+  contents: read
+
+jobs:
+  privacy-scan:
+    name: Scan for internal-path / private-data leaks
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the public skills repo (full history for accurate diffs)
+      - name: Checkout skills repo
+        uses: actions/checkout@v4
+        with:
+          path: skills
+
+      # 2. Clone the skill-graph tooling repo so the shared privacy-patterns.js
+      #    module is available at the expected sibling path.
+      #    This is the SAME resolution strategy as hooks/pre-push — one source of truth.
+      - name: Clone skill-graph (provides shared privacy-patterns.js)
+        run: |
+          git clone --depth=1 https://github.com/jacob-balslev/skill-graph.git skill-graph
+
+      # 3. Run the CI scanner.
+      #    SKILL_GRAPH_PATH points the script at the freshly-cloned tooling repo,
+      #    mirroring the SKILL_GRAPH_PATH override supported by hooks/pre-push.
+      - name: Run privacy scan
+        env:
+          SKILL_GRAPH_PATH: ${{ github.workspace }}/skill-graph
+        run: |
+          node skills/scripts/ci-privacy-scan.js
+        working-directory: ${{ github.workspace }}
+
+      # 4. Summary annotation (only runs when the scan passes — step 3 exits 1 on failure)
+      - name: Post scan summary
+        if: success()
+        run: |
+          echo "### Privacy Scan — CLEAN" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "0 violations found. The published tree contains no internal-path or private-data signals." >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "ADR 0012 Layer 4 gate passed. Detector: \`skill-graph/scripts/lib/privacy-patterns.js\`" >> "$GITHUB_STEP_SUMMARY"

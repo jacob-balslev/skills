@@ -20,6 +20,7 @@
 !/README.md
 !/SECURITY.md
 !/hooks/
+!/scripts/
 !/skills/
 
 # Belt-and-suspenders: never track secrets, env, or local build artifacts even under allowed dirs.
