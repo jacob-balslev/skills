@@ -1,0 +1,175 @@
+{
+  "skill_name": "event-storming",
+  "subject": "Event Storming workshop methodology (Brandolini, 2013)",
+  "version": "1.0",
+  "schema_version": 1,
+  "pilot_panel": "SH-6335",
+  "anchor_grounding": "domain-external",
+  "description": "Application-shape eval set for event-storming (SH-6335 batch 3). Tests whether loading the Event Storming skill changes which workshop facilitation defects an agent flags and which corrections it recommends when reviewing event boards, domain event sequences, and workshop session outputs. The discriminating signal: identify when the event board uses the wrong artifact color/type (e.g., commands masquerading as events, or policies unnamed), when a domain event is too granular or too coarse for the workshop scale, or when a bounded context boundary is placed at the wrong seam. 5 real in-scope cases + 2 red-herring probes (organizational / project-management concerns that look like Event Storming problems but are not). Cases grounded in Brandolini's published methodology and publicly known DDD literature — no internal system data.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "artifact_type_error",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A Big Picture Event Storming board is reviewed. The orange stickies (domain events) include the following:\n\n- Order Placed\n- Send Confirmation Email\n- Payment Charged\n- Update Inventory\n- Assign to Fulfillment Team\n- Shipment Dispatched\n- Handle Return Request\n\nThe facilitator says the board looks good and the team is ready to move to Process Modeling.",
+      "context": "This is a Big Picture Event Storming session. The goal is to build a shared, chronological model of domain behavior using orange domain-event stickies (past-tense facts). The board is about to be used to identify bounded context candidates.",
+      "question": "Review this Big Picture event board before the team moves to Process Modeling. Are the orange stickies correctly typed?",
+      "expected_flags": [
+        "'Send Confirmation Email', 'Update Inventory', and 'Assign to Fulfillment Team' are commands or internal actions, not domain events — domain events are past-tense facts that happened in the domain ('Order Confirmed', 'Inventory Updated', 'Fulfillment Assignment Created'); imperative phrases describe what the system should DO, not what has HAPPENED, which is the wrong artifact for an orange sticky",
+        "'Handle Return Request' is a command or process trigger, not a domain event — the corresponding domain event would be 'Return Request Received' or 'Return Initiated'; mixing commands with events on the event timeline makes the board unusable for bounded context discovery because commands and events have different producers and consumers",
+        "if the board advances to Process Modeling with commands disguised as events, the team will have a false picture of the domain's behavior — aggregate boundaries will be placed incorrectly because commands and events imply different ownership seams"
+      ],
+      "expected_fix_hints": [
+        "convert the imperative stickies to past-tense domain events: 'Send Confirmation Email' → 'Confirmation Email Sent'; 'Update Inventory' → 'Inventory Updated'; 'Assign to Fulfillment Team' → 'Fulfillment Assignment Created'",
+        "move the imperative-phrased stickies to blue command stickies if the team wants to keep them — commands are triggers that cause events; they should be a different color and placed upstream of their corresponding event on the timeline",
+        "before moving to Process Modeling, walk the board left-to-right and verify every orange sticky is in past tense and represents a business-meaningful fact, not an internal system action"
+      ],
+      "absent_signals": [
+        "should NOT accept the board as ready for Process Modeling when it mixes commands and domain events — the artifact type error will propagate into the Process Modeling output",
+        "should NOT treat the distinction between commands and events as a naming preference — commands and events have fundamentally different semantics (intent vs. fact) and are represented by different sticky colors for this reason",
+        "should NOT focus primarily on whether the events are 'in the right order' while leaving the artifact-type errors unaddressed"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "granularity_mismatch",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A Process Modeling Event Storming session produces this event sequence for a bank account opening flow:\n\n1. Application Form Submitted\n2. First Name Validated\n3. Last Name Validated\n4. Email Format Checked\n5. Date of Birth Verified\n6. Address Looked Up\n7. Phone Number Confirmed\n8. Identity Document Number Recorded\n9. Application Data Saved to Database\n10. KYC Check Triggered\n11. KYC Check Passed\n12. Account Number Generated\n13. Welcome Email Sent\n14. Account Opened\n\nThe team is satisfied that this is a complete picture of the process.",
+      "context": "This is a Process Modeling Event Storming session focusing on the account-opening flow for a retail bank. The team will use this board to identify bounded context candidates and aggregate boundaries.",
+      "question": "Review the granularity of the events on this board. Is this the right level of detail for Process Modeling Event Storming?",
+      "expected_flags": [
+        "events 2 through 8 (First Name Validated, Last Name Validated, Email Format Checked, Date of Birth Verified, Address Looked Up, Phone Number Confirmed, Identity Document Number Recorded) are at the wrong granularity for Process Modeling — these are field-level validation steps inside a single aggregate operation ('Application Submitted' and 'Application Validated'); at Process Modeling scale, the meaningful events are the business outcomes, not the internal field checks",
+        "'Application Data Saved to Database' (event 9) is an implementation artifact, not a domain event — saving to a database is a technical detail; the domain event at this point might be 'Application Received' or 'Application Under Review'; database operations are invisible to the business",
+        "at this granularity, the board will produce 14 aggregates or processes where there should be 3-4 (e.g., Application Intake, KYC Verification, Account Provisioning) — over-granular boards mislead bounded context discovery and create spurious aggregate candidates"
+      ],
+      "expected_fix_hints": [
+        "collapse events 2-8 into a single domain event: 'Application Validated' (or keep 'Application Submitted' and add a 'Validation Passed' event if validation is a meaningful business step) — the internal field checks happen inside this step and should not be on the timeline",
+        "remove 'Application Data Saved to Database' entirely — replace with the business-meaningful event that follows (e.g., 'Application Under Review' or 'Application Received for Processing')",
+        "re-run the timeline at Business Process scale: group the remaining events into 3-4 phases and verify each event represents a business-observable outcome, not an internal system action or technical artifact"
+      ],
+      "absent_signals": [
+        "should NOT approve this granularity for bounded context discovery — the over-granular events will produce spurious aggregate boundaries",
+        "should NOT frame the granularity issue as just an aesthetic or organizational preference — at the wrong granularity, the Event Storming output loses its mapping to bounded contexts",
+        "should NOT treat 'Application Data Saved to Database' as a valid domain event because the team included it — the criterion for a domain event is business relevance, not whether the team thought of it"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "policy_identification",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A Software Design Event Storming session models an order fulfillment flow. The board shows:\n\n- [Command] Place Order → [Event] Order Placed\n- [Event] Order Placed → [Command] Reserve Inventory\n- [Event] Inventory Reserved → [Command] Charge Payment\n- [Event] Payment Charged → [Command] Create Shipment\n- [Event] Shipment Created → [Command] Send Confirmation\n- [Event] Confirmation Sent\n\nThe causal links between events and commands (shown with arrows) are all implicit — there are no lilac/purple policy stickies anywhere on the board.",
+      "context": "At Software Design level, the board should include commands (blue), events (orange), aggregates (yellow), and policies (lilac/purple) that describe the automated rules or human decisions that connect events to commands.",
+      "question": "Review this Software Design board. What is missing and why does it matter?",
+      "expected_flags": [
+        "policies are entirely absent: the causal links from events to commands ('Order Placed → Reserve Inventory', 'Inventory Reserved → Charge Payment', etc.) are all implicit arrows with no policy or read model explaining WHY the command fires — policies describe the business rules or automation that connects an event to the next command, and without them the board gives no guidance on where to place business logic",
+        "the absence of policies makes it impossible to distinguish between automated rules ('whenever Order Placed, always Reserve Inventory') and human-decision points ('when Payment Charged, a fulfillment operator decides whether to Create Shipment or flag for review') — this distinction determines whether a step is a policy (automation) or a read model surfacing data for a human decision",
+        "at the Software Design level, the board should inform aggregate boundaries — without policies, the team cannot see which aggregates are responsible for enforcing which rules, because the rules themselves are invisible"
+      ],
+      "expected_fix_hints": [
+        "place lilac/purple policy stickies on every event-to-command link and name each policy explicitly: 'Whenever Order is Placed, Reserve Available Inventory' — even if the policy seems obvious, naming it makes the business rule explicit and reviewable",
+        "distinguish automated policies from human decision points by using a different marker on the policy sticky (e.g., adding a human icon or a different annotation) — this will surface which steps require human judgment and which are fully automated",
+        "use the policy placement to identify aggregate boundaries: an aggregate owns the policy that enforces its invariants; if a policy crosses aggregate boundaries, that is a design smell to investigate"
+      ],
+      "absent_signals": [
+        "should NOT approve the board for aggregate design without policies — the board's causal structure is incomplete without them",
+        "should NOT treat the implicit arrows as sufficient substitutes for policies — the arrows show flow, but policies explain the business rule governing the flow, which is different information",
+        "should NOT suggest that policies are optional at Software Design level — they are a core artifact at this scale (unlike Big Picture, where policies are often omitted)"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "bounded_context_boundary",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "After a Big Picture Event Storming session for an insurance company, the facilitator proposes these bounded context boundaries:\n\nBC 1: Policy Management (Quote Requested, Policy Issued, Policy Renewed, Policy Cancelled, Claim Filed)\nBC 2: Claims Processing (Claim Filed, Claim Assessed, Settlement Approved, Payment Dispatched, Claim Closed)\nBC 3: Customer Portal (Customer Registered, Quote Requested, Policy Viewed, Claim Tracked)\n\n'Claim Filed' appears in both BC 1 and BC 2. The facilitator says this is fine because 'it's the same event — it just matters to both contexts.'",
+      "context": "The bounded context proposal will be used to guide team organization and system decomposition. The 'Claim Filed' event appearing in both contexts is causing confusion.",
+      "question": "Evaluate the bounded context boundary proposal, particularly the 'Claim Filed' duplication.",
+      "expected_flags": [
+        "the facilitator's explanation ('it's the same event — it just matters to both contexts') misunderstands bounded context semantics: when the same event label appears on both sides of a context boundary, it usually signals one of two things — either the event is a published event that BC 1 emits and BC 2 subscribes to (which is correct; it is one event with two consumers), or there is a context boundary ambiguity that needs to be resolved by deciding which context owns the event",
+        "if 'Claim Filed' is the event that transitions from Policy Management into Claims Processing, the seam is correct but needs to be explicitly modeled as an integration event: BC 1 publishes 'Claim Filed', BC 2 subscribes to it — the event belongs to BC 1's language and BC 2 translates it via an anti-corruption layer or shared kernel",
+        "Customer Portal (BC 3) contains 'Quote Requested' and 'Policy Viewed' which overlap with Policy Management's domain — these may be read models or user-facing projections of Policy Management events rather than distinct bounded context events; placing them in BC 3 may create an inappropriate duplication of domain logic"
+      ],
+      "expected_fix_hints": [
+        "resolve the 'Claim Filed' ownership: decide whether BC 1 or BC 2 owns the event (typically BC 1 — the policy side files a claim, which triggers BC 2's workflow) — mark it as an integration event crossing the boundary and draw an explicit relationship between the two contexts",
+        "review 'Quote Requested' and 'Policy Viewed' in BC 3: if they are projections of Policy Management events for display purposes, model BC 3 as consuming a read model from BC 1 rather than owning independent domain events — the Customer Portal may be better modeled as a BFF (backend-for-frontend) or a view layer rather than an autonomous bounded context",
+        "use the Context Map artifact to explicitly label the relationships between the three contexts: which emits, which subscribes, which translates — this prevents the ambiguity from carrying into system design"
+      ],
+      "absent_signals": [
+        "should NOT accept the facilitator's explanation that an event can just 'belong to both contexts' without modeling the integration relationship — this is a bounded context seam decision with architectural implications",
+        "should NOT ignore the Customer Portal's domain event overlap as a minor inconsistency — if BC 3 owns events that BC 1 also owns, one of the contexts has incorrect boundaries",
+        "should NOT treat the context map as optional — the relationships between bounded contexts (which publishes, which subscribes, which has an anti-corruption layer) are part of the Event Storming output at Big Picture scale"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "missing_domain_events",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A team uses Big Picture Event Storming to model a subscription SaaS product's billing flow. The event board shows:\n\n1. Trial Started\n2. Card Added\n3. Subscription Activated\n4. Invoice Generated\n5. Payment Succeeded\n6. Subscription Renewed\n\nA senior engineer reviews the board and says: 'This looks complete — it covers the full happy path.'",
+      "context": "The board will be used to identify bounded context candidates and to ensure the engineering team understands the full billing domain before writing any code. The business stakeholders have not yet reviewed the board.",
+      "question": "Evaluate the engineer's claim that the board covers the full billing flow. What is missing?",
+      "expected_flags": [
+        "the board shows only the happy path — a complete Big Picture board must surface failure and exception paths as 'hotspots' (pain points marked with a red or yellow sticky) or as explicit domain events; key missing events include: Payment Failed, Subscription Past Due, Subscription Cancelled, Dunning Started, Card Expired, Card Declined, Trial Expired Without Conversion, Subscription Paused, Refund Issued",
+        "the board has no external systems or boundaries marked — a SaaS billing flow typically involves an external payment processor (Stripe, Braintree) and a revenue recognition system; these are External System stickies (large pink boxes) that clarify what the domain owns vs. what is delegated to a third party",
+        "'Card Added' is a technical event (a payment method is stored in a vault) — the corresponding business domain event is 'Payment Method Registered' or 'Payment Method Verified'; the card storage mechanics belong to the payment processor's bounded context, not the subscription domain"
+      ],
+      "expected_fix_hints": [
+        "walk the board and ask 'what can go wrong at each step?' — for every happy-path event, add at least one failure-path domain event; failure paths are often where the most valuable bounded context discoveries happen (e.g., a Dunning bounded context emerges from failure handling that is often overlooked)",
+        "add External System stickies for the payment processor and any revenue recognition or accounting integration — this clarifies which events the domain owns and which are translations from external systems",
+        "before calling the board complete, have business stakeholders (billing team, finance, customer support) walk the board — they will immediately add the cancellation, past-due, and refund flows that engineers overlook on a first pass"
+      ],
+      "absent_signals": [
+        "should NOT approve the board as complete on the grounds that it covers the happy path — a Big Picture board that covers only the happy path systematically misses the bounded contexts that handle failure, recovery, and exceptions",
+        "should NOT treat the missing external systems as a detail for later — external system boundaries are part of Big Picture Event Storming scope and affect where bounded context seams are drawn",
+        "should NOT focus the review on the event naming or color conventions while leaving the structural incompleteness (no failure paths, no external systems) unaddressed"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team has just completed a successful Big Picture Event Storming session. The board is coherent: all orange stickies are past-tense domain events, policies are labeled, external systems are marked, and the bounded context candidates are well-reasoned. The session ran for 4 hours with 12 participants.\n\nThe engineering manager says: 'The session was too long. In future sessions we should limit it to 90 minutes so people don't lose energy.'\n\nA facilitator disagrees: 'The session length is fine — we covered the full domain.'",
+      "context": "The debate is about session length and participant energy management for future Event Storming workshops. The board output is correct and complete.",
+      "question": "Who is right about the session length? What guidance applies here?",
+      "expected_flags": [
+        "the session length debate is a facilitation logistics question, not an Event Storming methodology correctness question — both the manager and the facilitator are making reasonable points; Brandolini's published guidance notes that 4-8 hours is typical for a Big Picture session covering a complex domain, and that energy management (breaks, snacks, standing vs sitting) matters more than a fixed time cap",
+        "the board is correct and complete, so there is no modeling error to address — the question is whether 4 hours is appropriate given the domain scope, which is a facilitation judgment call, not a right/wrong answer"
+      ],
+      "expected_fix_hints": [
+        "for future sessions: plan for 4-8 hours for a complex Big Picture session; use structured breaks (every 90 minutes), rotations, and energy-management techniques rather than capping the session at 90 minutes and leaving the domain incomplete",
+        "the 90-minute cap the manager proposes may be appropriate for a focused Process Modeling session on a narrow flow, but is typically insufficient for Big Picture coverage of a non-trivial domain"
+      ],
+      "absent_signals": [
+        "should NOT apply Event Storming artifact analysis (wrong event types, missing policies, granularity errors) to this scenario — the board is correct; the question is about workshop facilitation logistics",
+        "should NOT declare one side definitively right and the other wrong — this is a facilitation judgment call with reasonable arguments on both sides, not a methodology error",
+        "should NOT recommend restructuring the event board or revisiting bounded context boundaries in response to the session-length debate — the board is complete and the output is sound"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team finishes an Event Storming session and produces a well-structured board with correct domain events, policies, commands, aggregates, and two clearly identified bounded contexts. A project manager reviews the output and says:\n\n'This is great, but we need a timeline with delivery estimates. When can we ship each bounded context? Can you add sprints to the Event Storming board?'\n\nThe engineering lead responds: 'We don't add sprints to the Event Storming board — that's the wrong tool for project planning.'",
+      "context": "The project manager wants to use the Event Storming output for project planning and delivery estimation. The engineering lead is pushing back.",
+      "question": "Who is right? Should sprints and delivery estimates be added to the Event Storming board?",
+      "expected_flags": [
+        "the engineering lead is correct: Event Storming boards are domain modeling artifacts, not project planning artifacts — adding sprints or delivery estimates to the board would conflate two different concerns and corrupt the domain model with project management metadata",
+        "the project manager's need is legitimate (delivery planning is a real need) but is addressed by a different tool: the Event Storming output (bounded contexts, aggregate candidates, hotspots) feeds INTO project planning, but the planning itself lives in a backlog, roadmap, or sprint board — not on the event timeline"
+      ],
+      "expected_fix_hints": [
+        "use the bounded context candidates and hotspot list from the Event Storming output as input to a project planning session — translate the domain discoveries into a roadmap or backlog in the appropriate tool (Jira, Linear, Trello)",
+        "if the project manager needs a rough size estimate, the hotspots (complex or contentious areas on the board) are a useful proxy for effort, but this mapping should happen in the planning tool, not by annotating the Event Storming board itself"
+      ],
+      "absent_signals": [
+        "should NOT apply Event Storming methodology critique (artifact types, granularity, bounded context boundaries) to this scenario — the board is correct; the question is whether to repurpose the board for project planning, which is a tool-appropriateness question",
+        "should NOT side with the project manager on the grounds that the team should be delivery-focused — delivery focus is correct, but it does not justify annotating the domain model with project artifacts",
+        "should NOT suggest restructuring the Event Storming board to accommodate delivery planning — the board serves domain modeling; project planning has its own tools"
+      ]
+    }
+  ]
+}

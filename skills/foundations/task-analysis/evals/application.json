@@ -1,0 +1,175 @@
+{
+  "skill_name": "task-analysis",
+  "subject": "Task Analysis — goal-driven UX analysis: top task, subtask decomposition, friction scoring",
+  "version": "1.0",
+  "schema_version": 1,
+  "pilot_panel": "SH-6335",
+  "anchor_grounding": "domain-external",
+  "description": "Application-shape eval set for task-analysis (SH-6335 batch 3). Tests whether loading the task-analysis skill changes which UX flow defects an agent flags and which corrections it recommends when reviewing user flows, onboarding sequences, and navigation structures. The discriminating signal: identify when the stated user goal is absent or wrong, when a flow analysis confuses task steps with UI elements, when dead ends or hidden next steps block the top task, or when cognitive load is assessed without reference to the user's goal. 5 real in-scope cases + 2 red-herring probes (visual design or layout concerns that look like flow problems but are outside task-analysis scope). Cases use domain-neutral SaaS scenarios — no internal or personal data.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "missing_top_task",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A UX designer presents a redesigned settings page for a project management tool and asks for a UX review. The page has:\n\n- A sidebar with 12 settings categories (Profile, Notifications, Integrations, Billing, Team, Security, Appearance, Shortcuts, Language, Accessibility, Privacy, API Keys)\n- Each category shows a list of toggles and dropdowns\n- A 'Save' button at the bottom of each category form\n- A search bar at the top of the sidebar for finding settings\n\nThe designer says: 'The page is organized by category which is standard for settings pages. Users can find anything by searching.'\n\nA reviewer says: 'I think it could be better organized. What do you think?'",
+      "context": "This is a UX review of a settings page redesign. The goal is to improve usability. The reviewer has not defined what they mean by 'better organized.'",
+      "question": "How would you approach a UX review of this settings page?",
+      "expected_flags": [
+        "the review cannot proceed without establishing the top task(s): what do users actually come to this settings page to do? Without knowing whether most users visit settings to connect an integration, change notification preferences, or add a team member, the 12-category structure cannot be evaluated — 'settings is organized by category' is a solution, not a user goal",
+        "the designer's argument ('users can search') assumes users know what they're looking for — task analysis requires asking whether users can recognize the category name for what they need, which is a discoverability problem distinct from search capability; users who don't know the system's vocabulary cannot search effectively",
+        "the vague request ('what do you think?') must be translated into specific task questions before the review can be useful: Which tasks are top tasks (highest frequency / highest stakes)? Do users reach their top task within 2 clicks? Are there dead ends where users land on a settings category and can't find what they need?"
+      ],
+      "expected_fix_hints": [
+        "before reviewing the layout, define the top 3-5 tasks users perform on the settings page (e.g., 'connect Slack', 'change notification frequency', 'invite a team member') — these are derived from analytics, support tickets, or user research",
+        "walk each top task through the current structure: does the category name match the user's mental model? (e.g., does a user looking to 'connect Slack' look in 'Integrations' or 'Team'?) — mismatches between category names and mental models are the primary source of settings page confusion",
+        "score discoverability for each top task: how many clicks does it take from page load to completing the task? If any top task requires >3 clicks or requires search, it's a friction point worth addressing before layout optimization"
+      ],
+      "absent_signals": [
+        "should NOT evaluate the settings page organization (sidebar vs tabs vs flat list) before the top tasks are identified — the layout evaluation depends entirely on the task structure",
+        "should NOT accept the designer's 'searchable' argument as resolving the discoverability question — search is a fallback, not a navigation strategy; if users need to search to find common tasks, the IA has failed",
+        "should NOT give generic UX advice ('the sidebar looks clean', 'the save button placement is good') without connecting it to specific user tasks"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "dead_end_detection",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A product team reviews the onboarding flow for a B2B SaaS analytics tool. The flow has these steps:\n\n1. Email signup → email confirmation link sent\n2. User clicks confirmation link → account created\n3. 'Welcome' screen shown with a 'Connect your data source' button\n4. User clicks 'Connect data source' → modal opens with 8 data source options\n5. User selects 'Google Analytics' → form with API credentials fields\n6. User submits credentials → loading spinner for 30-60 seconds\n7. If credentials are wrong: red 'Invalid credentials' error message\n8. If credentials are correct: 'Data source connected!' success toast → user lands on the main dashboard\n\nThe team says the onboarding flow works great because users who complete it successfully reach the dashboard in under 3 minutes.",
+      "context": "The team is evaluating whether the onboarding flow meets the product's time-to-value target of getting users to a meaningful first experience within 5 minutes of signup.",
+      "question": "Evaluate the onboarding flow from a task analysis perspective. Are there problems the team's success metric ('users who complete it successfully reach the dashboard') is hiding?",
+      "expected_flags": [
+        "the team's metric counts only users who successfully complete the flow — it systematically excludes users who hit the 'Invalid credentials' error (step 7 dead end); task analysis requires measuring ALL users, not just the happy path; the question is: what do users do when they see 'Invalid credentials'? If there's no 'How do I find my API credentials?' link or help text, this is a dead end that blocks the top task",
+        "step 6 has a 30-60 second loading spinner with no progress indication — a 30-60 second wait on a first-use flow with no feedback or estimated time is a trust-breaking moment; users who don't know whether the system is working will abandon or retry, compounding the error rate",
+        "step 4 presents 8 data source options simultaneously on first use — this is a branching decision point that increases cognitive load without guidance; a task analysis of the top path should identify which data source 80% of users choose and whether that option is visually prioritized or buried in a flat list"
+      ],
+      "expected_fix_hints": [
+        "add inline help to the credential form: 'How do I find my API credentials?' with a link to documentation or a 2-step guide — this converts the dead end at step 7 into a recoverable error",
+        "replace the silent 30-60 second spinner with a progress indicator ('Connecting... validating permissions... checking data access...') and a realistic time estimate ('This usually takes under a minute') — this maintains trust during the wait",
+        "analyze which data source is selected most often and place it first or highlight it as 'Most popular' — reducing the branching decision at step 4 from 8 equal choices to a recommended path shortens the time-to-value for the majority of users"
+      ],
+      "absent_signals": [
+        "should NOT validate the team's claim that the flow 'works great' based on the completion-rate-of-completers metric — this is a survivorship bias; task analysis evaluates the full user population, including those who abandon at dead ends",
+        "should NOT accept the 30-60 second spinner as fine because 'the connection takes that long' — the technical constraint is real, but the UX response to a long wait is feedback and expectation-setting, which is a design choice independent of the technical duration",
+        "should NOT focus the analysis on visual design (colors, button sizes, layout) before addressing the dead end and the trust gap during the loading state"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "task_subtask_decomposition",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A UX analyst presents a task breakdown for 'Create a new report' in a business intelligence tool:\n\nGoal: Generate a custom report\nSubtasks:\n1. Click 'New Report' button\n2. Choose report template from dropdown\n3. Select date range from date picker\n4. Add filters using the filter panel\n5. Choose columns from the column selector\n6. Click 'Generate' button\n7. Wait for report to generate\n8. View the report\n9. Export the report as CSV\n\nThe analyst says: 'I've mapped out every step. The flow is 9 steps, which is a bit long, but all steps are necessary.'",
+      "context": "This task decomposition is being used to evaluate whether the report creation flow should be redesigned. The team is deciding whether 9 steps is acceptable or whether the flow needs simplification.",
+      "question": "Evaluate this task decomposition from a task analysis perspective. What is missing or incorrect?",
+      "expected_flags": [
+        "the decomposition conflates UI interactions ('click the button', 'use the date picker') with task steps — a task analysis decomposes by user decision and intent, not by UI element interaction; steps 1, 6, and 8 are UI interaction descriptions ('click', 'wait', 'view'), not task subtasks; a proper subtask is a meaningful user action: 'Define report scope' (encompasses date range + filters) or 'Select output format' (encompasses columns + export)",
+        "step 9 ('Export as CSV') is a separate downstream goal, not a subtask of 'Create a report' — the top task ends when the report is generated; exporting is a follow-on top task that should be analyzed separately, or included only if analytics confirm users always export immediately after creating",
+        "the decomposition has no branching or skip paths: what happens if the user selects a template that pre-populates date range and filters? (steps 3 and 4 may be skippable) — a task decomposition without skip paths gives a worst-case step count that overstates friction for users who use templates or defaults"
+      ],
+      "expected_fix_hints": [
+        "redraw the decomposition using user decisions rather than UI clicks: 'Define report scope (date, filters)' → 'Select output columns' → 'Generate and review' — this reduces the apparent step count and reveals where the real cognitive load is (scope definition is the hard step; clicking Generate is trivial)",
+        "add skip paths: annotate which steps are skippable when a template is used; the step count for a template user should be 3-4, not 9 — this distinction is important for evaluating whether to improve the template library vs. improving the manual flow",
+        "separate 'Export' into its own task analysis if export is a primary goal; if analytics show 70% of users export immediately, consider making export the last step in the create flow (design-level decision based on task frequency)"
+      ],
+      "absent_signals": [
+        "should NOT accept the 9-step count as the definitive measure of flow length — the number of UI interactions is not the same as the number of meaningful task steps; a 9-step UI flow may represent 3 meaningful decisions",
+        "should NOT debate whether 9 steps is 'too long' or 'acceptable' without first correcting the decomposition to reflect actual task decisions rather than UI interactions",
+        "should NOT include export as part of the create-report task without evidence that users always complete both in sequence — conflating two top tasks inflates the complexity assessment"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "friction_scoring",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A team is evaluating friction in a checkout flow for an e-commerce site. They produce this friction assessment:\n\nStep 1: Add to cart — Low friction (one click)\nStep 2: View cart — Low friction (items displayed clearly)\nStep 3: Enter shipping address — High friction (10 form fields, no address autocomplete)\nStep 4: Select shipping method — Medium friction (3 options, prices unclear)\nStep 5: Enter payment details — Low friction (card number, expiry, CVC, 3 fields)\nStep 6: Review order summary — Low friction (clear summary, edit links)\nStep 7: Place order — Low friction (one big button)\n\nThe team says: 'We should fix step 3 first because it has the highest friction score.'",
+      "context": "The team is prioritizing improvements to reduce checkout abandonment. The friction assessment will drive the improvement roadmap.",
+      "question": "Evaluate the friction assessment and the team's prioritization logic.",
+      "expected_flags": [
+        "the friction assessment scores individual steps in isolation without connecting friction to abandonment: high friction on shipping address (step 3) is only a priority if users actually abandon at step 3; if analytics show users abandon most often at step 5 (payment details), then step 5 is the higher-value fix regardless of its 'Low friction' score — friction scoring must be weighted by abandonment rate at each step",
+        "step 5 ('Low friction — 3 fields') ignores a major cognitive load source: security anxiety at the payment step — users who are unsure about a site's security legitimacy experience high cognitive friction even if the form has only 3 fields; friction has a trust dimension that field count does not capture",
+        "step 4 ('prices unclear') is scored as Medium friction but the description 'prices unclear' suggests users cannot make a decision — a shipping method where pricing is unclear blocks the top task as effectively as a technical dead end; the friction level for decision-blocking ambiguity should be High, not Medium"
+      ],
+      "expected_fix_hints": [
+        "layer abandonment-rate data on top of the friction scores: if analytics show step 3 has 15% abandonment and step 5 has 35% abandonment, fix step 5 first regardless of friction ratings — the goal is abandonment reduction, not friction elimination",
+        "add a trust dimension to the payment step friction score: does the checkout page display security badges, HTTPS indicators, or recognized payment logos? Trust signals at step 5 reduce abandonment more cost-effectively than form simplification in many checkout contexts",
+        "upgrade step 4 from Medium to High friction: 'prices unclear' means users cannot complete the decision required at this step — decision-blocking ambiguity is the definition of high friction regardless of the UI's visual complexity"
+      ],
+      "absent_signals": [
+        "should NOT accept the team's prioritization ('fix step 3 first because highest friction score') without checking whether friction score correlates with actual abandonment at that step",
+        "should NOT score payment step friction as Low because it has 3 fields — cognitive friction at the payment step includes trust and security anxiety, which field count does not measure",
+        "should NOT rate 'prices unclear' at Medium when unclear pricing blocks the user's decision — ambiguity that prevents task completion is High friction by definition"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "branching_analysis",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A product team reviews the account setup wizard for a project management SaaS. The wizard has this structure:\n\nStep 1: What kind of work do you do? (12 options: Software Engineering, Marketing, Design, Sales, HR, Finance, Legal, Operations, Research, Education, Consulting, Other)\nStep 2: What is your team size? (options: Just me, 2-10, 11-50, 51-200, 200+)\nStep 3: What is your primary goal? (options: Track projects, Collaborate with team, Report on progress, All of the above)\nStep 4: Which tools do you want to connect? (list of 25 integrations with checkboxes)\nStep 5: Invite your team members (email input, up to 10 emails)\n\nThe team says: 'The wizard has 5 steps, which is reasonable for account setup. Users only need to fill in what applies to them.'",
+      "context": "The wizard runs during account creation for all new users. Analytics show 60% of users drop off between step 1 and step 3. The team is investigating why.",
+      "question": "Analyze the wizard's structure to explain the 60% drop-off between steps 1-3.",
+      "expected_flags": [
+        "steps 1-3 are data-gathering questions that provide value to the product (personalization) but provide no visible value to the user at the moment of answering — the user's goal at account setup is to START USING THE PRODUCT, not to configure it; asking 12 + 3 + 4 = 19 decision options before the user has seen any value is a front-loaded cognitive load problem that causes abandonment",
+        "step 1's 12 options force a categorization decision before the user has a reference frame for the product's capabilities — a user who is simultaneously 'Software Engineering' AND 'Operations' must pick one, which creates task anxiety; branching decisions with no clear 'right answer' for the user's specific situation increase abandonment",
+        "the questions are personalization inputs for the system, not natural steps in the user's goal path — 'What is your team size?' and 'What kind of work do you do?' are signup survey questions, not setup tasks; the user's top task (get to a working project board) does not require answering these questions; deferring or making them optional would reduce abandonment without losing personalization data"
+      ],
+      "expected_fix_hints": [
+        "reduce upfront friction by deferring personalization questions to after first value: let the user create their first project immediately (step 1: 'Create your first project — what will you call it?') and ask work-type / team-size questions after they've seen the product working — this is progressive onboarding",
+        "if the questions are required for personalization, reduce cognitive load by narrowing step 1 from 12 options to 4-5 high-level categories and eliminating 'Other' as a trap option (users who select 'Other' have dropped out of the personalization funnel)",
+        "make step 4 (integrations) and step 5 (team invites) skippable with a 'Set up later' option — these are high-friction, low-urgency steps for a user who has not yet seen the product's value; removing them from the required path reduces the abandonment window"
+      ],
+      "absent_signals": [
+        "should NOT accept '5 steps is reasonable' as a complete analysis — the step count is not the problem; the front-loaded cognitive burden before any user value is the problem",
+        "should NOT focus on the visual design of the wizard steps (colors, progress bar, button labels) as the explanation for 60% abandonment — the structural problem (personalization questions before value delivery) is the root cause",
+        "should NOT recommend A/B testing the current structure without first addressing the structural issue — A/B testing a fundamentally front-loaded wizard against itself will not reveal the correct fix"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A design team is reviewing a data dashboard with the following layout:\n\n- Left sidebar: navigation links (6 items)\n- Main content area: 4 chart widgets arranged in a 2x2 grid\n- Each chart has a title, a legend, and a 'View Details' button\n- Color palette: each chart uses a distinct color scheme (chart 1 uses blues, chart 2 uses greens, chart 3 uses reds, chart 4 uses purples)\n\nA reviewer says: 'The color schemes across charts are inconsistent — each chart uses a different palette. We should unify them to a single color system for visual consistency.'",
+      "context": "The reviewer is evaluating the dashboard's visual coherence. The charts each display different types of data (revenue over time, user growth, error rates, product usage). No user task or goal has been defined for the review.",
+      "question": "Evaluate the reviewer's concern about color inconsistency.",
+      "expected_flags": [
+        "the reviewer's concern is a visual design / design-system question, not a task analysis question — color consistency is relevant to brand coherence and cognitive ergonomics, but it is not a task friction problem; task analysis would ask 'what is the user trying to do on this dashboard?' before evaluating whether the color choices help or hinder that task",
+        "the fact that each chart uses a different palette may be intentional and correct if each chart represents a categorically different type of metric (revenue, users, errors, usage) — color differentiation helps users distinguish the charts at a glance; unified color may reduce distinction rather than improve consistency"
+      ],
+      "expected_fix_hints": [
+        "evaluate the color choice in the context of the user's task: if the user's top task is 'compare revenue to user growth trends', then the color systems should be consistent within each chart but can differ between charts; if the task is 'spot anomalies across all four charts simultaneously', then a unified palette with a single anomaly color may help",
+        "refer the color consistency question to the design-system skill (which owns the token hierarchy) or the composition-theory skill (which owns zone layout and visual hierarchy) — those skills address the visual design concerns; task analysis addresses the goal and flow"
+      ],
+      "absent_signals": [
+        "should NOT apply task analysis (top task, subtask decomposition, dead ends, friction scoring) to a color consistency question — this is a visual design decision, not a user flow problem",
+        "should NOT recommend a specific color scheme or palette as the task-analysis answer — color choices are in the design-system and composition-theory domains",
+        "should NOT declare the color inconsistency a friction problem without first establishing what task the user is performing — color may be irrelevant to the friction assessment depending on the top task"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A frontend developer asks for UX feedback on a new modal dialog they've built for a 'rename project' feature:\n\n- Modal opens when user clicks the three-dot menu on a project card and selects 'Rename'\n- Modal contains: a text input pre-filled with the current project name, a 'Save' button, and a 'Cancel' button\n- The text input is focused automatically when the modal opens\n- Pressing Enter submits the form; pressing Escape closes the modal\n\nThe developer says: 'I think the rename modal is well-designed. The input is pre-filled, focused, and keyboard-accessible. Is there anything to improve?'",
+      "context": "The developer wants UX feedback on this specific interaction. The broader project list page and navigation structure are not under review.",
+      "question": "Give UX feedback on this rename modal implementation.",
+      "expected_flags": [
+        "the rename modal interaction is well-executed: pre-fill with current name (reduces re-entry effort), auto-focus input (discoverability of start state), Enter to submit + Escape to cancel (keyboard shortcuts match conventions) — this is a correct implementation of a simple inline editing task",
+        "the relevant feedback for this interaction is about interaction fidelity (does the pre-fill select all text so the user can immediately type the new name, or must they manually clear it?) and error handling (what happens if the user submits an empty name or a duplicate name?) — these are task completion concerns"
+      ],
+      "expected_fix_hints": [
+        "check whether the auto-focus pre-fills AND selects all text — most users want to replace the entire name, so selection on focus reduces the effort of clearing the old name before typing the new one",
+        "add validation feedback for empty name and duplicate name: what is the error message and where does it appear? Inline validation (showing error immediately on submit attempt) is preferable to a separate confirmation step for a simple rename"
+      ],
+      "absent_signals": [
+        "should NOT apply top-task analysis or onboarding flow evaluation to this scenario — this is a micro-interaction review of a single modal, not a multi-step flow or navigation structure audit",
+        "should NOT recommend restructuring the rename feature into a different UI pattern (inline edit, toast confirmation, sidebar panel) without a reason grounded in the user's task — the modal is an appropriate and conventional pattern for a rename action",
+        "should NOT flag the three-dot menu trigger as a discoverability problem without analytics data showing users fail to find the rename action — assumed discoverability problems require task analysis evidence, not speculation"
+      ]
+    }
+  ]
+}

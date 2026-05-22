@@ -1,0 +1,175 @@
+{
+  "skill_name": "conceptual-modeling",
+  "subject": "Conceptual Modeling — entity/relationship abstraction independent of implementation",
+  "version": "1.0",
+  "schema_version": 1,
+  "pilot_panel": "SH-6335",
+  "anchor_grounding": "domain-external",
+  "description": "Application-shape eval set for conceptual-modeling (SH-6335 batch 3). Tests whether loading the conceptual-modeling skill changes which modeling defects an agent flags and which corrections it recommends when reviewing domain models, requirements artifacts, and entity descriptions. The discriminating signal: identify when implementation detail has leaked into a conceptual model (premature physicalization), when a meaningful business entity is absent (missing abstraction), or when a cardinality or generalization hierarchy is wrong. 5 real in-scope cases + 2 red-herring probes. Cases are grounded in publicly known modeling theory (Rumbaugh, Chen, Coad/Yourdon) and domain-neutral scenarios — no Sales Hub or internal system data.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "requirements_to_model",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A team is building a library management system. A junior developer proposes this conceptual model:\n\nEntities:\n- Book (isbn VARCHAR(13) PRIMARY KEY, title VARCHAR(255), author_id INT FOREIGN KEY)\n- Author (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100), birth_year INT)\n- Member (member_id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) UNIQUE, password_hash VARCHAR(60))\n- Loan (loan_id INT AUTO_INCREMENT PRIMARY KEY, book_isbn VARCHAR(13), member_id INT, checked_out_at TIMESTAMP, due_date TIMESTAMP)\n\nThe developer says this is the conceptual model that business stakeholders can validate.",
+      "context": "The model is being reviewed before the team proceeds to database design. Business stakeholders (librarians and administrators) are expected to confirm the model reflects how the library actually works.",
+      "question": "Review this as a conceptual model intended for business stakeholder validation. What is wrong with it, and what would you ask the team to fix?",
+      "expected_flags": [
+        "implementation detail has leaked into the conceptual model: `VARCHAR(13)`, `INT AUTO_INCREMENT PRIMARY KEY`, `FOREIGN KEY`, `password_hash VARCHAR(60)`, `TIMESTAMP` are physical (SQL DDL) artifacts — a conceptual model should describe WHAT exists in the business domain, not HOW it is stored; business stakeholders cannot validate data types and storage keys",
+        "a key business concept is missing: a physical copy of a book (an individual loanable item) is absent — the model conflates the bibliographic record (Book as an abstract work) with the physical object a member borrows; a library can own 5 copies of a title, and the model cannot represent that",
+        "Member contains `password_hash`, which is an authentication implementation concern, not a business-domain attribute; at the conceptual level, a Member has identity attributes (name, contact info, membership number) — security implementation does not belong here"
+      ],
+      "expected_fix_hints": [
+        "strip all SQL types, keys, and constraints — express entities as named boxes with natural-language attributes only; cardinality is expressed as relationship labels (one-to-many, many-to-many), not foreign keys",
+        "introduce a `Copy` (or `PhysicalItem`) entity between Book and Loan — Book is the bibliographic record, Copy is the loanable object, Loan links a Member to a specific Copy",
+        "remove `password_hash` from Member at the conceptual level; if authentication is in scope, note it as an implementation concern to be addressed at the physical level"
+      ],
+      "absent_signals": [
+        "should NOT approve the model as a valid conceptual artifact on the grounds that the entities and relationships look reasonable — the physical leakage disqualifies it as a conceptual model",
+        "should NOT focus the review primarily on whether the SQL DDL syntax is correct — the defect is the wrong level of abstraction, not syntactic errors",
+        "should NOT treat the missing Copy entity as a minor omission if the system must support multiple copies of a title — it is a structural missing abstraction that makes the model incorrect"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "generalization_hierarchy",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A product team is modeling a payment system. They produce this generalization hierarchy:\n\nPayment\n├── CreditCardPayment (attributes: card_number, expiry, cvv, billing_address)\n├── BankTransferPayment (attributes: account_number, routing_number, bank_name)\n└── CashPayment (attributes: amount_tendered, change_given)\n\nA senior developer reviews it and says: 'This looks complete — we handle all three payment types. Let's proceed to implementation.'",
+      "context": "The team is designing a multi-channel retail system that will eventually need to support additional payment methods. The conceptual model will drive the interface contracts for the payment processing subsystem.",
+      "question": "Evaluate this generalization hierarchy. Is the senior developer right that it looks complete? What modeling issues do you see?",
+      "expected_flags": [
+        "the hierarchy encodes payment-method-specific implementation attributes (card_number, cvv, account_number, routing_number) at the conceptual level — at a conceptual model, the generalization hierarchy should express WHAT distinguishes each payment type semantically (source of funds, authorization mechanism), not HOW the data is captured and transmitted",
+        "the hierarchy is closed: adding a new payment method (digital wallet, buy-now-pay-later, gift card) requires modifying the hierarchy rather than extending it — the conceptual model should expose that Payment is an abstract type that can be extended, with each specialization characterized by its domain properties, not its capture fields",
+        "there is no rebuttal to the cardinality question: can a single transaction have multiple payment methods (split tender)? If so, Payment is not a property of Transaction but a separate entity with a one-to-many relationship — the model hides this ambiguity"
+      ],
+      "expected_fix_hints": [
+        "express each specialization with domain-distinguishing attributes only (CreditCardPayment: issued by a card network, requires cardholder authorization; BankTransferPayment: debit from a bank account, may require settlement delay) — strip the capture fields to a physical design note",
+        "mark Payment as extensible in the conceptual model by noting that additional payment types may be added without changing the abstract Payment contract — this is the open/closed principle applied to the domain model",
+        "add a note or question about split-tender: does a Sale have one Payment or many? This is a modeling decision that the business must answer before proceeding, and the current hierarchy assumes one without stating it"
+      ],
+      "absent_signals": [
+        "should NOT confirm the hierarchy as complete because it covers three payment types — completeness at the conceptual level means covering the domain semantics, not an enumeration of known variants",
+        "should NOT suggest the CVV and card_number are fine at the conceptual level because they are real domain attributes — they are real, but they belong to the physical/security design layer, not the business conceptual model",
+        "should NOT treat the split-tender question as out of scope — it is a cardinality ambiguity that the model must resolve before proceeding to interface contracts"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "entity_relationship",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A team is modeling an event ticketing system and produces the following entity list with relationships:\n\n- Event (name, date, venue, capacity)\n- Ticket (seat_number, price, event_id)\n- Customer (name, email)\n- Order (customer_id, ticket_id, purchased_at, total_price)\n\nRelationships:\n- Event has many Tickets (1:N)\n- Customer places many Orders (1:N)\n- Order contains one Ticket (1:1)\n\nThe team is satisfied with this model and wants to move to schema design.",
+      "context": "The system is for a ticketing agency that sells tickets to events across multiple venues. Customers sometimes buy multiple tickets in a single purchase (group bookings). Occasionally tickets are transferred between customers.",
+      "question": "Review this conceptual model against the described requirements. Is it ready for schema design?",
+      "expected_flags": [
+        "the Order-to-Ticket relationship is modeled as 1:1, but the context specifies group bookings (customers buying multiple tickets in one purchase) — this is a missing M:N or 1:N relationship; Order should contain many Tickets, with a junction entity (OrderLineItem or similar) capturing per-ticket detail",
+        "ticket transfer between customers is a business requirement the model cannot represent — there is no entity or relationship capturing transfer history, and the current model implies a Ticket belongs to the Customer who placed the original Order with no mechanism for reassignment",
+        "the model lacks a Venue entity even though the context mentions a ticketing agency operating across multiple venues — Venue is likely a first-class entity (with its own seating map, capacity rules, address) rather than an attribute on Event"
+      ],
+      "expected_fix_hints": [
+        "change the Order-Ticket relationship to 1:N (or introduce an OrderLineItem entity for quantity and per-ticket price) so group bookings can be represented correctly",
+        "add a Transfer entity (or a TicketOwnership history) that records the from-customer, to-customer, date, and authorization for ticket transfers — without this, transfer is unrepresentable in the model",
+        "promote Venue to a first-class entity with its own attributes and relate it to Event via a 1:N or M:N (if events span venues) relationship"
+      ],
+      "absent_signals": [
+        "should NOT approve the model for schema design when it cannot represent group bookings or ticket transfers — these are stated in the context, not edge cases",
+        "should NOT focus the review on attribute naming conventions (e.g. whether `event_id` should be named differently) while leaving the structural cardinality error unaddressed",
+        "should NOT treat Venue as out of scope simply because it is not explicitly listed as an entity — the context establishes it as a domain concept the model should capture"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "aggregation_vs_composition",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A developer is documenting the conceptual model for a hospital system and writes:\n\n'A Patient has-a MedicalRecord (composition). A MedicalRecord has-a list of Diagnoses (composition). A Doctor has-a list of Patients (composition). A Ward has-a list of Beds (composition).'\n\nThey argue that composition is the right relationship throughout because 'everything belongs to something else in a hospital.'",
+      "context": "This is a conceptual model review. The developer's claim is that composition (strong ownership with lifecycle dependency) is correct for all of these relationships.",
+      "question": "Evaluate the developer's modeling choices. Is composition correct for all four relationships?",
+      "expected_flags": [
+        "'Doctor has-a list of Patients (composition)' is incorrect: composition implies that deleting or deactivating a Doctor destroys the Patients — Patients exist independently of any Doctor and may be treated by multiple Doctors; the correct relationship is association (Doctor treats Patient, many-to-many)",
+        "'Patient has-a MedicalRecord (composition)' is the most debatable case: composition implies the record cannot exist without the patient, which may be correct (the record's lifecycle is tied to the patient), but it also implies only one MedicalRecord per Patient — if a patient is admitted multiple times (multiple admissions), each admission may produce a separate record, and the cardinality needs to be explicit",
+        "'MedicalRecord has-a list of Diagnoses (composition)' is defensible but the developer does not state the cardinality or the ordering — Diagnoses may be dated, ordered by severity, or linked to specific admissions; aggregation with ordering constraints may be more accurate depending on the domain rules"
+      ],
+      "expected_fix_hints": [
+        "change Doctor-Patient to a many-to-many association (a Doctor treats many Patients; a Patient may be treated by many Doctors); remove the composition — it encodes a lifecycle dependency that does not exist",
+        "clarify the cardinality and lifecycle rules for Patient-MedicalRecord: if a patient can have multiple records (one per admission), model it as 1:N composition with Admission as a structuring entity; if one record aggregates all history, document that constraint explicitly",
+        "add temporal and ordering metadata to MedicalRecord-Diagnosis: Diagnoses are typically dated and may be revised — represent this as aggregation with a date attribute on the relationship, not silent composition"
+      ],
+      "absent_signals": [
+        "should NOT accept the developer's blanket composition argument ('everything belongs to something else') as sufficient justification — composition is a specific semantic claim about lifecycle dependency, not just hierarchical membership",
+        "should NOT approve the Doctor-Patient composition as 'harmless' in a conceptual model because it will be corrected at the schema level — the conceptual model exists to capture business semantics correctly; wrong semantics in the conceptual model propagate to wrong schema decisions",
+        "should NOT limit the review to whether the notation is standard UML without addressing whether the semantic choices are correct"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "abstraction_level",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A team models a project management tool and proposes the following at the conceptual level:\n\nProject\n├── has many Tasks\n│   └── Task has many Comments\n│       └── Comment has: body (markdown string, max 10000 chars), author_id (UUID), created_at (ISO8601), is_deleted (boolean, soft-delete flag), edited_at (ISO8601 or null)\n└── has many Members (role: enum ['owner','admin','editor','viewer'])\n\nThe team says: 'The Comment attributes are fine at conceptual level because they represent real business concepts.'",
+      "context": "This model will be shown to product managers and stakeholders for validation before any code is written.",
+      "question": "Review the Comment entity's attributes in this conceptual model. Are the team's attribute choices appropriate?",
+      "expected_flags": [
+        "`markdown string, max 10000 chars` encodes both a physical representation format (markdown) and a storage constraint (10000 chars) at the conceptual level — at this level, body should simply be described as 'text content of the comment'; format and length constraints belong in the logical/physical layers",
+        "`author_id (UUID)` encodes the physical key type (UUID) — at the conceptual level, the relationship should be expressed as 'Comment is written by a Member', not as a foreign key attribute; the join mechanism belongs to the logical model",
+        "`is_deleted (boolean, soft-delete flag)` and `edited_at (ISO8601 or null)` are implementation decisions (soft-delete strategy, edit history representation) dressed as business attributes — a conceptual model should represent the business fact ('a comment can be deleted', 'a comment can be edited') as relationship or state constraints, not as specific storage flags"
+      ],
+      "expected_fix_hints": [
+        "remove type annotations and constraints from the conceptual model; describe Comment as having: author (relationship to Member), content, creation time, and optionally a deletion state and edit history — let business stakeholders confirm these concepts without worrying about data types",
+        "express author_id as a relationship arrow from Comment to Member (written-by), not as an attribute — the relationship carries the business semantics; the key is an implementation detail",
+        "represent deletion and editing as behavioral annotations or state notes on the entity ('comments may be deleted (soft); edits are tracked') rather than as specific boolean fields — stakeholders can validate the business behavior without understanding soft-delete patterns"
+      ],
+      "absent_signals": [
+        "should NOT accept the team's argument that 'real business concepts' justifies the level of detail — UUID, ISO8601, boolean, and varchar constraints are not business concepts; they are implementation artifacts regardless of the business fact they encode",
+        "should NOT suggest the comment attributes are fine because stakeholders 'probably understand' data types — conceptual models are validated by business users, not engineers; the standard is whether a librarian, product manager, or domain expert can confirm the model without technical training",
+        "should NOT limit the review to whether the attribute names are clear while accepting the implementation-level type annotations"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team presents a conceptual model for a recipe management system:\n\n- Recipe (name, description, servings, prep_time_minutes, cook_time_minutes, difficulty_level)\n- Ingredient (name, unit_of_measure, category)\n- RecipeIngredient (quantity, recipe_id, ingredient_id) — junction entity for many-to-many\n- Tag (name, color_hex) — for categorizing recipes by cuisine, diet type, etc.\n- RecipeTag (recipe_id, tag_id) — junction for many-to-many\n\nRelationships: A Recipe has many Ingredients (via RecipeIngredient, M:N). A Recipe has many Tags (via RecipeTag, M:N).\n\nA reviewer says: 'The entity names are inconsistent — RecipeIngredient and RecipeTag use CamelCase compound names while the others use single words. Let's rename them to Ingredient_Usage and Recipe_Classification.'",
+      "context": "The reviewer's concern is about entity naming conventions in the conceptual model. The model's structure, cardinality, and abstraction level are all appropriate for a conceptual model. The business domain is well-understood by the team.",
+      "question": "The reviewer wants to rename RecipeIngredient to Ingredient_Usage and RecipeTag to Recipe_Classification for naming consistency. Should the team follow this recommendation?",
+      "expected_flags": [
+        "the naming inconsistency the reviewer identifies is real (compound junction entity names vs single-word entity names), but it is a naming convention question, not a conceptual modeling error",
+        "the proposed rename to Ingredient_Usage and Recipe_Classification is a stylistic judgment — both the original names and the proposed names correctly represent the junction entities; the choice between them depends on team convention and readability"
+      ],
+      "expected_fix_hints": [
+        "if the team has a naming convention (e.g. all junction entities use Verb_Noun form), apply it consistently — the renaming is legitimate as a convention enforcement",
+        "if there is no convention, both naming styles are acceptable; the team should decide on a convention and document it, but the model's structural correctness does not depend on this choice"
+      ],
+      "absent_signals": [
+        "should NOT apply conceptual-modeling analysis to this scenario — the model structure, abstraction level, cardinality, and entity coverage are all correct; the question is purely about naming conventions, which is outside conceptual-modeling's judgment scope",
+        "should NOT flag the junction entity pattern itself (RecipeIngredient, RecipeTag) as a conceptual modeling error — representing M:N relationships via explicit junction entities is a valid and common conceptual modeling choice",
+        "should NOT reconstruct the entity hierarchy or suggest that Tags should be generalized differently — the domain is a recipe manager and the model is appropriate for that scope"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team is reviewing a conceptual model for an e-commerce system. The model has been through two rounds of stakeholder validation and everyone agrees it correctly captures the business domain. The model includes: Product, ProductVariant, Customer, Order, OrderLineItem, Shipment, Return, PaymentTransaction.\n\nA new team member joins and says: 'I think we should rename Order to PurchaseOrder to be more explicit about its business meaning. Also, I think we should split Customer into RegisteredCustomer and GuestCustomer with a generalization hierarchy.'\n\nThe existing team members note that business stakeholders have validated the current model and are familiar with the names. The 'Order' vs 'PurchaseOrder' distinction doesn't exist in the business's vocabulary — they just call it an order. The guest/registered distinction is real but is currently handled by a nullable login_required attribute on Customer.",
+      "context": "The model is finalized and validated. The debate is about whether to rename entities and restructure a generalization hierarchy in a model that business stakeholders have already confirmed.",
+      "question": "Should the team follow the new team member's naming and hierarchy suggestions?",
+      "expected_flags": [
+        "the 'PurchaseOrder' renaming contradicts the established business vocabulary: if business stakeholders call it an 'Order', the conceptual model should match the ubiquitous language of the domain — introducing 'PurchaseOrder' when no such term exists in the business adds confusion, not clarity",
+        "the Customer generalization hierarchy proposal (RegisteredCustomer vs GuestCustomer) may be structurally valid, but the team notes a nullable attribute currently handles the distinction and stakeholders have validated the model — restructuring a validated model requires a concrete modeling problem to solve, not just a preference"
+      ],
+      "expected_fix_hints": [
+        "retain 'Order' — the conceptual model should use the domain's own vocabulary; rename only if there is a genuine naming collision or ambiguity that confuses stakeholders",
+        "evaluate the Customer split against a concrete question: does the system treat Registered and Guest customers differently in ways that require different attributes or relationships? If the nullable attribute correctly models the distinction and stakeholders are satisfied, the split is unnecessary overhead"
+      ],
+      "absent_signals": [
+        "should NOT apply conceptual-modeling defect analysis (missing abstraction, premature physicalization, wrong cardinality) to this scenario — the model is structurally correct and validated; the question is whether to accept a naming and hierarchy change that is largely stylistic",
+        "should NOT declare the generalization hierarchy mandatory on the grounds that OOP best practices prefer explicit subtypes over nullable attributes — at the conceptual level, the decision is driven by domain semantics and stakeholder clarity, not implementation patterns",
+        "should NOT recommend adopting PurchaseOrder because it sounds 'more formal' or 'more accurate' — the standard for conceptual model naming is the business's own vocabulary, not technical precision"
+      ]
+    }
+  ]
+}
