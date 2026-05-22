@@ -1,0 +1,181 @@
+{
+  "skill_name": "api-design",
+  "subject": "API Design — HTTP Resource and Action Surface",
+  "version": "1.0",
+  "schema_version": 1,
+  "pilot_panel": "SH-6334",
+  "anchor_grounding": "domain-external",
+  "description": "Application-shape eval set for api-design (SH-6334 batch 2). Tests whether loading the API design skill changes which issues a model flags when reviewing route contracts, response schemas, status codes, pagination, idempotency, and error envelopes — compared to baseline (no skill). Discriminating signals: surfacing implicit vs explicit field contracts, wrong status code semantics, missing idempotency on mutating operations, unstated auth boundaries, and leaking internal implementation details into routes. 5 real cases where the skill SHOULD fire + 2 red herrings (cases where a different skill owns the concern and api-design should stay silent). Scenarios are constructed from publicly-described API design patterns and general engineering practice, NOT from any internal codebase. They are principle-grounded and portable.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "route_contract_review",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A backend engineer shares this proposed API for a file-processing service:\n\n```\nPOST /process\nRequest: { \"file_id\": \"abc123\", \"output_format\": \"pdf\", \"internal_queue_name\": \"conversion-prod-v2\" }\nResponse 200: { \"job_id\": \"job_987\", \"db_row_id\": 441, \"status\": \"queued\", \"internal_worker\": \"worker-07\" }\nErrors: { \"error\": \"something went wrong\" }\n```\n\nThe service enqueues the file for async conversion. A client should be able to poll later for the result.",
+      "context": "Two frontend teams and one mobile team will integrate with this API. The contract will be public and versioned. A code review is in progress and the engineer is confident the route is complete.",
+      "question": "Review this API contract before the teams start implementing against it. Is it production-ready?",
+      "expected_flags": [
+        "the request leaks internal implementation detail: `internal_queue_name` is a server-side routing concern that should never appear in the client-facing contract — clients should not know or care which queue processes their file",
+        "the response leaks internal implementation detail: `db_row_id` and `internal_worker` are storage/infrastructure identifiers that have no meaning to clients and couple clients to internal changes",
+        "the error envelope is unactionable: `{ 'error': 'something went wrong' }` gives clients no stable code to branch on, no field to display, and no way to distinguish retryable from fatal errors — a stable error code and a human-readable message are the minimum",
+        "the async design has no polling path: the response returns a `job_id` but the contract does not document how a client retrieves the final result (GET endpoint, timeout, terminal states)",
+        "the response status 200 is ambiguous for an async enqueue — 202 Accepted is conventional for 'request received, processing deferred' and communicates retry intent more precisely to HTTP-aware clients"
+      ],
+      "expected_fix_hints": [
+        "remove `internal_queue_name` from the request schema; let the server decide routing transparently",
+        "remove `db_row_id` and `internal_worker` from the response; expose only stable client-meaningful identifiers (`job_id`, `status`)",
+        "define a stable error envelope: `{ 'code': string, 'message': string }` where `code` is a machine-readable constant the client can switch on",
+        "document the polling endpoint (e.g. GET /jobs/{job_id}) with its response schema and terminal status values",
+        "change the success status to 202 Accepted and add a `Location` header pointing to the polling URL"
+      ],
+      "absent_signals": [
+        "should NOT approve the contract as production-ready based on the engineer's confidence or the presence of request/response fields",
+        "should NOT focus the review primarily on URL naming conventions while leaving implementation leakage and the missing error contract unaddressed",
+        "should NOT treat the missing polling endpoint as a minor cosmetic concern — it is a functional gap that makes the async design incomplete"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "status_code_semantics",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A team documents the following error behavior for their REST API:\n\n- `POST /orders` returns 200 with `{ 'created': false, 'reason': 'item_out_of_stock' }` when the order cannot be created because an item is out of stock\n- `POST /orders` returns 200 with `{ 'created': false, 'reason': 'payment_declined' }` when the payment fails\n- `POST /orders` returns 500 when the database is unreachable\n- `POST /orders` returns 200 with `{ 'created': true, 'order_id': '...' }` when successful\n\nThey say: 'We use 200 for everything so clients only need to check the body, not the status code. This makes it simpler.'",
+      "context": "The API is used by three client teams. The team believes their convention reduces client complexity. The API has been in use for 6 months and the teams have adapted.",
+      "question": "Evaluate this API design decision. Is the team's reasoning sound?",
+      "expected_flags": [
+        "using HTTP 200 for business failures (out_of_stock, payment_declined) defeats the purpose of HTTP status codes: HTTP middleware, load balancers, monitoring tools, retry policies, and caching layers all operate on status codes before seeing the body — a 200 out-of-stock order looks like a success to every layer above the application",
+        "the client-simplification argument is inverted: clients now must always deserialize and inspect the body to detect failure, whereas with proper status codes (422 Unprocessable Entity for business rule violations, 409 Conflict for state conflicts) they can branch on the status code without parsing",
+        "the 500 for database unreachability is correct but contrasts badly with the design: infrastructure errors use status codes, but business errors do not — this inconsistency suggests the team's rule is not actually applied uniformly",
+        "6 months of adaptation is adoption of a workaround, not validation of the design — the clients have built custom error-detection logic that would not be necessary with proper status codes"
+      ],
+      "expected_fix_hints": [
+        "use 422 Unprocessable Entity (or 409 Conflict) for `item_out_of_stock` and `payment_declined` — these are client-observable failures that should not retry automatically",
+        "keep the stable error envelope from the body (`code`, `message`, `details`) — both status code and body information are useful and not mutually exclusive",
+        "document which status codes are retryable (503/504) and which are not (422, 409) so clients and retry middleware can behave correctly"
+      ],
+      "absent_signals": [
+        "should NOT endorse the 'use 200 for everything' convention as a valid simplification strategy",
+        "should NOT accept the 6-month adoption history as evidence the design is correct — workaround adoption is not design validation",
+        "should NOT limit the critique to aesthetics or convention without explaining the functional consequences for middleware, monitoring, and retry behavior"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "idempotency_missing",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A team is designing an API for charging customers:\n\n```\nPOST /charges\nRequest: { \"customer_id\": \"cust_1\", \"amount_cents\": 5000, \"currency\": \"usd\", \"description\": \"Subscription renewal\" }\nResponse 201: { \"charge_id\": \"ch_abc\" }\n```\n\nA mobile client will call this endpoint. If the mobile network times out before a response arrives, the client retries the request automatically. The team says: 'Retries are the client's problem, not ours.'",
+      "context": "The service processes real payments against an external payment processor. Duplicate charges would result in double-billing customers. The endpoint has been in staging for 2 weeks.",
+      "question": "Review this API design before it goes to production. Is there anything the team needs to address?",
+      "expected_flags": [
+        "the endpoint is not idempotent and the retry scenario is a real risk: a network timeout means the server may have successfully processed the charge but the client never received the response — a retry will produce a duplicate charge, double-billing the customer",
+        "the 'retries are the client's problem' argument is wrong for financial mutations: idempotency is a server-side guarantee that protects both client and server from the fundamental unreliability of networks — the server must participate to make it safe",
+        "the request has no idempotency key: a stable client-generated key (e.g. `idempotency_key: string`) that the server deduplicates on is the standard mechanism — if the same key appears twice within a time window, return the original result without re-processing"
+      ],
+      "expected_fix_hints": [
+        "add an `idempotency_key` field to the request (or an `Idempotency-Key` header following Stripe's convention) — the client generates a unique key per logical charge attempt and includes it on every retry",
+        "store the (idempotency_key, response) pair for a defined window (e.g. 24 hours) and return the stored response on duplicate key submission without re-invoking the payment processor",
+        "document idempotency behavior in the contract: what the key format is, how long results are cached, and what happens when the key is reused after expiry"
+      ],
+      "absent_signals": [
+        "should NOT accept the team's position that idempotency is the client's responsibility for a financial mutation endpoint",
+        "should NOT approve the endpoint as production-ready for payment processing without idempotency guarantees",
+        "should NOT treat idempotency as a future optimization — it is a correctness requirement for any mutating operation that processes money"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "pagination_design",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A team is building a list endpoint:\n\n```\nGET /orders?page=3&limit=50\nResponse: {\n  \"orders\": [...],\n  \"total\": 15000,\n  \"page\": 3\n}\n```\n\nA data analyst says: 'This lets me download all orders for reporting — I just loop through page=1, 2, 3... until I get fewer results than the limit.'\n\nThe engineering team says this approach works fine. The table grows by ~2000 rows per day. After 6 months of live traffic, the table has 400k rows.",
+      "context": "The endpoint is called by a frontend for display and by a data analyst for bulk export. The table uses a timestamp-ordered primary index. The team is planning to increase the page limit to 1000 at the analyst's request.",
+      "question": "Review this pagination design for its stated use cases. Are there any problems the team should address before going further?",
+      "expected_flags": [
+        "offset-based pagination (page=N) is inconsistent under concurrent writes: between page 1 and page 2 requests, if new rows are inserted, the OFFSET shifts and rows can be skipped or duplicated — the analyst may miss orders or double-count them during a full export",
+        "at 400k rows, OFFSET-based queries scan and discard all preceding rows on every page request — a request for page 300 at 50 rows/page scans and throws away 14,950 rows — this gets exponentially slower as the table grows",
+        "increasing the limit to 1000 amplifies the offset-scan problem without solving it — it does not address the correctness issue or the indexing inefficiency"
+      ],
+      "expected_fix_hints": [
+        "use cursor-based pagination instead: return an opaque `next_cursor` token in each response, and accept `cursor=<token>` in the next request — the server translates the cursor to a WHERE clause that uses the index efficiently and is not affected by concurrent inserts",
+        "for the analyst's bulk export use case, consider a dedicated export endpoint that produces a snapshot (a job-based export) rather than page-looping through a live table",
+        "the current page/limit API can remain for display pagination if the page count is small — but document the inconsistency risk and separate the display and export paths"
+      ],
+      "absent_signals": [
+        "should NOT approve the pagination design as correct for the analyst's full-export use case",
+        "should NOT suggest raising the page limit as a sufficient fix for the scalability problem",
+        "should NOT focus solely on the display-pagination case and ignore the bulk-export use case described in the scenario"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "auth_boundary_missing",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A team publishes this API for their admin tool:\n\n```\nGET /users/{user_id}/profile\nGET /users/{user_id}/billing\nDELETE /users/{user_id}\nGET /admin/usage-stats\n```\n\nThe API contract document describes the request and response shapes in detail but says nothing about authentication or authorization. When asked, the engineer says: 'Auth is handled by our API gateway — the contract just describes the shape.'",
+      "context": "The API will be consumed by a mobile app (user-facing), an internal admin dashboard, and a third-party billing integration. Some routes should only be accessible to the user themselves; others only to internal admins.",
+      "question": "Review this API contract. Is it complete?",
+      "expected_flags": [
+        "the contract is incomplete without explicit auth and authorization boundaries: consumers (mobile app, admin dashboard, third-party billing) have different permission levels, but the contract gives them no information about which credentials are required, what scopes are needed, or which routes are restricted to which caller types",
+        "delegating auth documentation to 'the gateway' does not make it the consumer's problem — consumers must know what auth material to present, what error (401 vs 403) to expect when credentials are missing or insufficient, and which routes are admin-only vs user-accessible",
+        "the DELETE /users/{user_id} and GET /admin/usage-stats endpoints are particularly under-specified: whether a user can delete their own account vs only an admin can, and who can call the admin stats endpoint, are contract questions — not implementation details",
+        "third-party billing integrations that call /users/{user_id}/billing without documented scopes or credential requirements are a security contract gap — the third party cannot safely implement without knowing exactly what authorization material is required"
+      ],
+      "expected_fix_hints": [
+        "add an auth section to each endpoint documenting: required credential type (API key, JWT, OAuth scope), which caller roles can call it, and what 401/403 responses mean",
+        "separate admin routes (GET /admin/usage-stats, DELETE /users/{user_id} when admin-only) from user-accessible routes and document them accordingly",
+        "define the error behavior for auth failures: 401 when credentials are missing or invalid, 403 when credentials are valid but the caller lacks the required role"
+      ],
+      "absent_signals": [
+        "should NOT accept 'the gateway handles auth' as a complete answer — the contract must tell consumers what auth material to present and what errors to expect",
+        "should NOT approve the contract as complete on the basis that request/response shapes are well-documented while auth boundaries are absent",
+        "should NOT treat auth boundary documentation as optional or a 'nice to have' for APIs consumed by third parties"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team is deciding whether to store user orders in PostgreSQL or in a document store like MongoDB. Their access patterns are:\n\n1. Look up a single order by order_id (frequent)\n2. List all orders for a customer, sorted by created_at (frequent)\n3. Run monthly revenue reports across all orders (infrequent, but expensive)\n4. Orders have line items (1–50 per order) that are always read with the order and never queried independently\n\nA senior engineer proposes: 'Embed line items directly in the order document in MongoDB. This gives us a single document read for the main case. Revenue reports can run as aggregation pipelines.'\n\nAnother engineer says: 'Use PostgreSQL with a normalized orders + line_items table. Revenue reports are easier with SQL and we can add indexes for the customer lookup.'",
+      "context": "The team has experience with both systems. The decision will affect how they model the schema and what migrations look like when the data model evolves.",
+      "question": "Help us think through this storage and modeling decision.",
+      "expected_flags": [
+        "this is a data modeling and storage architecture decision, not an API surface design decision — the skill that owns this is data-modeling (which persistence structure best fits these access patterns)",
+        "the embedded document vs normalized table tradeoff is fundamentally about write/read patterns, consistency requirements, and query ergonomics — not about HTTP endpoints or external contract shape"
+      ],
+      "expected_fix_hints": [
+        "route the decision to data-modeling: evaluate the access patterns against embedding vs normalization tradeoffs, consistency requirements for line item updates, and reporting query complexity",
+        "the API surface that exposes orders to clients is a separate design concern from the storage structure — api-design applies once the data model is settled and the team is designing how clients access it"
+      ],
+      "absent_signals": [
+        "should NOT apply API design principles (status codes, pagination, idempotency, error envelopes) to a database storage decision — these are different layers",
+        "should NOT recommend specific HTTP endpoints, response schemas, or versioning strategies in response to a storage architecture question",
+        "should NOT conflate the external API shape with the internal data storage model — the api-design skill governs the client-visible surface, not the persistence layer behind it"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A data pipeline team is designing how a Kafka-based order processing system will publish events. They want to know:\n\n1. What fields should every order event carry in its envelope (event ID, timestamp, schema version, producer name)?\n2. How should they version the payload schema so consumers can migrate gracefully?\n3. What is the topic naming convention: `orders.created`, `orders-created`, or `org.orders.v1.created`?\n4. How should consumers handle duplicate event delivery (Kafka's at-least-once guarantee)?",
+      "context": "Three downstream services consume these events: a fulfillment service, a revenue reporting pipeline, and a notification service. The team has never published async events as a documented contract before.",
+      "question": "Help the team design their event publishing approach.",
+      "expected_flags": [
+        "this is an async event contract design question, not an HTTP API design question — the skill that owns this is event-contract-design (envelope fields, topic naming, schema versioning, idempotency for message queues)",
+        "the four specific concerns (envelope structure, schema versioning, topic naming, duplicate handling) are all within the event-contract-design scope and outside the api-design scope"
+      ],
+      "expected_fix_hints": [
+        "route to event-contract-design for the envelope definition (id, type, source, time, schemaVersion, correlationId), topic naming conventions, schema evolution strategy, and idempotency key recommendations for Kafka consumers",
+        "api-design applies if this team later builds an HTTP API for querying event history or publishing events via webhook — not for the internal Kafka event contract"
+      ],
+      "absent_signals": [
+        "should NOT apply HTTP-specific guidance (REST status codes, pagination, HTTP error envelopes) to a Kafka event design question",
+        "should NOT recommend HTTP idempotency patterns (Idempotency-Key headers) as the solution for Kafka's at-least-once delivery semantics — message deduplication in Kafka consumers requires different mechanisms",
+        "should NOT treat this as an API versioning question governed by api-design — async event schema evolution is a distinct contract concern owned by event-contract-design"
+      ]
+    }
+  ]
+}
