@@ -1,0 +1,173 @@
+{
+  "skill_name": "debugging",
+  "subject": "Failure-driven diagnosis: reproduction, scope reduction, evidence capture, root-cause isolation, fix verification, and regression-test creation",
+  "version": "1.0",
+  "schema_version": 1,
+  "pilot_batch": "SH-6333",
+  "anchor_grounding": "domain-external",
+  "description": "Application-shape eval set for debugging (SH-6333 Batch 1). Tests whether loading the skill changes how a model approaches failure diagnosis — specifically: requiring reproduction before hypothesizing, bisecting to narrow scope, capturing evidence at failure time, resisting symptom patches, and converting failures to permanent regression tests. 5 real cases + 2 red-herring probes. Scenarios constructed from portable principle-grounded artifacts — no internal data.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "reproduction_first",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A bug report says: 'The checkout sometimes fails during payment processing. Users report seeing an error screen, but it only happens occasionally — maybe 1 in 20 checkouts. We've had 3 complaints in the last week.' An engineer reads the report and immediately opens the payment service code to look for obvious mistakes.",
+      "context": "The bug is intermittent — not reproducible on demand. The engineer has no steps to reproduce, no error logs from the failures, and no information about which users or which payment methods were involved. The codebase is large; the payment flow spans 4 services.",
+      "question": "What is the correct first step in debugging this intermittent checkout failure? Is the engineer's approach of opening the code to look for mistakes the right starting point?",
+      "expected_flags": [
+        "the engineer should NOT start by reading the code — there is no reproduction case and no evidence about which code path is actually failing",
+        "step 1 is to gather evidence: find the actual error logs, identify which users experienced the failure, determine which payment methods were involved, and look for any pattern (time of day, order size, payment provider)",
+        "without a reproducible case, any code reading is hypothesis-driven guessing — the debugging skill requires evidence before hypothesizing",
+        "the intermittent nature means the bug may be in error handling or a race condition — the evidence (logs, timing, state at failure) is the only way to narrow which code path to examine"
+      ],
+      "expected_fix_hints": [
+        "pull the error logs for the 3 known failures; look for stack traces, error codes, or state snapshots",
+        "determine if the failures share a common attribute: same payment provider, same order size, same time window — this constrains the hypothesis space before any code is read"
+      ],
+      "absent_signals": [
+        "should NOT recommend reading the payment code as the first step when there is no reproduction case",
+        "should NOT suggest trying fixes without first understanding what the failure actually is",
+        "should NOT claim the bug is 'probably a race condition' or any other specific cause before examining the evidence"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "scope_reduction",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A developer is debugging a test failure. The failing test is: 'Creates an invoice with tax correctly.' The test was passing two weeks ago. In the last two weeks, 47 commits have landed on the main branch touching 15 different files. The test failure message is: 'Expected tax amount: 12.50, received: 0.00.'",
+      "context": "The developer wants to fix the bug but does not know which of the 47 commits introduced it. Reading 15 files is impractical. The commit history is available via git bisect.",
+      "question": "What is the most efficient approach for identifying which commit broke the tax calculation?",
+      "expected_flags": [
+        "git bisect is the correct tool — it performs a binary search over the 47 commits, requiring at most 6-7 test runs to identify the culprit commit",
+        "running git bisect with the failing test as the verification command automates the process: mark the current HEAD as bad, the commit from two weeks ago as good, and let git bisect run",
+        "reading all 15 files to look for a tax bug is O(N) and the wrong first step — bisect is O(log N)"
+      ],
+      "expected_fix_hints": [
+        "run: git bisect start; git bisect bad HEAD; git bisect good <commit-from-two-weeks-ago>; git bisect run <test-command>",
+        "once bisect identifies the culprit commit, read ONLY the diff of that commit to understand the regression"
+      ],
+      "absent_signals": [
+        "should NOT recommend reading all 15 changed files before attempting to narrow the scope of the bug",
+        "should NOT suggest 'checking the tax calculation logic' as the first step — the calculation could be correct but incorrectly invoked by a recent change"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "symptom_vs_root_cause",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A production alert fires: the orders-per-minute metric has dropped by 40% in the last 15 minutes. An on-call engineer checks the error logs and sees: 'Connection pool exhausted — all 20 connections in use.' They immediately increase the database connection pool from 20 to 50 and the alert clears. They mark the incident resolved.",
+      "context": "Three hours later, the alert fires again with the same error. The pool is exhausted again despite being increased to 50. The engineer considers increasing it to 100.",
+      "question": "Was the initial fix correct? What should the engineer do differently in the second incident?",
+      "expected_flags": [
+        "the initial fix was a symptom patch — increasing the pool masked the symptom (exhausted connections) without identifying WHY connections were being exhausted",
+        "pool exhaustion is typically caused by a code path that acquires a connection and does not release it (connection leak), or by a spike in traffic causing legitimate exhaustion — increasing the pool only defers the symptom",
+        "the correct approach for the second incident is to identify the root cause: are connections being leaked? Is there a slow query holding connections open? Is there a spike in a specific request type?",
+        "patching the symptom a second time (pool 50 → 100) will produce a third incident when the pool is exhausted again"
+      ],
+      "expected_fix_hints": [
+        "examine which queries/transactions are holding connections open: most databases expose active connections and their current query",
+        "look for any code path that opened a transaction without a corresponding commit or rollback (the typical connection-leak pattern)",
+        "look at the metric timeline: did the pool exhaustion correlate with a deploy, a spike in a specific endpoint, or a long-running batch job?"
+      ],
+      "absent_signals": [
+        "should NOT endorse increasing the connection pool a second time as a valid resolution",
+        "should NOT mark the incident resolved until the root cause is identified (not just the symptom suppressed)"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "fix_verification",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A developer fixes a bug: when a coupon code is applied to an order with a free shipping promotion already active, the coupon discount was being applied to the pre-shipping subtotal instead of the post-shipping subtotal, resulting in an incorrect discount amount. The fix changes the order of operations in the pricing calculation. The developer runs the full test suite and it passes. They open a PR.",
+      "context": "The bug was originally reported by a customer. There is no automated test that reproduces the exact scenario: coupon applied on top of an existing free shipping promotion. The developer did manual testing to confirm the fix works.",
+      "question": "Is the PR ready to merge? What is missing from the fix?",
+      "expected_flags": [
+        "the PR is not fully ready — it is missing a regression test that reproduces the exact failing scenario (coupon + free shipping promotion)",
+        "the full test suite passing does not prove the fix is correct for this specific case — there was no test for this scenario before the fix",
+        "without a regression test, this bug can silently regress in a future change to the pricing calculation order",
+        "the debugging skill requires: after identifying and fixing the root cause, convert the original failure case into a permanent automated test"
+      ],
+      "expected_fix_hints": [
+        "add a test: 'given an order with a free shipping promotion active, when a coupon code is applied, then the coupon discount is calculated on the post-shipping subtotal'",
+        "assert on the exact discount amount, not just that a discount was applied"
+      ],
+      "absent_signals": [
+        "should NOT consider the PR ready to merge without a regression test for the reported failure case",
+        "should NOT treat manual testing as a substitute for an automated regression test"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "evidence_capture",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "An engineer is debugging a race condition in a concurrent queue processor. The bug is: occasionally, the same job is processed twice. It only happens under high load (> 500 concurrent jobs). The engineer can reproduce it by running a load test script. However, the failure is non-deterministic: the double-processing happens in different jobs each run.",
+      "context": "The engineer has a reproduction script but the failure is non-deterministic. The error only manifests as 'job processed twice' which the engineer can detect by examining the database after the load test. The engineer is tempted to add a mutex lock immediately to fix the race condition.",
+      "question": "Before adding the mutex lock, what should the engineer do to understand the race condition? What evidence should they capture?",
+      "expected_flags": [
+        "before adding a fix, the engineer should capture evidence to understand WHICH part of the code races — adding a mutex without knowing the race location might fix the symptom for the wrong reason or introduce a different bug",
+        "add structured logging at the point where a job is claimed/dequeued, including the job ID, the timestamp, and any thread/process identifier — this makes the race visible in the logs",
+        "run the load test with the new logging and capture the log output to see which two processes claimed the same job and in what sequence",
+        "understanding the sequence of events (who claimed it first, who claimed it second, what state each reader saw) is necessary before choosing the right fix (mutex, compare-and-swap, database row locking)"
+      ],
+      "expected_fix_hints": [
+        "add logging: 'job {id} claimed by worker {worker_id} at {timestamp}' — after the load test, search for job IDs that appear twice",
+        "examine whether the database's job selection query uses a row lock (SELECT ... FOR UPDATE) or a read-then-update pattern — the latter is the typical source of this race"
+      ],
+      "absent_signals": [
+        "should NOT add a mutex lock as the immediate first response before understanding where in the code the race occurs",
+        "should NOT recommend fixing a non-deterministic race condition without first capturing evidence that makes the race visible"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team is planning the architecture for a new microservice that will handle real-time event streaming. They need to decide between three options: (A) Apache Kafka, (B) AWS SQS + SNS, (C) a self-hosted RabbitMQ cluster. Their requirements: high throughput (50k events/sec), at-least-once delivery, replay capability for up to 7 days, and minimal operational overhead.",
+      "context": "This is a technology selection decision for a greenfield microservice. There is no existing code and no bug to fix. The team wants a recommendation on which streaming infrastructure to adopt.",
+      "question": "Which streaming technology best fits these requirements and why?",
+      "expected_flags": [
+        "this is a technology selection and architecture decision, not a debugging task — there is no failing behavior to reproduce or root-cause",
+        "Kafka is the strongest fit: it natively supports replay (topic offset replay), handles 50k events/sec at scale, and at-least-once delivery is the default semantic",
+        "AWS SQS does not natively support replay past the message retention window, making it a poor fit for the 7-day replay requirement"
+      ],
+      "expected_fix_hints": [
+        "if operational overhead is the primary constraint, AWS MSK (managed Kafka) reduces cluster management burden",
+        "validate the 50k events/sec estimate against the partition count — Kafka performance scales with partition count, not cluster size alone"
+      ],
+      "absent_signals": [
+        "should NOT apply the debugging workflow (reproduction, bisection, evidence capture, root-cause isolation) to a technology selection question — there is nothing to debug",
+        "should NOT ask for a stack trace or failing test case before answering a technology selection question",
+        "should NOT treat this as a symptom-vs-root-cause question — it is a design and selection question"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A product manager asks a developer: 'We want to add a feature where users can export their complete order history as a PDF. The PDF should include: order number, date, items, quantities, unit prices, and the total. Can you estimate the effort and give me a rough implementation plan?'",
+      "context": "This is a new feature request. There is no existing code for PDF export. The developer is being asked to scope and plan the implementation, not to fix a bug or debug a failure.",
+      "question": "What is the implementation plan and effort estimate for a user order-history PDF export feature?",
+      "expected_flags": [
+        "this is a feature scoping and implementation planning task, not a debugging task — there is no bug, no failure, and nothing to reproduce",
+        "the implementation plan should cover: choosing a PDF generation library (e.g. Puppeteer, PDFKit, WeasyPrint), designing the data query to fetch all orders for a user, designing the PDF template, and wiring the endpoint",
+        "effort is likely 2-4 engineer-days depending on PDF layout complexity and whether a library already exists in the codebase"
+      ],
+      "expected_fix_hints": [
+        "if the team already uses a headless browser for other PDF generation, reuse that; otherwise evaluate a pure-Node library (PDFKit) vs. HTML-to-PDF (Puppeteer)",
+        "paginate the PDF generation for users with large order histories to avoid memory issues"
+      ],
+      "absent_signals": [
+        "should NOT apply the debugging workflow (reproduction, evidence capture, bisection, root-cause isolation) to a new feature planning request",
+        "should NOT ask for a failing test or error log before engaging with a feature scoping question",
+        "should NOT treat the absence of a known bug as a sign that no work is needed"
+      ]
+    }
+  ]
+}

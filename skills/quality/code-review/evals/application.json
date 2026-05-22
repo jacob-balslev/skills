@@ -1,0 +1,174 @@
+{
+  "skill_name": "code-review",
+  "subject": "Code review methodology: multi-phase diff reading, severity grading, comment discipline, and no-rubber-stamp rules for AI-generated changes",
+  "version": "1.0",
+  "schema_version": 1,
+  "pilot_batch": "SH-6333",
+  "anchor_grounding": "domain-external",
+  "description": "Application-shape eval set for code-review (SH-6333 Batch 1). Tests whether loading the code-review skill changes which issues a model flags, which severity grades it assigns, and which comments it demands — compared to baseline (no skill). Discriminating signals: reading tests BEFORE implementation, never rubber-stamping AI-generated diffs, catching missing error paths on new code, and distinguishing blocker vs nit severity correctly. 5 real cases + 2 red-herring probes. Scenarios constructed from portable, principle-grounded artifacts — no internal Sales Hub data.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "ai_generated_diff",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A developer opens a PR with an AI-generated diff. The description says: 'Adds retry logic to the payment webhook handler.' The diff is 180 lines. The test file adds three test cases. At a glance, the code looks clean: good variable names, clear comments, correct TypeScript types.",
+      "context": "Team convention: PRs must be read in this order — tests first, then implementation, then call sites. The payment webhook is on the critical path; bugs here mean missed payments. The AI assistant that generated this diff is known to sometimes write tests that assert the wrong thing (test title says one thing, assertion checks another). Time is short: other reviewers are tempted to approve quickly because 'it looks fine.'",
+      "question": "How should you approach reviewing this AI-generated payment-webhook PR? Walk through the review process step by step, noting specifically what you would verify and what common failure mode to watch for in AI-generated tests.",
+      "expected_flags": [
+        "read tests BEFORE the implementation — verify that each test's assertion actually matches what its description says it proves (AI tests frequently have mismatched titles and assertions)",
+        "apply the no-rubber-stamp rule for AI-generated diffs: the fact that the code 'looks fine' is not evidence that it is correct; AI-generated diffs have 1.7-2.74x more security vulnerabilities than human-authored equivalents",
+        "check that the retry logic handles the unhappy path: what happens when all retries are exhausted? Is there a dead-letter queue or alerting, or does the failure disappear silently?",
+        "verify the error path in the implementation explicitly — not just the success path tested by the happy-path tests"
+      ],
+      "expected_fix_hints": [
+        "open the test file first, read each test name, then read the assertion to confirm they match",
+        "deliberately look for the error/exhaustion path in the implementation; if absent, flag as blocker",
+        "document your verification approach in the review comment rather than just approving with 'LGTM'"
+      ],
+      "absent_signals": [
+        "should NOT approve because the code 'looks fine' without following the read-order protocol",
+        "should NOT treat AI-generated diffs as equivalent in trustworthiness to carefully human-authored code",
+        "should NOT skip the test review phase because the implementation already looks readable"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "severity_grading",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "During a code review you find three issues in a single PR:\n(A) A new endpoint does not check whether the requesting user is authorized to access the resource — any authenticated user can read any other user's data.\n(B) A function is named `processData` instead of `processOrderShipment` — the function is 20 lines and only ever called in one place.\n(C) The PR has no tests for the new endpoint.",
+      "context": "The PR is a new REST endpoint that returns order details. Your team uses four severity levels: blocker (must fix before merge), change-requested (should fix, PR can merge after confirmation), suggestion (author should consider but not required), nit (style-only, no action needed). Authorization failures and missing tests on security-sensitive endpoints are both explicitly called out in the team's review convention as blockers.",
+      "question": "For each of the three issues (A, B, C), assign the correct severity level and explain why. Then state the merge decision.",
+      "expected_flags": [
+        "issue A (missing authorization check) is a BLOCKER — it is a security vulnerability where any authenticated user can read any other user's data; this cannot merge",
+        "issue B (function naming) is a NIT — the name is vague but the function is small, single-purpose, and only called once; it has no correctness or security impact",
+        "issue C (no tests for a security-sensitive endpoint) is a BLOCKER — adding an endpoint with no test coverage on a security surface is explicitly a blocker per team convention",
+        "merge decision: REQUEST CHANGES — two blockers must be resolved before approval"
+      ],
+      "expected_fix_hints": [
+        "add authorization guard as the first statement in the endpoint handler before any data access",
+        "add at minimum: one test for the authorized case, one test for the unauthorized case (401 or 403 response), one test for a missing/invalid resource"
+      ],
+      "absent_signals": [
+        "should NOT label the authorization gap as anything less than a blocker",
+        "should NOT label the naming issue as 'change-requested' or higher — it is a nit",
+        "should NOT approve the PR with blockers outstanding, even if the rest of the code is clean"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "comment_phrasing",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "You are reviewing a PR from a junior engineer. The implementation is mostly correct but has one real problem: the database query inside a loop will produce N+1 queries for a list of 500 items. There is also one stylistic issue: the engineer used `let` where `const` would be correct since the variable is never reassigned.",
+      "context": "This engineer is new to the team. They have been working hard and are eager to get feedback. Your team's review convention says: distinguish objective problems (rule violations, bugs) from stylistic preferences; use questions for things the author can explain; do not conflate severity levels in a single comment.",
+      "question": "Write the review comment for the N+1 query issue and a separate comment for the const/let issue. Phrase each comment correctly for its severity and the context of reviewing a junior engineer's code.",
+      "expected_flags": [
+        "the N+1 query is an objective performance problem that must be flagged as a change request (not a nit or suggestion), with a clear explanation of why it matters at 500 items",
+        "the const/let issue is a nit — it should be labeled as such and not conflated with the N+1 issue in the same comment",
+        "comments should explain the WHY (why does N+1 matter at scale?) not just assert the problem",
+        "the N+1 comment should include a concrete hint toward the fix (fetch outside the loop) without being prescriptive about implementation details"
+      ],
+      "expected_fix_hints": [
+        "N+1 comment should read something like: 'This will run one DB query per item in the list [CHANGE-REQUEST]. At 500 items that is 501 round-trips; the query should be moved outside the loop and fetch all IDs in a single IN clause.'",
+        "const/let comment should read something like: '[Nit] `value` is never reassigned after declaration — prefer `const` to signal that intent.'"
+      ],
+      "absent_signals": [
+        "should NOT merge both issues into one comment that conflates severity levels",
+        "should NOT phrase the N+1 issue as a suggestion or nit — it is a real performance problem",
+        "should NOT write a harsh or accusatory comment about an obvious oversight from a junior engineer"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "self_review",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "An engineer has just finished implementing a feature that modifies the user profile update endpoint. Before opening the PR, they want to do a self-review pass. The diff touches: the endpoint handler (40 lines), a validation helper (15 lines), and no test files — the engineer says 'the happy path is already tested by existing tests.'",
+      "context": "Team convention: self-review should catch obvious mistakes before the human reviewer wastes time on them. The team has a specific rule: any change to an endpoint handler requires at minimum one test that covers the error path (not just the success path). This endpoint handles user profile data — a security-sensitive surface.",
+      "question": "What should this engineer's self-review catch, and what is the merge-readiness assessment?",
+      "expected_flags": [
+        "the self-review should catch the missing error-path test — the engineer's claim that 'existing tests cover the happy path' does not satisfy the team rule that endpoint changes require an error-path test",
+        "the self-review should check: does the validation helper return the right error shape for invalid input, or does it silently pass invalid data through?",
+        "the PR is not merge-ready: a security-sensitive endpoint handler with no error-path test coverage violates the team convention"
+      ],
+      "expected_fix_hints": [
+        "add a test for at least one invalid-input case (missing required field, wrong type) that verifies the error response shape",
+        "add a test for the unauthorized case if the endpoint requires authentication"
+      ],
+      "absent_signals": [
+        "should NOT assess the PR as merge-ready on the basis that 'existing happy-path tests already exist'",
+        "should NOT skip the self-review on the grounds that a human reviewer will catch anything important"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "large_diff_strategy",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A PR arrives with 1,400 changed lines across 22 files. The description says: 'Refactor order processing to use the new event-driven architecture. Also fixed a latent bug in the discount calculation that I found while refactoring. Also updated several tests to match the new structure.' The PR has been open for two days; the author is asking for a review today.",
+      "context": "Team convention: PRs over 1,000 lines should ideally be split. This PR mixes a behavior-preserving refactor, a bug fix, and test updates in one diff. It is hard to tell which test changes are driven by the refactor (expected) and which are driven by the bug fix (important to audit separately).",
+      "question": "How should a reviewer handle this PR? What are the specific structural problems with it, and what should the reviewer ask for before starting the full review?",
+      "expected_flags": [
+        "the PR mixes at least three concerns in one diff: the refactor, the bug fix, and the test updates — this makes it impossible to review each concern with the appropriate rigor",
+        "the bug fix is especially risky bundled with a refactor: bug fixes need their own test that demonstrates the bug existed and now does not; in a 1,400-line diff the fix is invisible",
+        "the reviewer should ask the author to split the PR: at minimum, the bug fix (with its regression test) should be a separate PR that can be reviewed and merged independently",
+        "the reviewer should NOT start a full review of a 1,400-line mixed-concern diff — the review will be low-signal because no dimension (correctness, security, tests) can be assessed independently"
+      ],
+      "expected_fix_hints": [
+        "ask the author to extract the bug fix + regression test into its own PR first",
+        "optionally accept the refactor + test updates as a single PR if the test changes are clearly and entirely explained by the structural changes"
+      ],
+      "absent_signals": [
+        "should NOT approve or begin a detailed review of the 1,400-line mixed-concern diff without first requesting a split",
+        "should NOT treat a bug fix bundled into a refactor PR as 'fine' because the author mentioned it in the description"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team wants to redesign their API documentation website. They have a draft information architecture: the current site has a flat list of 200 endpoint pages with no grouping. The proposal is to group endpoints by domain (Orders, Users, Billing, Inventory) and add a search bar. They want to know if the new structure will make it easier for developers to find what they need.",
+      "context": "The question is about information architecture and developer experience for a documentation site — not about reviewing a code change, diff, or PR. There is no code to review.",
+      "question": "Is this proposed information architecture improvement likely to help developers? What should they consider when reorganizing the 200 endpoint pages?",
+      "expected_flags": [
+        "this is an information architecture and developer-experience question, not a code review task",
+        "domain grouping (Orders, Users, Billing, Inventory) reduces cognitive load compared to a flat list of 200 items — this is a valid IA improvement"
+      ],
+      "expected_fix_hints": [
+        "consider progressive disclosure: show high-level domain summaries first, drill down to endpoints",
+        "ensure cross-domain endpoints (e.g. an endpoint that spans Orders and Billing) have clear canonical placement and cross-links"
+      ],
+      "absent_signals": [
+        "should NOT apply a code-review severity rubric (blocker, change-requested, nit) to a documentation site redesign question",
+        "should NOT demand tests, error-path coverage, or authorization checks for a documentation site reorganization",
+        "should NOT invoke the no-rubber-stamp rule or the read-order protocol (tests-first) for a question about documentation structure"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "An engineer asks: 'I need to refactor a 300-line function that processes discount calculations. It has 4 levels of nesting and is hard to follow. Should I extract helpers, use early returns, or both? How do I preserve the existing behavior while improving the structure?'",
+      "context": "The question is about how to perform a behavior-preserving refactor. There is no PR, no diff, and no proposed change to review. The engineer is asking for refactoring strategy advice before writing any code.",
+      "question": "What is the best approach for refactoring this complex function while preserving its behavior?",
+      "expected_flags": [
+        "this is a refactoring strategy question, not a code review task — there is no diff to review",
+        "early returns to reduce nesting is a high-value first step that reduces the cognitive load of the remaining logic",
+        "extracting helpers with clear, specific names (not 'processData' but 'calculateBundleDiscount') makes each unit independently testable"
+      ],
+      "expected_fix_hints": [
+        "run the existing tests before and after each extraction to confirm behavior is preserved",
+        "extract one helper at a time rather than rewriting the whole function at once"
+      ],
+      "absent_signals": [
+        "should NOT apply the PR review workflow (pre-review fact-gathering, severity grading, merge decision) to a refactoring strategy question",
+        "should NOT ask for the diff or PR link before answering — there is no diff; this is pre-code advice",
+        "should NOT refuse to help because 'code review skill doesn't cover authoring decisions' — the question is about refactoring methodology, which is adjacent but the skill should still give useful directional guidance without invoking its review protocol"
+      ]
+    }
+  ]
+}

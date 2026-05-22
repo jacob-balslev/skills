@@ -1,0 +1,179 @@
+{
+  "skill_name": "a11y",
+  "subject": "Interaction accessibility: semantic HTML primitives, keyboard access, focus management, labeling, change announcement, and user-preference respect",
+  "version": "1.0",
+  "schema_version": 1,
+  "pilot_batch": "SH-6333",
+  "anchor_grounding": "domain-external",
+  "description": "Application-shape eval set for a11y (SH-6333 Batch 1). Tests whether loading the skill changes how a model handles accessibility decisions — specifically: choosing the right semantic primitive (button vs div, label vs placeholder), managing focus after state changes, labeling dynamic content for screen readers, and recognizing when accessibility is a structural problem (wrong primitive) vs a cosmetic overlay (ARIA on a bad primitive). 5 real cases + 2 red-herring probes. Scenarios constructed from portable HTML/component artifacts — no internal Sales Hub data.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "primitive_selection",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A React component renders a list of products. Each product card has a 'Save to wishlist' interaction. The current implementation renders this as: `<div className=\"save-button\" onClick={handleSave}>Save</div>`. A developer asks whether this is acceptable.",
+      "context": "The component is used in production. The `onClick` handler works correctly with a mouse. The design team has styled the div to look like a button (cursor: pointer, padding, border). The developer argues that 'it looks and behaves like a button' so it should be fine.",
+      "question": "Is using a `<div onClick>` acceptable for the 'Save to wishlist' interaction? If not, what is the correct element and why?",
+      "expected_flags": [
+        "a `<div onClick>` is NOT acceptable for an action trigger — the correct primitive is `<button type=\"button\">`",
+        "the `<div>` is not keyboard-operable by default: it does not receive focus via Tab, and Enter/Space do not trigger the click handler",
+        "the `<div>` has no semantic role — screen readers will not identify it as a button and will not announce it as an actionable element",
+        "styling a div to look like a button does not give it the behavior or semantics of a button — this cannot be rescued by appearance"
+      ],
+      "expected_fix_hints": [
+        "replace `<div className=\"save-button\" onClick={handleSave}>Save</div>` with `<button type=\"button\" onClick={handleSave}>Save</button>` and apply the same visual styles to the button element",
+        "if the design requires a specific look that conflicts with default button styling, use CSS reset on the button (appearance: none, border: none, background: none) rather than reaching for a div"
+      ],
+      "absent_signals": [
+        "should NOT accept the div because 'it looks and behaves like a button with a mouse'",
+        "should NOT recommend adding `role=\"button\"` and `tabIndex=\"0\"` to the div as the fix — this is ARIA patching a wrong primitive, not fixing the root cause",
+        "should NOT suggest that `onClick` is sufficient for accessibility"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "focus_management",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A modal dialog opens when the user clicks 'Edit profile'. The modal contains a form with name, email, and bio fields. When the user presses Escape or clicks 'Cancel', the modal closes. A developer reports: 'When the modal closes, the browser seems to lose track of focus — there's no visible focus indicator anywhere on the page.' A QA tester using keyboard navigation reports they have to Tab from the beginning of the page to get back to where they were.",
+      "context": "The current implementation removes the modal from the DOM when it closes, which destroys the focused element. The 'Edit profile' button that opened the modal is still present in the page after close. The team is using a custom modal built without a library.",
+      "question": "Why is focus lost when the modal closes, and how should focus be managed correctly?",
+      "expected_flags": [
+        "when the modal closes and its DOM is removed, the browser has no element to return focus to — focus is lost to the body element or nowhere",
+        "the correct pattern: before opening the modal, save a reference to the element that triggered it (the 'Edit profile' button); when the modal closes, call `.focus()` on that saved reference",
+        "the focus should return to the trigger element — not to the top of the page or an arbitrary element",
+        "this is a structural accessibility issue (missing focus management), not a cosmetic one"
+      ],
+      "expected_fix_hints": [
+        "save the trigger element before opening: `const trigger = document.activeElement;`",
+        "on modal close (Escape or Cancel): `trigger.focus();`",
+        "if the trigger element may not exist after close (rare), fall back to the closest meaningful ancestor that is focusable"
+      ],
+      "absent_signals": [
+        "should NOT recommend adding `outline: none` or hiding focus indicators as a solution",
+        "should NOT suggest the user can 'just Tab back to where they were' — this is a broken experience for keyboard users",
+        "should NOT ignore the focus management issue because the mouse experience is unaffected"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "form_labeling",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A registration form has the following markup:\n```html\n<input type=\"email\" placeholder=\"Enter your email address\" />\n<input type=\"password\" placeholder=\"Password (min 8 characters)\" />\n```\nThe design uses the placeholder as the visible label for both fields. There are no `<label>` elements. A developer says: 'The placeholder tells users what to type, so we don't need labels.'",
+      "context": "The form is used by thousands of users per day. Several users with screen readers have submitted support tickets saying the form fields are announced as 'edit text' with no useful description.",
+      "question": "Is using placeholder as a label acceptable? What is the correct fix?",
+      "expected_flags": [
+        "placeholder is NOT an acceptable substitute for a label — placeholders are not announced by all screen readers, disappear when the user starts typing (eliminating the context), and have lower contrast than proper labels",
+        "each input needs an associated `<label>` element — either wrapping the input or linked via `for`/`id`",
+        "the current markup means screen readers announce the fields as unlabeled inputs, which explains the support tickets"
+      ],
+      "expected_fix_hints": [
+        "add `<label for=\"email\">Email address</label>` and `id=\"email\"` on the input, or wrap: `<label>Email address <input type=\"email\" /></label>`",
+        "keep the placeholder as supplementary hint text if desired (e.g. the min-8-characters note), but the label must be the primary identification mechanism",
+        "if the design does not want visible labels, use `sr-only` CSS (visually hidden but in the accessibility tree) rather than removing labels entirely"
+      ],
+      "absent_signals": [
+        "should NOT accept placeholder as sufficient labeling",
+        "should NOT recommend adding `aria-label` as the fix when a visible `<label>` would serve the same purpose — visible labels help all users, not just screen reader users",
+        "should NOT suggest `title` attribute as a label — it is not reliably exposed by assistive technologies"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "dynamic_content_announcement",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "An e-commerce site has a cart counter in the navigation bar. When a user adds an item to the cart, the counter updates from '2 items' to '3 items'. The update is visual only — the DOM changes but no announcement is made. A screen reader user reports: 'I can never tell when something is added to the cart — I have to navigate back to the cart to check.'",
+      "context": "The current implementation: the cart counter is a `<span>` that is updated via JavaScript. There is no ARIA on the span. Screen readers do not announce the change because there is no live region.",
+      "question": "How should the cart counter update be made accessible to screen reader users?",
+      "expected_flags": [
+        "the cart counter needs a live region so that screen readers announce the update when it changes",
+        "`aria-live=\"polite\"` is the correct choice — the update is not urgent and should not interrupt the user's current reading position",
+        "the live region should contain the full updated text ('3 items in cart') not just the number, so the announcement is meaningful in isolation",
+        "alternatively, use `role=\"status\"` which implies `aria-live=\"polite\"` and is semantically equivalent"
+      ],
+      "expected_fix_hints": [
+        "add `aria-live=\"polite\"` or `role=\"status\"` to the cart counter span",
+        "ensure the text content of the span includes enough context: '3 items in cart' not just '3'",
+        "if the update is very fast or frequent, consider a debounced announcement to avoid a flood of live region updates"
+      ],
+      "absent_signals": [
+        "should NOT suggest `aria-live=\"assertive\"` for a cart counter — assertive interrupts the user's reading, which is appropriate only for urgent errors or time-sensitive alerts",
+        "should NOT recommend hiding the visual counter and replacing it with a modal or alert popup — the live region is the correct lightweight solution"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "keyboard_operability",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A date picker component opens a calendar overlay when the user focuses the date input and presses Enter. Inside the calendar, the user can navigate days with arrow keys. However: (1) pressing Escape does not close the calendar; (2) after selecting a date, focus moves to the body instead of back to the date input; (3) the calendar has no visible focus indicator when navigating with arrow keys.",
+      "context": "The team built a custom date picker. The ARIA Authoring Practices Guide (APG) defines a keyboard interaction pattern for date pickers. The product is used by enterprise clients who have accessibility compliance requirements.",
+      "question": "List the accessibility issues with this date picker and prioritize which to fix first.",
+      "expected_flags": [
+        "Escape not closing the calendar is a keyboard trap — users who open the calendar cannot dismiss it without a mouse, which is a WCAG 2.1 Level A failure (2.1.2 No Keyboard Trap)",
+        "focus not returning to the date input after selection is a focus management failure (same issue as modal close — the trigger must receive focus back)",
+        "no visible focus indicator violates WCAG 2.4.7 Focus Visible (Level AA) — keyboard users cannot see where they are in the calendar",
+        "priority order: 1) keyboard trap (Escape key) — this is a Level A blocker that makes the component unusable by keyboard; 2) focus return after selection; 3) focus indicator visibility"
+      ],
+      "expected_fix_hints": [
+        "add an Escape keydown handler on the calendar overlay that closes it and returns focus to the date input",
+        "after a day is selected: close the calendar, call `dateInput.focus()`",
+        "add a visible `:focus` / `:focus-visible` style on the individual day cells in the calendar — ensure the contrast ratio meets WCAG 3:1 for UI components"
+      ],
+      "absent_signals": [
+        "should NOT suggest adding `role=\"dialog\"` to the calendar as the only fix — ARIA roles add semantics but do not add keyboard behavior",
+        "should NOT deprioritize the keyboard trap — it is the most severe issue (Level A failure) and must be fixed first",
+        "should NOT recommend removing the calendar overlay and using a native `<input type=\"date\">` as a dismissal — this may be valid for some contexts but ignores that the team has business reasons for a custom picker"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A marketing team is redesigning the color palette for a landing page. They are debating between two primary colors: a vibrant coral (#FF6B6B) and a deep teal (#006D77). They want to know which color will create more visual impact and drive higher click-through rates on the call-to-action button.",
+      "context": "This is a visual design and conversion optimization question. The team is choosing a brand color for marketing purposes. There is no code to review and no HTML structure to assess.",
+      "question": "Which color choice — coral or teal — is more likely to produce higher click-through rates on a call-to-action button?",
+      "expected_flags": [
+        "this is a visual design and CRO (conversion rate optimization) question, not an accessibility interaction question — the a11y skill does not own color palette selection for marketing purposes",
+        "click-through rate depends on context (brand, surrounding colors, user expectations) not on an absolute color value — neither color is universally better",
+        "if accessibility is relevant here at all, it would be to verify that the chosen color has sufficient contrast against the button text (WCAG 1.4.3, 4.5:1 for normal text) — but this is a contrast check, not the primary question"
+      ],
+      "expected_fix_hints": [
+        "run both colors through a WCAG contrast checker against the button text color to confirm either choice passes the 4.5:1 minimum",
+        "for conversion optimization, A/B test both colors with real traffic — color choice alone rarely determines click-through rate"
+      ],
+      "absent_signals": [
+        "should NOT apply keyboard operability, focus management, or live region advice to a color palette selection question",
+        "should NOT recommend specific ARIA roles or semantic HTML changes for a question about brand color choice",
+        "should NOT refuse to engage at all — the skill can contribute a contrast-check observation, but should not lead with interaction accessibility patterns for a visual-design question"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A developer is implementing server-side caching for a dashboard that aggregates data from three APIs. Each API call takes 500ms. Without caching, the dashboard loads in 1.5 seconds. They want to cache the aggregated result for 60 seconds using Redis. They ask: 'Should I cache at the individual API level or at the aggregated result level, and how do I handle cache invalidation?'",
+      "context": "This is a backend caching strategy and architecture question. There is no UI component, no HTML, and no user interaction pattern involved. The question is about Redis cache key design and invalidation strategy.",
+      "question": "Should the developer cache at the individual API level or at the aggregated result level, and how should cache invalidation work?",
+      "expected_flags": [
+        "this is a backend caching architecture question, not an interaction accessibility question — the a11y skill does not cover server-side caching strategy",
+        "caching at the aggregated level is simpler (one cache key, one invalidation path) but loses flexibility; caching at the individual API level allows partial cache hits and more granular invalidation",
+        "cache invalidation strategy depends on how often each underlying API's data changes — if they change at different rates, individual API caching gives better freshness control"
+      ],
+      "expected_fix_hints": [
+        "if the three APIs have different update frequencies, cache them individually with TTLs matched to their update rates",
+        "use a cache-aside pattern: check cache first, fetch from API on miss, write to cache with TTL"
+      ],
+      "absent_signals": [
+        "should NOT apply semantic HTML, ARIA, or keyboard interaction advice to a backend caching question",
+        "should NOT ask about screen reader behavior or focus management in response to a caching architecture question",
+        "should NOT refuse to engage entirely — the skill can acknowledge it is out of scope and provide directional guidance on the actual question"
+      ]
+    }
+  ]
+}
