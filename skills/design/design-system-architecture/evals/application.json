@@ -1,0 +1,182 @@
+{
+  "skill_name": "design-system-architecture",
+  "subject": "Design System Architecture",
+  "version": "1.0",
+  "schema_version": 1,
+  "description": "Application-shape eval set for design-system-architecture. Tests whether loading the skill changes which issues a model flags when reviewing token taxonomy, component API decisions, theming strategies, and migration plans — compared to baseline (no skill). Discriminating signal: surface the distinction between raw/semantic tokens, flag component API surface leaks, catch theming assumptions that require component rewrites, and identify drift between code and design intent. 5 real cases (skill SHOULD change flags) + 2 red-herring probes (adjacent concerns the skill explicitly does not own). Scenarios are constructed from publicly documented design-system principles (Nathan Curtis, Brad Frost, W3C Design Tokens CG) and common industry patterns — NOT reverse-engineered from the skill's own failure-mode table.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "token_taxonomy_review",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A team is building a design system for a web application. They have defined the following color tokens:\n\n```\n--color-blue-100: #EBF8FF;\n--color-blue-500: #3B82F6;\n--color-blue-700: #1D4ED8;\n--color-red-500: #EF4444;\n--color-green-500: #22C55E;\n--color-gray-100: #F3F4F6;\n--color-gray-900: #111827;\n```\n\nThese are used directly in components:\n```css\n.button-primary { background-color: var(--color-blue-500); }\n.button-danger { background-color: var(--color-red-500); }\n.badge-success { background-color: var(--color-green-500); }\n.surface-default { background-color: var(--color-gray-100); }\n```\n\nThe team wants to add dark mode support next quarter.",
+      "context": "This token structure is in production across 40 components. A new engineer suggests 'we just invert the gray palette for dark mode.' The design lead is unsure if this is the right approach.",
+      "question": "Review this token architecture and its dark mode readiness. What are the structural problems and how should the token layer be redesigned?",
+      "expected_flags": [
+        "the tokens are raw/palette tokens (color-blue-500), not semantic tokens — components consuming raw tokens means dark mode requires touching every component individually rather than remapping a semantic layer",
+        "there is no semantic token tier: concepts like 'interactive action color', 'danger action color', 'success state color', 'background surface', and 'foreground text' have no named home, so adding a theme means adding new tokens or breaking existing references",
+        "the dark mode cannot be implemented by 'inverting the gray palette' — the semantic meaning of gray-100 (surface) and gray-900 (text) would need to swap, but components reference the palette names directly, not their meaning",
+        "migration path is blocked: if --color-blue-500 is renamed or its value changes for dark mode, all 40 components referencing it break at once — semantic tokens would isolate that blast radius"
+      ],
+      "expected_fix_hints": [
+        "introduce a semantic tier: --color-action-primary, --color-action-danger, --color-feedback-success, --color-surface-default, --color-text-primary — components reference semantics, not palette",
+        "keep the palette layer as raw source values (primitives), let semantic tokens point into it — for dark mode, remap semantics to different palette values without touching components",
+        "document the two-tier contract: raw tokens are defined once, semantic tokens are the only tokens components may use"
+      ],
+      "absent_signals": [
+        "should NOT approve the current structure as 'fine for now' on the grounds that it works in production",
+        "should NOT treat this as a documentation problem (naming convention cleanup) without flagging the missing semantic tier",
+        "should NOT focus only on the dark-mode implementation technique without addressing the root architectural cause"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "component_api_review",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A design system team is proposing a Button component API:\n\n```typescript\ninterface ButtonProps {\n  label: string;\n  color: 'blue' | 'red' | 'gray' | 'green';\n  size: 'small' | 'medium' | 'large';\n  fontWeight: 'normal' | 'medium' | 'bold';\n  paddingLeft: number;\n  paddingRight: number;\n  borderRadius: number;\n  onClick: () => void;\n  disabled?: boolean;\n}\n```\n\nThe API was designed by asking \"what visual properties might callers need to customize?\"",
+      "context": "This component is about to be published as the canonical button for 12 product teams. Once released, the API is a public contract — changes will require coordination across all consumers.",
+      "question": "Review this component API before release. Is it designed correctly for a design system component?",
+      "expected_flags": [
+        "the API leaks implementation details as props: fontWeight, paddingLeft, paddingRight, borderRadius are raw style properties — exposing them means callers can construct any visual variant, defeating the system's constraint purpose",
+        "the color prop accepts palette names ('blue', 'green') rather than semantic role names ('primary', 'danger', 'secondary') — consumers will disagree on when to use 'blue' vs 'gray', creating visual inconsistency",
+        "there is no variant or intent prop that maps to the full component state (primary action, destructive action, ghost, link-style) — callers must compose size + color to approximate intent, but the mapping is undocumented and inconsistent across teams",
+        "the API was designed from 'what visual properties might callers need?' rather than 'what decisions does the caller actually need to make?' — this produces an escape-hatch-heavy API that governs nothing"
+      ],
+      "expected_fix_hints": [
+        "replace raw style props with a variant or intent prop: variant: 'primary' | 'secondary' | 'destructive' | 'ghost' — each variant fully resolves color, weight, padding, and border from within the component",
+        "remove fontWeight, paddingLeft, paddingRight, borderRadius from the public API — if a caller needs a different visual, they need a different variant, not an escape hatch",
+        "rename color to align with semantic intent: 'primary', 'danger', 'neutral' rather than palette names"
+      ],
+      "absent_signals": [
+        "should NOT approve the API as 'flexible and customizable' — flexibility without constraint is not a design system",
+        "should NOT suggest adding more raw style props to increase expressiveness",
+        "should NOT focus only on TypeScript correctness (type narrowing, prop types) while leaving the API design problem unaddressed"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "theming_architecture",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A product has a design system with light mode. A new requirement calls for a 'high contrast' mode for accessibility and a 'compact' mode for power users. The engineering lead proposes:\n\n1. Create a HighContrastButton, HighContrastCard, HighContrastTable, etc. components that duplicate the originals with different styles.\n2. Create a CompactButton, CompactCard, CompactTable, etc. components.\n\nThis gives us \"complete control over each variant\" and avoids touching the existing components.",
+      "context": "The design system has 60 components. Three teams are waiting for high-contrast and compact support. The proposal is framed as 'low risk' because it touches nothing that currently exists.",
+      "question": "Evaluate this theming architecture proposal. Is it the right approach?",
+      "expected_flags": [
+        "duplicating components for each theme creates an O(components × themes) maintenance burden — 60 components × 3 themes = 180 component files to keep in sync; a bug fix applied to Button must be applied to HighContrastButton and CompactButton separately",
+        "the 'low risk because it touches nothing existing' framing is the opposite of the real risk — fragmentation that compounds over time is higher risk than a controlled architectural change now",
+        "theming should be a layer above components, not a parallel component tree: a theming mechanism (CSS custom properties, design tokens, a theme provider) should remap semantic tokens without requiring component duplication",
+        "the proposal treats themes as component variants rather than as a system-level concern — this conflates 'visual mode' (system-level) with 'component variant' (component-level)"
+      ],
+      "expected_fix_hints": [
+        "define themes as semantic token remappings: [data-theme='high-contrast'] and [data-theme='compact'] remap semantic tokens to different values — components reference semantics and inherit the theme without duplication",
+        "compact mode specifically maps to spacing and size tokens, not component duplication — a CompactButton is a Button consuming --spacing-tight tokens, not a separate component",
+        "evaluate the architectural cost of the proposed approach using the O(components × themes) maintenance formula before accepting 'low risk' framing"
+      ],
+      "absent_signals": [
+        "should NOT accept 'low risk' on the grounds that existing components are untouched",
+        "should NOT suggest adding a third theme variant as a separate component tree",
+        "should NOT focus the review primarily on whether the CSS is correctly written in the duplicate components"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "migration_planning",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A team has 200 files using a legacy typography system with direct values:\n```css\n/* Legacy — used in 200 files */\n.title { font-size: 24px; font-weight: 700; }\n.subtitle { font-size: 18px; font-weight: 600; }\n.body-text { font-size: 14px; font-weight: 400; }\n.caption { font-size: 12px; font-weight: 400; }\n```\n\nThe new design system defines a token-based type scale:\n```css\n--text-2xl: 24px; --text-xl: 18px; --text-base: 14px; --text-sm: 12px;\n--font-bold: 700; --font-semibold: 600; --font-normal: 400;\n```\n\nThe migration plan is: delete all legacy classes this sprint, update all 200 files in parallel.",
+      "context": "The team has 4 engineers. The product ships weekly. The 200 files span 8 product areas owned by different teams.",
+      "question": "Review this migration plan. What are the architectural risks and how should the migration be structured?",
+      "expected_flags": [
+        "the big-bang migration (delete all legacy, update all 200 files this sprint) is high risk: partial migration leaves the product in a broken state if the sprint is cut short, and any conflict or test failure blocks all 4 engineers simultaneously",
+        "the new tokens are still raw values (font-size: 24px) rather than semantic roles — migrating to raw tokens does not solve the underlying problem (components will still reference size values rather than meaning)",
+        "cross-team coordination is missing: files in 8 product areas owned by different teams cannot be migrated by 4 engineers in one sprint without explicit per-team agreements and a freeze on legacy changes during migration",
+        "no deprecation path defined: the legacy classes will be deleted before consumers can migrate at their own pace — a better approach marks them deprecated first, adds a migration guide, then deletes after a fixed window"
+      ],
+      "expected_fix_hints": [
+        "phase the migration: mark legacy as deprecated in sprint 1 (CSS lint warning), migrate 1-2 product areas per sprint, delete legacy only after all consumers have migrated",
+        "elevate the token layer before migrating: define semantic type roles (--text-page-title, --text-section-heading, --text-body, --text-metadata) and migrate components to semantics, not raw sizes",
+        "add a codemigration script or codemod that transforms legacy class names to token references — this makes the per-file migration mechanical and reviewable"
+      ],
+      "absent_signals": [
+        "should NOT approve the big-bang plan as efficient because 'the team has 4 engineers'",
+        "should NOT focus only on the CSS syntax differences between legacy classes and new tokens",
+        "should NOT treat the coordination problem as a project management issue separate from the architectural risk"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "drift_detection",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "An audit of a design system finds the following:\n\n- Figma design file defines: `color/brand/primary = #0066CC`, `color/brand/primary/hover = #004FA3`\n- Codebase has: `--brand-primary: #0070D2;` and there is no `--brand-primary-hover` token; instead each component defines its own hover color inline.\n- 14 components override button primary color with local `style` props because the token 'doesn't match the design exactly'.\n- The icon library has 34 icons in the design file but only 22 are in the codebase; the other 12 are drawn inline using SVG in component files.\n\nThe team says 'the system is mostly consistent.'",
+      "context": "A new designer has just joined and is confused about which source is authoritative — Figma or code. The team is planning to expand the system to 3 new products.",
+      "question": "Assess the health of this design system based on the audit findings. What architectural changes are needed before expanding to 3 new products?",
+      "expected_flags": [
+        "the design system has a token drift problem: the Figma-defined value (#0066CC) and the code value (#0070D2) are different — there is no single source of truth, and the team cannot know which is correct without a governance decision",
+        "the missing hover token cascades into each component making its own local choice — this is a symptom of incomplete token coverage; every new surface will repeat the same local workaround",
+        "14 components overriding the primary color via style props means the design system's constraint layer is not working — the escape hatch rate should be zero for a core token like brand-primary",
+        "the icon library split (34 in design, 22 in code, 12 inline) is a governance failure: the inline SVGs will drift from the design file and will not benefit from future icon updates",
+        "expanding to 3 new products before resolving these issues will amplify each problem proportionally — drift, local overrides, and missing tokens will appear in all 3 new products from day one"
+      ],
+      "expected_fix_hints": [
+        "establish a single source of truth decision: either Figma exports generate the tokens file, or the code file is canonical — document this governance decision before expansion",
+        "complete the token coverage: add --brand-primary-hover and audit for other missing interactive state tokens; components should not need to define interaction colors locally",
+        "move the 12 inline icons into the icon library and add a lint rule that flags inline SVGs in component files",
+        "set a zero-escape-hatch policy for core brand tokens and track override count as a system health metric"
+      ],
+      "absent_signals": [
+        "should NOT accept 'mostly consistent' as a health assessment when core tokens have measurable value drift",
+        "should NOT recommend expanding to new products before the drift and governance issues are resolved",
+        "should NOT treat the icon split as a minor asset management issue rather than a governance failure"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team wants to improve their checkout flow. They have three steps: (1) cart review, (2) shipping and billing address entry, (3) payment details. The current design shows all three steps on one long scrolling page. Users frequently miss the 'Place Order' button at the bottom. The team is deciding: should they keep the single-page design, split into a tab interface with steps, or use a multi-step wizard with a progress indicator?",
+      "context": "The checkout has a high abandonment rate on mobile. On desktop, users often scroll past the order summary to reach payment details. This is a new product surface being built from scratch — there is no existing component to reuse.",
+      "question": "What interaction structure should the checkout flow use?",
+      "expected_flags": [
+        "the question is about choosing a flow structure (single page, tabs, or wizard) for a specific user task — this is an interaction pattern selection question",
+        "the recommendation should be grounded in the user's decision type: checkout is a sequenced multi-step action where each step depends on the previous (shipping must be known before payment), making a wizard with enforced sequence appropriate",
+        "mobile abandonment and button visibility are UX and interaction concerns, not design system architecture concerns"
+      ],
+      "expected_fix_hints": [
+        "evaluate the wizard vs tab patterns based on whether steps are truly sequential and dependent (wizard) or independent and switchable (tabs)",
+        "address the button visibility problem through layout and scroll behavior, not by choosing a specific design system token structure"
+      ],
+      "absent_signals": [
+        "should NOT invoke design-system-architecture framing (tokens, component API contracts, theming, semantic token tiers) — the problem is interaction pattern selection, not system architecture",
+        "should NOT recommend a semantic token remap, component API redesign, or migration strategy — there are no existing system artifacts to govern here",
+        "should NOT conflate 'choosing the right checkout flow pattern' with 'designing a reusable component system' — these are different problems at different levels of abstraction"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A marketing team wants the homepage to use a bold, editorial visual style with large display typography, full-bleed images, and a dark-on-white palette with a single gold accent. The current product UI uses 14px Inter at medium weight throughout. The designer asks: 'Should the homepage share the same type scale and color tokens as the product, or have its own visual language?'",
+      "context": "The homepage is a public-facing marketing surface. The product is an operational dashboard used daily by logged-in users. They share a deployment but different user contexts and brand goals.",
+      "question": "How should the team approach the visual design direction for the homepage relative to the product?",
+      "expected_flags": [
+        "this is a visual design direction question — the team needs guidance on palette roles, type scale, density, and brand fit for two different surface types",
+        "the core decision is whether editorial marketing surfaces should share a token system with operational product surfaces, or whether they warrant a distinct visual language",
+        "the guidance should come from visual-design-foundations (surface type identification, tone, scanning demand) and potentially design-system-architecture (whether a shared or parallel token system is appropriate)"
+      ],
+      "expected_fix_hints": [
+        "identify the two surface types first: editorial/marketing (one-time viewing, high visual impact, brand statement) vs operational/tool (repeated daily use, information density, task focus)",
+        "evaluate whether the existing product tokens can be extended with editorial-specific semantic tokens, or whether the surface difference warrants a separate theme"
+      ],
+      "absent_signals": [
+        "should NOT focus the answer on component API contracts, token taxonomy governance, or migration strategy — the question is primarily about visual direction and whether to share or separate the visual language",
+        "should NOT produce a semantic token architecture plan without first answering the surface-type and visual-direction question",
+        "should NOT recommend resolving the question by auditing the existing token structure for drift — this is a greenfield decision, not a drift-detection problem"
+      ]
+    }
+  ]
+}

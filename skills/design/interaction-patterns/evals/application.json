@@ -1,0 +1,178 @@
+{
+  "skill_name": "interaction-patterns",
+  "subject": "Interaction Patterns",
+  "version": "1.0",
+  "schema_version": 1,
+  "description": "Application-shape eval set for interaction-patterns. Tests whether loading the skill changes which issues a model flags when choosing or auditing UI interaction patterns — tabs vs pages, dropdown vs combobox, modal vs inline edit, disclosure, command menus, bulk selection, stepper vs wizard — compared to baseline (no skill). Discriminating signal: surface pattern mismatches (control chosen without evaluating the user's decision type, choice set characteristics, or context visibility needs), unhandled states (cancel, escape, invalid, disabled), and pointer-only patterns without keyboard alternatives. 5 real cases (skill SHOULD change flags) + 2 red-herring probes (adjacent concerns the skill explicitly does not own). Scenarios are drawn from ARIA Authoring Practices Guide patterns, documented UX research, and common industry anti-patterns — NOT from internal codebase incidents.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "control_selection",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A product team is building a country-of-origin selector for an international shipping form. There are 195 countries. The current implementation uses a native `<select>` HTML element. A UX review suggests replacing it with a custom dropdown component that shows a scrollable list of all 195 countries.\n\nThe team debates:\n(A) Keep native `<select>`\n(B) Replace with a scrollable custom dropdown\n(C) Replace with a combobox that allows typing to search/filter",
+      "context": "The form is used by logistics operators who frequently switch between countries as they process international shipments. A typical session involves selecting 15-30 different countries across multiple shipments. Operators know the country names and ISO codes by memory.",
+      "question": "Which control pattern is correct for this selector, and why?",
+      "expected_flags": [
+        "a scrollable list of 195 countries requires the user to visually scan a large, unfiltered option set — this is an O(n) visual search where n=195, making scrollable dropdown inappropriate for a large searchable set",
+        "the native <select> has the same problem as a custom scrollable dropdown for 195 items: it does not support search/filter, and scrolling through 195 items is inefficient for a frequent-use field",
+        "a combobox (type-to-filter) is the correct pattern for a large searchable set where users know the values: operators who know country names can type 'fra' and see 'France' immediately rather than scrolling",
+        "the keyboard-first use case matters here: operators processing many shipments may use keyboard navigation; a combobox with type-ahead is more keyboard-efficient than either scrollable dropdown variant"
+      ],
+      "expected_fix_hints": [
+        "implement a combobox: input field that filters the list as the user types, with keyboard arrow-key navigation and Enter to confirm — this supports both mouse and keyboard operators efficiently",
+        "include ISO code search in addition to country name so operators who know 'DEU' can type the code rather than the full country name",
+        "define the behavior for no-match (show 'no results' or suggest closest match), escape (clear input and close dropdown), and empty input (show full list or prompt to type)"
+      ],
+      "absent_signals": [
+        "should NOT recommend a scrollable custom dropdown as an improvement over native <select> for 195 options without flagging the O(n) visual search problem",
+        "should NOT approve either dropdown variant (native or custom) for a 195-item searchable list used frequently",
+        "should NOT focus the recommendation on visual styling differences between the options without evaluating which pattern fits the user's decision type and choice set size"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "modal_vs_inline",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A table-based task management tool allows users to edit task attributes (title, assignee, due date, priority, status). Currently, clicking a row opens a modal with a full-form view of all attributes. Users report:\n- They lose context when the modal opens because the full table disappears behind the overlay\n- They frequently need to compare the task being edited against adjacent tasks (e.g., 'Is the due date I'm setting earlier than the blocking task above?')\n- The modal requires clicking 'Save' and then waiting for a re-fetch before seeing the change reflected in the table\n\nThe team proposes: make the modal bigger (90% of viewport) so 'there's more room for context.'",
+      "context": "The table has 15-40 rows per view. The primary work pattern is editing 3-8 tasks per session, with frequent comparison between tasks. Attribute edits are generally single-field changes, not wholesale task rewrites.",
+      "question": "Evaluate the modal pattern and the team's proposed fix.",
+      "expected_flags": [
+        "the modal pattern is wrong for this use case: the core problem is loss of table context when the user needs to compare tasks — a larger modal covers more screen but still blocks the table, making the fix directionally wrong",
+        "when edits are primarily single-field changes (not wholesale form rewrites), inline editing directly in the table cell or in a side panel preserves context better than a full-screen modal",
+        "the described comparison need ('Is the due date I'm setting earlier than the blocking task above?') requires simultaneously seeing the row being edited AND adjacent rows — a modal of any size cannot provide this without closing the form",
+        "making the modal 90% of viewport size intensifies the problem: the user will see the modal form but not the adjacent rows they need to compare against"
+      ],
+      "expected_fix_hints": [
+        "switch to inline cell editing for single-attribute changes: clicking a cell activates an edit control in-place; the table remains fully visible and comparable during the edit",
+        "for multi-attribute edits (when more than 3 attributes change at once), consider a side panel (drawer) that slides in beside the table rather than overlaying it — the table remains at reduced width but visible",
+        "define escape behavior (cancel changes) and invalid-action behavior (required field empty, date conflict) for inline and panel patterns before implementation"
+      ],
+      "absent_signals": [
+        "should NOT recommend increasing modal size as a fix for a context-loss problem caused by the modal pattern itself",
+        "should NOT approve the modal pattern for a task where the user explicitly needs to see adjacent rows during editing",
+        "should NOT focus the fix on modal animation or transition speed without addressing the fundamental context-loss problem"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "tabs_vs_pages",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A product settings area has the following sections:\n- Profile: name, photo, bio, language\n- Notifications: email frequency, push settings, digest schedule (15 fields)\n- Security: password change, 2FA setup, active sessions, API keys (involves multi-step sub-flows)\n- Billing: plan, payment method, invoice history, usage (involves third-party Stripe elements)\n- Integrations: 12 third-party service connections, each with its own auth flow\n\nThe current design displays all 5 sections as vertical scroll on a single page. The product team wants to 'make it feel more organized' and proposes tabbing all 5 sections under a top tab bar.",
+      "context": "Settings are accessed 1-3 times per month. Users rarely need to move between settings sections in a single session — a typical visit is to one section only. The Security and Billing sections contain sub-flows (2FA setup wizard, Stripe elements) that require focused state management.",
+      "question": "Should the settings sections be tabbed or kept as separate pages (each accessible from a sidebar or URL)?",
+      "expected_flags": [
+        "tabs are appropriate when sections are peer alternatives the user switches between frequently in a single session — settings sections are not: users visit one section per session and navigate away",
+        "Security and Billing contain sub-flows (2FA wizard, Stripe payment flow) that require persistent URL state and back/forward navigation — embedding them in a tab panel breaks browser history, back button behavior, and deep-linking (e.g., email link directly to Billing)",
+        "12 third-party integration connections each with their own auth flow in a tab panel will exceed the tab panel's URL-state capabilities — each auth redirect would navigate away from the tab panel, losing its state",
+        "tabs do not support bookmarkability by default — users cannot share a direct link to their Security settings if that section is a tab panel rather than its own URL"
+      ],
+      "expected_fix_hints": [
+        "use separate pages (each with its own URL) for settings sections: a sidebar or left-nav provides section navigation, each section is a full page with a unique URL supporting deep-linking and browser history",
+        "tabs are appropriate within a section only when sub-sections are truly interchangeable and non-stateful (e.g., a Profile section with 'Display' and 'Preferences' sub-tabs that do not involve external auth flows)",
+        "define the cancel, back, and escape behavior for the Security 2FA setup and Billing Stripe flows explicitly — these are multi-step sub-flows that need their own state management"
+      ],
+      "absent_signals": [
+        "should NOT recommend tabs for settings sections on the grounds that 'tabs make it feel more organized'",
+        "should NOT approve tabs for sections containing external auth redirects or multi-step sub-flows without flagging the URL-state and back-button problems",
+        "should NOT evaluate the tab vs page decision based on visual aesthetics alone without assessing URL state, deep-linking, and sub-flow requirements"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "bulk_selection",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A data table has 200 rows across 10 pages. Users need to perform bulk operations: archive, assign to team, or export selected records. The current bulk selection pattern:\n- Each row has a checkbox in the first column\n- Checking 'select all' checks all rows on the CURRENT PAGE ONLY (20 rows)\n- A toolbar appears above the table with action buttons when any rows are checked\n- The toolbar shows '20 selected'\n- 'Archive' archives only the 20 checked rows on the current page; the other 180 rows are unaffected\n\nUsers report: 'We thought we selected everything but only 20 got archived. Now we have to redo it 9 more times.'",
+      "context": "Bulk archiving all 200 records is a common task. Users initiate bulk operations 2-3 times per week. The confusion between 'all on this page' and 'all records' is the primary support ticket topic.",
+      "question": "What is wrong with the bulk selection pattern and how should it be fixed?",
+      "expected_flags": [
+        "the 'select all' scope is ambiguous and defaults to the wrong scope for the primary use case: users intending to select all 200 records select 20 (current page only); the pattern does not surface the distinction between 'this page' and 'all records' in a visible, confirmable way",
+        "showing '20 selected' in the toolbar does not communicate that 180 more records exist and are unselected — the count alone does not convey scope",
+        "after checking 'select all' on a paginated table, the pattern should offer a secondary confirmation: 'Select all 200 records matching your current filters' — this pattern (used by Gmail and other tools) makes the scope explicit and reversible",
+        "the action button label 'Archive' does not summarize scope — 'Archive 20 records' or 'Archive all 200 records' would make the consequence visible at the action step"
+      ],
+      "expected_fix_hints": [
+        "after 'select all' checks the page, show a contextual message: 'Selected 20 records on this page. Select all 200 records?' with a clear action link — two-step scope confirmation prevents the scope ambiguity",
+        "update the toolbar to show the full record count and scope: 'Archive 20 of 200 records' vs 'Archive all 200 records' so the consequence is visible before the user confirms",
+        "define the cancel behavior: after 'select all 200' is triggered, show a 'Deselect all' option in the toolbar so the user can recover without refreshing the page"
+      ],
+      "absent_signals": [
+        "should NOT accept '20 selected' as a clear and sufficient scope indicator for a paginated table with 200 records",
+        "should NOT recommend disabling pagination to show all 200 rows at once as the fix for the bulk selection scope problem",
+        "should NOT focus the fix on making the checkbox more visually prominent without addressing the underlying scope ambiguity in the 'select all' behavior"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "disclosure_progressive",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A developer tools interface shows a request/response inspector. The primary view shows:\n- Request URL\n- HTTP method\n- Status code\n- Response time\n\nAdvanced details (request headers, response headers, body payload, cookies, timing breakdown) are collapsed behind a 'Show details' link. Clicking 'Show details' expands everything at once — all 6 detail sections appear simultaneously.\n\nUsers report:\n- 'There's too much when I expand it — I just want the headers, not the body'\n- 'I have to re-collapse and re-expand to find what I need'\n- Power users always expand immediately and never use the collapsed state",
+      "context": "The inspector is used by developers debugging API integration issues. Different debugging tasks need different detail sections: header debugging needs headers, payload debugging needs the body, timing issues need the timing breakdown. Power users (70% of usage) always expand everything.",
+      "question": "Evaluate the disclosure pattern and propose a better structure for the different user segments.",
+      "expected_flags": [
+        "the current all-or-nothing disclosure treats 6 distinct detail sections as a single hidden unit — this prevents users from accessing one section without being presented all others",
+        "for the 70% power-user segment who always expand, a collapsed default state adds a mandatory interaction step before they can access any detail — consider defaulting to expanded for users who always expand (persisted state preference)",
+        "a single 'Show details' toggle for 6 heterogeneous sections (headers, body, cookies, timing) is a disclosure mismatch: disclosure is appropriate for progressive revelation of ONE type of content, not for switching between functionally distinct panels",
+        "the reported behavior ('re-collapse and re-expand to find what I need') indicates users are using the disclosure toggle as a tab switcher because there is no direct access to individual sections"
+      ],
+      "expected_fix_hints": [
+        "replace the single disclosure with section-level tabs or named section toggles: each detail section (Headers, Body, Cookies, Timing) is individually expandable — users open the one they need without seeing all others",
+        "consider a tab bar for the detail sections: this provides persistent access to each section without hide/show state management and avoids the re-collapse problem",
+        "persist the expanded/collapsed preference per user — power users who always expand should not face a mandatory click on every request inspection"
+      ],
+      "absent_signals": [
+        "should NOT approve the all-or-nothing disclosure as 'keeping the default view clean' without acknowledging the re-collapse workflow tax",
+        "should NOT recommend adding more items to the single disclosure group rather than splitting into per-section toggles or tabs",
+        "should NOT focus the fix on the visual styling of the expanded state without addressing the granularity problem (6 sections treated as one)"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A design review for a new checkout page surfaces the following observation: 'The order summary card on the right side of the page has the same visual weight as the main checkout form on the left. Both use white background, similar font sizes, and the same border style. Users' eyes are not pulled to the primary action (completing the form) over the secondary content (reviewing the summary).'\n\nThe designer asks: 'How do we create better visual hierarchy between the checkout form and the order summary?'",
+      "context": "The layout uses a two-column structure: 60% checkout form on the left, 40% order summary on the right. The form is the primary task; the summary is reference content. Both are rendered at the same visual weight.",
+      "question": "How should the team address the visual hierarchy problem between the form and the summary card?",
+      "expected_flags": [
+        "this is a visual design foundations question: the problem is that two areas of the page have equal visual weight when one is primary and one is secondary",
+        "the solution involves palette, elevation, and weight differentiation: the primary form area should have higher visual weight than the secondary summary; this is achieved through background, border, and typography treatment"
+      ],
+      "expected_fix_hints": [
+        "apply visual weight to differentiate: main form area on a white surface with stronger primary action buttons; summary card on a slightly tinted background (gray-50) with lighter typography treatment",
+        "elevation and border: the summary can use a lighter border or no border (background color alone creates the separation) vs the form's stronger visual presence"
+      ],
+      "absent_signals": [
+        "should NOT invoke interaction-patterns reasoning (control selection, modal vs inline, tabs vs pages, disclosure, bulk selection) — the problem is visual hierarchy between page areas, not a control pattern or flow structure question",
+        "should NOT recommend adding a different interaction pattern to the summary card (e.g., making it a drawer or modal) to resolve what is fundamentally a visual weight problem",
+        "should NOT conflate 'the summary has too much visual weight' (a visual-design problem) with 'the summary is in the wrong interaction pattern' (an interaction-patterns problem)"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team is building an onboarding screen for a new user who has just signed up. The screen shows:\n- Welcome message with the user's name\n- A 6-step progress indicator (Step 1 of 6: Profile setup)\n- A form with 4 fields: display name, role, team size, primary use case\n- A 'Next' button and a 'Skip this step' link\n\nDuring a design review, a stakeholder says: 'The typography feels generic and corporate. The welcome message is just 14px body text — it doesn't feel welcoming or exciting. The 'Next' button is gray and doesn't invite action. Can we make this feel more premium and motivating?'",
+      "context": "The onboarding flow has a 42% completion rate. The team wants to improve it. The interaction structure (stepper pattern with progress indicator and skip option) is not in question — the review is about the visual quality of the current step.",
+      "question": "How should the team address the stakeholder's feedback about visual quality?",
+      "expected_flags": [
+        "this is a visual design foundations question: the stakeholder's concerns are about typography weight and warmth, color choice for the primary action, and overall visual tone",
+        "the stepper interaction pattern (6-step progress indicator with Next and Skip) is explicitly confirmed as not in question — improving the visual quality of the existing pattern is a visual-design task"
+      ],
+      "expected_fix_hints": [
+        "address the welcome message typography: increase weight and size to make it a recognizable greeting moment (larger display type, warmer tone)",
+        "reconsider the 'Next' button color: a primary action button should use the brand's action color, not a neutral gray — gray buttons communicate secondary or disabled state"
+      ],
+      "absent_signals": [
+        "should NOT invoke interaction-patterns reasoning (is a stepper the right pattern, should we remove steps, should we use tabs instead) — the interaction structure is confirmed and the review is about visual quality",
+        "should NOT recommend changing the 6-step stepper to a different flow pattern (single-page form, accordion, modal) based on visual quality feedback",
+        "should NOT conflate 'this doesn't look welcoming' (a visual-design-foundations problem) with 'this is the wrong interaction pattern' (an interaction-patterns problem)"
+      ]
+    }
+  ]
+}

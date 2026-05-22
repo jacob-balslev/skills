@@ -1,0 +1,178 @@
+{
+  "skill_name": "visual-design-foundations",
+  "subject": "Visual Design Foundations",
+  "version": "1.0",
+  "schema_version": 1,
+  "description": "Application-shape eval set for visual-design-foundations. Tests whether loading the skill changes which issues a model flags when reviewing palette direction, type scale, spacing rhythm, hierarchy, density, elevation, and brand fit — compared to baseline (no skill). Discriminating signal: surface palette-without-role (colors chosen before purpose is defined), type-role gaps, density mismatches for the surface type, and elevation that adds visual noise rather than clarifying grouping. 5 real cases (skill SHOULD change flags) + 2 red-herring probes (adjacent concerns the skill explicitly does not own). Scenarios are constructed from published visual design principles (Itten, Lidwell, Holtzblatt) and documented anti-patterns — NOT from internal codebase incidents.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "palette_direction",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A team building an internal admin tool for operations teams shows the following palette in their design review:\n\n- Primary: #FF5722 (deep orange, used for all primary buttons, links, and highlights)\n- Success: #76FF03 (bright lime green)\n- Danger: #F44336 (red)\n- Background: #FAFAFA\n- Surface: #FFFFFF\n- Text: #212121\n\nThe design note says: 'We chose orange because it's energetic and distinctive, and we didn't want to look like every other blue enterprise tool. The lime green for success makes positive feedback unmissable.'\n\nThe tool is used for 6-8 hours per day by operations staff who process hundreds of items.",
+      "context": "This is an operational tool with high information density. The primary user goal is efficient processing — reviewing, approving, or flagging items. The tool has no brand requirement beyond appearing professional.",
+      "question": "Evaluate the palette direction for this surface type.",
+      "expected_flags": [
+        "the surface type is a high-density operational tool used for 6-8 hours daily — an energetic, high-chroma palette (deep orange primary, lime green for success) is inappropriate for this use context; high-chroma colors cause visual fatigue in prolonged-use environments",
+        "the palette is chosen based on aesthetics ('distinctive', 'energetic') rather than the surface's scanning demand — operational tools need a restrained palette that keeps chrome low so data content reads clearly",
+        "lime green (#76FF03) at maximum brightness is a visual attention spike that will compete with actual content; success states in high-frequency tools should be legible without being visually aggressive",
+        "the palette has no neutral intermediate — between the high-chroma primary and a near-white background, there is no surface layer for cards, panels, or secondary containers to sit at a mid-level elevation without adding strong color"
+      ],
+      "expected_fix_hints": [
+        "recalibrate the palette to low-chroma, high-clarity: a neutral primary (blue-gray or desaturated teal), muted greens and reds for feedback states, and a surface system that uses lightness steps rather than saturation jumps",
+        "define palette roles before choosing colors: surface/chrome, action/interactive, feedback/success, feedback/danger, feedback/warning, text/primary, text/secondary — choose colors to serve those roles for the operational context",
+        "evaluate the orange primary against prolonged-use legibility, not just one-screenshot aesthetics"
+      ],
+      "absent_signals": [
+        "should NOT approve the palette because 'it's distinctive' or 'not like every other enterprise tool'",
+        "should NOT evaluate the palette only against WCAG contrast ratios without assessing appropriateness for the surface type and use context",
+        "should NOT focus the review on whether individual hex values are accessible without addressing the role and context mismatch"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "type_scale",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A dashboard design uses the following typography:\n\n- Page title: 'Analytics Overview' — 32px, 700 weight\n- Chart title: 'Revenue by Region' — 24px, 700 weight\n- Card subtitle: 'Last 30 days' — 16px, 400 weight\n- KPI value: '$1,234,567' — 40px, 800 weight\n- KPI label: 'Total Revenue' — 10px, 400 weight\n- Table column headers: 12px, 700 weight\n- Table body text: 14px, 400 weight\n- Navigation items: 14px, 600 weight\n- Tooltip text: 11px, 400 weight\n\nThe design team reports that the dashboard 'feels hard to read' even though individual elements look fine in isolation.",
+      "context": "The dashboard is a daily-use operational surface with 6 chart cards, 4 KPI cards, and 2 data tables. It fits on a single viewport without scrolling on a 1440px monitor.",
+      "question": "Diagnose the typography problem and recommend changes.",
+      "expected_flags": [
+        "the type scale has a hierarchy inversion: KPI values at 40px/800 weight dominate the page more than the 32px/700 page title — two separate 'heaviest' elements compete for the primary position",
+        "chart titles at 24px/700 weight are styled the same as page title weight (700) with only a 25% size reduction — on a dense dashboard, chart titles will read as sub-section headings competing with the page title rather than widget labels",
+        "the KPI label at 10px/400 weight is the smallest text on the page and serves as the label for the largest value (40px KPI) — the contrast between 10px label and 40px value within the same card creates a hierarchy problem inside the card",
+        "the overall scale has 8 distinct size steps (10, 11, 12, 14, 16, 24, 32, 40px) — too many stops for a single dashboard to manage consistently; typical dashboards use 4-5 type roles"
+      ],
+      "expected_fix_hints": [
+        "reduce the type scale to 4-5 roles: page title, section/chart heading, body/control label, metadata/caption, numeric emphasis — then choose sizes that form a clear hierarchy without collision",
+        "recalibrate KPI values: the 40px/800 weight reads as the page's headline; if the page title is intended to be primary, KPI values need to be at a scale that reads as featured content, not as a heading",
+        "unify chart title treatment: chart/widget titles should be at a weight lower than the page title (400-500 weight, not 700) to read as card-level headings rather than page-level section headings"
+      ],
+      "absent_signals": [
+        "should NOT accept 'individual elements look fine in isolation' as evidence the typography system is working",
+        "should NOT focus only on increasing contrast ratios for small text without addressing the hierarchy inversion and role collisions",
+        "should NOT recommend adding more size or weight variation to fix a problem caused by too much variation"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "density_and_spacing",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A product redesign applies the following spacing decisions:\n\n- Card padding: 32px on all sides\n- Section gap between cards: 40px\n- Form field vertical gap: 32px\n- Input padding: 16px vertical, 20px horizontal\n- Table row height: 72px\n- Navigation item height: 56px\n\nThe design reference cited is a consumer-facing marketing site known for 'generous white space and editorial feel.'\n\nThe product is a B2B CRM used by sales teams to manage 50-200 accounts daily. The team says 'we want to feel premium, not cramped.'",
+      "context": "Sales teams using the CRM need to review many records quickly. The primary work is scanning lists, comparing account details, and updating fields. The tool must display 10-15 fields per record and 15-20 records in a list view without excessive scrolling.",
+      "question": "Evaluate the spacing and density decisions for this surface.",
+      "expected_flags": [
+        "the spacing scale (32-40px card padding/gaps, 72px table rows, 56px nav items) is calibrated for editorial/marketing surfaces, not for high-density operational tools — applying marketing-site spacing to a CRM creates significant information loss per viewport",
+        "at 72px table row height, a standard 1080px monitor shows approximately 8 table rows without scrolling; a sales rep managing 15-20 records must scroll twice as much as necessary, reducing scanning efficiency",
+        "the 'premium feel = generous whitespace' assumption conflates consumer marketing aesthetics with tool ergonomics — operational tools earn 'premium' perception through clarity and efficiency, not editorial spacing",
+        "32px card padding means meaningful content starts after 64px of horizontal margin (left + right); on a 320px mobile viewport, this leaves only 256px for content — more than 20% of the viewport is padding"
+      ],
+      "expected_fix_hints": [
+        "define spacing from the surface type's density requirement first: count the minimum number of records/items the primary viewport must display without scrolling, then derive the maximum row height from that constraint",
+        "use a density-for-use-context rule: editorial surfaces (once-viewed marketing pages) tolerate 40px+ gaps; daily-use operational tools use 16-24px gaps for cards, 8-16px for rows, 4-8px for tight controls",
+        "distinguish 'premium' for consumer marketing (spacious, high-margin, editorialized) from 'premium' for B2B tools (fast, dense-but-clear, zero visual noise)"
+      ],
+      "absent_signals": [
+        "should NOT approve the spacing scale because 'it looks premium' or 'references a respected design'",
+        "should NOT treat the spacing choices as a personal preference question rather than a functional density failure for the surface type",
+        "should NOT focus only on individual spacing values in isolation without evaluating the combined impact on information density per viewport"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "visual_hierarchy",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A product page renders a list of transaction records. Each record shows:\n- Merchant name (14px, 700 weight, black)\n- Transaction ID (14px, 700 weight, black)\n- Amount (14px, 700 weight, black)\n- Date (14px, 400 weight, gray)\n- Status badge (12px, various colors)\n- Account code (14px, 400 weight, black)\n\nUsers report that they 'can't find the amount quickly' and 'everything looks the same weight.'",
+      "context": "User research confirms that amount and merchant name are the primary scanning targets — users match amounts to merchants to verify transactions. Transaction ID, date, account code, and status are secondary — used only when a transaction needs investigation.",
+      "question": "Diagnose the visual hierarchy problem and recommend changes.",
+      "expected_flags": [
+        "amount, merchant name, transaction ID, and account code all share the same 14px/700 weight treatment — there is no visual differentiation between primary scanning targets (amount, merchant) and secondary reference data (transaction ID, account code)",
+        "equal weight across 5 of 6 fields means the user must read each field label to find what they need rather than having the eye pulled to primary data by visual weight",
+        "the hierarchy inversion is subtle: the fields the user scans most (amount, merchant) should be visually heavier and/or larger; the fields used for investigation only (transaction ID, account code) should be visually lighter"
+      ],
+      "expected_fix_hints": [
+        "differentiate by visual weight based on scanning priority: merchant name and amount at 14px/600 weight as primary; date and status at 13px/400 weight as secondary metadata; transaction ID and account code at 12px/400 weight, gray, as reference-only",
+        "consider layout differentiation in addition to typography: primary data (merchant, amount) in the natural left-to-right scan position; secondary data in a smaller sub-row or right-aligned secondary column",
+        "tabular numbers (font-variant-numeric: tabular-nums) for amounts so values align at the decimal point in a list"
+      ],
+      "absent_signals": [
+        "should NOT accept 'everything is readable at 14px' as evidence that hierarchy is working",
+        "should NOT recommend making all fields larger or bolder — the fix is differentiation, not uniform amplification",
+        "should NOT focus only on color contrast compliance without addressing the visual weight differentiation problem"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "elevation_and_grouping",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A settings page design uses the following elevation treatment:\n\n- Page background: #F5F5F5\n- Section card: white background, 2px border (#E0E0E0), 8px border-radius, box-shadow: 0 2px 8px rgba(0,0,0,0.15)\n- Sub-section inside card: white background, 1px border (#EEEEEE), 4px border-radius, box-shadow: 0 1px 4px rgba(0,0,0,0.10)\n- Input fields: white background, 1px border (#BDBDBD), 4px border-radius, box-shadow: 0 1px 3px rgba(0,0,0,0.08)\n- Buttons: white background (outlined style), 1px border (#9E9E9E)\n\nThe designer notes: 'Each level of nesting needs its own shadow to show depth and separation.'",
+      "context": "The settings page has 4 sections, each containing 2-3 sub-sections, each containing 3-6 input fields and buttons. All elements are white on a light gray page background.",
+      "question": "Evaluate the elevation system. Is the approach correct?",
+      "expected_flags": [
+        "four overlapping shadow levels (page shadow on section card, shadow on sub-section, shadow on input, shadow on button) applied to white elements on a light gray background creates visual noise rather than clarity — the eye cannot parse meaningful depth when all elements cast shadows of similar intensity",
+        "white cards with shadows on a #F5F5F5 background that also uses white sub-sections and white inputs eliminates the background contrast that makes elevation legible — all elements merge into a white-on-light-gray wash",
+        "elevation should clarify grouping, not signal nesting depth — the question to answer is 'which elements belong together?' not 'how many levels deep is this element?'",
+        "buttons with shadow in an outlined style conflate elevation (indicates interactive surface) with depth hierarchy (indicates spatial position) — outlined buttons do not typically carry drop shadows, which would suggest they are floating above the form"
+      ],
+      "expected_fix_hints": [
+        "reduce to two elevation levels: background (#F5F5F5), and cards (white, single shadow or border — not both), without adding a third level for sub-sections and a fourth for inputs",
+        "use the combination of background color difference and a single subtle shadow for section cards only; sub-sections and inputs use border only (no shadow) to indicate grouping without adding depth layers",
+        "reconsider outlined buttons with shadows: use a flat outlined button style with no shadow; reserve shadows for floating elements (modals, popovers, dropdowns) that genuinely sit above the page"
+      ],
+      "absent_signals": [
+        "should NOT accept 'each level needs its own shadow to show depth' as a valid elevation principle",
+        "should NOT evaluate only whether individual elements look correct in isolation without assessing the combined visual effect of four overlapping shadow levels",
+        "should NOT recommend adding more visual differentiation (colors, heavier borders) to compensate for an overcrowded shadow hierarchy"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A product team is designing a notification center. Users receive alerts for: system updates, account activity, team mentions, and billing events. The team wants to add filtering: users should be able to filter the notification list by category. They are deciding between:\n\n(A) Horizontal tab bar (All | System | Activity | Mentions | Billing)\n(B) Dropdown filter with checkboxes for multi-select\n(C) Pill filter buttons (multi-select, always visible)\n\nThe team notes that most users only care about one or two categories at a time but occasionally want to see all notifications.",
+      "context": "The notification center is a slide-out panel, 360px wide. It appears frequently during daily work. The filter state should persist across panel open/close.",
+      "question": "Which filtering pattern should the notification center use?",
+      "expected_flags": [
+        "this is an interaction pattern selection question — the team needs to choose a control pattern for filtering a list",
+        "the decision hinges on: panel width constraint (360px limits horizontal tabs), whether single or multi-category filtering is the primary use case, and whether always-visible filter options are worth the space they consume",
+        "pill filters work well for multi-select with a small category count in a constrained panel; tabs work better for single-select and prioritized categories"
+      ],
+      "expected_fix_hints": [
+        "evaluate the tab pattern against the 360px panel width: 5 tabs may clip or wrap; evaluate pill filters as a more compact multi-select option",
+        "consider persistence behavior: pill filters with a clear-all option are ergonomic for persisted state across panel open/close"
+      ],
+      "absent_signals": [
+        "should NOT invoke visual-design-foundations reasoning (palette direction, type scale, spacing rhythm, elevation, density) — this is a control pattern selection question in a constrained panel, not a visual craft question",
+        "should NOT recommend a specific color scheme or typography scale for the filter controls without first resolving the pattern selection",
+        "should NOT conflate 'what the filter should look like visually' with 'which interaction pattern to use for filtering' — the visual treatment follows the pattern choice, not the other way around"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A team has defined the following tokens for their design system:\n```\n--color-brand: #0A52A1;\n--color-brand-hover: #083E7B;\n--color-success: #198754;\n--color-danger: #DC3545;\n--color-surface: #FFFFFF;\n--color-surface-subtle: #F8F9FA;\n--color-text: #212529;\n--color-text-muted: #6C757D;\n```\n\nThey want to add dark mode support. For dark mode, the brand color needs to lighten (so it is readable on a dark background), surfaces need to darken, and text needs to lighten. The team asks: 'How should we structure the token system to support dark mode without breaking all 85 components?'",
+      "context": "All 85 components reference these tokens directly in CSS via var(--color-*). There is currently no semantic tier — components use the palette tokens above directly.",
+      "question": "How should the token system be restructured to support dark mode?",
+      "expected_flags": [
+        "this is a design-system-architecture question: the token taxonomy needs a semantic tier so dark mode can remap meanings without touching 85 components",
+        "the current palette tokens (--color-brand, --color-success) are used directly in components — adding dark mode requires either a semantic tier (architecture change) or per-component overrides (85 changes)"
+      ],
+      "expected_fix_hints": [
+        "introduce semantic tokens: --color-action-primary, --color-feedback-success, --color-surface-default, --color-text-primary — components reference semantics; dark mode remaps semantic tokens to different palette values",
+        "keep palette tokens as source-of-truth raw values; semantic tokens point into them"
+      ],
+      "absent_signals": [
+        "should NOT invoke visual-design-foundations reasoning (palette direction, type scale, spacing, elevation, density) — the question is about token architecture and system structure, not about which colors to choose or how the surface should feel",
+        "should NOT recommend specific color values for dark mode without first solving the token architecture problem",
+        "should NOT conflate 'which colors are visually appropriate for dark mode' (a visual-design-foundations question) with 'how to structure tokens to support theming without breaking components' (a design-system-architecture question)"
+      ]
+    }
+  ]
+}
