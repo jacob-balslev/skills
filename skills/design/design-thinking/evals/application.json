@@ -1,0 +1,177 @@
+{
+  "skill_name": "design-thinking",
+  "subject": "Design Thinking Meta-skill — Stage Recognition, Routing, and Loop-Back Judgment",
+  "version": "1.0",
+  "schema_version": 1,
+  "pilot_panel": "SH-6337",
+  "anchor_grounding": "domain-external",
+  "description": "Application-shape eval set for design-thinking (SH-6337 batch 5). Tests whether loading the design-thinking meta-skill changes which stage a model identifies as current, which transitions it flags as premature, and which loop-back conditions it recognizes on realistic project briefs. Discriminating signal: correctly naming the open question a stage exists to answer, applying the non-linearity principle, and routing to the right sibling skill instead of generic advice. 5 real cases (skill SHOULD change diagnosis or routing) + 2 red-herring probes (single-stage execution task / engineering domain discovery — skill should NOT fire). Scenarios are constructed from domain-external design practice literature (Stanford d.school, IDEO, UK Design Council Double Diamond, Google Design Sprint), NOT internal project data.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "stage_recognition",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A four-person product team has run 12 user interviews with small-business owners about invoice management pain. The research lead has read every transcript. The team had a 90-minute debrief where each person said what surprised them most. The PM then wrote a problem statement: 'Small business owners need a faster way to send invoices.' The team is now planning a two-week sprint to design a mobile invoicing flow.\n\nThe team's PM says: 'We've done the research phase, we're ready to start designing.'",
+      "context": "The team is about to allocate two weeks to design a mobile invoicing flow. The PM believes they have cleared the Empathize and Define stages. No synthesis artifact (affinity wall, theme set, or insight statements) exists beyond individual impressions from the debrief.",
+      "question": "Is the team ready to move to ideation and design? What stage are they actually in, and what is the open question that stage exists to answer?",
+      "expected_flags": [
+        "the team has collected research (Empathize) but has not synthesized it — the 90-minute debrief where each person named surprises is not affinity mapping or insight synthesis; the team is still in Empathize/transition to Define, not in Ideate",
+        "the problem statement 'a faster way to send invoices' was written from impression, not from a defensible theme set; it may be correct, but it has not been validated as emerging from the data — this is the Define stage's open question, not something to skip over",
+        "moving to two-week design sprint now risks spending two weeks optimizing for the wrong framing; the missing artifact is a synthesis output (themes, insight statements, or a validated point-of-view) that the Define stage requires"
+      ],
+      "expected_fix_hints": [
+        "run research-synthesis on the 12 transcripts before declaring Define complete — affinity mapping, clustering, and insight statements produce a defensible theme set the problem statement should emerge from",
+        "the problem statement is a hypothesis to check against the synthesis output, not a conclusion to build from",
+        "if the team cannot slow down for synthesis, at minimum write down the top 3 clusters of observations from the transcripts with at least 2 quotes per cluster — this is the minimum evidence that the Define-stage problem framing is grounded rather than guessed"
+      ],
+      "absent_signals": [
+        "should NOT accept 'we did 12 interviews and had a debrief' as sufficient evidence to call Define complete",
+        "should NOT route directly to ideation framing or mobile flow design without flagging the missing synthesis step",
+        "should NOT confuse interview volume with synthesis quality — more interviews without synthesis produces more unstructured data, not more insight"
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "loop_back_condition",
+      "red_herring": false,
+      "criticality": "high",
+      "scenario": "A team has been through Define and Ideate stages and built a medium-fidelity prototype of a 'shared grocery list' feature for a household management app. They ran 5 usability tests. Three participants completed all tasks successfully. Two participants stopped on the 'add member' step and said variations of: 'I'd never share this with someone I don't completely trust — all my family's eating habits and budget are in here.'\n\nThe design lead says: 'Three out of five completed. The usability issues are mostly with the add-member UX. Let's polish the add-member flow and test again.'",
+      "context": "The usability findings include both task-completion data (3/5 success) and a conceptual concern (privacy/trust around sharing). The design lead is treating the finding as a UX execution problem in the Prototype/Test stage rather than a problem-framing signal.",
+      "question": "Is the design lead's diagnosis correct? What is the right response to the 'I'd never share this' finding?",
+      "expected_flags": [
+        "the 'I'd never share this with someone I don't completely trust' finding is not a UX execution problem in the add-member flow — it is a problem-framing signal: the premise of the feature (household sharing) may not be desirable for a meaningful segment of users, which is a Define-stage question",
+        "two out of five expressing the same conceptual concern is not a minor usability finding to polish around — it surfaces a problem the Define stage should have surfaced: 'who is the target household composition and what is their trust model for shared information?'",
+        "the loop-back candidate is back to Define (not to Empathize): the problem statement 'shared grocery list for household management' needs a qualifier about household type, trust context, or information sensitivity"
+      ],
+      "expected_fix_hints": [
+        "loop back to Define before investing in add-member UX polish — the open question is whether 'household' means cohabitants who trust each other completely, or a broader range including roommates or extended family where trust is partial",
+        "treat the 'I'd never share this' finding as evidence that the problem framing scope ('household') is under-specified; narrow or qualify the point-of-view before testing again",
+        "alternatively, scope the prototype to the sub-segment where trust is high (e.g., nuclear household with shared finances) and explicitly exclude the segment that raised the concern"
+      ],
+      "absent_signals": [
+        "should NOT treat 3/5 task completion as sufficient grounds to proceed with polishing the add-member flow",
+        "should NOT frame the two dissenting responses as outliers to be designed around rather than signals to be interpreted",
+        "should NOT recommend another round of usability testing on the existing prototype without first addressing the framing gap — testing the same framing again will reproduce the same finding"
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "stage_routing",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A nonprofit is planning a six-week project to improve the donation experience on their website. Week one: 'understand the problem'. The project lead has written the following plan: 'We'll survey our existing donors to find out what they like and don't like, then hold a team brainstorm to figure out improvements, and then build and test a new donation flow.'\n\nThey ask: 'What should we be doing in week one?'",
+      "context": "This is a real open-ended design brief with a six-week timeline. The team has a plausible plan but it collapses research, synthesis, and framing into a survey plus brainstorm, and it presupposes a 'donation flow' as the solution before any problem framing.",
+      "question": "What should the team be doing in week one, and is their overall plan appropriately structured for this type of problem?",
+      "expected_flags": [
+        "the plan presupposes a 'donation flow' fix before establishing what the problem actually is — the open question in week one is empathy/discovery, not solution type",
+        "a donor survey will gather what donors say; it will miss what they do and what they feel — for an experience improvement project, qualitative methods (interviews, observation, or diary studies with donors during and after a donation attempt) surface richer insight than survey scales",
+        "the team brainstorm step is placed too early — it produces solutions to the team's assumptions before the data is synthesized into themes and insight statements that would make the problem concrete"
+      ],
+      "expected_fix_hints": [
+        "week one should be focused on empathy: 5-8 qualitative interviews or think-aloud donation-attempt sessions with existing and lapsed donors, recording what they think and feel at each step — route to user-research",
+        "the team brainstorm should be in week three or four, after synthesis has produced insight statements and a validated problem framing — route to ideation after research-synthesis runs",
+        "drop 'donation flow' as the assumed output until the problem framing is complete — the solution might be the flow, or it might be the ask framing, the impact reporting, or the post-donation confirmation"
+      ],
+      "absent_signals": [
+        "should NOT endorse the survey-then-brainstorm approach as sufficient for a six-week design project",
+        "should NOT treat the question as a scheduling question (how to fill week one) without addressing the missing problem framing",
+        "should NOT assume that 'donation flow' is the right scope for the solution before any research is conducted"
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "transition_criteria",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A team has been running a Design Sprint (Monday–Friday). By Wednesday evening they have: an affinity-mapped research download from 10 customer interviews done the previous week, a 'how might we' board with 23 questions, and three distinct concept sketches (crazy-8s output). The sprint facilitator wants to move Thursday to prototyping one of the three concepts.\n\nThe sprint facilitator asks: 'We're on track. Should we just pick the highest-voted concept sketch and prototype it tomorrow?'",
+      "context": "Design Sprint context. Monday was Mapping and Target, Tuesday was sketching (Lightning Demos + Crazy 8s), Wednesday was voting. The three sketches are voted, but there has been no explicit articulation of what the prototype is trying to learn.",
+      "question": "What should happen before the team picks a concept and moves to prototyping?",
+      "expected_flags": [
+        "the transition from Ideate to Prototype requires a learning goal: what specific assumption or risk is this prototype designed to test? Without naming the learning goal, the prototype is a solution demo rather than a learning artifact",
+        "highest-voted is a proxy for team confidence, not for highest-risk assumption — the right concept to prototype first is the one with the highest-risk assumption that a Thursday prototype can test by Friday's user tests",
+        "if the three concepts are substantially different (different interaction models, different value propositions), the team may need to define a storyboard or prototype scope before Thursday to ensure what gets built is testable in one day"
+      ],
+      "expected_fix_hints": [
+        "before picking a concept: write a two-sentence learning goal ('by the end of Friday's tests, we will know whether [users can / users believe that / users will] [specific thing]') — this is the transition criterion from Ideate to Prototype",
+        "use the learning goal to pick the concept (or blend of concepts): the one that most directly tests the highest-risk assumption",
+        "define the prototype scope (what 3-4 screens are necessary to learn what you need to learn) before building — scope protects Thursday's time"
+      ],
+      "absent_signals": [
+        "should NOT approve 'pick the highest-voted concept and prototype it' without naming the learning goal",
+        "should NOT treat Wednesday's vote as sufficient transition evidence for Prototype without connecting the concept choice to a specific testable risk",
+        "should NOT recommend exhaustively prototyping all three concepts — a Design Sprint constraint is one testable prototype per day, not multiple; the team must choose"
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "anti_pattern_recognition",
+      "red_herring": false,
+      "criticality": "normal",
+      "scenario": "A team has completed three full design-thinking cycles on the same problem (a public library's teen engagement challenge) over eight months. Each cycle produced slightly different insights. After cycle 3, the team has 11 insight statements, 6 prototypes, and 3 sets of usability findings. The program lead says: 'Our findings keep contradicting each other, so we should do one more round of research to resolve the contradictions before we commit to a direction.'\n\nA stakeholder says: 'We've been researching for eight months. When do we build something?'",
+      "context": "This is a loop-endlessly failure mode: the team is using research and synthesis as a way to defer commitment. The contradictions between insight sets may be real (indicating a diverse target population) or may be resolvable by narrowing scope.",
+      "question": "What should the team do? Is another research round the right next step?",
+      "expected_flags": [
+        "this is the loop-endlessly failure mode: three cycles of research without commitment indicates that the team is using design thinking as a way to avoid deciding, not as a way to learn what to decide",
+        "contradictions across insight sets often indicate population heterogeneity — the response to 'teens want X and teens want Y' is usually to narrow the target segment (which teens?) not to do more research with the same broad population",
+        "the stakeholder's challenge is legitimate: eight months of research and prototyping without a shipped artifact is a process failure, not a design success — the Implement stage exists in the Double Diamond for a reason"
+      ],
+      "expected_fix_hints": [
+        "stop new research: use the 11 insight statements and 3 usability finding sets to make a deliberate segmentation decision (commit to one or two teen sub-segments) and accept that others will not be served in the first release",
+        "the contradictions are data about the population, not a research gap to fill — treat them as evidence to inform scope decisions, not evidence of insufficient research",
+        "name a ship criterion: 'we will build and release a minimum version within 6 weeks and test it with real users in context' — this converts the loop-back into a forward commitment with an embedded learning opportunity"
+      ],
+      "absent_signals": [
+        "should NOT endorse a fourth research round as the path to resolving contradictions",
+        "should NOT dismiss the stakeholder's challenge as impatience — eight months without delivery is a legitimate concern in a time-constrained public program",
+        "should NOT treat the absence of a perfect unified insight set as a research failure — diverse populations produce diverse insights; that is a design input, not a research problem"
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "A frontend developer asks: 'I need to implement a crazy-8s ideation session in our design tool. Each participant should be able to sketch eight mini-concepts in eight minutes, and the tool should auto-save each frame at the 1-minute mark. How should I build the timer and auto-save logic?'\n\nThe developer has already decided to use a canvas-based rendering library and wants guidance on the auto-save implementation specifically.",
+      "context": "This is a concrete engineering implementation request for a specific feature in an already-decided architecture. The developer knows what they are building and which tool they are using. The open question is purely technical.",
+      "question": "How should the timer and auto-save logic be implemented for this design tool feature?",
+      "expected_flags": [
+        "this is a concrete engineering implementation question — the stage is implementation (Deliver in the Double Diamond), the architecture is decided, and the open question is purely technical (timer + auto-save logic)",
+        "no design-thinking stage recognition, routing, or loop-back judgment is relevant — the developer is not uncertain which design stage they are in"
+      ],
+      "expected_fix_hints": [
+        "answer the engineering question directly: interval-based timer using setInterval or requestAnimationFrame, snapshot serialization at each 1-minute mark, optimistic local-storage or IndexedDB auto-save with server sync on session end",
+        "do not invoke design-thinking stage framing for an implementation question with a settled scope"
+      ],
+      "absent_signals": [
+        "should NOT invoke design-thinking stage recognition or routing — this is an engineering implementation task, not a design-process uncertainty",
+        "should NOT suggest the developer should first loop back to empathize with users about the timer UX before implementing — the scope and design direction are settled",
+        "should NOT reframe the question as 'what design thinking stage is this?' — there is nothing to route or diagnose here"
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "red_herring",
+      "red_herring": true,
+      "criticality": "normal",
+      "scenario": "An engineering team is mapping the domain model for a new freight logistics system. They have identified three bounded contexts: Shipment, Carrier, and Route. They are debating whether 'Cargo' should be an entity inside Shipment or its own bounded context. The tech lead says: 'Let me facilitate an event-storming session to resolve the aggregate boundary.'\n\nA team member asks: 'Should we also run a design-thinking exercise to make sure we understand user needs before we finalize the bounded contexts?'",
+      "context": "The team is doing domain-driven design for a freight logistics system. The question is whether to layer design-thinking process onto an engineering domain modeling session.",
+      "question": "Is design-thinking appropriate here? Should the team run design-thinking alongside event-storming?",
+      "expected_flags": [
+        "the open question here is an engineering domain modeling question — where to draw bounded-context boundaries between Shipment and Cargo — which event-storming is designed to answer",
+        "design-thinking is not the appropriate tool for resolving aggregate boundaries in a domain model; that is a DDD/event-storming concern about technical coupling, not a human-centered design uncertainty",
+        "the team member's suggestion is a boundary confusion: design-thinking is for discovering what to build for users; event-storming is for modeling how the system should work — they serve different open questions and are not interchangeable"
+      ],
+      "expected_fix_hints": [
+        "proceed with the event-storming session for the bounded-context decision — that is the right tool for this open question",
+        "if the team has genuine uncertainty about what freight logistics users need (the 'what to build' question), that is a separate discovery effort that would precede domain modeling, not run alongside it",
+        "do not mix design-thinking framing into an event-storming session — the facilitation methods and outputs are incompatible"
+      ],
+      "absent_signals": [
+        "should NOT recommend running a design-thinking arc alongside event-storming for the bounded-context decision",
+        "should NOT endorse the team member's suggestion that design-thinking uncertainty applies to the Cargo/Shipment boundary question",
+        "should NOT invoke empathy mapping, affinity clustering, or insight statements for an engineering domain modeling session — those methods address human need uncertainty, not technical boundary uncertainty"
+      ]
+    }
+  ]
+}
