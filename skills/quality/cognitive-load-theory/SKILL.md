@@ -21,7 +21,7 @@ metadata:
   stability: experimental
   keywords: "[\"cognitive load theory\",\"working memory\",\"intrinsic load\",\"extraneous load\",\"germane load\",\"chunking\",\"segmentation\",\"schema formation\",\"Sweller\",\"prompt design\",\"skill writing\",\"documentation load\",\"dashboard cognitive budget\",\"information design\"]"
   triggers: "[\"cognitive-load-skill\",\"working-memory-skill\",\"clt-skill\"]"
-  relations: "{\"adjacent\":[\"teaching-patterns\",\"context-window\",\"compression\",\"editorial-standards\",\"prompt-craft\"],\"boundary\":[{\"skill\":\"context-management\",\"reason\":\"context-management owns retrieval and session working-set design; CLT owns the cognitive-load taxonomy applied to authored content\"},{\"skill\":\"memory-gardener\",\"reason\":\"memory-gardener owns memory pruning and consolidation; CLT owns the cognitive-load framing for what to keep vs cut\"}],\"verify_with\":[\"context-management\",\"teaching-patterns\",\"best-practice\"]}"
+  relations: "{\"related\":[\"teaching-patterns\",\"context-window\",\"compression\",\"editorial-standards\",\"prompt-craft\"],\"boundary\":[{\"skill\":\"context-management\",\"reason\":\"context-management owns retrieval and session working-set design; CLT owns the cognitive-load taxonomy applied to authored content\"},{\"skill\":\"memory-gardener\",\"reason\":\"memory-gardener owns memory pruning and consolidation; CLT owns the cognitive-load framing for what to keep vs cut\"}],\"verify_with\":[\"context-management\",\"teaching-patterns\",\"best-practice\"]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
