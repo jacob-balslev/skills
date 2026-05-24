@@ -238,7 +238,7 @@ Legacy fields below may appear in old skills but are not valid v7 top-level fiel
 
 ### Understanding fields (flat)
 
-When the skill teaches a non-trivial subject, populate these flat top-level fields. The comprehension grader reads them; the agent loads them when the skill activates. Required when `comprehension_state: present` (see `schemas/skill.v7.schema.json`). These replace the v5 `concept.*` nested block for machine-readable grading.
+When the skill teaches a non-trivial subject, populate these flat top-level fields. The comprehension grader reads them; the agent loads them when the skill activates. Required when `comprehension_state: present` (see `schemas/skill.schema.json`). These replace the v5 `concept.*` nested block for machine-readable grading.
 
 | Field | Purpose |
 | --- | --- |
@@ -252,7 +252,7 @@ The legacy `concept` nested block remains accepted for v5 skills not yet migrate
 
 ### Health Block (flat — written by the audit loop)
 
-These fields are stamped automatically by `audit`, `improve`, and `evaluate`. Do not author them manually; the loop owns them. (v7 replaced the single `audit_verdict` field with four discrete verdicts — see `docs/migrations/v6-to-v7.md` and ADR 0011.)
+These fields are stamped automatically by `audit`, `improve`, and `evaluate`. Do not author them manually; the loop owns them. (v7 replaced the single `audit_verdict` field with four discrete verdicts — see ADR 0011.)
 
 | Field | Written by | Purpose |
 | --- | --- | --- |
