@@ -1,0 +1,84 @@
+{
+  "skill_name": "autonomous-loop-patterns",
+  "subject": "Autonomous Loop Patterns",
+  "adjacent_concepts": [
+    "hook lifecycle",
+    "checkpoint state machines",
+    "agent control planes",
+    "agent observability",
+    "task orchestration",
+    "session handoff"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define autonomous loop patterns for an AI agent system in 2-3 sentences. A correct answer must state that they are reusable control shapes for repeated agent execution, and must mention stop conditions, progress signals, checkpoint/respawn behavior, and safety caps.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Describe the mental model for autonomous loop patterns by naming at least four primitives and explaining how Ralph Wiggum, manage-loop, and grind-loop place those primitives differently. A correct answer must include trigger, worker session, progress signal, stop condition, and safety cap.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why do autonomous loop patterns exist as a named skill rather than ad hoc scripting? A correct answer must explain the failure mode of uncapped or uncheckpointed loops and how named patterns let the system pick the smallest safe loop shape.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Autonomous loop patterns are often confused with command selection, task execution, agent control, and inter-agent messaging. Explain the boundary to each. A correct answer must route command choice to ai-coding-agents, implementation to task-execution, steering/budget to agent-control, and messaging to agent-to-agent or agent-messaging.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify Ralph Wiggum, manage-loop, and grind-loop by complexity, continuation mechanism, and best use case. A correct answer must identify Ralph Wiggum as simplest for one clear task, manage-loop as continuation-signal based for orchestrated backlog work, and grind-loop as an external supervisor for fresh-session respawn and throughput.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use the autopilot-mode analogy for autonomous loop patterns and map it to concrete repo mechanisms. A correct answer must map instruments to status/checkpoint/telemetry, altitude limits to iteration or bad-exit caps, and pilot handoff to stop conditions or human review.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: an agent must clear a small queue of 4 well-specified docs tasks overnight. Choose a loop pattern and list the required safety mechanisms. A correct answer must choose the simplest adequate pattern, explain when grind-loop would be justified instead, and include completion signals, a cap, persisted status, and observability evidence. It must not say an unbounded loop is acceptable.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}

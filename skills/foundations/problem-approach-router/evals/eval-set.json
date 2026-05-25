@@ -1,0 +1,42 @@
+[
+  {
+    "query": "I don't know which problem-solving approach to use here",
+    "should_trigger": true,
+    "note": "Core routing trigger — uncertainty about which method applies"
+  },
+  {
+    "query": "Which foundational skill should I activate for this problem?",
+    "should_trigger": true,
+    "note": "Direct methodology-selection request"
+  },
+  {
+    "query": "Should I use first principles or pattern matching for this?",
+    "should_trigger": true,
+    "note": "Explicit choice between two foundational approaches"
+  },
+  {
+    "query": "Where do I start — this problem could be solved multiple ways",
+    "should_trigger": true,
+    "note": "Approach ambiguity signal"
+  },
+  {
+    "query": "I'm not sure if this is a systems problem or a workflow problem",
+    "should_trigger": true,
+    "note": "Problem-type classification uncertainty"
+  },
+  {
+    "query": "Apply first-principles thinking to our pricing model",
+    "should_trigger": false,
+    "note": "Approach already chosen — activate first-principles-thinking directly"
+  },
+  {
+    "query": "Identify the recurring pattern in these user complaints",
+    "should_trigger": false,
+    "note": "Pattern-recognition task — approach already selected"
+  },
+  {
+    "query": "Break down the user journey for the checkout flow step by step",
+    "should_trigger": false,
+    "note": "Task-analysis task — approach already selected"
+  }
+]

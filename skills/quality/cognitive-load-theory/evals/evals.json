@@ -1,0 +1,96 @@
+{
+  "skill_name": "cognitive-load-theory",
+  "evals": [
+    {
+      "id": 1,
+      "description": "Load classification: classify sections of a skill body by load type",
+      "expected_output": {
+        "section_1": "extraneous",
+        "section_1_reason": "Verbose preamble with no new information — redundant meta-commentary before substance",
+        "section_2": "germane",
+        "section_2_reason": "Comparative table that builds a schema for distinguishing load types — directly promotes schema formation",
+        "section_3": "germane",
+        "section_3_reason": "Worked example that makes the abstract rule concrete — promotes schema through varied instantiation",
+        "section_4": "extraneous",
+        "section_4_reason": "Redundancy effect — prose restates what the table already communicated clearly"
+      },
+      "tags": [
+        "load-classification",
+        "skill-writing",
+        "extraneous-vs-germane"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "repo_implementation",
+      "skill_type": "knowledge",
+      "criticality": "medium",
+      "prompt": "Given the following skill body excerpt, classify each section as intrinsic, extraneous, or germane load:\n\n1. A 200-word preamble explaining that 'this section is important because understanding the concept helps agents write better output and therefore is worth reading carefully before moving on to the next section'\n\n2. A table comparing three load types with columns: Name, Definition, Should Eliminate?, Example\n\n3. A worked example showing a before/after of an audit report, with an explanation of why each change reduces a specific load type\n\n4. A paragraph that restates in prose exactly what the preceding table already communicated",
+      "expectations": [
+        "Classifies section 1 (200-word preamble) as extraneous load",
+        "Classifies the comparative table (section 2) as germane load — it promotes schema formation",
+        "Classifies the schema-formation section (section 3) as germane load",
+        "Provides a load-source reason for each classification (not just the label)",
+        "Does NOT classify the comparative table as extraneous (this would conflate explanatory structure with redundancy)"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "Prompt redesign: restructure an overloaded single-block prompt using CLT chunking/segmentation",
+      "expected_output": {
+        "approach": "Segment into sequential steps, each with a single output",
+        "step_1": "Step 1: Review the skill body. List any sections with extraneous load. Format: [section_name] — [load_source]",
+        "step_2": "Step 2: Check evals/evals.json. Answer: (a) Does it have ≥2 evals? (b) Does each eval cover a distinct use case?",
+        "step_3": "Step 3: Check frontmatter. List any missing v6 required fields. Include verify_with relations status.",
+        "step_4": "Step 4: Write a Linear comment. Group findings as BLOCKING and ADVISORY. Omit NITPICKs.",
+        "rationale": "Each step has a single output type, allowing the model to complete it before holding the next task. The original prompt required simultaneously tracking 5 distinct outputs."
+      },
+      "tags": [
+        "prompt-design",
+        "segmentation",
+        "intrinsic-load",
+        "chunking"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "repo_implementation",
+      "skill_type": "knowledge",
+      "criticality": "medium",
+      "prompt": "The following prompt has high intrinsic load. Restructure it using CLT segmentation to reduce the simultaneous demands on the model's processing capacity:\n\n'Review the attached skill file and identify any sections that have extraneous load, then check whether the eval file has at least two evals and whether each eval covers a distinct use case, and also verify the frontmatter has all required v6 fields including verify_with relations, and finally write a summary Linear comment that covers all findings grouped by severity, making sure to note which findings are BLOCKING versus ADVISORY, but skip anything that is only a NITPICK.'",
+      "expectations": [
+        "Decomposes the multi-step task into 2-4 sequential prompts, each producing a single named output",
+        "Each step has a single deliverable defined (no implicit chained reasoning across steps)",
+        "Preserves the intrinsic load of each sub-task while removing the extraneous load of simultaneous demands",
+        "Names the segmentation strategy explicitly as CLT segmentation (or equivalent: chunking, progressive disclosure)",
+        "Does NOT propose a single mega-prompt with bullet-point sub-instructions (this preserves the high simultaneous load)"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "Working memory budget: identify which dashboard layout violates the ~4-chunk limit",
+      "expected_output": {
+        "verdict": "VIOLATES CLT",
+        "reason": "10 independent data points with no grouping exceeds the ~4-chunk working memory limit. Reader must process each metric as a separate chunk with no schema to consolidate them.",
+        "fix": "Group metrics into labeled categories (e.g., 'Revenue: gross, net, refunds'; 'Profitability: gross margin %, net margin %'; 'Operations: order count, AOV, fulfillment cost'; 'Marketing: ad spend'). Each category label becomes one chunk that pre-loads a schema for its children.",
+        "tags": [
+          "dashboard",
+          "working-memory",
+          "chunking",
+          "grouping"
+        ]
+      },
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "repo_implementation",
+      "skill_type": "knowledge",
+      "criticality": "medium",
+      "prompt": "A dashboard widget shows: (1) gross revenue, (2) net revenue, (3) refunds, (4) COGS, (5) gross margin %, (6) net margin %, (7) order count, (8) average order value, (9) fulfillment cost, (10) ad spend — all in a single flat grid with no grouping, uniform visual weight, and no category labels. Does this violate CLT working memory limits? If so, what is the fix?",
+      "expectations": [
+        "Returns verdict VIOLATES CLT (or equivalent: too many chunks, exceeds working memory)",
+        "Cites the ~4-chunk working-memory limit (Miller's 4±1) as the underlying constraint",
+        "Recommends grouping the 10 metrics into 3-4 semantic chunks (e.g. revenue cluster, margin cluster, ops cluster)",
+        "Names the intervention as schema-building or progressive disclosure (germane-load promotion)",
+        "Does NOT recommend simply removing metrics — the fix is grouping, not subtraction"
+      ]
+    }
+  ]
+}

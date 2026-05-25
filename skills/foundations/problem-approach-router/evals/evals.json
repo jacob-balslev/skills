@@ -1,0 +1,157 @@
+{
+  "skill_name": "problem-approach-router",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A developer says: 'I have no idea how to design this distributed rate-limiter. No one has done this exact thing in our stack before.' Which skill should the agent activate?",
+      "expected_output": "Route to first-principles-thinking. The problem is novel with no prior solution to copy from — the correct first move is stripping assumptions and rebuilding from primitives (rate-limiting semantics, consistency guarantees, network partition behavior) rather than copying existing patterns.",
+      "type": "routing",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes to first-principles-thinking",
+        "Identifies the novelty signal: 'no one has done this exact thing'",
+        "Does NOT route to pattern-recognition (no prior pattern exists)",
+        "Does NOT apply an approach without routing first"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "prompt": "A user says: 'This authentication failure looks exactly like the JWT expiry issue we fixed last quarter.' Which skill should the agent activate?",
+      "expected_output": "Route to pattern-recognition. The signal 'looks exactly like' plus the prior incident reference indicates the problem shape has been seen before. The goal is to name and apply the recurring pattern, not to derive from scratch.",
+      "type": "routing",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes to pattern-recognition",
+        "Identifies the familiar-shape signal: 'looks exactly like' and prior incident reference",
+        "Does NOT route to first-principles-thinking (a known pattern exists)",
+        "Does NOT conflate routing with executing the approach"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A stakeholder says: 'I don't understand how the order reconciliation system fits together with the inventory service.' Which skill should the agent activate?",
+      "expected_output": "Route to mental-models. The goal is comprehension of how two system parts relate — not solving a problem or making a decision. Mental-models handles the 'help me understand how this works' class of requests.",
+      "type": "routing",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes to mental-models",
+        "Identifies the comprehension signal: 'don't understand how X fits with Y'",
+        "Does NOT route to task-analysis (no workflow decomposition needed yet)",
+        "Does NOT start solving before the stakeholder understands the system"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 4,
+      "prompt": "An engineer says: 'We must use Postgres because our infra team won't approve anything else, our budget caps at $200/month, and we can't touch the existing auth tables. I need to design the new feature within those limits.' Which skill should the agent activate?",
+      "expected_output": "Route to constraint-awareness. The problem is dominated by hard boundaries (infra approval, budget cap, schema restriction). The first move is mapping which constraints are non-negotiable before designing anything.",
+      "type": "routing",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes to constraint-awareness",
+        "Identifies multiple hard constraints as the dominant signal",
+        "Does NOT route to first-principles-thinking (constraints, not assumptions, dominate)",
+        "Does NOT skip constraint mapping to jump to design"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A product manager asks: 'A customer wants to export their orders as a CSV. Walk me through every step they'd take and what they need at each step.' Which skill should the agent activate?",
+      "expected_output": "Route to task-analysis. The request is explicitly a step-by-step workflow decomposition from the user's perspective. Task-analysis owns the breakdown of user actions, decision points, and information needs across a multi-step sequence.",
+      "type": "routing",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes to task-analysis",
+        "Identifies the workflow-decomposition signal: 'every step they'd take'",
+        "Does NOT route to mental-models (no system-comprehension needed; the flow is being mapped)",
+        "Does NOT route to first-principles-thinking (not about assumptions; about user steps)"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 6,
+      "prompt": "A user says: 'I'm not sure if this is a system design problem, a data problem, or a workflow problem. Where do I start?' Which skill should the agent activate?",
+      "expected_output": "Route to epistemic-grounding. The problem type itself is unclear — the user cannot classify the problem, which means the first move is clarifying what is known, what is assumed, and what is missing before any approach is selected. This is the coverage-gap case in the routing table.",
+      "type": "routing",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes to epistemic-grounding",
+        "Identifies the 'unclear problem type' signal",
+        "Does NOT pick an approach before the problem is classified",
+        "Does NOT route directly to first-principles-thinking, mental-models, or task-analysis without a classification signal"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "A developer says: 'This looks like the same recurring caching bug AND we also don't fully understand how our CDN and origin server interact.' Which skills should the agent activate?",
+      "expected_output": "Route to both pattern-recognition and mental-models, in that order. The problem matches two rows: it has a recurring shape (pattern-recognition) AND a comprehension gap about system interaction (mental-models). The agent should declare the compound classification explicitly before proceeding.",
+      "type": "routing",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes to both pattern-recognition and mental-models",
+        "Identifies the compound problem: recurring shape + comprehension gap",
+        "Declares the compound classification explicitly before applying skills",
+        "Applies skills in the order they appear in the routing table: pattern-recognition first, mental-models second"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 8,
+      "prompt": "Should problem-approach-router be used after a developer has already decided to apply first-principles-thinking?",
+      "expected_output": "No. The router is only needed when the correct approach is unknown. Once the developer has chosen first-principles-thinking, the routing decision is made — activate first-principles-thinking directly. Using the router after the decision is already made adds ceremony without value.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Correctly declines to use the router when the approach is already known",
+        "Routes the developer to first-principles-thinking directly",
+        "Does NOT treat the router as mandatory before every skill activation",
+        "Explains that the router serves the 'unsure which approach' case only"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    }
+  ]
+}
