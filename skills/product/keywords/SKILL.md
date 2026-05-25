@@ -31,10 +31,12 @@ grounding:
 drift_check:
   last_verified: "2026-05-19"
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.2.0"
   type: capability
+  operation: know
   category: product
+  subject: product-domain
   domain: product/search
   scope: portable
   owner: skill-graph-maintainer

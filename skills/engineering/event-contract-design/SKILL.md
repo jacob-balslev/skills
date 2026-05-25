@@ -6,10 +6,12 @@ compatibility:
   notes: "Portable async-event contract guidance for queues, streams, pub/sub, internal events, outbound webhooks, and documented event-driven APIs."
 allowed-tools: Read Grep
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.0.0"
   type: capability
+  operation: know
   category: engineering
+  subject: product-domain
   domain: architecture/events
   scope: portable
   owner: skill-graph-maintainer
