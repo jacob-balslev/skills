@@ -32,12 +32,14 @@ drift_check:
     "../sales-hub/db/migrations/20260314_rls_with_check_and_security_invoker.sql": "2edcb51debd4ab4e7306eb6f8908c7a725217b19962e1429728e911fc57e88fb"
     "../sales-hub/db/migrations/20260315_enable_rls_all.sql": "c8de6823684f84b54376284a3a51bb6b52e38acd4f5c29664be26e89e5d39570"
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.1.0"
   type: capability
+  operation: do
   category: engineering
+  subject: code-engineering
   domain: engineering/database-security
-  scope: codebase
+  scope: project
   owner: skill-graph-maintainer
   freshness: "2026-05-18"
   drift_check: "{\"last_verified\":\"2026-05-18\",\"truth_source_hashes\":{\"sales-hub/apps/web/src/lib/db.ts\":\"d1d9988d1da4545c58f76b5f44dbd12d5323409b777920d31d5f496db31ad7cb\",\"sales-hub/db/migrations/20260218_rls_hardening.sql\":\"b5fb6dc74e78a3fb7e77c669af4e4b4303a4e995eaf4993cb6bdcbe7bdca424f\",\"sales-hub/db/migrations/20260314_rls_expansion.sql\":\"406e2c419b09a6866f10c508e4ff6dc1f7a1ee82b788c5e2515186561c30ffb5\",\"sales-hub/db/migrations/20260314_rls_with_check_and_security_invoker.sql\":\"2edcb51debd4ab4e7306eb6f8908c7a725217b19962e1429728e911fc57e88fb\",\"sales-hub/db/migrations/20260315_enable_rls_all.sql\":\"c8de6823684f84b54376284a3a51bb6b52e38acd4f5c29664be26e89e5d39570\"}}"
@@ -45,7 +47,7 @@ metadata:
   eval_state: unverified
   routing_eval: absent
   stability: stable
-  keywords: "[\"rls\",\"row-level-security\",\"postgres\",\"tenant-isolation\",\"org-id\",\"security-policy\",\"set-local\",\"view-bypass\",\"migration\",\"multi-tenant\",\"ENABLE ROW LEVEL SECURITY\",\"FORCE ROW LEVEL SECURITY\",\"security_invoker\",\"USING clause\",\"WITH CHECK\",\"superuser bypass\",\"orgQuery\",\"app.organization_id\",\"connection pool safety\",\"materialized view RLS\"]"
+  keywords: "[\"rls\",\"row-level-security\",\"postgres\",\"tenant-isolation\",\"org-id\",\"security-policy\",\"set-local\",\"view-bypass\",\"migration\",\"multi-tenant\"]"
   examples: "[\"adding RLS to a new table — what statements are required and in what order?\",\"auditing our existing RLS migrations for missing FORCE or WITH CHECK\",\"implementing a view on an RLS-protected table in PostgreSQL 15+\",\"debugging a cross-tenant data leak in a multi-tenant SaaS system\",\"ensuring connection pool context (SET LOCAL) does not leak tenant state between requests\",\"reviewing a migration that enables RLS to check for superuser and owner bypass risks\",\"verifying that materialized views over RLS tables are documented as security-sensitive\"]"
   anti_examples: "[\"implementing application-level auth guards (requireAuth, requireOrgAuth) — use nextauth-patterns\",\"choosing when to use orgQuery() vs query() in application code — use multi-tenancy-rls\",\"implementing CSRF protection or webhook HMAC verification — use security-scanning\",\"designing the overall multi-tenant data architecture — use data-architect\",\"designing row-level access control in non-PostgreSQL databases\"]"
   relations: "{\"adjacent\":[\"database-migration\",\"security-scanning\",\"data-architect\",\"guardrails\"],\"boundary\":[{\"skill\":\"nextauth-patterns\",\"reason\":\"nextauth-patterns owns application-level authorization (requireAuth, requireOrgAuth, withOrgAuth); postgres-rls owns database-level isolation via PostgreSQL RLS policies\"},{\"skill\":\"multi-tenancy-rls\",\"reason\":\"multi-tenancy-rls owns the application query tier (orgQuery, query, withAppSession usage patterns); postgres-rls owns the PostgreSQL server-side RLS policy implementation\"}],\"verify_with\":[\"security-scanning\",\"database-migration\"]}"
