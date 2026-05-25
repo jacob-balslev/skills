@@ -87,7 +87,7 @@ As the baseline enforcement layer, this skill connects:
 | Comments explain WHY | Code explains what; comments explain intent, gotchas, business rules |
 | ADRs for decisions | `docs/adr/` — Context, Decision, Alternatives, Consequences |
 | TSDoc on public APIs | `@param`, `@returns`, `@throws` on exported functions |
-| No stale TODOs | Every `// TODO` must reference a ticket: `// TODO(SH-1234)` |
+| No stale TODOs | Every `// TODO` must reference a tracker ticket |
 
 > See adr for ADR creation methodology. See doc-updater for the documentation update protocol.
 
