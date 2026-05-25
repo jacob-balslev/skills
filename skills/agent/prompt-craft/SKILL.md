@@ -6,10 +6,12 @@ compatibility:
   notes: "Provider-agnostic prompt-design discipline for OpenAI, Anthropic, Google Gemini, open-weight models, and agent runtimes; provider-specific APIs, role names, structured-output features, and reasoning controls must be checked before implementation."
 allowed-tools: Read Grep Bash Edit
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.1.0"
   type: capability
+  operation: know
   category: agent
+  subject: agent-ops
   domain: agent/prompts
   scope: portable
   owner: skill-graph-maintainer

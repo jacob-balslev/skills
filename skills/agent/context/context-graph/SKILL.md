@@ -6,10 +6,12 @@ compatibility:
   notes: "Architecture-level skill. Applies to any agent-coding workspace that has more than one skill / doc-routing / memory artifact and any way to traverse them — Claude Code, OpenCode, Cursor, Aider, Continue, Copilot Workspace, or a custom harness. The four-graph model and the orphan / connectivity metrics are independent of the specific runtime."
 allowed-tools: Read Grep
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.1.0"
   type: capability
+  operation: know
   category: agent
+  subject: agent-ops
   domain: agent/context
   scope: portable
   owner: skill-graph-maintainer
@@ -20,7 +22,7 @@ metadata:
   routing_eval: absent
   comprehension_state: present
   stability: experimental
-  keywords: "[\"context graph architecture\",\"multi-graph context model\",\"skill knowledge graph\",\"document routing graph\",\"memory index graph\",\"script command registry graph\",\"cross-graph edges\",\"orphan detection skill graph\",\"graph connectivity metrics\",\"average node degree\",\"hub-and-spoke anti-pattern\",\"reciprocal relations\",\"bidirectional graph edges\",\"change propagation across graphs\",\"edge type taxonomy\",\"adjacent boundary verify_with\",\"deterministic graph synthesis\",\"bundle co-membership\"]"
+  keywords: "[\"context graph architecture\",\"multi-graph context model\",\"skill knowledge graph\",\"document routing graph\",\"memory index graph\",\"script command registry graph\",\"cross-graph edges\",\"orphan detection skill graph\",\"graph connectivity metrics\",\"average node degree\"]"
   examples: "[\"we have ~300 skills but the agent never finds half of them — what's the diagnostic frame?\",\"how do I measure whether our skill graph is actually navigable vs just present?\",\"I changed a webhook handler — what's the discipline for tracing the impact across docs, skills, memory, and scripts?\",\"we keep accumulating orphan skills and our connectivity drops every quarter — how do I make graph-health a deliberate gate?\",\"the agent is loading 15 skills per task and burning context — is the underlying graph too dense, too sparse, or wrong-shaped?\",\"design a deterministic recipe for synthesizing the skill graph from frontmatter without running an LLM\",\"what's the right cap on adjacent / boundary / verify_with relations per skill?\"]"
   anti_examples: "[\"scaffold a new SKILL.md from a template\",\"validate that this single skill's frontmatter matches the schema\",\"decide which skill to inject for this query right now\",\"this skill says 'use orgQuery'; that one says 'never use orgQuery' — fix the conflict\",\"decide what should and shouldn't be in this agent's context window for this task\",\"review this AI-generated PR for correctness\"]"
   relations: "{\"boundary\":[{\"skill\":\"skill-router\",\"reason\":\"skill-router is the per-query dispatch decision (which skill activates now); context-graph is the underlying graph the router traverses\"},{\"skill\":\"skill-infrastructure\",\"reason\":\"skill-infrastructure owns the live skill library tooling (census, conflict detection, routing-gap reporting); context-graph owns the architectural model behind it\"},{\"skill\":\"skill-scaffold\",\"reason\":\"skill-scaffold authors a single SKILL.md; context-graph designs the graph that those authored skills participate in\"}],\"related\":[\"skill-router\",\"skill-infrastructure\",\"skill-scaffold\"],\"verify_with\":[\"skill-infrastructure\"]}"

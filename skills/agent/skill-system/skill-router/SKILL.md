@@ -27,10 +27,12 @@ drift_check:
     "examples/evals/skill-router.json": "fccabcbc5f9d8057536f397fb0fc71a567371f75fb9a21afda343b197af30293"
     "examples/evals/skill-router.routing.json": "c4dc88db1e746bea78a7cf96b50c6c84532a07eda42da2e35d790c8928d4da8c"
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.0.0"
   type: router
+  operation: decide
   category: agent
+  subject: agent-ops
   domain: agent/skill-system
   scope: portable
   owner: skill-graph-maintainer
@@ -40,7 +42,7 @@ metadata:
   eval_state: passing
   routing_eval: present
   stability: experimental
-  keywords: "[\"skill routing\",\"skill dispatch\",\"keyword routing\",\"route skill\",\"which skill to use\",\"skill selector\",\"routing table\",\"coverage gap\",\"ambiguous skill activation\",\"skill activate\",\"skill activates\",\"activate skill\",\"skill should activate\",\"which skill activates\",\"why did skill activate\",\"why skill activated\",\"routing decision\",\"dispatch request\",\"dispatch agent request\",\"agent request routing\",\"route this request\",\"route the request\",\"find the right skill\",\"choose the right skill\",\"which skill handles\"]"
+  keywords: "[\"skill routing\",\"skill dispatch\",\"keyword routing\",\"route skill\",\"which skill to use\",\"skill selector\",\"routing table\",\"coverage gap\",\"ambiguous skill activation\",\"skill activate\"]"
   triggers: "[\"skill-router\"]"
   examples: "[\"activate the right skill for this agent request: 'my tests are failing in CI'\",\"build a routing table that covers every agent request type we see\",\"why did the documentation skill activate when the user asked about a11y?\",\"find the coverage gaps — which agent requests match no skill at all?\"]"
   anti_examples: "[\"audit the graph-audit skill for schema conformance\",\"write a guide explaining how our routing works\",\"reproduce this routing mis-dispatch from production logs\"]"

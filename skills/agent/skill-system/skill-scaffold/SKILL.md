@@ -6,12 +6,14 @@ compatibility:
   notes: "Markdown, YAML, JSON Schema"
 allowed-tools: Read Grep Bash Write Edit
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.1.0"
   type: capability
+  operation: know
   category: agent
+  subject: agent-ops
   domain: agent/skill-system
-  scope: reference
+  scope: workspace
   owner: skill-graph-maintainer
   freshness: "2026-05-18"
   drift_check: "{\"last_verified\":\"2026-05-18\"}"
@@ -20,7 +22,7 @@ metadata:
   routing_eval: absent
   comprehension_state: present
   stability: experimental
-  keywords: "[\"skill authoring\",\"new skill\",\"writing a skill\",\"skill scaffold\",\"skill template\",\"skill frontmatter\",\"skill metadata protocol v7\",\"skill graph contract\",\"capability or workflow\",\"description vs coverage\",\"archetype selection\",\"skill body layout\",\"teaching layer\",\"understanding fields\",\"health block\",\"placeholder sludge\",\"cargo cult meta sections\",\"focused authoring gates\",\"routing eval honesty\"]"
+  keywords: "[\"skill authoring\",\"new skill\",\"writing a skill\",\"skill scaffold\",\"skill template\",\"skill frontmatter\",\"skill metadata protocol v7\",\"skill graph contract\",\"capability or workflow\",\"description vs coverage\"]"
   examples: "[\"I'm writing a new skill from scratch — where do I start?\",\"how do I pick between capability and workflow for my skill type?\",\"what's the difference between description and the ## Coverage section?\",\"scaffold a new skill that teaches react component composition patterns\",\"I copied skill-metadata-template.md but my new skill won't pass lint — help\",\"draft frontmatter for a workflow skill that owns deployment rollback\",\"how do I strip teaching annotations from the template before commit?\",\"should I flip routing_eval to present on my new skill?\"]"
   anti_examples: "[\"refactor my existing skill to be more concise\",\"my skill's routing isn't activating — why?\",\"audit my skill library for stale frontmatter\",\"write a developer guide for the contributor docs\",\"review this skill's content for correctness\"]"
   relations: "{\"boundary\":[{\"skill\":\"refactor\",\"reason\":\"refactor is behaviour-preserving modification of existing code or skills; skill-scaffold creates a new skill from scratch\"},{\"skill\":\"skill-router\",\"reason\":\"skill-router dispatches between existing skills at request time; skill-scaffold is the authoring-time guide for a NEW skill\"},{\"skill\":\"skill-infrastructure\",\"reason\":\"skill-infrastructure runs health tooling across the entire skill library after authoring; skill-scaffold is the authoring-time guide for creating a single new skill before it joins the library\"}],\"related\":[\"naming-conventions\"],\"verify_with\":[]}"
