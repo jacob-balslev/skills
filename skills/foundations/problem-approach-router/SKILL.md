@@ -6,10 +6,12 @@ compatibility:
   notes: "Domain-agnostic dispatch. The routing table applies to any problem a human or agent faces — software, design, product, or strategy. The skill names in the Routing Rules refer to sibling skills in the foundations category."
 allowed-tools: Read Grep
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.0.0"
   type: router
+  operation: decide
   category: foundations
+  subject: meta-methods
   domain: foundations/meta
   scope: portable
   owner: skill-graph-maintainer
@@ -19,7 +21,7 @@ metadata:
   eval_state: unverified
   routing_eval: absent
   stability: experimental
-  keywords: "[\"which approach\",\"which methodology\",\"problem-solving method\",\"select methodology\",\"which skill first\",\"approach selection\",\"methodology dispatch\",\"method router\",\"first principles vs pattern\",\"how to approach this problem\",\"where to start\",\"problem classification before solving\",\"meta-method selection\",\"foundational skill selection\"]"
+  keywords: "[\"which approach\",\"which methodology\",\"problem-solving method\",\"select methodology\",\"which skill first\",\"approach selection\",\"methodology dispatch\",\"method router\",\"first principles vs pattern\",\"how to approach this problem\"]"
   triggers: "[\"problem-approach-router\",\"methodology-router\",\"approach-router\"]"
   examples: "[\"I have a completely novel problem nobody has solved before — where do I start?\",\"the codebase has a recurring bug pattern — which foundational approach should I use?\",\"I need to explain a complex system to a stakeholder — which skill applies?\",\"I'm blocked by conflicting requirements that all seem equally valid — which approach first?\",\"the task feels overwhelming because there are too many parts — what's the right starting lens?\",\"a user is asking me to solve something I know a similar solution for but the details differ\",\"I don't know what I don't know about this problem — which foundational skill handles that?\"]"
   anti_examples: "[\"actually apply first-principles thinking to this specific problem\",\"analyze why this pattern keeps recurring in the codebase\",\"break down the constraints on this engineering decision\",\"map the mental model for this domain concept\",\"implement the algorithm we already decided on\",\"choose a testing strategy for this feature\"]"
