@@ -36,12 +36,14 @@ drift_check:
     "scripts/generate-manifest.js": "ec4ad89e21e44c272676846377679f59a272c193f0b0d448a7b6d881b0b9effc"
     "examples/evals/graph-audit.json": "4fc0fa157b363c9d5675112bfe860ed48a599d05c41720b387aa2d8798eab5a3"
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.0.0"
   type: capability
+  operation: know
   category: quality
+  subject: quality-assurance
   domain: quality/audit
-  scope: codebase
+  scope: project
   owner: skill-graph-maintainer
   freshness: "2026-04-18"
   drift_check: "{\"last_verified\":\"2026-05-13\",\"truth_source_hashes\":{\"schemas/skill.schema.json\":\"370a021a129cba5b54cd15daaaa934fbb172df306dc0095608ea4a5607fe2526\",\"schemas/manifest.schema.json\":\"b5181764e0b645d01a8b6918c78463e53a2f28669a6883365c3a1d132323c066\",\"docs/skill-metadata-protocol.md\":\"bce8933a4f4f6386e36e618f2de97f0f6feb864a4c1aaeec225291110e7f8a76\",\"scripts/skill-lint.js\":\"3a78f75f8921542b91dc619cd41bde29bf379de3c16bdcf3653c854ecbe9fa29\",\"scripts/lib/alias-contract.js\":\"ab7b4f15c13caf1ff1f3205e285415b086f7b6cbc3fcfaba982a590cc56b49cd\",\"scripts/check-protocol-consistency.js\":\"0ff39406d36e7a9e51c176f657f4f426d8bd5a3fe6411d28b9e9a93dc7d89f29\",\"scripts/generate-manifest.js\":\"9d7bbbdae440fdb1763d61ffa7bda10c9efae92359d1c2139d0e971582d59e0e\",\"examples/evals/graph-audit.json\":\"8edab7bc057c65c8fd43f6ca17863c7a12ea831f6eb2158f1b2fde2ba03ad4b2\"}}"

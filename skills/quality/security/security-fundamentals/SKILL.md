@@ -4,12 +4,14 @@ description: "Use when reasoning about the security properties any application m
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.0.0"
   type: capability
+  operation: do
   category: quality
+  subject: quality-assurance
   domain: quality/security
-  scope: reference
+  scope: workspace
   owner: skill-graph-maintainer
   freshness: "2026-05-16"
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
@@ -18,7 +20,7 @@ metadata:
   routing_eval: absent
   comprehension_state: present
   stability: experimental
-  keywords: "[\"security fundamentals\",\"threat modeling\",\"input validation\",\"authentication\",\"authorization\",\"authn\",\"authz\",\"least privilege\",\"defense in depth\",\"secure by default\",\"OWASP Top 10\",\"Saltzer and Schroeder\",\"secrets handling\",\"attack surface\",\"trust boundary\",\"principle of least privilege\"]"
+  keywords: "[\"security fundamentals\",\"threat modeling\",\"input validation\",\"authentication\",\"authorization\",\"authn\",\"authz\",\"least privilege\",\"defense in depth\",\"secure by default\"]"
   triggers: "[\"is this secure\",\"where should validation happen\",\"authentication vs authorization\",\"what could go wrong here\",\"threat model\",\"OWASP\",\"do I need to check permissions here\"]"
   examples: "[\"audit a route handler for authn, authz, and input validation\",\"decide where to validate inbound data when the same shape comes in through multiple endpoints\",\"decide whether a piece of data is a secret, a credential, or non-sensitive — and what handling each requires\",\"produce a threat model for a new feature before any code is written\"]"
   anti_examples: "[\"implement HMAC verification for a Shopify webhook (use webhook-integration)\",\"configure a SAST scanner for the CI pipeline (use security-scanning)\",\"store an OAuth refresh token in an encrypted column (use credential-encryption)\",\"respond to a GDPR data-subject-access request (use gdpr-compliance)\",\"defend an LLM agent against prompt injection (use prompt-injection-defense)\"]"
