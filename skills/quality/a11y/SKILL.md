@@ -33,7 +33,7 @@ metadata:
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/a11y/SKILL.md
   structural_verdict: PASS
-  truth_verdict: UNVERIFIED
+  truth_verdict: PASS
   comprehension_verdict: UNVERIFIED
   application_verdict: UNVERIFIED
 last_audited: 2026-05-25
