@@ -4,12 +4,14 @@ description: "Use when designing or reviewing Next.js middleware (the single `mi
 license: MIT
 allowed-tools: Read Grep
 metadata:
-  schema_version: 7
+  schema_version: 8
   version: "1.0.0"
   type: capability
+  operation: do
   category: engineering
+  subject: frontend-ui
   domain: engineering/frontend
-  scope: reference
+  scope: workspace
   owner: skill-graph-maintainer
   freshness: "2026-05-17"
   drift_check: "{\"last_verified\":\"2026-05-17\"}"
@@ -18,7 +20,7 @@ metadata:
   routing_eval: absent
   comprehension_state: present
   stability: experimental
-  keywords: "[\"Next.js middleware\",\"middleware.ts file\",\"NextRequest NextResponse\",\"matcher config middleware\",\"Edge Runtime constraints\",\"NextResponse.redirect rewrite next\",\"auth check before route\",\"locale routing i18n middleware\",\"A/B testing variant rewrite\",\"CSP nonce middleware\",\"geo-routing X-Vercel-IP-Country\",\"request header injection\",\"bot blocking middleware\",\"middleware cookie set\"]"
+  keywords: "[\"Next.js middleware\",\"middleware.ts file\",\"NextRequest NextResponse\",\"matcher config middleware\",\"Edge Runtime constraints\",\"NextResponse.redirect rewrite next\",\"auth check before route\",\"locale routing i18n middleware\",\"A/B testing variant rewrite\",\"CSP nonce middleware\"]"
   triggers: "[\"how do I redirect unauthenticated users to login in Next.js\",\"how do I run code before every request in Next.js\",\"how do I set security headers globally in Next.js\",\"how do I do locale routing in App Router\",\"how do I do an A/B test with rewrites\",\"why does my middleware run on static assets\",\"can middleware do a database query\",\"how do I generate a CSP nonce per request\"]"
   examples: "[\"design middleware that redirects unauthenticated users to /login while letting public routes through, configured via a matcher\",\"add a middleware that generates a per-request CSP nonce and injects it into both the request and response headers\",\"implement locale routing that detects Accept-Language and rewrites /about to /en/about for new visitors\",\"add bot blocking that returns 403 for known scraper user-agents while letting search-engine bots through\",\"tune a middleware that runs on every request down to 5ms so it stops adding latency to image fetches\"]"
   anti_examples: "[\"implement a /api/posts POST endpoint (use route-handler-design)\",\"implement a delete-comment mutation triggered from a form button (use server-actions-design)\",\"explain what an HTTP 308 means vs 307 (use http-semantics)\",\"design the full CSP policy and the rest of the security-header strategy (use security-fundamentals)\",\"design a long-lived SSE stream from middleware (use streaming-architecture)\",\"design the CSP policy, threat model, or OWASP audit for a system (use security-fundamentals)\",\"decide what an HTTP method, status code, or header should mean per RFC 9110 (use http-semantics)\",\"design signature verification, idempotency, or retry semantics for vendor webhooks (use webhook-integration)\"]"
