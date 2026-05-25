@@ -17,9 +17,6 @@ metadata:
   drift_check:
     last_verified: "2026-05-18"
     truth_source_hashes: {}
-  primaryCategory: Product Domain
-  layerPrimary: integration
-  routingRole: primary
   last_audited: "2026-05-18"
   structural_verdict: UNVERIFIED
   truth_verdict: UNVERIFIED
