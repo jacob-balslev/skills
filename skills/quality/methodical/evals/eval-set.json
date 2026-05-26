@@ -1,0 +1,5 @@
+[
+  { "query": "How do I make sure an audit report includes every finding?", "should_trigger": true, "note": "Completeness enforcement" },
+  { "query": "Should I report only the top issues from a review?", "should_trigger": true, "note": "Severity-filtering guardrail" },
+  { "query": "Refactor this utility", "should_trigger": false, "note": "Basic implementation work belongs elsewhere" }
+]

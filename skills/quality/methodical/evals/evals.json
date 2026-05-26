@@ -1,0 +1,119 @@
+{
+  "skill_name": "methodical",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "An audit surfaced 32 findings. Should I open with the most important five and offer the rest later?",
+      "expected_output": "No. Show all 32 findings first, then optionally recommend deprioritization after the full list.",
+      "type": "knowledge",
+      "grounding": "repo-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Requires complete reporting before summary",
+        "Rejects phased or severity-gated disclosure",
+        "Allows recommendations only after the complete set is shown",
+        "Does NOT defer the remaining findings"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 2,
+      "prompt": "I completed four implementation steps. Is a single 'done' summary enough, or do I need evidence per step?",
+      "expected_output": "Methodical requires evidence receipts per step, not just one end summary.",
+      "type": "knowledge",
+      "grounding": "repo-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Requires step-level evidence receipts",
+        "Explains why end-only summaries are insufficient",
+        "Keeps verification tied to each step",
+        "Does NOT accept a single summary as equivalent evidence"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 3,
+      "prompt": "Refactor this function into two helpers.",
+      "expected_output": "Does not route a simple refactor request to methodical as the primary owner.",
+      "type": "negative",
+      "grounding": "repo-specific",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects methodical as the primary owner for a basic refactor task",
+        "Routes to refactor or task-execution",
+        "Preserves methodical for completeness-critical work",
+        "Does NOT over-apply this skill outside its documented boundaries or owner scope."
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 4,
+      "prompt": "I counted 11 tasks in scope but only described 8 in my report. Can I call it complete if the missing three are minor?",
+      "expected_output": "No. If the output count does not match the examined scope, the report is incomplete regardless of severity.",
+      "type": "knowledge",
+      "grounding": "repo-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Enforces count parity between scope and output",
+        "Rejects severity as a reason to exclude items",
+        "Requires completion claim integrity",
+        "Does NOT permit omission because findings are minor"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 5,
+      "prompt": "A subagent reported 'done'. Should I trust that and move on without checking the artifact?",
+      "expected_output": "No. Methodical requires verification of the actual artifact or output, not trust in the completion claim.",
+      "type": "negative",
+      "grounding": "repo-specific",
+      "difficulty": "applied",
+      "expectations": [
+        "Rejects unverified trust in subagent completion",
+        "Requires artifact-level verification",
+        "Keeps verification separate from status reporting",
+        "Does NOT treat 'done' as self-proving evidence"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    },
+    {
+      "id": 6,
+      "prompt": "Should I write the summary first and fill in the detailed findings afterward so the report reads more cleanly?",
+      "expected_output": "No. Methodical requires complete enumeration before summary to avoid summary-first fabrication and scope reduction.",
+      "type": "contradiction-check",
+      "grounding": "repo-specific",
+      "difficulty": "adversarial",
+      "expectations": [
+        "Rejects summary-first workflow",
+        "Requires enumeration before synthesis",
+        "Names summary-first fabrication or equivalent anti-pattern",
+        "Does NOT allow summary drafting to precede complete analysis"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "normal"
+    }
+  ]
+}

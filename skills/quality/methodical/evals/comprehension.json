@@ -1,0 +1,77 @@
+{
+  "skill_name": "methodical",
+  "subject": "Methodical Execution",
+  "adjacent_concepts": ["intellectual honesty", "quality-doctrine", "task-execution", "self-review-pattern", "system 2 thinking"],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define the 'Complete Before Summarize' rule and explain why LLM summarization bias makes it necessary.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "How does the RLHF training signal (which rewards 'helpful' and concise answers) directly conflict with the goals of an exhaustive security audit, and how does this skill counteract that?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "What is the purpose of the 'Step-Level Evidence Protocol', and why is a summary at the end of a multi-step task insufficient?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Explain the boundary between `methodical`, `quality-doctrine`, and `self-review-pattern`. If an agent needs to know the specific architecture constraints of a React component, which skill should it consult?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "How does 'prioritization' differ from 'filtering' within this methodology, and why is this distinction critical for intellectual honesty?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 6,
+      "dimension": "application",
+      "prompt": "Novel scenario: You are asked to review a PR with 25 files. After checking 10 files, you find 3 critical security flaws. The prompt asks for 'the key issues'. Apply the methodical execution framework: do you stop at 10 files, or continue? How do you format the output to comply with both the prompt and the completeness rule?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: You are writing a script that drops a database table and recreates it. According to the 'Observe Before Act' and 'Deliberate Pace' rules, what exact steps and evidence receipts must you produce before running the `DROP TABLE` command?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}
