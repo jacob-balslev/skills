@@ -4,44 +4,129 @@ description: "Use when reasoning about React Hooks as a discipline: when a rende
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: frontend-ui
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/frontend
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"React Hooks\",\"Rules of Hooks\",\"useEffect dependencies\",\"useState\",\"useMemo when not to\",\"useCallback footgun\",\"custom hooks extraction\",\"derived state\",\"stale closure\",\"effect cleanup\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"is this hook safe to call here\",\"why does my useEffect run twice\",\"do I need useMemo here\",\"dependency array warning\",\"should this be state or derived\",\"extract this into a custom hook\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"review a useEffect whose dependency array is missing a variable and decide whether to add it, hoist the value, or rethink whether an effect is needed at all\",\"decide whether a derived value should live in useState plus useEffect, or simply be computed during render\",\"explain why the Rules of Hooks are a compile-time invariant, not just a convention\",\"audit a component for unnecessary useMemo / useCallback wrappers that don't actually prevent rerenders\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"choose between Server Components and Client Components for a new page (use client-server-boundary)\",\"decide where the application's order list lives in memory across routes (use state-management)\",\"design the public API of a reusable component library primitive (use component-architecture)\",\"pick between SSR, SSG, and ISR for a route (use rendering-models)\",\"decide how to layer primitives, composites, and product-specific components (use component-architecture)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"rendering-models\",\"client-server-boundary\",\"component-architecture\",\"state-management\"],\"boundary\":[{\"skill\":\"state-management\",\"reason\":\"state-management owns the question of where state lives across the application (server, client, URL, persistent); hooks-patterns owns the in-component discipline of expressing state with the hook primitives.\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the serialization and 'use client' / 'use server' contract; hooks-patterns owns the rules of hook usage on the client side of that boundary.\"}],\"verify_with\":[\"code-review\",\"testing-strategy\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     React identifies hooks by CALL ORDER. The first `useState` in a render is matched to slot 0 of the fiber's hook list, the second to slot 1, and so on. The Rules of Hooks (call at top level, call only from React functions or other hooks) exist to keep that call order stable across renders — a conditional hook would shift slot indices and corrupt state across the entire component. Once that foundation is internalized, every other hook rule falls out of it: dependency arrays exist because callbacks capture closures over render-time state (stale closure = referential bug); `useEffect` exists for synchronizing with non-React systems, not for general "do this when X changes"; custom hooks exist when stateful logic must be reused across components; `useMemo`/`useCallback` stabilize referential identity for downstream `React.memo` or hook dependency arrays, not as general performance optimizations.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "hooks as a generic toolkit" with "hooks as primitives with specific semantics." Without hooks-patterns discipline, components accumulate `useEffect` calls that should have been derived values during render, `useMemo` wrappers that do not actually prevent rerenders, stale-closure bugs that surface as "why does this run twice?", custom hooks extracted for stylistic shorter-body preference rather than reuse, and conditional hooks that pass eslint warnings but corrupt slot indices on the second render. The discipline asks at each hook call "what invariant am I expressing?" and reaches for the cheapest primitive that expresses it. Stale-closure bugs, "useEffect runs twice" mysteries, and over-memoized components are all symptoms of treating hooks as a toolkit rather than as primitives.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from state-management, which owns the question of WHERE state lives across the application (server / client UI / URL / persistent) — hooks-patterns owns the in-component discipline of expressing state with the hook primitives once the location is decided. Distinct from client-server-boundary, which owns serialization and the `'use client'` / `'use server'` directives — hooks-patterns owns the rules of hook usage on the client side of that boundary. Distinct from rendering-models, which owns when and where the UI is produced (build / request / stream / interaction × server / edge / client) — hooks-patterns is a discipline within the client-side render and interaction stages. Distinct from component-architecture, which owns the cross-product layering of primitives / composites / product-specific components — hooks-patterns is in-component implementation discipline, not cross-product API design.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Hooks are to function components what stack frames are to function calls — they let a function remember things across calls without breaking referential transparency from the outside, by tracking state in a slot array indexed by call order, and the Rules of Hooks are the same kind of invariant as 'do not goto into the middle of a stack frame': violating them produces undefined behavior masked by garbage collection rather than visible crashes."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that `useEffect` is the general "run this when X changes" primitive. It is not. `useEffect`'s purpose is to synchronize with systems outside React's control (DOM mutations, browser APIs, network subscriptions, timers, third-party libraries). Most uses of `useEffect` that compute derived state, transform props, or trigger re-renders should be: (a) computed during render (derived state); (b) handled in an event handler (event-driven); or (c) handled in a `useMemo` or `useCallback` (referential stability for downstream consumers). Reaching for `useEffect` as the default "do this when X changes" produces components with synchronization bugs, double-execution surprises under StrictMode, and stale-closure footguns that better primitives would have prevented entirely.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Hooks are the React primitives that let a function component participate in the render/commit lifecycle: subscribe to state, schedule effects, read context, and reference mutable values across renders. The Rules of Hooks — call at the top level, call only from React functions — are not style guidance but the precondition that lets React match each hook call to its slot in the fiber tree by call order alone.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/hooks-patterns/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
