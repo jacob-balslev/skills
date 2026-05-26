@@ -4,46 +4,131 @@ description: "Use when reasoning about tests that specify universal properties o
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: quality
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: quality-assurance
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: quality/testing
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"property-based testing\",\"PBT\",\"QuickCheck\",\"Hypothesis\",\"fast-check\",\"generator\",\"shrinker\",\"forall\",\"invariant\",\"round-trip property\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"should this be a property test\",\"what's an invariant for this function\",\"the bug only happens on weird inputs\",\"QuickCheck or fast-check\",\"how do we test all possible cases\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design property-based tests for a sorting function that exercise the universal contract\",\"decide which functions in a parser deserve property tests vs example tests\",\"diagnose a property test that finds a real bug but the shrunk input is large — likely a poorly-shrinkable generator\",\"explain the round-trip property for an encode/decode pair\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"specify one concrete input-output case (use example-based tests; see testing-strategy)\",\"fuzz for crashes and memory safety (use fuzz-testing)\",\"measure whether tests would catch a defect (use mutation-testing)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"testing-strategy\",\"test-driven-development\",\"type-safety\",\"mutation-testing\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what test levels to invest in; this skill owns one tactical technique (generative tests with universal properties) within that strategy. Property-based testing is a complement to example-based tests, not a replacement.\"},{\"skill\":\"mutation-testing\",\"reason\":\"mutation-testing measures whether the test suite catches code-level defects; property-based testing is one source of high-mutation-killing tests because universal properties tend to be specific about behavior across many inputs. They compose: PBT writes the tests; mutation testing measures their effectiveness.\"},{\"skill\":\"type-safety\",\"reason\":\"type-safety constrains the input space at compile time; property-based testing samples the runtime input space within the type-constraint envelope. Stronger types reduce the property-test surface needed; PBT is most valuable where types alone cannot encode the invariants (algorithmic correctness, business rules, round-trips).\"}],\"verify_with\":[\"testing-strategy\",\"mutation-testing\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Property-based testing changes the unit of specification from the example to the universal contract. The four primitives are: the *property* (a forall-quantified claim that must hold for all inputs in a domain), the *generator* (produces random inputs spanning the domain including its edges — empty, single-element, boundary values, Unicode pathologies), the *shrinker* (when the property fails, reduces the failing input to its minimal demonstration — without shrinking, a failing input is random noise; with shrinking, it is the smallest case that exhibits the bug), and the *trial budget* (how many inputs the framework tries before declaring the property held — 100 for cheap properties, 1000+ for slow code or rare-bug input spaces, nightly long-running campaigns for production-critical properties).
 
     Three classical property shapes: *invariant* (`forall L. isSorted(sort(L))` — output has a structural property regardless of input), *oracle* (`forall L. fastSort(L) == referenceSort(L)` — output equals an alternative implementation's), and *round-trip* (`forall x. decode(encode(x)) == x` — a transformation composed with its inverse is identity). Plus *algebraic* patterns (commutativity, associativity, identity, idempotence) and *metamorphic* patterns (relations between related inputs). The QuickCheck heritage (Claessen & Hughes 2000) and modern tools — Hypothesis (Python), fast-check (JS/TS), ScalaCheck, proptest, jqwik (JVM) — make the technique practical across ecosystems with strong default generators and shrinkers for primitives and collections.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces hand-written example sets with generative tests that exercise the *universal contract* of the code. Solves the limitation that example tests verify only the specific cases the author thought to write down — they miss the edge cases the author didn't think of, the combinations they couldn't enumerate, and the boundary conditions hidden in the input space. A well-designed property test exercises hundreds or thousands of inputs per run, including the edges humans systematically miss (empty collections, single-element collections, off-by-one boundaries, Unicode edge cases, integer overflow zones). When the bug is rare in the hand-written example space but findable in the generator's reach, property tests catch what examples cannot. Industrial validation: Hughes et al. (2016) caught real Dropbox synchronization bugs via PBT that example tests had not surfaced over years.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from testing-strategy, which owns the strategic question of what test levels to invest in — this skill is one tactical technique within the strategy, complementary to example-based tests, not a replacement. Distinct from mutation-testing, which measures whether the test suite catches code-level defects — the two compose: PBT tends to produce high-mutation-killing tests because universal properties are specific about behavior across many inputs; mutation testing then measures their effectiveness. Distinct from type-safety, which constrains the input space at compile time — stronger types reduce the property-test surface needed; PBT is most valuable where types alone cannot encode the invariants (algorithmic correctness, business rules, round-trips). Distinct from fuzz-testing, which asserts no-crash implicitly — PBT asserts an explicit property. Distinct from state-machine-modeling, which owns finite-state representation of workflows (stateful PBT is a related narrower technique). Distinct from test-driven-development, which can be done with either example or property tests (the schools and the unit-of-specification choice are orthogonal).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A property-based test is to an example test what an actuarial table is to a single insurance claim — the example tells you what happened in one case, the property tells you what must hold across the entire population; you do not learn that fire insurance is sound by inspecting one policy, you learn it from a contract that quantifies over every house ever insured."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that property tests *replace* example tests, or that any test with random input is a property test. They do not, and it is not. A test that runs `forall input in [single_value]` is an example test in property-test clothing. A "property" written after the fact to fit whatever the generator happens to produce is not a universal claim — it is whatever the generator's reach happens to be, which verifies nothing meaningful. Property tests are *complements* to example tests in a mature suite: properties for the universal contract; examples for specific cases that document particular behaviors or bug fixes. The discipline lives in *three* places simultaneously — the property must be universal, falsifiable, and meaningful (writing a property requires articulating the contract; if the contract is not articulable, PBT does not apply); the generator must produce inputs that cover the space *including the edges* (generators that produce only "typical" inputs miss bug-triggering edges by construction); the shrinker must reduce failing inputs to a minimal form (if the reported failure is a 500-element random list, the generator/shrinker pair is the bug, not the property). All three must be well-designed for PBT to deliver its promise.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Property-based testing is a tactical technique in which a test specifies a universal property — a claim that must hold for all inputs in a domain — and a test framework generates many random inputs in the domain and checks the property holds. When the property fails on some input, the framework shrinks the input to the smallest failing case to make the bug legible. The unit of specification is a forall-quantified claim, not a single example. Properties typically take three shapes: invariants (a property the output must always have, independent of the input), oracles (the output must equal what an alternative implementation computes), and round-trips (encoding then decoding produces the original value). Property-based testing supplements example-based testing rather than replacing it: examples specify particular behaviors; properties specify the universal contract.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/property-based-testing/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
