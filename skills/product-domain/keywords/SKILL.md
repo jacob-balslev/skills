@@ -31,43 +31,138 @@ grounding:
 drift_check:
   last_verified: "2026-05-19"
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: product
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: product-domain
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: product/search
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-19"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: '["keyword research","keyword strategy","search intent mapping","keyword clustering","topical cluster","topic cluster","seed keyword expansion","long-tail keyword","marketplace keyword optimization","etsy tags","amazon search terms","amazon backend keywords","shopify keywords","google title link","meta description keywords","keyword cannibalization","rank tracking cadence","SERP overlap","commercial investigation query","transactional query","informational query","navigational query","listing keyword field mapping"]'
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: '["keyword-skill","keyword-research-skill"]'
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: '["research keywords for a new product line before writing listings","map these 80 queries into informational, transactional, navigational, and commercial-investigation intent","cluster these search terms into pillar and support pages without cannibalizing the same query","choose Etsy tags for a listing while respecting current tag limits and avoiding padding","convert Amazon keyword research into title-safe terms and backend search terms without repetition","decide whether a Shopify collection page or product page should target this keyword","two pages rank for the same query in Search Console -- is that cannibalization or different intent?","set up a rank tracking cadence after changing marketplace titles and tags"]'
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: '["build the SEO landing page, JSON-LD schema, and internal-linking plan from these keywords","rewrite the product description so it sounds more human and on-brand","design the site navigation and decide which categories become top-level menu items","audit Core Web Vitals or crawlability problems","prove that this exact marketplace listing will rank first after the keyword update"]'
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"seo-strategy","reason":"seo-strategy owns page construction, schema markup, programmatic SEO, internal linking, and implementation strategy after keywords are selected; keywords owns research, clustering, intent mapping, and field translation before construction."},{"skill":"writing-humanizer","reason":"writing-humanizer owns the finished prose quality and AI-tell removal; keywords can supply target terms and intent but must not stuff or write the final copy."},{"skill":"information-architecture","reason":"information-architecture owns navigation, sitemap shape, page hierarchy, and content grouping; keywords may reveal demand but does not decide the IA alone."}],"related":["seo-strategy","writing-humanizer","information-architecture"],"verify_with":["seo-strategy","writing-humanizer"]}'
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: '{"domain_object":"Keyword research, intent mapping, topical clustering, and marketplace/search field translation for public e-commerce, marketplace, SaaS, and content surfaces","grounding_mode":"universal","truth_sources":["https://help.etsy.com/hc/en-gb/articles/360000336307-How-to-Use-Tags-to-Get-Found-in-Search","https://help.etsy.com/hc/en-us/articles/115015628707-How-to-Create-a-Listing","https://sellercentral.amazon.com/seller-forums/discussions/t/923d53dc-a182-4475-a164-6b2500dbaf2d","https://sellercentral.amazon.com/seller-forums/discussions/t/b2b15728-0d43-453e-974f-59eb63f73059/","https://developers.google.com/search/docs/appearance/title-link","https://developers.google.com/search/docs/appearance/snippet","https://help.shopify.com/en/manual/promoting-marketing/seo/adding-keywords","https://help.shopify.com/en/manual/promoting-marketing/seo/seo-overview"],"failure_modes":["keyword_stuffing_mistaken_for_strategy","platform_field_limits_drift_silently","marketplace_tags_padded_with_irrelevant_terms","amazon_search_terms_repeat_title_or_brand_fields","shopify_keyword_guidance_ignores_readability","intent_mapping_skipped_before_page_or_listing_targeting","cannibalization_collapses_distinct_search_intents","rank_tracking_claims_made_without_baseline_or_cadence","keyword_skill_overowns_seo_implementation_finished_prose_or_information_architecture"],"evidence_priority":"equal"}'
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: '{"readiness":"scripted","targets":["skill-md"]}'
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: '{"stale_after_days":90,"review_cadence":"quarterly"}'
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Keyword work is demand translation. Raw queries are evidence of language, intent, and platform constraints; the skill turns them into targetable clusters, page/listing assignments, and measurement baselines without pretending that keywords alone create rankings."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: "This skill prevents agents from jumping straight to generic SEO copy, stuffing repeated terms into marketplace fields, or targeting one query from multiple pages. It gives a repeatable process for finding search language, mapping intent, respecting platform fields, and measuring whether changes moved visibility."
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: "This skill owns research, clustering, intent mapping, field translation, cannibalization detection, and tracking setup. It does not build SEO pages, write final listing or page prose, design navigation, diagnose technical SEO, guarantee rankings, or bypass current marketplace policy checks."
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Keyword research is like translating customer demand into a shelf map: each phrase tells you where a shopper is looking, but the shelf still needs good products, labels, layout, and measurement."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is treating keywords as magic words to repeat. Search systems reward relevance, clarity, and satisfaction signals; repeated or irrelevant terms can waste fields, confuse readers, and make pages compete with each other."
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: '{"definition":"Keyword research is the practice of discovering search language, classifying the intent behind it, grouping related terms, assigning each group to the right page or listing surface, and tracking visibility after changes.","mental_model":"Treat keywords as demand signals, not incantations. A query suggests intent, vocabulary, competition, and platform field constraints; the work is to translate that signal into one clear target per page or listing.","purpose":"It helps agents and teams choose what to target before building pages or writing copy, avoid cannibalization, respect marketplace limits, and measure whether keyword changes improved discovery.","boundary":"It does not implement SEO page architecture, write final copy, design information architecture, audit technical SEO, or promise ranking outcomes.","taxonomy":"Core moves include seed expansion, query-source capture, volume/difficulty/context review, intent classification, SERP or marketplace result inspection, semantic clustering, page/listing assignment, platform field translation, cannibalization checks, and rank tracking.","analogy":"It is a shelf map for demand: it shows which aisle shoppers search in and what label they expect, but it does not manufacture the product or guarantee the sale.","misconception":"More keywords is not better. Better means the right query language mapped to the right surface with readable, policy-safe, non-duplicative usage."}'
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/product-domain/keywords/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
