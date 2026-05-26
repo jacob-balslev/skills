@@ -6,41 +6,129 @@ compatibility:
   notes: "Markdown, strategy memos, investment diligence, product strategy, market-entry analysis, moat diagnosis"
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: foundations
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: meta-methods
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: foundations/strategy
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-26"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check:
     last_verified: "2026-05-26"
     truth_source_hashes:
       "skills/meta-methods/seven-powers/references/seven-powers-sources.md": "79e4fbfeaf37dd1e98ee0946f642fb88722885896537bd8476096fc8232e052f"
       "skills/meta-methods/seven-powers/references/upstream-displacement-2026-05-26.md": "c0790ff7d3ec7fa29ebda3c60d5fa0a5c7d5fac4ddb52a0153f1455c31259d60"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: stable
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"seven powers\",\"7 powers\",\"Hamilton Helmer\",\"strategic power\",\"durable moat\",\"scale economies\",\"network economies\",\"counter-positioning\",\"switching costs\",\"process power\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"assess whether this startup has a real Seven Powers moat\",\"which of Helmer's powers could apply to this business model?\",\"test if our claimed network effects are actually power\",\"separate branding from ordinary brand awareness in this strategy memo\",\"does this incumbent face counter-positioning from a new entrant?\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"analyze the attractiveness of this industry using entrants, suppliers, buyers, substitutes, and rivalry\",\"turn this market-entry plan into a winning aspiration, where to play, how to win, capabilities, and systems\",\"rank these roadmap items by impact and effort\",\"make a SWOT table for this company\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"porters-five-forces\",\"reason\":\"porters-five-forces owns industry-structure and profit-pool pressure; seven-powers owns firm-level durable power sources that can let one company earn persistent differential returns\"},{\"skill\":\"playing-to-win\",\"reason\":\"playing-to-win owns integrated strategy choices across aspiration, arena, advantage, capabilities, and systems; seven-powers owns classifying and testing the specific moat mechanism that may support how-to-win\"},{\"skill\":\"prioritization\",\"reason\":\"prioritization ranks work or options; seven-powers owns whether the proposed strategy creates a durable power with both benefit and barrier\"}],\"related\":[\"constraint-awareness\",\"framework-fit-analysis\",\"epistemic-grounding\",\"bayesian-reasoning\"],\"verify_with\":[\"methodology\",\"epistemic-grounding\"]}"
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: "{\"domain_object\":\"Hamilton Helmer's Seven Powers strategy framework\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://7powers.com/\",\"https://7powers.com/synopsis/\",\"https://7powers.com/foreword/\",\"skills/meta-methods/seven-powers/references/seven-powers-sources.md\",\"skills/meta-methods/seven-powers/references/upstream-displacement-2026-05-26.md\"],\"failure_modes\":[\"growth_confused_with_power\",\"benefit_without_barrier\",\"barrier_without_customer_value\",\"network_effects_claimed_from_usage_only\",\"brand_awareness_confused_with_branding_power\",\"temporary_execution_edge_confused_with_process_power\",\"industry_attractiveness_confused_with_firm_power\"],\"evidence_priority\":\"general_knowledge_first\"}"
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Seven Powers treats durable strategy as a specific mechanism that creates both benefit for the business and a barrier against competitors. The seven mechanisms are scale economies, network economies, counter-positioning, switching costs, branding, cornered resource, and process power. A power claim is weak unless it explains why the company benefits and why rivals cannot quickly copy, neutralize, or bid away that benefit."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: "This skill prevents agents from labeling any attractive business, fast-growing product, or popular feature as having a moat. It replaces vague advantage language with a mechanism test: identify the candidate power, prove the benefit, prove the barrier, check timing and phase, name false positives, and translate the finding into strategy implications."
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: "Seven Powers diagnoses durable firm-level power. It is not Porter's Five Forces industry-structure analysis, Playing to Win strategy-cascade formulation, Blue Ocean value-innovation design, generic competitive positioning, financial valuation, or task prioritization. Those tools can feed or consume the analysis, but this skill owns the moat mechanism."
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Seven Powers is a stress test for a bridge: the benefit is the load the bridge can carry, the barrier is why competitors cannot build the same bridge beside it tomorrow, and a claim fails if either side is missing."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is treating the seven powers as a checklist of nice business traits. A real power is not just growth, differentiation, brand awareness, loyal users, or operational competence. It must create an economic benefit and a defensible barrier that persists against competitive pressure."
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: PASS
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 last_audited: 2026-05-26
 lint_verdict: PASS
