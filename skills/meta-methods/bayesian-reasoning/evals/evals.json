@@ -1,0 +1,144 @@
+{
+  "skill_name": "bayesian-reasoning",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A rare production failure has appeared twice today. A teammate says the newest deployment is definitely the cause. Apply Bayesian reasoning before deciding.",
+      "expected_output": "The agent should define the deployment-caused hypothesis and alternatives, state the prior/base rate for similar failures after deployments, compare how expected the two failures are under each hypothesis, account for possible correlated evidence, update confidence directionally, and name what additional evidence would raise or lower the posterior. It should not treat recency alone as decisive.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "States hypothesis and alternatives",
+        "Uses prior or base-rate language",
+        "Compares evidence under competing explanations",
+        "Avoids treating two correlated failures as independent proof",
+        "Does NOT treat recency or salience as decisive evidence",
+        "Reports residual uncertainty and next evidence"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A user interview strongly supports a product idea, but only one interview has been conducted. How should Bayesian reasoning update confidence?",
+      "expected_output": "The interview is evidence, but the update should be limited by the prior and sample size. The agent should ask whether the user is in the target reference class, whether the evidence is diagnostic versus merely vivid, what alternatives explain the response, and what independent evidence would be needed next. It should raise confidence only modestly unless the prior was already strong.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Acknowledges the interview as evidence",
+        "Limits update size due to weak/early evidence",
+        "Separates vividness from diagnosticity",
+        "Names independent follow-up evidence",
+        "Does NOT overgeneralize from one interview"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A test is 90% sensitive and has a 10% false-positive rate. The condition has a 1% base rate. Explain why a positive test does not mean 90% probability.",
+      "expected_output": "The agent should use natural frequencies or equivalent reasoning: out of 10,000 cases, about 100 have the condition and about 90 test positive; about 9,900 do not have it and about 990 false-positive. Among roughly 1,080 positives, about 90 are true positives, so posterior probability is much lower than 90%. It should identify the likelihood-posterior confusion and base-rate neglect.",
+      "type": "natural-frequency",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Uses base rate in the calculation",
+        "Separates sensitivity from posterior probability",
+        "Uses natural frequencies or equivalent denominator reasoning",
+        "Identifies false positives as the key driver",
+        "Does NOT claim positive equals 90% probability"
+      ],
+      "substance": "domain",
+      "calibration": "numeric",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 4,
+      "prompt": "A team asks for expected value, but they have not updated the probabilities after new evidence. Should Bayesian reasoning own the first step?",
+      "expected_output": "Bayesian reasoning should own the probability update first. Expected value can later multiply outcome values by probabilities, but those probabilities should be calibrated using priors, likelihood comparisons, and residual uncertainty. The agent should not compute a precise EV table from stale or unexamined probabilities.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes probability updating to Bayesian reasoning",
+        "Explains expected value as downstream payoff calculation",
+        "Warns against stale or unexamined probabilities",
+        "Does NOT conflate belief update with value calculation"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "Three metrics moved in the same direction after one campaign. The marketer says this is three independent confirmations. Apply Bayesian reasoning.",
+      "expected_output": "The agent should check whether the metrics share the same underlying source or causal path. If they are correlated, they should be treated as one evidence cluster or a smaller update, not three independent updates. The posterior can increase, but the answer must avoid double-counting and should ask for independent evidence.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "adversarial",
+      "expectations": [
+        "Detects possible correlated evidence",
+        "Avoids three independent updates without independence",
+        "Still allows a directionally positive update",
+        "Requests independent evidence",
+        "Does NOT double-count the same signal"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A strategy question asks where to play and how to win, but the team also has uncertain assumptions. Should Bayesian reasoning replace Playing to Win?",
+      "expected_output": "No. Playing to Win owns the strategy cascade. Bayesian reasoning can support the work by updating confidence in assumptions such as market need, channel risk, or capability feasibility, but it does not replace the integrated choices of aspiration, where to play, how to win, capabilities, and systems.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Keeps strategy-cascade ownership with Playing to Win",
+        "Uses Bayesian reasoning for assumption confidence",
+        "Names examples of assumptions that can be updated",
+        "Does NOT present Bayesian reasoning as a full strategy framework"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "prompt": "A manager wants a precise probability that a launch will succeed. Evidence is sparse and conflicting. What output should Bayesian reasoning produce?",
+      "expected_output": "The agent should avoid fake precision. It should state the prior/reference class if available, summarize evidence that raises or lowers confidence, use a coarse confidence band, label evidence gaps, and name the observations that would justify a stronger posterior. It should not invent a precise percentage from weak inputs.",
+      "type": "calibration",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Rejects unjustified precision",
+        "Uses a confidence band or qualitative posterior",
+        "States evidence for and against",
+        "Names evidence gaps and next evidence",
+        "Does NOT fabricate an exact probability"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}

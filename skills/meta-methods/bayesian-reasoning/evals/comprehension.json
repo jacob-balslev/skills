@@ -1,0 +1,138 @@
+{
+  "skill_name": "bayesian-reasoning",
+  "subject": "Bayesian reasoning",
+  "adjacent_concepts": [
+    "expected value",
+    "prior probability",
+    "posterior probability",
+    "likelihood ratio",
+    "base-rate neglect",
+    "diagnostic reasoning",
+    "confidence calibration",
+    "hypothesis testing"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define Bayesian reasoning in 2-3 sentences. Include prior, likelihood, posterior, and residual uncertainty.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names prior or base rate",
+        "Names likelihood of evidence under a hypothesis",
+        "Names posterior belief after update",
+        "Mentions residual uncertainty",
+        "Frames reasoning as belief updating rather than binary proof"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Bayesian reasoning. Name at least 7 primitives and describe how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "At least 7 of: hypothesis, alternatives, prior, base rate, evidence, likelihood, posterior, residual uncertainty, update history, evidence independence",
+        "Explains posterior becomes the next prior",
+        "Explains evidence is compared under competing hypotheses",
+        "Explains update size depends on prior and evidence strength"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents base-rate neglect",
+        "Prevents overreaction to salient evidence",
+        "Prevents likelihood-posterior confusion",
+        "Prevents fake precision",
+        "Replaces binary diagnosis with calibrated belief updates"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish Bayesian reasoning from expected value, prioritization, Playing to Win, Porter's Five Forces, and statistical modeling. Give a mechanism-level reason for each.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Expected value uses probabilities and payoffs to choose among options",
+        "Prioritization ranks work items or options",
+        "Playing to Win formulates strategy choices",
+        "Porter's Five Forces diagnoses industry structure",
+        "Statistical modeling estimates parameters from data",
+        "Bayesian reasoning updates belief strength under uncertainty"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "workflow",
+      "prompt": "List the ordered workflow taught by the skill, then identify which steps catch base-rate neglect, likelihood-posterior confusion, and correlated-evidence double counting.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Define belief/hypothesis and alternatives",
+        "Establish prior or base rate",
+        "Compare likelihoods",
+        "Update belief",
+        "Report posterior and next evidence",
+        "Base-rate neglect caught by establishing prior",
+        "Likelihood-posterior confusion caught by comparing likelihoods before posterior",
+        "Correlated evidence caught by checking evidence independence"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for Bayesian reasoning that preserves incremental belief updating. Then name one bad analogy and explain what it gets wrong.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy with a prior state that changes incrementally",
+        "Maps evidence to adjustment pressure or ledger entries",
+        "Explains posterior as updated state",
+        "Rejects a bad analogy that treats evidence as proof or a fresh reset"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A compliance alert fired once in a low-risk account. Apply Bayesian reasoning by stating the prior, likelihood comparison, posterior direction, uncertainty, and next evidence.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "States low prior or base rate",
+        "Compares alert likelihood under true incident and benign alternatives",
+        "Updates confidence directionally rather than to certainty",
+        "Mentions false positives or alert noise",
+        "Names next evidence that would strengthen or weaken the posterior",
+        "Avoids precise probability without enough data"
+      ]
+    }
+  ]
+}
