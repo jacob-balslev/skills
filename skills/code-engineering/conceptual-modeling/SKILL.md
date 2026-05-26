@@ -26,48 +26,141 @@ grounding:
 drift_check:
   last_verified: "2026-05-19"
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.1.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: code-engineering
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/modeling
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-19"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: '["conceptual model","conceptual modeling methodology","domain abstraction","implementation neutral model","business model to system model","stakeholder validation","entity identity criteria","named relationship","relationship cardinality","reified relationship","associative entity","generalization specialization","aggregation composition relationship","conceptual logical physical layers","implementation leakage anti-pattern","unnamed relationship anti-pattern","god entity anti-pattern","missing entity anti-pattern","attribute as entity anti-pattern","conceptual schema before implementation","UML class diagram conceptual","role modeling pattern","is-a vs part-of vs owns"]'
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: '["a stakeholder says users place orders that ship in multiple boxes -- how do I capture this as a model before naming tables?","is a refund its own entity or just a payment status -- what conceptual test decides that?","two business stakeholders disagree on whether a cart and an order are the same thing -- how should the conceptual model resolve that?","our domain diagram already mentions UUIDs and cascade-delete -- what anti-pattern is that and how do I pull it back?","this relationship has a date, an amount, and a status -- should it stay as a line between entities or become its own entity?","should this attribute live on Customer or Order -- what is the rule?","we have Physical, Digital, and Subscription products -- how do I model that as specialization without lying about totality?"]'
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: '["give me the physical table design with PKs, FKs, and normalization forms","turn this model into SQL migrations and index definitions","I need OWL class axioms and reasoning constraints for these concepts","build the DDD aggregate boundaries and anti-corruption layer","what hypernymy or meronymy labels apply between these two terms","review this ORM model class for code correctness","name the entities and fields once we agree on the conceptual model"]'
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"data-modeling","reason":"data-modeling owns logical and physical persistence decisions such as keys, constraints, normalization, denormalization, provenance, and indexing; conceptual-modeling stays implementation-neutral and validates business meaning first."},{"skill":"entity-relationship-modeling","reason":"entity-relationship-modeling owns database-oriented ER notation, primary and foreign keys, junction tables, inheritance mapping, and SQL translation; conceptual-modeling owns pre-database entity, attribute, relationship, and cardinality discovery."},{"skill":"ontology-modeling","reason":"ontology-modeling formalizes classes, properties, axioms, validation shapes, and reasoning semantics; conceptual-modeling produces stakeholder-readable domain structure without OWL/RDFS/SHACL commitments."},{"skill":"semantic-relations","reason":"semantic-relations types individual meaning edges such as IS-A, PART-OF, synonymy, and thematic roles; conceptual-modeling assembles the full implementation-neutral domain model that may consume those relation tests."},{"skill":"bounded-context-mapping","reason":"bounded-context-mapping owns DDD context boundaries, translations, and anti-corruption layers; conceptual-modeling owns the concept inventory before tactical DDD boundaries are chosen."},{"skill":"naming-conventions","reason":"naming-conventions owns how settled concepts are named in code, schemas, or APIs; conceptual-modeling decides which concepts exist and what their identity and relationships are before naming."},{"skill":"code-review","reason":"code-review evaluates an implementation diff; conceptual-modeling happens upstream before code or schema review exists."}],"related":["data-modeling","entity-relationship-modeling","semantic-relations","ontology-modeling","taxonomy-design","bounded-context-mapping","naming-conventions"],"depends_on":[],"verify_with":["semantic-relations","data-modeling","ontology-modeling"]}'
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: '{"domain_object":"Implementation-neutral conceptual modeling for business domains before logical schema, physical database, ontology, API, or DDD tactical design","grounding_mode":"universal","truth_sources":["https://doi.org/10.1145/320434.320440","https://www.omg.org/spec/UML/2.5.1/PDF","https://opentextbc.ca/dbdesign01/chapter/chapter-8-entity-relationship-model/","https://www.ibm.com/think/topics/conceptual-data-model"],"failure_modes":["implementation_leakage_turns_conceptual_model_into_physical_schema","unnamed_relationships_hide_business_meaning","cardinality_or_optionality_left_implicit","identity_criteria_missing_for_entities","relationship_with_attributes_not_reified","generalization_claim_lies_about_disjointness_or_totality","stakeholder_validation_skipped","conceptual_model_overowns_ontology_data_modeling_or_ddd_design"],"evidence_priority":"equal"}'
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: '{"readiness":"scripted","targets":["skill-md"]}'
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: '{"stale_after_days":365,"review_cadence":"quarterly"}'
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Conceptual modeling is a meaning-first translation layer. It turns stakeholder language and domain scenarios into an implementation-neutral map of entities, attributes, identity criteria, relationships, cardinalities, and specialization constraints. The model is not the database, not the API, and not the ontology; it is the shared domain agreement those later artifacts must preserve.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     This skill exists to catch modeling mistakes while they are still cheap: ambiguous nouns, unnamed relationships, hidden many-to-many concepts, attributes that should be entities, physical design leaking into business diagrams, and subtype claims that silently change business rules. It gives agents a repeatable way to surface decisions before code, migrations, or formal axioms harden them.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     This skill owns pre-implementation business meaning and stakeholder validation. It does not choose primary keys, indexes, SQL normalization forms, migration steps, OWL/RDFS axioms, SHACL shapes, DDD aggregate boundaries, anti-corruption layers, implementation names, or code-level correctness. Those are downstream skills once the conceptual model is stable.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Conceptual modeling is the architectural floor plan before engineering drawings: it says what rooms exist, how people move between them, and what must be connected, while leaving materials, wiring, and load calculations to later specialists."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The common mistake is treating a conceptual model as a vague sketch or as an early database diagram. A good conceptual model is neither. It is precise about meaning, identity, relationship names, cardinality, and business constraints, while deliberately refusing to decide storage, framework, or reasoning technology too early.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: '{"definition":"Conceptual modeling is the implementation-neutral discipline of representing a domain as entities, attributes, relationships, identity criteria, cardinalities, and abstraction boundaries that stakeholders can validate before technical design begins.","mental_model":"Treat the conceptual model as a contract between stakeholder language and later system design. It must preserve business meaning while postponing storage, API, ontology, and DDD implementation choices.","purpose":"It exposes hidden domain decisions early: what exists, what makes two things the same, how concepts relate, which relationships carry their own data, and which constraints are business truths rather than technical preferences.","boundary":"It does not design physical database schemas, write migrations, define formal ontology axioms, choose aggregate boundaries, perform code review, or settle implementation naming once the model is already accepted.","taxonomy":"Core moves include entity discovery, attribute placement, relationship naming, cardinality and optionality analysis, identity criteria, aggregation versus composition, specialization/generalization, reification of relationship concepts, abstraction-level policing, and stakeholder scenario validation.","analogy":"It is the architectural floor plan before engineering drawings: useful because it is precise about the lived structure while still independent of materials and machinery.","misconception":"A conceptual model is not informal hand-waving and not a premature table diagram. It should be business-readable, constraint-aware, and intentionally implementation-neutral."}'
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/conceptual-modeling/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "600"
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
