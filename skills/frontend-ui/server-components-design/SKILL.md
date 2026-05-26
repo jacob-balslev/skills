@@ -4,46 +4,131 @@ description: "Use when designing or reviewing React Server Components: what an R
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: frontend-ui
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/frontend
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"React Server Components\",\"RSC\",\"Next.js App Router\",\"async components\",\"server-side data fetching\",\"streaming RSC\",\"server/client component tree\",\"RSC payload\",\"Suspense boundaries with RSC\",\"data flow without API layer\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"should this be a Server Component or a Client Component\",\"can I fetch data here\",\"why can't I use useState in this file\",\"how does data move from server to client\",\"do I need an API route\",\"why is the bundle so large\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"decide whether a dashboard widget should be a Server Component (fetches and renders) or a Client Component (interactive)\",\"explain why a Server Component cannot pass a function as a prop to a Client Component\",\"design a page where the layout fetches user data once and child widgets fetch their own data, with Suspense streaming each in\",\"audit a component tree for unnecessary 'use client' boundaries that pull static rendering into the bundle\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"add a click handler to an existing component (use hooks-patterns and client-server-boundary)\",\"choose between SSR and SSG for a marketing page (use rendering-models)\",\"build the form-submission mutation flow (use server-actions-design when authored)\",\"design the public API for a third-party integration (use api-design)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"client-server-boundary\",\"rendering-models\",\"hooks-patterns\",\"streaming-architecture\",\"suspense-patterns\"],\"boundary\":[{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the serialization-and-directive mechanics of the boundary itself ('use client', what can cross, RSC payload format); server-components-design owns the discipline of which work belongs on the server side of that boundary.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the strategic decision among SSR, SSG, ISR, and CSR; server-components-design operates within the App Router / RSC paradigm and is one rendering mode among several.\"},{\"skill\":\"hooks-patterns\",\"reason\":\"hooks-patterns covers state and effect discipline on Client Components; Server Components cannot use those primitives at all, so the two skills cover disjoint surfaces.\"}],\"verify_with\":[\"code-review\",\"rendering-models\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     A React Server Component is a component that *runs only on the server*, *never ships to the browser as JavaScript*, can be `async`, and can directly access server-side resources (databases, file system, secrets, server-only environment variables). Its output is serialized to a wire format (the *RSC payload*) and reconstituted into the client tree without a separate API layer. Server and Client Components compose in a single tree with *one-way directionality*: a Server Component can render a Client Component, but a Client Component cannot `import` a Server Component as a child — though a Client Component *can* receive a Server Component as a `children` prop, which is content the parent already rendered on the server. The Server Component capability surface (async, direct DB queries, server-only imports) and the Client Component capability surface (state, effects, event handlers, browser APIs) are *disjoint* — Server Components cannot use hooks; Client Components cannot read databases directly.
 
     The discipline is *pushing as much of the tree as possible to the server side of the boundary*, drawing the line at the *interactive leaves*: the button that toggles a dropdown is a Client Component; the dropdown's structure, the surrounding layout, the data feeding it — all Server Components. Server Components remove the need for a separate API layer for read-path data: the Server Component queries the database directly, passes results to children as props, and the props arrive at the client *as the rendered output* — serialized in the RSC payload, never round-tripped through a JSON API. Suspense composes with RSC to stream content: a slow component wrapped in `<Suspense fallback={...}>` lets the surrounding tree flush immediately; the slow component's output streams in when it resolves. Two design rules: co-locate Suspense boundaries with the slow data, not above it; render independent slow queries as siblings (not parent/child) so their `await`s happen in parallel.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces the SSR-and-hydration model (every component ships to the client, every component re-runs on hydration) with *zero-bundle-size server components* for the non-interactive parts of the tree. Solves the problem that hydration has two costs the industry tolerated for a decade — every component must ship to the client (bundle size grows with the page), and every component re-runs on the client (CPU cost grows with the page). RSC separates roles: Server Components run once on the server and produce serialized output the client uses directly (no shipping, no re-execution); Client Components are what we used to call "a component" (ships to the browser, runs on render and every interaction). The win is real: bundle size shrinks toward "only the interactive parts," and the server has direct access to databases, file systems, and secrets without an intermediating API layer. The data-flow benefit collapses the classic 5-step pattern (browser requests → SSR HTML → hydrate → `useEffect` → `/api/data` → re-render with data) to one step (browser requests → Server Component queries database directly → RSC payload with data baked in). The `/api/data` route doesn't need to exist; it's only needed when something *outside* this app needs to read the data (mobile app, third-party integration, server-to-server call).
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from client-server-boundary, which owns the *serialization-and-directive mechanics* of the boundary itself (`'use client'`, what can cross, RSC payload format) — this skill owns the *discipline of which work belongs on the server side* of that boundary. The two skills are read together. Distinct from rendering-models, which owns the strategic decision among SSR, SSG, ISR, and CSR — this skill operates within the App Router / RSC paradigm and is one rendering mode among several. Distinct from hooks-patterns, which covers state and effect discipline on Client Components — Server Components cannot use those primitives at all, so the two skills cover disjoint surfaces. Distinct from server-actions-design, which owns the *write* path (mutations); this skill owns the *read* path (components rendering data); the two share infrastructure but have distinct design concerns. Distinct from streaming-architecture, which owns the broader streaming protocol concern — RSC streaming is one application of that toolkit. Distinct from suspense-patterns, which owns the wider Suspense discipline (error boundaries, nested fallbacks, React transition APIs) — this skill uses Suspense as one composition primitive.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A Server Component is to a React tree what a printed page is to a book — the typesetter (server) sets the lead, presses the ink, and ships the printed page (RSC payload); the reader's table lamp (Client Component) is wired and switchable at the reader's end. You do not ship the typesetter to the reader's living room, and you do not ship the lamp's wiring to the printer — the boundary is where 'this never changes once it leaves my workshop' ends and 'this responds to who touches it' begins."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that you can mark `'use client'` at the page level "just to be safe" or "to use one button." You cannot, productively — marking the whole page as a Client Component loses all RSC benefit, ships the entire page as a client bundle, and re-runs every component on hydration. The discipline is the opposite: `'use client'` belongs at the *leaf* where interactivity actually starts, with as much as possible of the surrounding tree remaining server-rendered. Adjacent misconceptions: that a Client Component can `import` a Server Component (it cannot — the bundler running on the client would have to bundle the Server Component, which violates the no-ship rule; only Server Components can `import` Client Components, or a Server Component can be passed as `children` to a Client Component); that functions can cross the boundary as props (they cannot — only serializable values: strings, numbers, plain objects, arrays, Promises in React 19, JSX, React elements; not functions, not class instances, not symbols, not Maps); that you still need `/api/data` for Server Component reads (you do not — query the database directly from the Server Component; the API route is only needed when something *outside* this app needs to read the data); that `useEffect` is fine for fetching data on mount (it is not — produces hydration delay, double-fetch, lost streaming benefit; fetch in a Server Component ancestor and pass data as prop); that one Suspense boundary at the page root is enough (it is not — all slow content blocks together with no streaming benefit; place boundaries near the slow data, one per independent slow section); and that Server Components can use any library (they cannot — anything that touches `window`, `document`, `localStorage`, or other browser APIs will crash; move browser-API code to a Client Component or to a `useEffect`).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"A React Server Component is a component that runs only on the server, never ships to the browser as JavaScript, can be async, and can directly access server-side resources (databases, file system, secrets) — its output is serialized to a wire format (the RSC payload) and reconstituted into the client tree without a separate API layer. Server Components compose with Client Components in a single tree, but the directionality is one-way: a Server Component can render a Client Component, but a Client Component cannot import a Server Component as a child.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/server-components-design/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
