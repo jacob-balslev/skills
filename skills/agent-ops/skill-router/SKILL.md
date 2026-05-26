@@ -27,35 +27,115 @@ drift_check:
     "examples/evals/skill-router.json": "fccabcbc5f9d8057536f397fb0fc71a567371f75fb9a21afda343b197af30293"
     "examples/evals/skill-router.routing.json": "c4dc88db1e746bea78a7cf96b50c6c84532a07eda42da2e35d790c8928d4da8c"
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: router
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: decide
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: agent
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: agent-ops
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: agent/skill-system
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-04-18"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-13\",\"truth_source_hashes\":{\"scripts/skill-graph-route.js\":\"b9a7b51d0e8b845b11473f479c4593754768c3775508049db7339892b2f08cc2\",\"scripts/skill-graph-routing-eval.js\":\"fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb\",\"examples/evals/skill-router.json\":\"fccabcbc5f9d8057536f397fb0fc71a567371f75fb9a21afda343b197af30293\",\"examples/evals/skill-router.routing.json\":\"c4dc88db1e746bea78a7cf96b50c6c84532a07eda42da2e35d790c8928d4da8c\"}}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: passing
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"skill routing\",\"skill dispatch\",\"keyword routing\",\"route skill\",\"which skill to use\",\"skill selector\",\"routing table\",\"coverage gap\",\"ambiguous skill activation\",\"skill activate\",\"agent request routing\",\"skill activation decision\",\"which skill should fire\",\"skill selection for request\",\"skill library coverage\",\"skill dispatch logic\",\"agent request to skill mapping\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"skill-router\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"given an agent request, choose which skill should fire — what's the skill dispatch logic?\",\"build the skill-routing decision table covering every agent request type we see\",\"why did the documentation skill activate when the user asked about a11y?\",\"find the skill-library coverage gaps — which agent requests match no skill at all?\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"audit the graph-audit skill for schema conformance\",\"write a guide explaining how our routing works\",\"reproduce this routing mis-dispatch from production logs\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"graph-audit\",\"reason\":\"graph-audit verifies ONE skill's metadata; skill-router chooses BETWEEN skills at request time\"},{\"skill\":\"debugging\",\"reason\":\"debugging reproduces a specific routing mis-dispatch from evidence; skill-router designs the routing table itself\"},{\"skill\":\"skill-infrastructure\",\"reason\":\"skill-infrastructure analyses routing-miss patterns across the whole library to find systemic gaps; skill-router authors the routing logic for one library at a time\"},{\"skill\":\"middleware-patterns\",\"reason\":\"middleware-patterns owns the design of Next.js middleware (request/response transforms, edge runtime, matchers); skill-router owns agent skill dispatch. Writing a guide explaining 'how our routing works' is documentation about Next.js middleware patterns, not an agent skill routing exercise.\"}],\"verify_with\":[\"graph-audit\"]}"
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: "{\"domain_object\":\"Skill Graph reference routing behavior\",\"grounding_mode\":\"repo_specific\",\"truth_sources\":[\"scripts/skill-graph-route.js\",\"scripts/skill-graph-routing-eval.js\",\"examples/evals/skill-router.json\",\"examples/evals/skill-router.routing.json\"],\"failure_modes\":[\"negation_paths_score_as_positive_matches\",\"routing_eval_claim_without_harness_pass\",\"boundary_exclusion_removes_stronger_match\",\"coverage_gap_silently_falls_back\"],\"evidence_priority\":\"repo_code_first\"}"
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/skill-router/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
