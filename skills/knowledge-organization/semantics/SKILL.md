@@ -6,42 +6,135 @@ compatibility:
   notes: "Cross-domain naming and meaning skill, stack-agnostic. The naming-smells catalogue, SemVer rules, conventional-commit format, semantic-token architecture, HTTP-status semantics, REST/GraphQL conventions, semantic type patterns, and anti-pattern catalog apply to any codebase; examples use generic commerce/order language and should be substituted for the user's domain."
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: foundations
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: knowledge-organization
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: foundations/semantics
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-19"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: '["semantic naming","semantic drift detection","meaning encoding","names as contracts","branded type design","semantic versioning rules","conventional commit type choice","HTTP status semantic signaling","design-token semantic layer","naming smells catalogue","DDD ubiquitous language","semantic affordance naming","semantic UI signal","semantic API contract","parse-dont-validate pattern","three-layer token architecture","semantic-vs-syntactic distinction","cargo-cult naming anti-pattern","status code semantics","semantic design tokens"]'
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: '["a function named process(data) actually reconciles revenue with production cost -- what semantic rename would make the operation self-explanatory without reading the implementation?","our API returns HTTP 200 with an error payload for a failed request -- is that syntactically valid but semantically wrong, and what should the response signal be instead?","we named a token --light-blue and now dark mode plus rebranding broke its meaning -- what semantic token pattern should replace it?","a variable called provider could mean payment, fulfillment, or auth in three different modules -- how should semantics resolve that ambiguity?","I need to choose between feat(billing): add email notifications and chore(billing): add email notifications -- which commit type communicates the change correctly?","should this ID be a branded type or a plain string, and what does parse-dont-validate mean for it?","audit this schema for unitless financial columns and timestamp-naming drift","this UI state uses color only to distinguish warning from success -- what semantic signal is missing?"]'
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: '["should onboarding be hyphenated, and how does English compound morphology affect that decision?","what casing should a new database timestamp column use -- kebab, snake, or camel?","rename this function and update every call-site across the repo","type the relation between refund and payment as IS-A, PART-OF, causal, or thematic","draft the empty-state copy for a freshly connected storefront with no orders yet","decide whether these entities should live in a strict hierarchy or a faceted taxonomy","audit whether this button has the correct aria-label and focus semantics for screen readers","should we squash or rebase this feature branch before release?"]'
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"linguistics","reason":"linguistics owns word-form rules, polysemy phrasing, morphology, audience register, and blame-free wording; semantics owns what a name or signal communicates about the underlying concept or behavior."},{"skill":"naming-conventions","reason":"naming-conventions owns casing, prefix/suffix conventions, and rename mechanics per artifact kind; semantics owns whether the chosen words encode the right meaning before any casing rule is applied."},{"skill":"semantic-relations","reason":"semantic-relations owns typed connections between concepts such as IS-A, PART-OF, causal, and thematic relations; semantics owns the meaning encoded by one identifier, token, status, or signal."},{"skill":"microcopy","reason":"microcopy owns concrete UI-text patterns such as button labels, empty states, dialogs, validation, and toasts; semantics owns the cross-domain meaning rule those words must preserve."},{"skill":"taxonomy-design","reason":"taxonomy-design owns classification structures, facets, and category governance; semantics owns the names and signals inside or around that structure."},{"skill":"a11y","reason":"a11y owns accessibility compliance and assistive-technology behavior; semantics can flag a missing non-color signal but a11y verifies the actual accessibility contract."},{"skill":"version-control","reason":"version-control owns branch, commit, tag, and release-history shape; semantics owns the meaning encoded by version numbers and conventional-commit type choice."}],"related":["linguistics","naming-conventions","semantic-relations","microcopy","semantic-center","conceptual-modeling","taxonomy-design"],"verify_with":["naming-conventions","semantic-relations","a11y","code-review"]}'
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: '{"domain_object":"Cross-domain meaning encoding in software names, status signals, versions, commits, APIs, design tokens, UI signals, and semantic types","grounding_mode":"universal","truth_sources":["https://martinfowler.com/bliki/UbiquitousLanguage.html","https://hilton.org.uk/blog/naming-smells","https://semver.org/","https://www.conventionalcommits.org/en/v1.0.0/","https://www.rfc-editor.org/rfc/rfc9110.html","https://www.designtokens.org/tr/drafts/format/","https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html","https://www.typescriptlang.org/docs/handbook/type-compatibility.html","https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/"],"failure_modes":["identifier_name_still_matches_syntax_but_not_behavior","domain_language_drift_creates_translation_tax","http_status_code_contradicts_response_body","version_bump_understates_api_breakage","commit_type_hides_feature_or_breaking_change","design_token_name_coupled_to_appearance_instead_of_purpose","primitive_type_allows_id_or_unit_mixups","color_is_the_only_state_signal","concept_block_contains_placeholder_values","semantics_overowns_morphology_relation_typing_or_microcopy_work"],"evidence_priority":"equal"}'
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: '{"readiness":"scripted","targets":["skill-md"]}'
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: '{"stale_after_days":365,"review_cadence":"quarterly"}'
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Semantics in software is meaning encoding: every name, status code, version number, commit type, token, and typed value is a sign that points at a referent under a convention. Good semantics keeps the sign, referent, and convention aligned as the system changes."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: "Make meaning a first-class artifact so readers, tools, APIs, and users can infer what something is, why it exists, and what signal it sends without opening implementation details or tribal context."
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: "This skill owns the meaning encoded by one identifier, signal, token, version, status, or type. It does not own word morphology, casing rules, rename mechanics, typed relation analysis between concepts, UI-copy pattern writing, taxonomy governance, accessibility compliance, or git history shape."
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Semantics is road signage for software: the sign is not the road, but wrong signage sends people and machines down the wrong path even when the underlying road is structurally sound."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is treating naming and signaling as polish. A name that lies, a version number that understates a breaking change, or a 200 response that reports request failure is a behavioral defect because downstream readers and tools act on the signal."
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: '{"definition":"Semantics applied to software is the discipline of encoding meaning in names and signals: identifiers, status codes, version numbers, commit types, design tokens, UI signifiers, API resources, and semantic types.","mental_model":"Treat every visible name or signal as a contract between a sign, the thing it refers to, and the convention readers use to decode it. Semantic drift happens when the thing changes but the signal does not.","purpose":"It reduces translation tax, prevents misleading signals, and makes intent legible to humans, agents, tools, and downstream systems before they inspect implementation details.","boundary":"It does not decide casing formats, word morphology, audience register, rename mechanics, relation types between concepts, UI-copy patterns, taxonomy structure, accessibility compliance, or git history shape.","taxonomy":"Core surfaces include code names, database names, API names, HTTP status signals, SemVer bumps, Conventional Commit types, design-token layers, semantic UI signifiers, branded or refined types, and anti-patterns such as generic names, stale names, appearance-based names, and syntactically valid but semantically false responses.","analogy":"Semantics is like road signage: a sign is small compared with the road, but if it points to the wrong destination, every later decision built on that sign is at risk.","misconception":"Good semantics is not taste or clever wording. It is evidence-backed alignment between the words/signals a system exposes and the behavior, domain concept, or compatibility promise those words/signals represent."}'
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/knowledge-organization/semantics/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
