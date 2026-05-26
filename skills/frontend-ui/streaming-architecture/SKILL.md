@@ -4,46 +4,131 @@ description: "Use when reasoning about systems that emit a sequence of values ov
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: frontend-ui
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/realtime
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"streaming\",\"stream\",\"backpressure\",\"SSE\",\"server-sent events\",\"chunked transfer\",\"HTTP/2\",\"WebSocket\",\"WHATWG Streams\",\"ReadableStream\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"how should this endpoint stream\",\"should this be SSE or WebSocket\",\"is the consumer slow\",\"what's the backpressure story\",\"partial result delivery\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design the response shape for an endpoint that returns 50,000 rows incrementally\",\"decide between SSE and WebSocket for a live progress feed\",\"diagnose why a fast producer is exhausting memory when the consumer falls behind\",\"explain why an RSC-streamed page renders out of order and how the boundary resolves\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design the JSON shape of a single response payload (use api-design)\",\"implement the model→tool message-history protocol (use tool-call-flow)\",\"design pub-sub topic structure (use event-driven-architecture)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"tool-call-flow\",\"client-server-boundary\",\"rendering-models\",\"performance-budgets\",\"api-design\"],\"boundary\":[{\"skill\":\"tool-call-flow\",\"reason\":\"tool-call-flow owns the message-history protocol between a model and a tool runtime; streaming-architecture owns the lower-level pattern of incremental value emission with backpressure that streaming tool-call responses are a specialization of.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the request/response surface for one round-trip; streaming-architecture owns the multi-value-over-time surface where one logical response is delivered as N chunks.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the page-rendering taxonomy (CSR/SSR/SSG/RSC); streaming-architecture owns the incremental-delivery primitive that streaming SSR and RSC are built on.\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the serialization frontier; streaming-architecture is what makes the frontier traversable over time rather than only once per request.\"}],\"verify_with\":[\"api-design\",\"performance-budgets\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     A streaming architecture is one where a producer emits a sequence of values over time and a consumer processes them incrementally, with an explicit flow-control signal (*backpressure*) regulating the rate between them. The architecture decouples production speed from consumption speed and makes partial results observable before the producer finishes — or before the producer is even known to terminate. *Five primitives*, against which any streaming system can be analyzed: *producer* (source; owns emission rate, ordering, framing), *stream* (the ordered emission channel; carries values in order, no random access), *consumer* (sink; owns processing rate, ack of received values), *backpressure* (flow-control signal traveling upstream — matches producer rate to consumer rate; absence causes memory exhaustion, dropped values, crashes), *termination* (explicit end-of-stream signal — distinguishing "done" from "quiet"; absence causes consumers to wait forever, resource leaks).
 
     *Transport mechanisms* are encodings of the same primitives: HTTP chunked transfer (RFC 9112, server→client, TCP-level backpressure only), *Server-Sent Events* (one-way server→client, newline-delimited text events, built-in reconnect via `Last-Event-ID`, *the default for one-way server→client streaming*), WebSocket (RFC 6455, bidirectional, framed, application-level backpressure required, no built-in reconnect), HTTP/2 streams (RFC 9113, per-stream WINDOW_UPDATE flow control), gRPC streaming (typed RPC over HTTP/2 flow control), WHATWG ReadableStream (in-process pull-based backpressure), Node Readable (in-process highWaterMark backpressure). *Backpressure strategies*: pull (consumer asks — correct by construction); credit-based push (consumer signals N more — explicit, works over network); buffered push with drop (bounded memory, lossy); buffered push with block (in-process only); sampling (lossy by design, correct for telemetry, wrong for correctness streams). *Termination is always a distinct signal* (zero-length chunk in HTTP chunked, server-close in SSE, close frame in WebSocket, status trailer in gRPC, `{done: true}` from a ReadableStream reader) — never the absence of new values.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces batch request/response with incremental emission for results that are *too big to materialize* (50,000 rows that exceed memory), *too slow to wait for* (LLM generation, long-running computation), or *too useful at the front to delay until the back arrives* (live progress, search results, dashboard updates, LLM token streams). Solves the problem that batch is *wrong*, not "inferior streaming," for that problem class — for a search returning many results, materializing all of them before sending the first wastes memory and latency; for an LLM generating a response, holding it until the last token defeats the user-experience benefit; for a long-running computation, the user cannot see progress. The cost is a more demanding contract between producer and consumer — error semantics get harder, backpressure must be explicit, connections must be managed — but for the problem class, that cost is well-spent. The deeper architectural insight: streaming is a *contract about time*, and the five primitives are the same whether the transport is SSE, gRPC bidirectional, WHATWG ReadableStream piping into TransformStream, RSC chunked response, or LLM emitting tokens — a practitioner who learns the contract once moves between transports at the cost of an encoding translation.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from tool-call-flow, which owns the message-history protocol between a model and a tool runtime — tool-call-flow is a *specialization* of streaming for the model↔runtime cycle; this skill owns the underlying primitive of incremental value emission with backpressure that streaming tool-call responses build on. Distinct from api-design, which owns the request/response surface for one round-trip — this skill owns the multi-value-over-time surface where one logical response is delivered as N chunks. Distinct from rendering-models, which owns the page-rendering taxonomy (CSR/SSR/SSG/RSC) — this skill owns the incremental-delivery primitive that streaming SSR and RSC are *built on*. Distinct from client-server-boundary, which owns the serialization frontier — this skill is what makes the frontier *traversable over time* rather than only once per request. Distinct from event-driven-architecture, which owns named-occurrence routing and pub-sub topic structure — streaming owns ordered-emission channels (the two address different problems despite surface similarities; events compose into streams but the design vocabularies differ). Distinct from real-time-updates transport-specific skills (WebSocket-only or SSE-only references) and from realtime collaborative editing with CRDT/OT (streaming is the transport; collaborative state has its own design layer above).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A streaming architecture is to data delivery what a conveyor belt is to a factory's order fulfillment — you do not wait for an entire shipment to be assembled before any piece leaves the warehouse; the belt moves boxes one at a time, the loading dock signals when it's full (backpressure), a final marker indicates the shipment is complete (termination), and the receiving truck can start unloading the first box while the last one is still being assembled. A conveyor with no full-dock signal flings boxes onto the floor; a conveyor with no end-marker keeps the truck driver waiting forever."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that streaming "is just HTTP with chunked transfer" or "is just an SDK feature" — that the choice of transport (SSE vs WebSocket vs gRPC) is the *core* decision. It is not. The core decision is the *contract*: who is the producer, who is the consumer, how is the stream framed, how does backpressure travel upstream, how is termination signaled. The transport is the encoding. A practitioner who learns only one vendor's API conflates the contract with its encoding and treats every new streaming surface as a new concept. Adjacent misconceptions: that backpressure is automatic — TCP-level flow control handles it (it is not, except in narrow cases; a producer emitting at 1000 events/sec and a consumer processing at 100/sec accumulates 900 events/sec in buffers and exhausts memory in minutes without an explicit strategy of pull / credit-based push / drop / block / sample); that termination is the absence of new values (it is not — a consumer that interprets 10-second silence as "stream ended" will be wrong on any production network; termination must be a *distinct signal*); that reconnect is automatic (only SSE has it built in via `Last-Event-ID`; WebSocket requires application-level resume tokens; gRPC offers reconnect but not exactly-once across reconnects); that mid-stream errors should terminate the stream (sometimes yes — LLM token streams; sometimes no — search results where one row's error need not stop the others; the choice depends on whether the consumer can usefully proceed past an error, and the encoding choice is fail-fast / in-band error value / out-of-band signal); and that long-lived consumers materialize the full stream into a collection (they cannot, except for known-bounded small streams — a streaming consumer must process incrementally or the streaming was wasted, and the slow-consumer failure mode must be tested under load, not assumed).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"A streaming architecture is one where a producer emits a sequence of values over time and a consumer processes them incrementally, with an explicit flow-control signal (backpressure) regulating the rate between them. The architecture decouples production speed from consumption speed and makes partial results observable before the producer finishes — or before the producer is even known to terminate.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/streaming-architecture/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
