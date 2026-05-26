@@ -51,6 +51,31 @@
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
 
+// ─── Repo root resolution (single source of truth) ────────────────────────────
+
+// Use `git rev-parse --show-toplevel` instead of __dirname-based math. A naive
+// `path.resolve(__dirname, '..')` is off by one when the hook is invoked from
+// .git/hooks/ (because __dirname there is .git/hooks/, so '..' lands at .git/,
+// not the repo root). Asking git is independent of where the hook lives.
+function getRepoRoot() {
+  const result = spawnSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' });
+  if (result.status !== 0 || !result.stdout) {
+    // Fallback: walk up from __dirname until we find a .git directory. Covers
+    // edge cases where git isn't on PATH for some reason.
+    const fs = require('fs');
+    let current = __dirname;
+    for (let i = 0; i < 6; i++) {
+      if (fs.existsSync(path.join(current, '.git'))) return current;
+      const parent = path.dirname(current);
+      if (parent === current) break;
+      current = parent;
+    }
+    // Last resort: assume installed-hook layout (.git/hooks/<name>).
+    return path.resolve(__dirname, '..', '..');
+  }
+  return result.stdout.trim();
+}
+
 // ─── Resolve the shared privacy-patterns module ───────────────────────────────
 
 function resolvePrivacyPatternsModule() {
@@ -59,10 +84,10 @@ function resolvePrivacyPatternsModule() {
     return path.join(process.env.SKILL_GRAPH_PATH, 'scripts/lib/privacy-patterns.js');
   }
 
-  // 2. Standard workspace: skill-graph is a sibling of this repo's parent
+  // 2. Standard workspace: skill-graph is a sibling of this repo
   //    This repo: ~/Development/skills/
   //    skill-graph: ~/Development/skill-graph/
-  const repoRoot = path.resolve(__dirname, '..');
+  const repoRoot = getRepoRoot();
   const sibling = path.resolve(repoRoot, '..', 'skill-graph', 'scripts', 'lib', 'privacy-patterns.js');
   return sibling;
 }
@@ -108,7 +133,7 @@ const { detectPrivacyViolations } = loadDetector();
  * @returns {string[]}         Absolute paths to changed SKILL.md files.
  */
 function getChangedSkillFiles(localSha, remoteSha) {
-  const repoRoot = path.resolve(__dirname, '..');
+  const repoRoot = getRepoRoot();
   const zeroSha = /^0{40}$/.test(remoteSha);
 
   let diffOutput;
@@ -137,7 +162,7 @@ function getChangedSkillFiles(localSha, remoteSha) {
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 function main() {
-  const repoRoot = path.resolve(__dirname, '..');
+  const repoRoot = getRepoRoot();
 
   // Read push targets from stdin (one line per ref being pushed)
   let stdinData = '';
