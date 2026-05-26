@@ -4,46 +4,131 @@ description: "Use when declaring, measuring, or enforcing performance thresholds
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: quality
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: data-analytics
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: quality/performance
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-15"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-15\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"performance budget\",\"Core Web Vitals\",\"LCP\",\"INP\",\"CLS\",\"RAIL model\",\"Lighthouse budgets\",\"lab metrics\",\"field metrics\",\"p75 performance\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"how fast does this page need to be\",\"what's a good LCP target\",\"should this fail the build\",\"why is the Lighthouse score different from real users\",\"we need a performance budget\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"set a Core Web Vitals budget for a marketing landing page and enforce it in CI\",\"explain why a green Lighthouse score still produced bad real-user performance\",\"decide between INP and FID as the interaction-responsiveness metric\",\"design a per-route budget table that distinguishes static pages from logged-in dashboards\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"profile a specific slow query and decide what to fix (use performance-engineering)\",\"choose between SSG and SSR for a route (use rendering-models)\",\"design telemetry spans and traces (use observability-modeling)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"performance-engineering\",\"rendering-models\",\"observability-modeling\",\"testing-strategy\",\"http-semantics\"],\"boundary\":[{\"skill\":\"performance-engineering\",\"reason\":\"performance-engineering owns the activity of measuring, profiling, and improving performance. performance-budgets owns the threshold-and-consequence contract. The two compose: budgets define the failure conditions; engineering produces the improvements that prevent breach.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the choice of when and where the UI is produced. performance-budgets sits downstream — the chosen rendering model bounds which budgets are achievable on a given route.\"},{\"skill\":\"observability-modeling\",\"reason\":\"observability-modeling owns the design of telemetry signals (spans, metrics, logs). performance-budgets consumes signals as evidence of breach but does not design the signals themselves.\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns runtime-correctness verification. performance-budgets is an analogous discipline for non-functional properties — a budget breach is the same kind of CI failure as a failing test.\"}],\"verify_with\":[\"performance-engineering\",\"observability-modeling\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     A performance budget is a declared, measurable threshold for a user-affecting property of a system — load time, interaction latency, layout stability, bundle size, request count — *treated as a contract the system must satisfy*. A complete budget has *four parts* (a statement missing any part is not a budget): (1) *metric* — LCP, INP, CLS, JS bytes, request count, cited by name not by "speed" or "load time"; (2) *threshold* — a number, not a band ("2.5 seconds"); (3) *percentile* — whose experience the threshold describes ("p75" is the Core Web Vitals standard, meaning the threshold must hold for the median through the 75th percentile of users); (4) *consequence* — what happens when the threshold is breached: deploy blocked / CI failure / rollback trigger, *not* "we look at it next sprint."
 
     *Three axes* (set at least one budget on each): time (LCP, INP, CLS, TTFB, FCP, TTI), size (JS bytes, CSS bytes, image bytes, font bytes, total transfer), count (requests, third-party scripts, fonts loaded, DOM nodes). Size and count are upstream of time — a page that ships 3MB of JS fails INP on a mid-range Android regardless of optimization. *Three measurement modes*: lab (Lighthouse, WebPageTest — reproducible, fast, in CI), field (CrUX, RUM — authoritative; reflects real users), synthetic (scheduled lab runs from multiple regions — trend tracking). *Core Web Vitals*: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1, all at p75 in field data. INP replaced FID in March 2024 — FID measured only the first interaction; INP measures the worst across the session, so a site that passes FID may fail INP. *RAIL*: per-interaction-class budgets — Response < 100ms, Animation < 16ms/frame, Idle work ≤ 50ms chunks, Load < 5s on slow 3G.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces aspirational performance targets ("we'd like the page to be fast") with enforceable contracts ("LCP at p75 must be below 2.5 seconds in field measurement; breach blocks deploy"). Solves the problem that performance regressions accumulate silently — every commit adds a little JS, every quarter ships more third-party scripts, every redesign loosens layout — and by the time anyone notices, the regressions are baked into many changes that are hard to disentangle. Three properties distinguish a real budget from a tracked metric: (1) it is set *before* the spending decisions, not after (a budget that emerges from post-hoc retrospectives is description; one that constrains the next feature is discipline); (2) it binds to a *consequence*, not a dashboard (a number someone watches is a metric; a number that fails a build is a budget); (3) it speaks *for the user* (every other voice in the room — engineering, design, product, marketing — has its own incentives; the budget is the institutional voice of the user, present at every commit, refusing to grant exceptions silently). The hardest part is not setting the number — it is committing to enforce it the first time the budget blocks a feature.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from performance-engineering, which owns the activity of measuring, profiling, and improving performance — this skill owns the *threshold-and-consequence contract*; the two compose (budgets define failure conditions; engineering produces improvements that prevent breach). Distinct from rendering-models, which owns the choice of when and where UI is produced — this skill sits *downstream* (the chosen rendering model bounds which budgets are achievable on a given route; a fully-CSR dashboard cannot meet a 1.5s LCP budget no matter what optimization). Distinct from observability-modeling, which owns the design of telemetry signals (spans, metrics, logs) — this skill *consumes* signals as evidence of breach but does not design them. Distinct from testing-strategy, which owns runtime-correctness verification — this skill is an analogous discipline for *non-functional* properties; a budget breach is the same kind of CI failure as a failing test. Distinct from http-semantics (transport-level optimization, downstream of the rendering and routing choices that determine achievable budgets).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A performance budget is to a web app what a calorie budget is to a diet — the calorie count of any single meal is information; the calorie budget is what you do about it when you exceed it. A diet that 'tracks' calories without consequence is description; a diet with a calorie *budget* is discipline. And a per-meal budget (per-route) catches drift earlier than a per-day total: by the time the day total breaches, the offending meal is hours behind you and harder to undo."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that a "performance budget" is any kind of measurement-and-tracking around performance — that a dashboard with green-yellow-red thresholds is a budget, or that "we monitor Core Web Vitals" is a budgeting practice. They are not. The defining property is the *consequence*: a budget without an automated build-or-deploy gate is a tracked metric, not a budget. Adjacent misconceptions: that a single site-wide threshold fits all routes (it does not — marketing landing pages need stricter budgets than logged-in admin panels because the audience and competitive context differ; per-route budgets are the working standard); that lab measurements alone are sufficient (they are not — lab is reproducible and fast for CI gates, but field data is authoritative; if the field metric breaches while the lab passes, the lab is missing something — investigate and fix the gap, never accept "but the Lighthouse score is green"); that one-axis budgets are enough (they are not — a JS-bytes budget catches bundle bloat, a time budget catches render delays, a request-count budget catches third-party drift; setting all three axes catches regression at the level closest to where it happened); that FID is still the interaction-responsiveness metric (it is not — INP replaced FID in March 2024; a site that passes FID may fail INP); that third-party scripts should be exempted from the budget (they should not — the user experiences their cost regardless of who shipped them; the budget *includes* third parties or it is not measuring user experience); and that budgets are aspirational from day one (they are not — calibrate against current p75 + 5-10% margin and ratchet tighter as optimization lands; "impossible from day one" gets disabled, "loose forever" generates no signal).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"A performance budget is a declared, measurable threshold for a user-affecting property of a system — load time, interaction latency, layout stability, bundle size, request count — treated as a contract the system must satisfy. A budget has four parts: the metric (what is measured), the threshold (the maximum or minimum acceptable value), the percentile (whose experience the threshold describes), and the consequence (what happens when the threshold is breached). Without all four, the number is an aspiration, not a budget.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/performance-budgets/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
