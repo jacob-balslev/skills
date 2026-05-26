@@ -4,46 +4,131 @@ description: "Use when reasoning about snapshot testing as a tactical technique:
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: quality
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: quality-assurance
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: quality/testing
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"snapshot testing\",\"golden file\",\"characterization test\",\"approval testing\",\"visual regression\",\"Chromatic\",\"Percy\",\"Storybook\",\"Jest snapshot\",\"DOM snapshot\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"should this be a snapshot test\",\"the snapshot keeps changing\",\"is visual regression testing the same thing\",\"should we auto-update snapshots\",\"snapshot file is too big\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"decide whether a rendered component is a candidate for a snapshot test or for behavioral tests\",\"diagnose a test suite where every PR updates snapshot files — likely snapshot churn from non-stable inputs\",\"explain why auto-updating snapshots without review removes the testing value\",\"design an approval cycle for a visual regression suite (Chromatic / Percy)\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"specify the exact return value of a calculation (use example tests under testing-strategy)\",\"verify a universal property like sort correctness (use property-based-testing)\",\"design end-to-end user journey tests (use e2e-test-design)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"testing-strategy\",\"property-based-testing\",\"test-driven-development\",\"code-review\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what to test at which level; this skill owns one tactical technique (capture-and-compare) within that strategy.\"},{\"skill\":\"property-based-testing\",\"reason\":\"property-based-testing asserts universal claims about output structure; snapshot testing captures a specific output and asserts equality to a baseline. The two complement: PBT for universal contracts, snapshots for complex structural outputs that are easier to capture than specify.\"},{\"skill\":\"test-driven-development\",\"reason\":\"TDD prescribes writing the test before the code; snapshot testing requires the code to exist before the snapshot can be captured. Snapshot testing fits poorly with strict TDD on greenfield code and well with characterization of existing code.\"},{\"skill\":\"code-review\",\"reason\":\"Snapshot diffs surface change evidence that code review must read and approve; the approval cycle of snapshot testing is operationally part of the review process the code-review discipline owns.\"}],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Snapshot testing is a tactical testing technique in which the output of a system under test is *captured on a known-good run, stored as an artifact (the snapshot), and compared against fresh output on each subsequent test run*. A mismatch is the test failure. The snapshot itself is the assertion — there is *no hand-written claim about what the output should be*; the claim is *"the output should equal what it was last time, until someone deliberately approves a new baseline."* *Five primitives*: (1) *target output* — data structure / DOM tree / image / text; (2) *snapshot artifact* — stored serialized, checked into version control (or stored in a centralized service for visual snapshots); (3) *comparison and diff* — line-by-line text diff for data/DOM/text; perceptual diff with tolerance threshold for images; (4) *approval cycle* — the discipline-critical primitive: when a test fails, *read the diff*, decide whether the change was intentional, and either update the baseline (intentional) or fix the production code (unintentional); (5) *stability discipline* — timestamps, random IDs, iteration order, environment values must be normalized before capture or the test churns on noise.
 
     Output target matrix: *data structures* (Jest `toMatchSnapshot`, Vitest snapshot — JSON or framework-serialized), *DOM/HTML* (`@testing-library` + Jest), *images* (Chromatic, Percy, Argos, Loki, Playwright screenshots — perceptual diff with tolerance), *text/generated code* (approval-test libraries). The conceptual ancestor: Feathers' *characterization tests* (Working Effectively with Legacy Code, 2004) — capturing current behavior as a safety net for refactoring legacy code, where you have to know *what the code currently does* before you can safely change it.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces hand-specifying every part of a complex output (impractical for large rendered DOM trees, JSON API responses, generated SQL, full-page visual layouts) with capture-and-compare. Solves the problem that some outputs are structurally complex enough that writing explicit assertions is prohibitively expensive — a rendered component might have hundreds of nodes; a JSON response might have dozens of fields; a generated migration might have many lines — and that small structural drift should be visible to a reviewer's eye. The technique's value is in *surfacing every subsequent change to a reviewer's eye* so that intentional changes are approved and unintentional changes are caught as regressions. Sub-purposes: (1) *characterize legacy code* as a safety net before refactoring (Feathers' original use); (2) catch *visual regressions* on UI components (Chromatic, Percy, Storybook); (3) detect *structural drift* in API responses or generated outputs over time. The technique fits where the output is structurally complex, where small drift should be visible, and *where the team will honor the approval cycle*.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from testing-strategy, which owns the strategic question of what to test at which level — this skill owns one tactical technique within that strategy. Distinct from property-based-testing, which asserts *universal* claims about output structure — snapshot captures a *specific* output and asserts equality to a baseline; the two complement (PBT for universal contracts; snapshots for complex structural outputs easier to capture than specify). Distinct from test-driven-development, which prescribes writing the test before the code — snapshot testing requires the code to exist before the snapshot can be captured; fits poorly with strict TDD on greenfield code, well with characterization of existing code. Distinct from code-review, which owns the broader review discipline — the approval cycle of snapshot testing is operationally *part of* the review process code-review owns; the diff must be small, legible, and *actually read*. Distinct from e2e-test-design — e2e covers user-journey testing; visual snapshots compose *inside* e2e tests as a regression net for UI changes the journey assertions don't catch. Distinct from example tests — use precise hand-written assertions for simple outputs; snapshots are wasteful for primitive return values and inappropriate for behavioral contracts that need explicit specification.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A snapshot test is to a piece of output what a wedding photograph is to a memory of the day — the photograph does not say what the wedding *should* have looked like, only what it did look like; on the next anniversary, you compare the room to the photograph and notice 'the curtains are different' (intentional — they were replaced) or 'the picture is crooked' (unintentional — fix it). A photograph filed away without anyone ever looking at it again is not a record; it is paper. A snapshot file the team auto-accepts via `-u` is the same."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that snapshot testing is "automatic regression coverage" and that running `jest -u` to update snapshots in response to failures is part of the workflow. It is not — *auto-updating without review removes the testing value*. The discipline is the *approval cycle*: when a snapshot test fails, the developer must read the diff, decide whether the change was intentional, and either approve (update the baseline) or fix the production code. A team that types `jest -u` reflexively has automated the maintenance and removed the verification. Adjacent misconceptions: that snapshot testing is a substitute for behavioral specification (it is not — it captures what the output *was*, not what it *should be*; pair with example tests for behaviors that need explicit specification); that snapshots can be arbitrarily large (they cannot — diffs must be readable by humans; snapshots over a few hundred lines should be split or replaced with per-property assertions); that snapshots on output with timestamps, random IDs, or iteration-order-dependent collections work (they do not — the test will churn on noise and train the team to ignore failures; normalize unstable sources before capture: freeze time, seed ID generators, sort collections, pin locale); that visual snapshots should use bit-for-bit equality (they should not — perceptual diff with a tuned tolerance threshold ignores rendering noise while catching real changes); that snapshot diffs in PR review are reviewed automatically (they are not — reviewers must actually read them, and visual snapshot services like Chromatic/Percy provide review UI for exactly that purpose); and that snapshot testing fits everywhere (it does not — fits well for complex rendered DOM, large JSON responses, generated code, visual regression; fits poorly for simple return values, behavioral contracts needing explicit specification, and any unstable output the team will neither stabilize nor stop using).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Snapshot testing is a tactical testing technique in which the output of a system under test is captured on a known-good run, stored as an artifact (the snapshot), and compared against fresh output on each subsequent test run. A mismatch is the test failure. The snapshot itself is the assertion — there is no hand-written claim about what the output should be; the claim is 'the output should equal what it was last time, until someone deliberately approves a new baseline.' The discipline is in the *approval cycle*: when the output legitimately changes, a human reviews the diff and accepts the new baseline; when the change is unexpected, the test failure surfaces the regression. A snapshot test without disciplined approval review is not a test; it is a record of whatever the output happened to be on the day the snapshot was last updated.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/snapshot-testing/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
