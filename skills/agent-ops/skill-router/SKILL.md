@@ -1,6 +1,6 @@
 ---
 name: skill-router
-description: "Use when routing an agent request across multiple skills, building or auditing a routing table, detecting routing coverage gaps, or answering questions like 'which skill handles this?', 'who routes X?', or 'why did skill A activate instead of B?'. Do NOT use when the target skill is already known (load it directly), when authoring a new skill (use `skill-metadata-template` instead), or when evaluating a SINGLE skill's quality (use `graph-audit`). Covers trigger-label matching, file-path matching, keyword matching, description-based semantic matching, scope/type tiebreakers, and coverage-gap detection."
+description: "Use when routing an agent request across multiple skills, building or auditing a routing table, detecting routing coverage gaps, or answering questions like 'which skill handles this?', 'who routes X?', or 'why did skill A activate instead of B?'. Covers trigger-label matching, file-path matching, keyword matching, description-based semantic matching, scope/type tiebreakers, and coverage-gap detection. Do NOT use when the target skill is already known (load it directly), when authoring a new skill (use `skill-metadata-template` instead), or when evaluating a SINGLE skill's quality (use `graph-audit`)."
 license: MIT
 compatibility:
   notes: "Markdown, YAML, any agent runtime"
@@ -42,7 +42,7 @@ metadata:
   eval_state: passing
   routing_eval: present
   stability: experimental
-  keywords: "[\"skill routing\",\"skill dispatch\",\"agent request routing\",\"activate right skill\",\"which skill to use\",\"routing table\",\"agent request coverage gap\",\"ambiguous skill activation\",\"skill activate\",\"coverage gap\"]"
+  keywords: "[\"skill routing\",\"skill dispatch\",\"keyword routing\",\"route skill\",\"which skill to use\",\"skill selector\",\"routing table\",\"coverage gap\",\"ambiguous skill activation\",\"skill activate\"]"
   triggers: "[\"skill-router\"]"
   examples: "[\"activate the right skill for this agent request: 'my tests are failing in CI'\",\"build a routing table that covers every agent request type we see\",\"why did the documentation skill activate when the user asked about a11y?\",\"find the coverage gaps — which agent requests match no skill at all?\"]"
   anti_examples: "[\"audit the graph-audit skill for schema conformance\",\"write a guide explaining how our routing works\",\"reproduce this routing mis-dispatch from production logs\"]"

@@ -1,6 +1,6 @@
 ---
 name: second-order-thinking
-description: "Use when a decision, intervention, policy, product change, metric target, or system fix needs analysis beyond the immediate effect: ask what happens next, how actors respond, what incentives change, and what delayed or compounding consequences follow. Do NOT use for reversing a goal to find failure paths (use inversion), decomposing assumptions to primitives (use first-principles-thinking), recurring issue clustering (use pattern-recognition), or system leverage-level diagnosis (use meadows-leverage-points when available). Covers consequence chains, time horizons, stakeholder reactions, feedback loops, second- and third-order effects, and guardrail design."
+description: "Use when a decision, intervention, policy, product change, metric target, or system fix needs analysis beyond the immediate effect: ask what happens next, how actors respond, what incentives change, and what delayed or compounding consequences follow. Covers consequence chains, time horizons, stakeholder reactions, feedback loops, second- and third-order effects, and guardrail design. Do NOT use for reversing a goal to find failure paths (use inversion), decomposing assumptions to primitives (use first-principles-thinking), recurring issue clustering (use pattern-recognition), or system leverage-level diagnosis (use meadows-leverage-points when available)."
 license: MIT
 allowed-tools: Read Grep
 metadata:

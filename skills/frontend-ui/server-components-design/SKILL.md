@@ -1,6 +1,6 @@
 ---
 name: server-components-design
-description: "Use when designing or reviewing React Server Components: what an RSC can do (async, data fetching, server-only imports) versus what it cannot (state, effects, event handlers, browser APIs), where to draw the server/client boundary in the tree, and how RSC composes with Suspense to stream content without a separate API layer. Do NOT use for the 'use client' directive mechanics (use client-server-boundary), hook discipline on Client Components (use hooks-patterns), rendering strategy choice (use rendering-models), or the server-action mutation surface (use server-actions-design when authored). Covers Next.js App Router as the canonical implementation, but the discipline is framework-agnostic."
+description: "Use when designing or reviewing React Server Components: what an RSC can do (async, data fetching, server-only imports) versus what it cannot (state, effects, event handlers, browser APIs), where to draw the server/client boundary in the tree, and how RSC composes with Suspense to stream content without a separate API layer. Covers Next.js App Router as the canonical implementation, but the discipline is framework-agnostic. Do NOT use for the 'use client' directive mechanics (use client-server-boundary), hook discipline on Client Components (use hooks-patterns), rendering strategy choice (use rendering-models), or the server-action mutation surface (use server-actions-design when authored)."
 license: MIT
 allowed-tools: Read Grep
 metadata:

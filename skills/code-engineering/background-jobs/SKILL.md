@@ -1,6 +1,6 @@
 ---
 name: background-jobs
-description: "Use when moving slow or failure-prone work out of a request path, designing job queues, retries, checkpoints, progress reporting, cancellation, or worker concurrency. Do NOT use for time-based schedule design (use `cron-scheduling`), live browser transport choice (use `real-time-updates`), or async message schema ownership (use `event-contract-design`). Covers inline-vs-background decisions, queue contracts, state machines, idempotency, retry/backoff, progress signals, worker leases, and user-visible completion reporting."
+description: "Use when moving slow or failure-prone work out of a request path, designing job queues, retries, checkpoints, progress reporting, cancellation, or worker concurrency. Covers inline-vs-background decisions, queue contracts, state machines, idempotency, retry/backoff, progress signals, worker leases, and user-visible completion reporting. Do NOT use for time-based schedule design (use `cron-scheduling`), live browser transport choice (use `real-time-updates`), or async message schema ownership (use `event-contract-design`)."
 license: MIT
 compatibility:
   notes: "Portable background job design guidance for web apps, APIs, workers, serverless functions, and queue-backed systems. Specific queue products differ; verify platform limits before production rollout."

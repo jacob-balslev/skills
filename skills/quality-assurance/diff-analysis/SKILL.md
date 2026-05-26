@@ -1,6 +1,6 @@
 ---
 name: diff-analysis
-description: "Use when analyzing `git diff`, reviewing a patch before commit, or explaining what a changeset does. Do NOT use for full code-review verdicts (use `code-review`), git workflow decisions (use `version-control`), or visual diffs. Covers unified diff anatomy, hunk interpretation, semantic-vs-formatting separation, blast-radius tracing, hidden-risk scanning, and intent-vs-diff comparison."
+description: "Use when analyzing `git diff`, reviewing a patch before commit, or explaining what a changeset does. Covers unified diff anatomy, hunk interpretation, semantic-vs-formatting separation, blast-radius tracing, hidden-risk scanning, and intent-vs-diff comparison. Do NOT use for full code-review verdicts (use `code-review`), git workflow decisions (use `version-control`), or visual diffs."
 license: MIT
 compatibility:
   notes: "Markdown, Git, agent-skill runtimes"

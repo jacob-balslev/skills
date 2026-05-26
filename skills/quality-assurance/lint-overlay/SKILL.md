@@ -1,6 +1,6 @@
 ---
 name: lint-overlay
-description: "Use when adding or enforcing lint rules as part of a test or verification plan. Do NOT use standalone — load the base testing-strategy skill alongside it — and do NOT use for chasing a specific lint failure in one file (that is debugging). Extends testing-strategy with lint-specific guidance: rule selection, gate placement, failure triage, and migration planning when introducing rules to an existing codebase."
+description: "Use when adding or enforcing lint rules as part of a test or verification plan. Extends testing-strategy with lint-specific guidance: rule selection, gate placement, failure triage, and migration planning when introducing rules to an existing codebase. Do NOT use standalone — load the base testing-strategy skill alongside it — and do NOT use for chasing a specific lint failure in one file (that is debugging)."
 license: MIT
 compatibility:
   notes: "Markdown, Git, any codebase with a lint tool"
@@ -21,11 +21,11 @@ metadata:
   routing_eval: present
   stability: experimental
   extends: testing-strategy
-  keywords: "[\"lint\",\"linting\",\"lint rules\",\"lint integration\",\"static analysis\",\"eslint\",\"legacy noimplicitany phased migration\",\"pre-commit CI lint gate\",\"add eslint rule\",\"add lint check\"]"
+  keywords: "[\"lint\",\"linting\",\"lint rules\",\"lint integration\",\"static analysis\",\"eslint\",\"format check\",\"add eslint rule\",\"lint is failing\",\"add lint check\"]"
   triggers: "[\"lint-overlay\"]"
   examples: "[\"plan ESLint rule introduction for a monorepo that has never had linting\",\"which lint rules should block CI and which should warn-only for now?\",\"migrate these legacy noImplicitAny violations in phased gates\",\"decide whether this new rule runs pre-commit or in CI only\"]"
-  anti_examples: "[\"reproduce this lint failure from the commit log\",\"decide whether to unit-test or integration-test this handler\",\"extract this repeated code pattern into a shared util\"]"
-  relations: "{\"boundary\":[{\"skill\":\"debugging\",\"reason\":\"debugging fixes a specific failing lint result; lint-overlay plans rule selection and gate placement\"},{\"skill\":\"refactor\",\"reason\":\"refactor changes behavior-preserving code shape; lint-overlay is verification-plan authoring, not code modification\"},{\"skill\":\"integration-test-design\",\"reason\":\"integration-test-design owns unit-vs-integration boundary decisions once the question is about a concrete handler; lint-overlay only decides lint-rule gate placement\"},{\"skill\":\"pattern-recognition\",\"reason\":\"pattern-recognition identifies repeated code shapes and conceptual motifs; lint-overlay owns static-analysis gate design, not extraction of repeated implementation patterns\"},{\"skill\":\"testing-strategy\",\"reason\":\"base testing-strategy owns unit-vs-integration scope selection; lint-overlay extends it only for lint-specific gate placement\"}]}"
+  anti_examples: "[\"this specific ESLint error is blocking my commit — why?\",\"decide whether to unit-test or integration-test this handler\",\"extract this repeated code pattern into a shared util\"]"
+  relations: "{\"boundary\":[{\"skill\":\"debugging\",\"reason\":\"debugging fixes a specific failing lint result; lint-overlay plans rule selection and gate placement\"},{\"skill\":\"refactor\",\"reason\":\"refactor changes behavior-preserving code shape; lint-overlay is verification-plan authoring, not code modification\"},{\"skill\":\"testing-strategy\",\"reason\":\"base testing-strategy owns unit-vs-integration scope selection; lint-overlay extends it only for lint-specific gate placement\"}]}"
   grounding: "{\"domain_object\":\"Lint-specific verification planning in the Skill Graph starter library\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"scripts/skill-lint.js\",\"scripts/lint/check-routing-quality.js\",\"scripts/lint/check-routing-eval.js\",\"examples/evals/lint-overlay.json\",\"skills/testing-strategy/SKILL.md\"],\"failure_modes\":[\"lint_failure_triaged_as_strategy_problem\",\"overlay_loaded_without_base_testing_strategy\",\"rule_migration_lacks_gate_placement\",\"routing_eval_claim_not_backed_by_harness\"],\"evidence_priority\":\"repo_code_first\"}"
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"

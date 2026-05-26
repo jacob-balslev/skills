@@ -1,6 +1,6 @@
 ---
 name: playing-to-win
-description: "Use when turning a vague business strategy, product strategy, market-entry decision, or initiative plan into an integrated Playing to Win strategy cascade: winning aspiration, where to play, how to win, must-have capabilities, and management systems. Do NOT use for competitive-industry structure analysis (use a five-forces skill when available), generic backlog scoring (use prioritization), or broad process-gate design (use methodology). Covers Lafley/Martin choice-making, fit across the five choices, trade-off pressure, reverse tests, capability-system alignment, and the difference between strategy and planning."
+description: "Use when turning a vague business strategy, product strategy, market-entry decision, or initiative plan into an integrated Playing to Win strategy cascade: winning aspiration, where to play, how to win, must-have capabilities, and management systems. Covers Lafley/Martin choice-making, fit across the five choices, trade-off pressure, reverse tests, capability-system alignment, and the difference between strategy and planning. Do NOT use for competitive-industry structure analysis (use a five-forces skill when available), generic backlog scoring (use prioritization), or broad process-gate design (use methodology)."
 license: MIT
 compatibility:
   notes: "Markdown, strategy memos, product strategy, executive decision-making"

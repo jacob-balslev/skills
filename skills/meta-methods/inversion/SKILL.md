@@ -1,6 +1,6 @@
 ---
 name: inversion
-description: "Use when a goal, plan, design, strategy, or assumption should be examined by reversing it: ask how to guarantee failure, how the opposite could be true, or what would have to happen for the desired outcome not to occur. Do NOT use for decomposing a problem to irreducible premises (use first-principles-thinking), post-failure root-cause analysis (use debugging), recurring failure clustering (use pattern-recognition), or claim/source grounding (use epistemic-grounding). Covers objective reversal, failure-path enumeration, obstacle-first planning, opposite-hypothesis testing, and prevention design."
+description: "Use when a goal, plan, design, strategy, or assumption should be examined by reversing it: ask how to guarantee failure, how the opposite could be true, or what would have to happen for the desired outcome not to occur. Covers objective reversal, failure-path enumeration, obstacle-first planning, opposite-hypothesis testing, and prevention design. Do NOT use for decomposing a problem to irreducible premises (use first-principles-thinking), post-failure root-cause analysis (use debugging), recurring failure clustering (use pattern-recognition), or claim/source grounding (use epistemic-grounding)."
 license: MIT
 allowed-tools: Read Grep
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: keywords
-description: "Use when doing keyword research, mapping search intent, building topical clusters, choosing terms for product or marketplace listings, detecting cannibalization, or translating query demand into page/listing targets. Do NOT use for building SEO pages or schema strategy (use `seo-strategy`), writing the finished prose (use `writing-humanizer`), or designing navigation/page hierarchy (use `information-architecture`). Covers seed expansion, intent classification, clustering, platform field translation for Etsy, Amazon, Shopify, SaaS/content sites, long-tail marketplace strategy, cannibalization resolution, and rank-tracking cadence."
+description: "Use when doing keyword research, mapping search intent, building topical clusters, choosing terms for product or marketplace listings, detecting cannibalization, or translating query demand into page/listing targets. Covers seed expansion, intent classification, clustering, platform field translation for Etsy, Amazon, Shopify, SaaS/content sites, long-tail marketplace strategy, cannibalization resolution, and rank-tracking cadence. Do NOT use for building SEO pages or schema strategy (use `seo-strategy`), writing the finished prose (use `writing-humanizer`), or designing navigation/page hierarchy (use `information-architecture`)."
 license: MIT
 compatibility:
   notes: "Portable keyword research and marketplace keyword-mapping guidance. Platform limits and field names can drift; verify against current marketplace docs before high-stakes listing work."
