@@ -1,0 +1,144 @@
+{
+  "skill_name": "porters-five-forces",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A founder asks: \"Is AI productivity software an attractive market? It is huge and growing fast.\" Apply Porter's Five Forces and identify what is missing before judging attractiveness.",
+      "expected_output": "The agent should not infer attractiveness from market size alone. It should first define a narrower industry boundary, then analyze new entrants, supplier power, buyer power, substitutes, and rivalry with structural drivers. It should flag evidence gaps and explain how each force affects profitability and value capture.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects market size as a substitute for industry-structure analysis",
+        "Requires a narrower industry boundary",
+        "Names all five forces",
+        "Connects force strength to profitability or value capture",
+        "Labels missing evidence instead of inventing certainty"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A category has low switching costs, no regulation, easy cloud distribution, and customers can trial new products in minutes. Which force should be emphasized?",
+      "expected_output": "Threat of new entrants should be emphasized. The agent should explain that low switching costs, low regulatory barriers, easy distribution, and easy trialing lower entry barriers and can cap prices or raise customer acquisition costs. It should still note interaction with rivalry and buyer power rather than treating one force in isolation.",
+      "type": "force-diagnosis",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies threat of new entrants",
+        "Maps the facts to entry barriers",
+        "Explains profitability implications",
+        "Mentions interaction with rivalry or buyer power",
+        "Does NOT call this direct rivalry only"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A business depends on two specialized model providers for its core input, and switching providers requires months of integration and quality tuning. Diagnose the force.",
+      "expected_output": "Supplier power is likely strong. The agent should cite supplier concentration, differentiated or scarce inputs, and high switching costs. It should explain that suppliers can capture value through pricing, terms, quality limits, or access constraints, and suggest mitigation options such as multi-sourcing, abstraction, integration flexibility, or repositioning away from the bottleneck.",
+      "type": "force-diagnosis",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies bargaining power of suppliers",
+        "Names concentration, differentiation, and switching costs",
+        "Explains value capture by suppliers",
+        "Suggests strategy implications or mitigations",
+        "Does NOT treat supplier dependence as an internal weakness only"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A commodity service sells to a few large enterprise buyers through annual RFPs. Products are hard to differentiate and switching vendors is cheap. What does Five Forces say?",
+      "expected_output": "Buyer power is strong and rivalry may also be intense. The agent should cite buyer concentration, high purchase volume, low differentiation, low switching costs, and price sensitivity through RFPs. It should explain that buyers can force price concessions or higher service levels and that the strategic response may require segmentation, differentiation, switching costs, or avoiding the segment.",
+      "type": "force-diagnosis",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies bargaining power of buyers",
+        "Mentions rivalry interaction when products are undifferentiated",
+        "Names structural drivers from the prompt",
+        "Connects buyer power to price or service concessions",
+        "Does NOT merely say the customer is important"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A team asks for Porter's Five Forces, but the actual question is: \"Which customer segment should we choose, how will we win, and what capabilities do we need?\" Should this skill own the answer?",
+      "expected_output": "Five Forces can support the industry-structure diagnosis, but Playing to Win should own the integrated strategy-cascade answer. The agent should route the choice of segment, how-to-win, capabilities, and management systems to Playing to Win, while offering to use Five Forces as an upstream input if industry attractiveness or force pressure is uncertain.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes integrated strategy-choice work to playing-to-win",
+        "Defines Five Forces as supporting industry-structure diagnosis",
+        "Distinguishes industry attractiveness from where-to-play/how-to-win",
+        "Does NOT force all strategy formulation into Five Forces"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "prompt": "A draft Five Forces analysis says only: \"Rivalry: high because many competitors. Buyers: medium. Suppliers: low. Entrants: high. Substitutes: low.\" Critique it.",
+      "expected_output": "The draft is a label checklist, not a useful analysis. The agent should require industry boundary, evidence, structural drivers for each force, profit implications, trend direction, uncertainty, and strategic implications. It should specifically ask why buyers, suppliers, entrants, and substitutes have those ratings.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Identifies force-label checklist as weak",
+        "Requires structural drivers and evidence",
+        "Requires profitability implications",
+        "Requires trend or time-horizon assessment",
+        "Does NOT accept unexplained high/medium/low ratings"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "A regulated market is opening because a new law allows non-bank providers, while open-source alternatives are improving quickly. Apply the dynamic part of Five Forces.",
+      "expected_output": "The agent should treat industry structure as dynamic. The law may increase threat of new entrants by lowering regulatory barriers, while open-source alternatives may strengthen substitutes and perhaps reduce supplier power if they replace proprietary inputs. The analysis should state trend direction, uncertainty, profit-pool implications, and strategic responses such as timing entry, differentiation, partnerships, or avoiding crowded segments.",
+      "type": "dynamic-analysis",
+      "grounding": "principle",
+      "difficulty": "adversarial",
+      "expectations": [
+        "Recognizes industry structure changes over time",
+        "Maps regulation change to entrant threat",
+        "Maps open-source alternatives to substitutes or supplier power",
+        "States uncertainty and trend direction",
+        "Connects trends to strategic implications"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}
