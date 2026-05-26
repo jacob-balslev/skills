@@ -3,183 +3,127 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "I want to run a single, well-defined task autonomously — implement a new API endpoint, commit, and stop. Which loop pattern should I use?",
-      "expected_output": "Ralph Wiggum. It's the simplest pattern: the stop hook checks the transcript for a completion word, exits with code 2 to continue or code 0 to stop. No infrastructure needed beyond a ~20-line hook.",
+      "prompt": "A coding agent needs to make one small change, run one verification command, and then stop. Which autonomous loop pattern fits best?",
+      "expected_output": "Use a bounded single-run loop, or a sentinel continuation loop only if the runtime needs a precise completion marker. The answer should name the verification gate, final status, and an external iteration or elapsed-time cap.",
       "type": "knowledge",
-      "grounding": "repo-specific",
+      "grounding": "portable",
       "difficulty": "basic",
       "expectations": [
-        "Recommends Ralph Wiggum as the correct pattern for a single well-defined task",
-        "Explains the exit code 2 mechanic (continue) vs exit code 0 (stop)",
-        "Mentions the completion word contract in the agent prompt",
-        "Notes this is simpler and more debuggable than manage-loop or grind-loop",
-        "Does NOT recommend grind-loop or manage-loop for a single mechanical task"
-      ],
-      "substance": "domain",
-      "calibration": "semantic",
-      "truth_mode": "infrastructure_correctness",
-      "skill_type": "agent",
-      "criticality": "normal"
+        "Chooses the simplest adequate loop pattern for one clear task",
+        "Names verification output as the done evidence",
+        "Includes a safety cap outside the worker agent",
+        "Does NOT recommend a supervisor respawn loop for one small task"
+      ]
     },
     {
       "id": 2,
-      "prompt": "My manage-loop signal has remaining tasks and context_health is reporting 'compact'. Should the Stop hook block the session and tell the agent to run /clear?",
-      "expected_output": "No. Current manage-loop-hook.py approves stop for context_health='compact', marks the signal with needs_new_session and needs_compaction when tasks remain, and lets the external loop or user restart with fresh context. It does not block and inject slash-command text because agents cannot execute slash commands from hook prose.",
+      "prompt": "Design a loop for a documentation cleanup that may take several sessions because context will be reset between runs.",
+      "expected_output": "Use a checkpoint-resume loop. Persist objective, iteration, max iterations, completed work, remaining work, latest evidence, context health, and next action. The next run should verify current reality before trusting the checkpoint.",
       "type": "edge-case",
-      "grounding": "repo-specific",
+      "grounding": "portable",
       "difficulty": "applied",
       "expectations": [
-        "States the hook should approve stop rather than block",
-        "Mentions needs_new_session and needs_compaction flags for remaining work",
-        "Explains why injecting /clear or /compact as block text caused bad loop behavior",
-        "References manage-loop-hook.py as the owner of this decision",
-        "Does NOT describe context_health='critical' as a valid continuation state"
-      ],
-      "substance": "domain",
-      "calibration": "semantic",
-      "truth_mode": "infrastructure_correctness",
-      "skill_type": "agent",
-      "criticality": "normal"
+        "Chooses checkpoint-resume rather than a completion marker alone",
+        "Lists the minimum checkpoint fields needed to resume safely",
+        "Requires verification of current reality before acting on persisted state",
+        "Does NOT rely on chat history or agent memory as the only progress record"
+      ]
     },
     {
       "id": 3,
-      "prompt": "What is the wrap-gate hook and why does it exist?",
-      "expected_output": "The wrap-gate hook enforces that the task-manager runs /wrap between tasks. It writes a marker when a task is marked Done, then blocks any new claim attempt until /wrap clears the marker. This prevents tasks from being claimed without proper closeout.",
+      "prompt": "An unattended worker queue has 80 independent items. Each item should start with fresh context and can fail independently. Which loop shape should control this?",
+      "expected_output": "Use an external supervisor respawn loop. The supervisor owns queue selection, per-worker timeout, status writes, consecutive-error caps, and visible respawn decisions. Workers should not own the whole queue policy.",
       "type": "knowledge",
-      "grounding": "repo-specific",
-      "difficulty": "basic",
+      "grounding": "portable",
+      "difficulty": "applied",
       "expectations": [
-        "Explains wrap-gate blocks task claims until /wrap is run",
-        "States the trigger: linear-cli.js done writes a wrap-required marker",
-        "States /wrap clears the marker",
-        "Explains the purpose: prevent incomplete closeout before claiming next task",
-        "Names the hook file: scripts/hooks/wrap-gate-hook.py",
-        "Does NOT suggest bypassing the wrap-gate as a valid workaround"
-      ],
-      "substance": "domain",
-      "calibration": "semantic",
-      "truth_mode": "infrastructure_correctness",
-      "skill_type": "agent",
-      "criticality": "normal"
+        "Chooses a supervisor respawn loop for independent high-throughput queue work",
+        "Separates worker responsibility from supervisor responsibility",
+        "Includes timeout, status, and consecutive-error caps",
+        "Does NOT put queue ownership entirely inside one long-running worker prompt"
+      ]
     },
     {
       "id": 4,
-      "prompt": "My grind-loop keeps respawning even though the same session is crashing immediately with an error. How do I prevent a respawn storm?",
-      "expected_output": "Add a consecutive-error cap to grind-loop.sh. Track consecutive exit-code-1 sessions and stop after 3 consecutive errors. Log the failure and exit so a human can investigate rather than looping indefinitely.",
-      "type": "edge-case",
-      "grounding": "repo-specific",
-      "difficulty": "applied",
+      "prompt": "A sentinel loop uses the marker DONE. The worker sometimes prints code examples that contain DONE, causing premature termination. How should the loop be fixed?",
+      "expected_output": "Use an uncommon marker and make the prompt contract say the marker may appear only as the final status. Add an iteration cap and a blocked status. Do not use generic words as completion sentinels.",
+      "type": "contradiction-check",
+      "grounding": "portable",
+      "difficulty": "adversarial",
       "expectations": [
-        "Identifies this as a respawn storm caused by consecutive session errors",
-        "Recommends a consecutive-error counter (not a total iteration cap)",
-        "Suggests stopping at 3 consecutive errors as a reasonable default",
-        "States the loop should exit with an error signal so the failure is visible",
-        "Does NOT recommend increasing the timeout or ignoring the errors"
-      ],
-      "substance": "domain",
-      "calibration": "semantic",
-      "truth_mode": "infrastructure_correctness",
-      "skill_type": "agent",
-      "criticality": "normal"
+        "Identifies generic completion markers as unsafe",
+        "Requires an uncommon marker and final-status-only contract",
+        "Adds a cap and blocked status to prevent endless continuation",
+        "Does NOT treat any occurrence of a common word as reliable completion evidence"
+      ]
     },
     {
       "id": 5,
-      "prompt": "What is the most reliable completion detection strategy for an autonomous loop?",
-      "expected_output": "Linear status check — querying Linear for remaining tasks. It's the ground truth. The continuation file is a fast-path cache but can be stale. Always reconcile against Linear on session start.",
-      "type": "knowledge",
-      "grounding": "repo-specific",
+      "prompt": "A worker keeps failing the same test, but the supervisor restarts it every time. What safety mechanism is missing?",
+      "expected_output": "The loop is missing a consecutive-error cap and stall classification. Stop after a small number of repeated failures, preserve evidence, classify the failure, and escalate instead of respawning unchanged state.",
+      "type": "edge-case",
+      "grounding": "portable",
       "difficulty": "applied",
       "expectations": [
-        "Identifies Linear status check as the most reliable strategy",
-        "Explains why: Linear is the ground truth, not the local state file",
-        "Notes the continuation file can be stale if a session crashes mid-write",
-        "States the recommendation to reconcile against Linear on each session start",
-        "Does NOT rank absence of new commits as a reliable signal"
-      ],
-      "substance": "domain",
-      "calibration": "semantic",
-      "truth_mode": "infrastructure_correctness",
-      "skill_type": "agent",
-      "criticality": "normal"
+        "Identifies the scenario as a respawn storm or stall",
+        "Recommends a consecutive-error cap",
+        "Requires preserving evidence and escalating after repeated failure",
+        "Does NOT recommend only increasing the iteration limit"
+      ]
     },
     {
       "id": 6,
-      "category": "wrap-gate-threshold",
-      "prompt": "A manage-loop session marks three tasks Done and immediately tries to claim a fourth task. The continuation signal does not override max_tasks_before_wrap. What should happen?",
-      "expected_output": "wrap-gate-hook.py should block the claim once tasks_since_wrap reaches the max_tasks_before_wrap threshold, which defaults to 3. The agent must run /wrap before claiming the fourth task. The gate is threshold-based, not an unconditional block after every Done command.",
-      "type": "contradiction-check",
-      "grounding": "repo-specific",
-      "difficulty": "adversarial",
+      "prompt": "Rank completion signals for an agent loop and explain which ones should be trusted most.",
+      "expected_output": "Authoritative tracker state and passing verification gates are strongest. Precise sentinel markers are useful for small loops. Checkpoints are medium reliability because they can be stale. Silence or absence of output is only a stall hint, not proof of done.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "basic",
       "expectations": [
-        "Identifies wrap-gate-hook.py as the enforcement point",
-        "States the default max_tasks_before_wrap threshold is 3",
-        "Explains that the fourth claim is blocked until /wrap clears the marker",
-        "Distinguishes threshold-based blocking from unconditional per-task blocking",
-        "Does NOT claim the continuation signal makes /wrap optional"
-      ],
-      "substance": "domain",
-      "calibration": "semantic",
-      "truth_mode": "infrastructure_correctness",
-      "skill_type": "agent",
-      "criticality": "normal"
+        "Ranks tracker state and verification output above silence",
+        "Explains that checkpoints can be stale",
+        "Treats sentinel markers as useful but bounded",
+        "Does NOT call absence of output a reliable completion signal"
+      ]
     },
     {
       "id": 7,
-      "category": "stall-detection",
-      "prompt": "A grind-loop child session has exceeded its timeout and the status file still says running. Linear also shows the task In Progress. What current repo mechanisms should detect and recover from this without creating a zombie claim?",
-      "expected_output": "grind-loop.sh starts a watchdog that kills the child process tree on timeout or after a non-running status appears. In multi-instance solo mode it releases the claim lock after the child exits, logs metrics, emits a task_completed event, and uses bad-exit streak caps to stop after repeated failures. Stale Linear claims are handled by the linear-cli.js reaper with model-specific thresholds, and registered loop checkpoint staleness is surfaced by loop-supervisor.js.",
-      "type": "knowledge",
-      "grounding": "repo-specific",
+      "prompt": "An agent loop reaches exhausted context health but still has remaining work. Should it continue because the queue is not empty?",
+      "expected_output": "No. It should stop, persist a checkpoint or handoff, and restart with fresh context only through the loop controller. Remaining work does not override a context-health safety exit.",
+      "type": "contradiction-check",
+      "grounding": "portable",
       "difficulty": "adversarial",
       "expectations": [
-        "Names the grind-loop watchdog and status file as the child-session timeout mechanism",
-        "Mentions claim-lock release after child exit in multi-instance solo mode",
-        "Mentions bad-exit streak caps for repeated failures",
-        "Mentions linear-cli.js reaper for stale Linear claims",
-        "Mentions loop-supervisor.js for checkpoint staleness",
-        "Does NOT cite worker-status.json as grind-loop's primary stall detector"
-      ],
-      "substance": "domain",
-      "calibration": "semantic",
-      "truth_mode": "infrastructure_correctness",
-      "skill_type": "agent",
-      "criticality": "normal"
+        "Prioritizes context-health safety over remaining work",
+        "Requires a persisted checkpoint or handoff before stopping",
+        "Says restart should be controlled by the loop controller",
+        "Does NOT recommend continuing complex work in exhausted context"
+      ]
     },
     {
       "id": 8,
-      "prompt": "I need to create a Linear issue to track a bug I found during loop execution. How do I do that?",
-      "expected_output": "This is outside the scope of autonomous-loop-patterns. Use the linear skill for creating and managing Linear issues. The loop-patterns skill only covers loop architecture, not issue management.",
+      "prompt": "Which slash command or hosted-agent button should I press to start a loop in my specific tool?",
+      "expected_output": "That is outside this skill. Use the product-specific documentation or a broader agent-engineering skill. Autonomous-loop-patterns can help choose the control shape, but it does not own product command names.",
       "type": "negative",
-      "grounding": "repo-specific",
-      "difficulty": "applied",
+      "grounding": "portable",
+      "difficulty": "basic",
       "expectations": [
-        "Routes Linear issue creation to the linear skill",
-        "Does NOT attempt to explain Linear issue creation syntax",
-        "Clearly states this is a boundary: loop-patterns covers loop mechanics, not issue management"
-      ],
-      "substance": "domain",
-      "calibration": "semantic",
-      "truth_mode": "infrastructure_correctness",
-      "skill_type": "agent",
-      "criticality": "normal"
+        "Routes product command selection out of this skill",
+        "Keeps ownership on loop control shape only",
+        "Does NOT invent product-specific command names"
+      ]
     },
     {
       "id": 9,
-      "prompt": "I want to write a new stop hook that intercepts before any Bash command runs and blocks dangerous file deletions. Which loop pattern covers this?",
-      "expected_output": "This is not a loop pattern question — it is a hook implementation question. Use the hook-patterns skill, which covers PreToolUse and PostToolUse hook lifecycle, security gates, and hook implementation patterns. The autonomous-loop-patterns skill only references hooks as components of loop architectures, not how to implement them.",
+      "prompt": "Write the exact worker prompt for my data extraction task, including schema and examples.",
+      "expected_output": "Use prompt-craft for the exact worker prompt. This skill can specify the loop wrapper, done signal, checkpoint fields, and caps, but not the full task prompt content.",
       "type": "negative",
-      "grounding": "repo-specific",
-      "difficulty": "applied",
+      "grounding": "portable",
+      "difficulty": "basic",
       "expectations": [
-        "Routes hook implementation to the hook-patterns skill",
-        "Does NOT provide hook implementation details",
-        "Explains the boundary: this skill references hooks as loop components but does not teach hook development"
-      ],
-      "substance": "domain",
-      "calibration": "semantic",
-      "truth_mode": "infrastructure_correctness",
-      "skill_type": "agent",
-      "criticality": "normal"
+        "Routes worker-prompt authoring to prompt-craft",
+        "States what loop-patterns can still contribute",
+        "Does NOT write the full task prompt as if this skill owned prompt craft"
+      ]
     }
   ]
 }

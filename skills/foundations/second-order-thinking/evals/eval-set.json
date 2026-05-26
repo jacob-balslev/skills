@@ -1,0 +1,47 @@
+[
+  {
+    "query": "What are the second-order effects of this policy change?",
+    "should_trigger": true,
+    "note": "Core trigger"
+  },
+  {
+    "query": "Think through downstream consequences before we ship this",
+    "should_trigger": true,
+    "note": "Downstream consequence analysis"
+  },
+  {
+    "query": "And then what happens after users adapt to this pricing change?",
+    "should_trigger": true,
+    "note": "Actor response and time horizon"
+  },
+  {
+    "query": "Could this metric go up while the real system gets worse?",
+    "should_trigger": true,
+    "note": "Metric backfire and Goodhart risk"
+  },
+  {
+    "query": "What incentives does this new rule create over time?",
+    "should_trigger": true,
+    "note": "Incentive response"
+  },
+  {
+    "query": "Invert this plan and list how to make it fail",
+    "should_trigger": false,
+    "note": "Goal reversal belongs to inversion"
+  },
+  {
+    "query": "Break this decision down to first principles",
+    "should_trigger": false,
+    "note": "Primitive decomposition belongs to first-principles-thinking"
+  },
+  {
+    "query": "Cluster this recurring bug pattern across many files",
+    "should_trigger": false,
+    "note": "Recurrence clustering belongs to pattern-recognition"
+  },
+  {
+    "query": "Find the highest leverage point in this system",
+    "should_trigger": false,
+    "note": "Leverage hierarchy belongs to dedicated leverage-point analysis"
+  }
+]

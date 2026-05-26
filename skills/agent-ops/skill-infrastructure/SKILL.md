@@ -1,6 +1,6 @@
 ---
 name: skill-infrastructure
-description: "Use when designing the deterministic health-tooling layer for a skill library, diagnosing why an existing library is decaying invisibly, deciding which categories of automated check to add (inventory, protocol consistency, conflict detection, routing health, drift sentinel), debugging eval-threshold violations across many skills at once, auditing whether a skill-system has the safety nets a production library needs, or planning schema, relation, routing, drift, and export checks across a whole skill library. Covers the five categories of skill-health tooling, the library-as-database mental model, eval quality patterns (minimum thresholds, contradiction-check pattern, negative-expectation requirement), maintenance workflows triggered by batch skill changes, and the anti-patterns that cause skill libraries to decay until agents loading them get worse over time. Do NOT use for authoring an individual SKILL.md (use `skill-scaffold`), or for general lint rule selection across a codebase (use `lint-overlay`)."
+description: "Use when designing the deterministic health-tooling layer for a skill library, diagnosing why an existing library is decaying invisibly, deciding which categories of automated check to add (inventory, protocol consistency, conflict detection, routing health, drift sentinel), debugging eval-threshold violations across many skills at once, or auditing whether a skill-system has the safety nets a production library needs. Covers the five categories of skill-health tooling, the library-as-database mental model, eval quality patterns (minimum thresholds, contradiction-check pattern, negative-expectation requirement), maintenance workflows triggered by batch skill changes, and the anti-patterns that cause skill libraries to decay until agents loading them get worse over time. Do NOT use for authoring an individual SKILL.md (use `skill-scaffold`), for running the conformance audit on the Skill Graph repo itself (use `graph-audit`), or for general lint rule selection across a codebase (use `lint-overlay`)."
 license: MIT
 compatibility:
   notes: "Library- and harness-agnostic. Patterns apply to any skill-style library (Skill Graph, Claude skills, Cursor rules, custom in-house skill systems). Specific tool names in this skill (skill-lint, generate-manifest, routing-eval, drift-sentinel) are concrete examples from the Skill Graph reference implementation -- substitute your library's equivalents."
@@ -39,12 +39,12 @@ drift_check:
     "scripts/skill-graph-routing-eval.js": "fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb"
     "docs/manifest-field-mapping.md": "0f2488dcde5634b04f33ca543d99059819a1242aa43dffb6cce50c555240391a"
 metadata:
-  schema_version: 8
+  schema_version: 7
   version: "1.1.0"
   type: capability
   operation: do
-  category: agent
   subject: agent-ops
+  category: agent
   domain: agent/skill-system
   scope: portable
   owner: skill-graph-maintainer
@@ -54,15 +54,15 @@ metadata:
   eval_state: unverified
   routing_eval: absent
   stability: experimental
-  keywords: "[\"skill library health\",\"skill system tooling\",\"skill library decay\",\"skill library maintenance\",\"skill census\",\"skill inventory\",\"frontmatter validation\",\"imperative conflict\",\"skill overlap detection\",\"skill conflict\"]"
+  keywords: "[\"skill library health\",\"skill system tooling\",\"skill library decay\",\"skill library maintenance\",\"skill census\",\"skill inventory\",\"frontmatter validation\",\"imperative conflict\",\"skill overlap detection\",\"skill conflict\",\"routing gap\",\"routing miss\",\"routing health\",\"eval threshold\",\"eval minimum\",\"contradiction check\",\"negative expectation\",\"drift sentinel\",\"truth source hash\",\"mirror parity\",\"skill graph health\",\"production skill library\",\"skill linter\",\"skill quality gate\",\"phantom ref\",\"schema conformance\",\"audit skills\",\"audit my skills\",\"skill schema conformance\",\"skill schema validation\",\"audit skill metadata\"]"
   examples: "[\"our skill library is growing and we're getting silent decay — eval counts dropping, conflicts emerging — what tooling should we add?\",\"two of our skills give opposite instructions for the same function — how do we detect this automatically?\",\"we keep getting skill-router misses on real user queries — how do we surface and close routing gaps?\",\"design a health-check pipeline for a 200-skill library that runs in CI\",\"what's a reasonable minimum eval count per skill, and how do we enforce it?\",\"our skill mirror in `.claude/skills` keeps drifting from the source — what's the parity check?\",\"we want to add a contradiction-check eval pattern — what does it look like and when do we use it?\",\"skill-overlap-detector flagged 12 imperative conflicts — how do we triage which to fix vs suppress?\",\"audit my skills for schema conformance\",\"check that my skill frontmatter conforms to the schema\"]"
   anti_examples: "[\"scaffold a new SKILL.md for our team's deploy procedure\",\"audit this Skill Graph repo for schema conformance and dangling relation targets\",\"the manifest sample drifted from the generator — find the mismatch\",\"improve this prompt's wording to get better outputs\",\"review this AI-generated PR for correctness\",\"set up ESLint for our TypeScript repo\",\"draft an architecture note explaining why we chose Postgres\"]"
-  relations: "{\"boundary\":[{\"skill\":\"skill-scaffold\",\"reason\":\"skill-scaffold owns authoring methodology for one new SKILL.md; skill-infrastructure owns the deterministic health-tooling layer that watches the entire library after authoring\"},{\"skill\":\"lint-overlay\",\"reason\":\"lint-overlay covers lint-rule selection and gate placement for general codebases; skill-infrastructure covers the skill-system-specific tooling category that includes lint but extends to overlap, routing-gap, drift, and mirror-parity\"}],\"related\":[\"skill-scaffold\",\"testing-strategy\"],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
+  relations: "{\"boundary\":[{\"skill\":\"skill-scaffold\",\"reason\":\"skill-scaffold owns authoring methodology for one new SKILL.md; skill-infrastructure owns the deterministic health-tooling layer that watches the entire library after authoring\"},{\"skill\":\"graph-audit\",\"reason\":\"graph-audit is the operational audit of one specific library (Skill Graph), scope: codebase; skill-infrastructure is the portable discipline of designing health tooling for any skill library\"},{\"skill\":\"lint-overlay\",\"reason\":\"lint-overlay covers lint-rule selection and gate placement for general codebases; skill-infrastructure covers the skill-system-specific tooling category that includes lint but extends to overlap, routing-gap, drift, and mirror-parity\"}],\"related\":[\"skill-scaffold\",\"graph-audit\",\"testing-strategy\"],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
   grounding: "{\"domain_object\":\"Deterministic health tooling for Skill Graph libraries\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"package.json\",\"bin/skill-graph.js\",\"scripts/skill-lint.js\",\"scripts/lib/roots.js\",\"scripts/check-protocol-consistency.js\",\"scripts/generate-manifest.js\",\"scripts/skill-graph-drift.js\",\"scripts/skill-overlap.js\",\"scripts/skill-graph-routing-eval.js\",\"docs/manifest-field-mapping.md\"],\"failure_modes\":[\"health_tooling_categories_missing_from_ci\",\"protocol_mapping_drift\",\"eval_thresholds_become_self_attested\",\"overlap_or_drift_checks_not_run_after_batch_changes\"],\"evidence_priority\":\"repo_code_first\"}"
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v7
+  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/skill-infrastructure/SKILL.md
   structural_verdict: UNVERIFIED
@@ -130,7 +130,7 @@ Walks the skill tree, parses every SKILL.md's frontmatter, and validates against
 | Reference-path resolution (every `references/X.md` cited in frontmatter actually exists) | Dangling references mislead the agent at activation time |
 | Scope-grounding consistency (`scope: codebase` requires populated `grounding` block) | Codebase claims without grounding can hallucinate file paths |
 
-**Reference implementation:** the Skill Graph reference layer splits these checks across focused tools. `scripts/skill-lint.js` is only the lightweight canonical-source gate; `scripts/check-protocol-consistency.js`, `scripts/generate-manifest.js`, `scripts/skill-graph-routing-eval.js`, `scripts/skill-graph-drift.js`, `scripts/skill-overlap.js`, and export verification cover the broader schema, routing, relation, drift, overlap, and portability surfaces.
+**Reference implementation:** `scripts/skill-lint.js` in this repo runs T5 per-skill lint covering most of these.
 
 ### 2. Protocol Consistency
 
@@ -375,6 +375,7 @@ Before any batch skill commit, verify:
 | Use instead | When |
 |---|---|
 | `skill-scaffold` | Authoring or restructuring a single new SKILL.md (the contract for one file, not the system around the library) |
+| `graph-audit` | Running the conformance audit on this Skill Graph repo specifically (operational), not designing the discipline |
 | `lint-overlay` | General-purpose lint-rule selection and gate placement for any codebase, not skill-system-specific tooling |
 | `documentation` | Writing prose for a human reader explaining how the skill system works |
 | `code-review` | Reviewing a code change to the health-tooling scripts themselves |

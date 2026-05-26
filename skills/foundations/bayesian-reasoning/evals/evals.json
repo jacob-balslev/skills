@@ -1,0 +1,176 @@
+{
+  "skill_name": "bayesian-reasoning",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A rare event has a 1% base rate. A detector that is fairly accurate fires once. Apply Bayesian reasoning before deciding the event happened.",
+      "expected_output": "Start from the 1% prior, ask how often the detector fires when the event is true and when it is false, account for false positives caused by rarity, and produce a posterior or qualitative update rather than treating the alert as decisive.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Starts with the base rate or prior",
+        "Compares likelihood of the alert under event-true and event-false hypotheses",
+        "Recognizes the false-positive risk in rare events",
+        "Does NOT treat the alert alone as proof"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "prompt": "A team believed a bug was caused by a recent code change. New evidence shows the same bug happened before the change. How should the belief update?",
+      "expected_output": "Lower confidence in the recent-change hypothesis because the evidence is more expected under an older or external cause. Keep the hypothesis possible if there are multiple bugs, but update toward alternatives and identify evidence that would separate them.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Names the prior belief and the new evidence separately",
+        "Updates toward alternatives because the evidence is less compatible with the original hypothesis",
+        "Leaves room for revised hypotheses if warranted",
+        "Does NOT cling to the initial hypothesis without updating"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A vivid story about one failure is circulating, but historical data says the failure mode is uncommon. What should Bayesian reasoning do?",
+      "expected_output": "Treat the story as evidence, but compare it against the base rate and selection process. Ask whether the story is representative or selected for memorability, then update only in proportion to its diagnostic value.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Uses the historical base rate as the prior",
+        "Assesses whether the anecdote is representative or selected",
+        "Updates proportionally to diagnostic strength",
+        "Does NOT let vividness replace probability"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 4,
+      "prompt": "Three monitoring alerts fired, but all are triggered by the same underlying rule. How should Bayesian reasoning treat them?",
+      "expected_output": "Treat the alerts as correlated evidence, not three independent confirmations. Collapse the shared source or discount the extra alerts, then update based on the rule's diagnostic strength and seek an independent signal if needed.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies the alerts as correlated evidence",
+        "Avoids counting shared-source signals as independent confirmation",
+        "Seeks or values independent evidence",
+        "Does NOT multiply confidence just because there are three alerts"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "No errors appear in the logs. Is that evidence the system is healthy?",
+      "expected_output": "Only partly, and only if the logging would probably capture the errors if they existed. Bayesian reasoning asks how likely empty logs are under healthy and unhealthy hypotheses, then updates based on observability sensitivity.",
+      "type": "contradiction-check",
+      "grounding": "portable",
+      "difficulty": "adversarial",
+      "expectations": [
+        "Treats absence of evidence as conditional on detection sensitivity",
+        "Compares empty logs under healthy and unhealthy hypotheses",
+        "States remaining uncertainty if observability is weak",
+        "Does NOT equate no logs with proof of no problem"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "The user asks: 'Break this inherited workflow down to primitive truths and constraints.' Should bayesian-reasoning own it?",
+      "expected_output": "No. Route the core task to first-principles-thinking because it asks for primitive premises and assumption stripping. Bayesian reasoning becomes relevant later only if evidence updates the plausibility of a specific hypothesis.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes primitive-premise work to first-principles-thinking",
+        "Defines Bayesian reasoning as a later belief-update tool",
+        "Distinguishes premise discovery from probability updating",
+        "Does NOT over-own first-principles decomposition"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 7,
+      "prompt": "The user has three options with probabilities and payoffs and asks which has the best expected return. What should bayesian-reasoning do?",
+      "expected_output": "Bayesian reasoning can scrutinize or update the probabilities if evidence is involved, but payoff comparison belongs to expected-value reasoning or a prioritization framework. Do not replace payoff analysis with posterior updating alone.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Limits Bayesian reasoning to probability updating or probability scrutiny",
+        "Routes payoff comparison to expected-value reasoning or prioritization",
+        "Separates probability estimates from utility or payoff ranking",
+        "Does NOT choose the option by probability alone"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    },
+    {
+      "id": 8,
+      "prompt": "A report cites three independent-looking sources, but all repeat the same original claim. Apply Bayesian reasoning to the evidential weight.",
+      "expected_output": "Trace the evidence lineage, identify the common origin, and avoid treating the three citations as independent support. Update based on the original source's reliability and seek genuinely independent corroboration if the posterior remains uncertain.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Checks whether the sources are independent",
+        "Discounts repeated claims from a common origin",
+        "Values independent corroboration more than repetition",
+        "Does NOT count duplicated sourcing as three independent updates"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 9,
+      "prompt": "The user asks for a source-backed argument showing why a claim is valid. Should bayesian-reasoning own it?",
+      "expected_output": "No. Route the claim-grounding task to epistemic-grounding. Bayesian reasoning can estimate how evidence changes confidence in a hypothesis, but it does not replace source citation, warrant analysis, or normative claim qualification.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes source-to-claim warrant work to epistemic-grounding",
+        "Keeps Bayesian reasoning focused on belief update strength",
+        "Distinguishes confidence updating from citation and warrant structure",
+        "Does NOT present Bayesian reasoning as a substitute for source grounding"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "normal"
+    }
+  ]
+}

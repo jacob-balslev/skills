@@ -1,0 +1,138 @@
+{
+  "skill_name": "background-jobs",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "An API endpoint exports a large CSV and sometimes takes two minutes. The user can leave the page and come back later. Apply the background-jobs skill.",
+      "expected_output": "Move the export out of the request path. The endpoint should enqueue a durable job, return a job ID, expose status/progress/result retrieval, and make completion or terminal failure visible after refresh.",
+      "type": "knowledge",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Recommends a durable background job instead of synchronous export work",
+        "Includes a job ID and queryable status/result contract",
+        "Mentions visible progress or completion reporting",
+        "Does NOT keep the two-minute operation inside the request handler"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "prompt": "A worker imports 100,000 records. It failed after 72,000 records and retrying started from record 1. What should the skill require?",
+      "expected_output": "Add checkpointing at committed boundaries so retries resume from the last successful record, page, cursor, or batch. Pair the checkpoint with idempotent side effects so replay does not duplicate already-processed records.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Requires checkpointing based on the last committed unit of work",
+        "Connects checkpointing with idempotent side effects",
+        "Identifies restart-from-zero as a retry design failure",
+        "Does NOT accept percentage progress as sufficient resume state"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A queue retries all failures five times, including validation errors and permission failures. How should background-jobs classify this?",
+      "expected_output": "This is incorrect retry classification. Transient network and rate-limit failures can retry with backoff, but validation and permission failures should become terminal failures with actionable messages or operator intervention.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Distinguishes transient and rate-limit failures from validation and permission failures",
+        "Requires terminal failure handling for non-retryable classes",
+        "Mentions actionable failure messages or operator action",
+        "Does NOT recommend retrying every failure uniformly"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "Two workers pick up the same queued job during a traffic spike and both write output. What design element is missing?",
+      "expected_output": "The queue needs an ownership or lease mechanism plus idempotent output writes. A worker should claim a job for a bounded lease, and expired leases should allow recovery without concurrent active processing.",
+      "type": "edge-case",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Identifies missing worker ownership, lock, or lease",
+        "Explains bounded lease expiry for recovery",
+        "Mentions idempotent output or side-effect writes",
+        "Does NOT solve the race only by increasing retry count"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A product asks for a progress bar on an operation where the system cannot know the total item count. What should the agent do?",
+      "expected_output": "Avoid fake percentages. Report durable status using stages, processed counts, timestamps, or checkpoint labels. Use a percentage only when the denominator is known, and make stale or failed states visible.",
+      "type": "contradiction-check",
+      "grounding": "portable",
+      "difficulty": "applied",
+      "expectations": [
+        "Rejects fake precision when the denominator is unknown",
+        "Offers stages, counts, timestamps, or checkpoints as alternatives",
+        "Keeps terminal failure or staleness visible",
+        "Does NOT invent a percentage merely to satisfy the UI request"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "normal"
+    },
+    {
+      "id": 6,
+      "prompt": "A daily reconciliation should run at 03:00 UTC. The task is to choose the cron expression and handle missed runs. Should background-jobs own the whole task?",
+      "expected_output": "No. Route schedule design, cron expression, and missed-run timing to cron-scheduling. Background-jobs may own the queued execution after the schedule fires: state, retries, checkpoints, concurrency, and progress.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes cron expression and schedule semantics to cron-scheduling",
+        "Limits background-jobs to execution after the trigger fires",
+        "Names worker concerns such as state, retry, checkpoint, concurrency, or progress",
+        "Does NOT over-own time-based scheduling"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "normal"
+    },
+    {
+      "id": 7,
+      "prompt": "A team wants to push live job progress to the browser and asks whether to use polling, SSE, or WebSocket. How should background-jobs respond?",
+      "expected_output": "Background-jobs should define the progress state contract, but transport selection belongs to real-time-updates. It should hand off the browser freshness channel while preserving job status fields such as stage, counts, completion, failure, and cancellation.",
+      "type": "negative",
+      "grounding": "portable",
+      "difficulty": "basic",
+      "expectations": [
+        "Separates job progress state from browser transport choice",
+        "Routes polling/SSE/WebSocket selection to real-time-updates",
+        "Keeps ownership of durable job status and terminal states",
+        "Does NOT choose SSE or WebSocket as the primary output of this skill"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "process_correctness",
+      "skill_type": "capability",
+      "criticality": "normal"
+    }
+  ]
+}
