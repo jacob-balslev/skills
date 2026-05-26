@@ -4,48 +4,133 @@ description: "Use when measuring a system's non-functional properties — latenc
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: quality
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: quality-assurance
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: quality/testing
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"performance testing\",\"load testing\",\"stress testing\",\"soak testing\",\"spike testing\",\"breakpoint test\",\"k6\",\"JMeter\",\"Locust\",\"Gatling\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"what should our load test do\",\"p95 vs average latency\",\"k6 vs JMeter vs Locust\",\"is the system fast enough\",\"stress test or load test\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design a load test for an API endpoint that verifies the p95 SLO at expected production traffic\",\"decide between load, stress, and soak tests for a new service before launch\",\"diagnose a soak test failure that only appears after 4 hours — likely a leak\",\"explain why average latency is the wrong metric for user experience\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"measure production traffic latency in real time (use observability)\",\"benchmark a single function in isolation (use language benchmark tools)\",\"inject failures into a production system (use chaos-engineering)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"testing-strategy\",\"integration-test-design\",\"e2e-test-design\",\"performance-engineering\",\"performance-budgets\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what to test; this skill owns one tactical technique (controlled-load measurement of non-functional properties) within that strategy.\"},{\"skill\":\"integration-test-design\",\"reason\":\"integration-test-design owns tests of correctness across internal seams; this skill owns tests of non-functional properties (latency, throughput) under controlled load. Both can use the same environment; they answer different questions.\"},{\"skill\":\"e2e-test-design\",\"reason\":\"e2e-test-design owns user-journey correctness tests; this skill owns load-driven measurement of those same journeys. A 'performance e2e test' is the composition of both disciplines.\"},{\"skill\":\"performance-engineering\",\"reason\":\"performance-engineering owns the activity of profiling and optimizing a specific slow path once it has been identified; this skill owns the discipline of exercising the system under controlled load to discover and quantify performance behavior. Performance-engineering acts on bottlenecks; performance-testing produces the measurements that locate them and verifies the optimizations afterward.\"},{\"skill\":\"performance-budgets\",\"reason\":\"performance-budgets owns the declaration of the threshold-and-consequence contract (metric, threshold, percentile, consequence) as a quality property; this skill owns the test mechanism that exercises the system under load and verifies whether the declared budgets hold. The two compose: budgets declare what 'fast enough' means; performance tests verify the system meets the declaration. Without a budget, a performance test produces measurements without a verdict; without performance tests, a budget is an aspirational threshold without empirical evidence.\"}],\"verify_with\":[\"testing-strategy\",\"integration-test-design\",\"performance-budgets\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Performance testing is the discipline of measuring a system's *non-functional properties* — latency, throughput, error rate, resource utilization, saturation — by running the system under *controlled load* and observing the resulting metrics. Where functional tests answer "does the system produce the right output?", performance tests answer "does the system produce the right output *quickly enough* and at *sufficient scale*, while staying within resource budgets and error tolerances?" The unit of judgment is whether measured metrics meet defined acceptance thresholds — typically *Service-Level Objectives* (SLOs) expressed as *percentiles* (e.g., "p95 latency below 200ms at 1,000 RPS sustained for 30 minutes").
 
     *Five primitives*: load profile (shape of traffic over time), workload (operation mix — 70% reads, 25% writes, 5% complex queries), latency metric (typically p50/p95/p99/p99.9), throughput metric (RPS, transactions/sec), SLO target. *Six load shapes*: smoke (small load, short duration — every PR), load (expected production × margin, sustained — every merge), stress (beyond expected capacity — verifies graceful failure mode), spike (sudden large increase — verifies elasticity and autoscaling), soak (sustained moderate load for hours — verifies no leaks or degradation), breakpoint (gradually increasing to failure — quantifies capacity ceiling). *Latency percentiles* are the honest vocabulary — p50 is the typical request; p95 is what 1 in 20 users feels; p99 is what 1 in 100 users feels; p99.9 is what 1 in 1000 feels; the mean is easily skewed and should not be an acceptance criterion. *Tool landscape*: k6 (Grafana, modern JS — recommended default for new projects), JMeter (mature, UI-driven, enterprise), Locust (Python, distributed), Gatling (Scala, high throughput), Vegeta (Go, CLI), Wrk/Wrk2 (microbenchmark). *Environment fidelity* is the load-bearing precondition — a test in a non-production-like environment measures that environment, not the system.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "is it fast enough?" answered by intuition or user complaints with empirical answers measured against an explicit SLO. Solves the problem that performance is *multi-dimensional* — latency distribution, throughput ceiling, error rate under load, resource utilization, saturation point are each separate properties; each requires its own measurement; each can be acceptable while others fail. Reducing performance to a single number (especially average latency) is the most common discipline failure. Sub-purpose: verify that declared performance budgets (per `performance-budgets`) hold under realistic load — without performance tests, a budget is an aspirational threshold without empirical evidence; without budgets, a performance test produces measurements without a verdict. A complete pre-launch performance test suite runs all six load shapes because each verifies a different property; an ongoing suite typically runs smoke on every PR, load on every merge, with stress/spike/soak/breakpoint on cadence.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from performance-engineering, which owns the activity of *profiling and optimizing* a specific slow path once it has been identified — this skill owns the discipline of *exercising the system under controlled load* to discover and quantify performance behavior; the two compose (this skill produces measurements that locate bottlenecks and verifies optimizations afterward). Distinct from performance-budgets, which owns the *declaration* of the threshold-and-consequence contract (metric, threshold, percentile, consequence) as a quality property — this skill owns the *test mechanism* that exercises the system under load and verifies the budgets hold. Distinct from observability, which owns *real-time runtime measurement* of the deployed system — this skill is *offline controlled measurement*; the two compose (one for pre-deploy verification, the other for production runtime validation). Distinct from chaos-engineering (fault injection in deployed systems), microbenchmarks (single-function isolation via language benchmark tools), testing-strategy (level/scope), integration-test-design and e2e-test-design (correctness across seams or user journeys — this skill exercises those same paths under load), and mutation-testing (test-suite quality measurement).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Performance testing is to a software system what a load-bearing inspection is to a bridge — you do not certify a bridge by walking across it (functional test) and concluding it works; you drive trucks of known weight across at increasing volumes, with strain gauges on every beam, and verify the deflection stays within spec under expected traffic, that the failure mode is graceful when overloaded (cracks before collapse), that nothing creeps over a long soak. A bridge whose 'average' load it can carry is 50 tonnes but whose p99 stressor reveals harmonic resonance at 80 tonnes is the bridge that fails on a windy day."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that *average latency* is a meaningful performance metric. It is not. A system whose mean is 50ms and p99 is 5 seconds has a user-experience problem the mean hides — 1 in 100 users sees a 5-second response time. Acceptance criteria should always be *percentiles* (or distributions); averages are easily skewed by outliers in both directions. Adjacent misconceptions: that performance tests in a stripped/non-production environment are meaningful (they are not — the test produces a measurement of *that environment*, not the system; production hardware, network, data volumes, dependency versions, and configuration are the load-bearing investment); that one-time pre-launch testing is enough (it is not — regressions accumulate; the ongoing value is continuous testing in CI); that load tests alone characterize the system (they do not — a complete pre-launch suite runs all six shapes, because each verifies a different property: load verifies SLO at design load, stress verifies graceful failure, spike verifies elasticity, soak verifies no leaks or memory growth, breakpoint quantifies the capacity ceiling); that performance testing replaces observability (it does not — performance testing is offline controlled measurement; observability is online real-traffic measurement; the two compose); that *coordinated omission* in the load tool doesn't matter (it does — Tene's canonical talk shows naive percentile reporting silently drops slow responses; honest tools account for it); and that a performance test without an SLO is a verification (it is not — without an SLO it is a measurement without a verdict; the SLO is what makes the test a verification rather than an information report).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Performance testing is the discipline of measuring a system's non-functional properties — latency, throughput, resource utilization, error rate under load — by running the system under controlled load conditions and observing the resulting metrics. Where functional tests answer 'does the system produce the right output?', performance tests answer 'does the system produce the right output *quickly enough* and at *sufficient scale*, while staying within resource budgets and error tolerances?'. The unit of judgment is whether the measured metrics meet defined acceptance thresholds (typically Service-Level Objectives expressed as percentiles, e.g., 'p95 latency below 200ms at 1,000 requests per second sustained for 30 minutes'). Performance testing is *controlled* and *offline*; observability is its production-runtime counterpart that measures the live system without imposed load.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/performance-testing/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1133"
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
