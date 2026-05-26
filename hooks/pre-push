@@ -1,0 +1,235 @@
+#!/usr/bin/env node
+/**
+ * Pre-push hook — Privacy Gate (L3)
+ *
+ * Blocks any push that would send a SKILL.md file containing internal/private
+ * content to the public `jacob-balslev/skills` repository.
+ *
+ * Architecture: ADR 0012 Layer 3 — "defense-in-depth gate"
+ *   skill-graph/docs/adr/0012-internal-skill-library-separation.md
+ *
+ * HARD RULE: No Sales Hub / Sales Channels / Printify / Shopify / customer /
+ * personal API / bank / credential / PII data may be pushed to this repo.
+ *
+ * === Installation ===
+ *
+ *   # One-time install (run from the skills repo root):
+ *   node hooks/install.js
+ *
+ *   # Or install manually:
+ *   cp hooks/pre-push .git/hooks/pre-push
+ *   chmod +x .git/hooks/pre-push
+ *
+ * === How it works ===
+ *
+ *   git calls this hook before pushing, passing remote name + URL on argv[2]/argv[3].
+ *   For each ref being pushed, git writes lines on stdin:
+ *
+ *     <local ref> SP <local sha1> SP <remote ref> SP <remote sha1> LF
+ *
+ *   The hook collects all SKILL.md files that are new or changed relative to
+ *   the remote and scans them for PRIVACY_PATTERNS violations. If any are found
+ *   the push is rejected with a clear error message.
+ *
+ * === Source of truth ===
+ *
+ *   PRIVACY_PATTERNS live in skill-graph/scripts/lib/privacy-patterns.js.
+ *   This hook imports from that shared module so the patterns stay in sync
+ *   across all gate layers (export pipeline, pre-push, CI).
+ *
+ *   Expected workspace layout:
+ *     ~/Development/skill-graph/  — skill-graph tooling repo
+ *     ~/Development/skills/       — this repo (public skills library)
+ *
+ *   If skill-graph is not found at that sibling path, the hook falls back to
+ *   looking for it via the SKILL_GRAPH_PATH env var, or exits with an install
+ *   reminder.
+ */
+
+'use strict';
+
+const path = require('path');
+const { execSync, spawnSync } = require('child_process');
+
+// ─── Repo root resolution (single source of truth) ────────────────────────────
+
+// Use `git rev-parse --show-toplevel` instead of __dirname-based math. A naive
+// `path.resolve(__dirname, '..')` is off by one when the hook is invoked from
+// .git/hooks/ (because __dirname there is .git/hooks/, so '..' lands at .git/,
+// not the repo root). Asking git is independent of where the hook lives.
+function getRepoRoot() {
+  const result = spawnSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' });
+  if (result.status !== 0 || !result.stdout) {
+    // Fallback: walk up from __dirname until we find a .git directory. Covers
+    // edge cases where git isn't on PATH for some reason.
+    const fs = require('fs');
+    let current = __dirname;
+    for (let i = 0; i < 6; i++) {
+      if (fs.existsSync(path.join(current, '.git'))) return current;
+      const parent = path.dirname(current);
+      if (parent === current) break;
+      current = parent;
+    }
+    // Last resort: assume installed-hook layout (.git/hooks/<name>).
+    return path.resolve(__dirname, '..', '..');
+  }
+  return result.stdout.trim();
+}
+
+// ─── Resolve the shared privacy-patterns module ───────────────────────────────
+
+function resolvePrivacyPatternsModule() {
+  // 1. Explicit override (useful in CI and custom workspace layouts)
+  if (process.env.SKILL_GRAPH_PATH) {
+    return path.join(process.env.SKILL_GRAPH_PATH, 'scripts/lib/privacy-patterns.js');
+  }
+
+  // 2. Standard workspace: skill-graph is a sibling of this repo
+  //    This repo: ~/Development/skills/
+  //    skill-graph: ~/Development/skill-graph/
+  const repoRoot = getRepoRoot();
+  const sibling = path.resolve(repoRoot, '..', 'skill-graph', 'scripts', 'lib', 'privacy-patterns.js');
+  return sibling;
+}
+
+function loadDetector() {
+  const modulePath = resolvePrivacyPatternsModule();
+  try {
+    const fs = require('fs');
+    fs.accessSync(modulePath);
+    return require(modulePath);
+  } catch {
+    process.stderr.write([
+      '',
+      'pre-push hook: ERROR — cannot load the shared privacy-patterns module.',
+      '',
+      '  Expected location: ' + resolvePrivacyPatternsModule(),
+      '',
+      '  This hook requires skill-graph to be cloned alongside this repo:',
+      '    ~/Development/skill-graph/',
+      '    ~/Development/skills/         ← this repo',
+      '',
+      '  Or set SKILL_GRAPH_PATH=/path/to/skill-graph to override.',
+      '',
+      '  The push has been BLOCKED to prevent accidental leakage of internal content.',
+      '  Fix the skill-graph path, then retry.',
+      '',
+    ].join('\n'));
+    process.exit(1);
+  }
+}
+
+const { detectPrivacyViolations } = loadDetector();
+
+// ─── Git helpers ─────────────────────────────────────────────────────────────
+
+/**
+ * Return the list of SKILL.md files that would be added or modified between
+ * `remoteRef` and `localRef`. Falls back to all SKILL.md files tracked by
+ * git when the remote ref is the zero SHA (first push of a new branch).
+ *
+ * @param {string} localSha   - Local commit SHA being pushed.
+ * @param {string} remoteSha  - Remote commit SHA (all-zeros = new branch / no upstream).
+ * @returns {string[]}         Absolute paths to changed SKILL.md files.
+ */
+function getChangedSkillFiles(localSha, remoteSha) {
+  const repoRoot = getRepoRoot();
+  const zeroSha = /^0{40}$/.test(remoteSha);
+
+  let diffOutput;
+  if (zeroSha) {
+    // New branch — scan all tracked SKILL.md files to be safe.
+    const result = spawnSync('git', ['ls-files', '*.md'], { cwd: repoRoot, encoding: 'utf8' });
+    diffOutput = (result.stdout || '').trim();
+  } else {
+    // Existing branch — only files changed vs the remote tip.
+    const result = spawnSync(
+      'git',
+      ['diff', '--name-only', '--diff-filter=ACMR', remoteSha, localSha, '--', '*.md'],
+      { cwd: repoRoot, encoding: 'utf8' }
+    );
+    diffOutput = (result.stdout || '').trim();
+  }
+
+  if (!diffOutput) return [];
+
+  return diffOutput
+    .split('\n')
+    .filter(f => f.endsWith('SKILL.md'))
+    .map(f => path.resolve(repoRoot, f));
+}
+
+// ─── Main ────────────────────────────────────────────────────────────────────
+
+function main() {
+  const repoRoot = getRepoRoot();
+
+  // Read push targets from stdin (one line per ref being pushed)
+  let stdinData = '';
+  try {
+    stdinData = require('fs').readFileSync('/dev/stdin', 'utf8');
+  } catch {
+    // /dev/stdin unavailable in some environments; fall back to empty
+    stdinData = '';
+  }
+
+  if (!stdinData.trim()) {
+    // Nothing being pushed (e.g. deletion-only push or empty stdin)
+    process.exit(0);
+  }
+
+  const allViolatingSkills = new Set();
+  const allFindings = [];
+
+  for (const line of stdinData.split('\n')) {
+    const parts = line.trim().split(' ');
+    if (parts.length < 4) continue;
+    const [, localSha, , remoteSha] = parts;
+
+    // Skip deletions (local sha is zeros)
+    if (/^0{40}$/.test(localSha)) continue;
+
+    const skillFiles = getChangedSkillFiles(localSha, remoteSha);
+    if (skillFiles.length === 0) continue;
+
+    const pathDisplay = p => path.relative(repoRoot, p);
+    const findings = detectPrivacyViolations(skillFiles, { pathDisplay });
+    for (const f of findings) {
+      allViolatingSkills.add(f.file);
+      allFindings.push(f);
+    }
+  }
+
+  if (allFindings.length === 0) {
+    process.exit(0);
+  }
+
+  // Push rejected — print clear error
+  process.stderr.write('\n');
+  process.stderr.write('┌─────────────────────────────────────────────────────────────────────┐\n');
+  process.stderr.write('│  pre-push BLOCKED — privacy violation detected                      │\n');
+  process.stderr.write('│  ADR 0012 Layer 3 gate (skill-graph/scripts/lib/privacy-patterns.js)│\n');
+  process.stderr.write('└─────────────────────────────────────────────────────────────────────┘\n');
+  process.stderr.write('\n');
+  process.stderr.write('The following SKILL.md files contain content that must NOT enter the\n');
+  process.stderr.write('public skills repository:\n\n');
+
+  for (const skillFile of [...allViolatingSkills].sort()) {
+    process.stderr.write(`  BLOCKED  ${skillFile}\n`);
+  }
+
+  process.stderr.write('\nViolations detail:\n\n');
+  for (const f of allFindings) {
+    process.stderr.write(`  ${f.file}:${f.line}  [${f.id}] ${f.message}\n`);
+    process.stderr.write(`           match: "${f.match}"\n`);
+  }
+
+  process.stderr.write('\n');
+  process.stderr.write('HARD RULE: No Sales Hub / customer / personal / API / bank data may\n');
+  process.stderr.write('enter the public skills repo. Remove the offending content and retry.\n\n');
+  process.stderr.write('See: skill-graph/docs/adr/0012-internal-skill-library-separation.md\n\n');
+
+  process.exit(1);
+}
+
+main();
