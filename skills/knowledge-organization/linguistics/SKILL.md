@@ -30,51 +30,144 @@ grounding:
 drift_check:
   last_verified: "2026-05-19"
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: foundations
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: knowledge-organization
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: foundations/language
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-19"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: '["linguistic precision","software linguistics","identifier morphology","polysemy resolution","polysemy map","register selection","audience register","blame-free error wording","what why action error structure","compound-word ordering","abbreviation policy","ambiguous identifier qualification","semantic naming","global audience language","cross-cultural language awareness","verb-noun naming rule","unqualified polysemous identifier","error-message linguistics"]'
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: '["this variable is named provider but it could mean fulfillment, auth, or payment -- what linguistic rule applies?","rewrite this error message to be specific, blame-free, and actionable","the word shipping means seller cost in one file and customer charge in another -- how do we resolve the polysemy without a glossary cleanup?","should this helper file be called utils.ts, helpers.ts, or something domain-specific?","explain how to phrase the same finance concept for an end-user, an agent, and a developer","audit this UI copy for register mismatch with the end-user audience","when is an abbreviation acceptable in a code identifier?","is this sentence clear for a global developer audience or full of idioms and ambiguous modifiers?"]'
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: '["decide kebab-case vs snake_case vs camelCase for new database columns","restructure this doc into a tutorial format with progressive disclosure","implement Intl.NumberFormat for DKK vs USD currency formatting","give me the canonical definition of reconciliation in our domain","review this PR for code quality and missing tests","rename this function and update every call-site across the repo","rewrite this release note only to remove AI tells and vary sentence rhythm"]'
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"naming-conventions","reason":"naming-conventions owns artifact-specific casing, prefix/suffix policy, and deterministic convention choice; linguistics owns the meaning-level rationale behind morphology, polysemy resolution, register, and error wording."},{"skill":"refactor","reason":"refactor owns behavior-preserving rename mechanics across call sites; linguistics owns choosing a precise name before or during the rename."},{"skill":"information-architecture","reason":"information-architecture owns docs/navigation/page hierarchy and findability; linguistics owns sentence-level and identifier-level meaning inside that structure."},{"skill":"microcopy","reason":"microcopy owns specialized in-product UI-text patterns such as button, empty-state, tooltip, dialog, and toast structures; linguistics owns underlying language rules and register diagnostics."},{"skill":"writing-humanizer","reason":"writing-humanizer owns prose polish, AI-tell removal, and rhythm repair; linguistics owns morphology, semantic ambiguity, audience register, and blame-free error language."}],"related":["semantics","writing-humanizer","microcopy","prompt-craft","intent-recognition","code-review"],"verify_with":["naming-conventions","code-review","writing-humanizer"]}'
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: '{"domain_object":"Linguistic precision for software identifiers, UI copy, error messages, technical documentation, and cross-cultural language choices","grounding_mode":"universal","truth_sources":["https://developers.google.com/style/voice","https://developers.google.com/style/tone","https://developers.google.com/style/translation","https://learn.microsoft.com/en-us/windows/apps/design/style/writing-style","https://learn.microsoft.com/en-us/windows/win32/debug/error-message-guidelines","https://www.w3.org/TR/WCAG22/","https://www.nngroup.com/articles/ten-usability-heuristics/","https://www.nngroup.com/articles/hostile-error-messages/"],"failure_modes":["naming_taste_mistaken_for_linguistic_fit","artifact_casing_policy_confused_with_semantic_naming","polysemous_identifier_left_unqualified","generic_handle_process_or_utils_names_hide_contracts","error_copy_blames_user_or_hides_action","agent_register_leaks_into_end_user_copy","global_audience_copy_uses_idioms_jargon_or_untranslatable_phrasing","linguistics_overowns_refactor_docs_ia_microcopy_or_i18n_implementation"],"evidence_priority":"equal"}'
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: '{"readiness":"scripted","targets":["skill-md"]}'
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: '{"stale_after_days":365,"review_cadence":"quarterly"}'
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Treat every name or visible string as a small language artifact. Its form carries a contract: morphology makes the artifact parseable, semantics fixes what it means, pragmatics fits the situation, and register fits the audience.
 
     Morphology rules make identifiers scan correctly: artifact casing is local convention, but compound order, abbreviation safety, and verb/noun shape determine whether the reader can parse the name. Semantic rules prevent one word from carrying multiple meanings without qualification. Pragmatic rules decide whether a message names the action a reader can take. Register rules choose the words appropriate for end-users, agents, developers, and global audiences.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     This skill replaces taste-based naming and copy decisions with repeatable linguistic checks. It prevents weak contracts such as generic handlers, unqualified polysemous identifiers, utility-file dumping grounds, agent-register UI copy, blame-heavy errors, and culturally narrow language that does not translate cleanly.
 
     The goal is unambiguous meaning at the point of contact: the name itself, the label itself, the error itself, or the sentence itself. Glossaries and docs can support the system, but they must not compensate for unclear local wording.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from naming-conventions, which owns artifact-specific casing and deterministic convention policy. Distinct from refactor, which owns behavior-preserving rename mechanics across call sites. Distinct from information-architecture, which owns document, navigation, and content-structure findability. Distinct from microcopy, which owns specialized UI-text pattern catalogs. Distinct from writing-humanizer, which owns prose polish, AI-tell removal, and rhythm repair.
 
     Use this skill for the linguistic rationale and diagnostic rule; hand off when the task becomes implementation, bulk rename mechanics, document architecture, specialized UI pattern selection, or final prose polish.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Linguistics in software is grammar for the interface between people and systems: the syntax of a name or sentence should make the intended meaning easy to recover without hidden context."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is treating naming and wording as personal preference. Ambiguous words, weak compounds, blame-heavy error text, and wrong register create predictable comprehension failures; agreement inside one team does not make the language portable or clear."
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: '{"definition":"Linguistics applied to software is the discipline of using human-language structure, meaning, context, and audience register to shape code identifiers, labels, error messages, UI copy, and technical prose so readers can decode intent reliably.","mental_model":"Treat every name or visible string as a small language artifact. Its form carries a contract: morphology makes the artifact parseable, semantics fixes what it means, pragmatics fits the situation, and register fits the audience.","purpose":"The skill replaces taste-based naming and copy decisions with repeatable linguistic checks for ambiguity, misleading names, register mismatch, blame assignment, and cross-language readability.","boundary":"It does not own casing convention policy, repo-wide rename mechanics, document information architecture, specialized UI microcopy pattern catalogs, final prose humanization, or locale-format implementation.","taxonomy":"Foundations/language capability covering morphology, semantics, pragmatics, sociolinguistic register, error-message language, and cross-cultural language awareness for software surfaces.","analogy":"It is grammar for the interface between people and software: the syntax of a name or sentence should make the intended meaning easy to recover without hidden context.","misconception":"The common mistake is treating naming and wording as personal preference. Ambiguous words, weak compounds, blame-heavy error text, and wrong register create predictable comprehension failures."}'
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/knowledge-organization/linguistics/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
