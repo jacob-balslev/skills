@@ -4,44 +4,129 @@ description: "Use when designing or reviewing React error boundaries: what an er
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: frontend-ui
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/frontend
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"React Error Boundary\",\"componentDidCatch\",\"getDerivedStateFromError\",\"react-error-boundary library\",\"Next.js error.tsx\",\"global-error.tsx\",\"error boundary granularity\",\"resetKeys\",\"error boundary with Suspense\",\"caught render error\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"my error boundary isn't catching errors\",\"do I need an error boundary here\",\"why does the whole page crash on one component error\",\"how do I recover from a caught error\",\"error.tsx vs global-error.tsx\",\"why doesn't this catch async errors\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design a route-segment error.tsx for a dashboard so one failing widget doesn't blank the whole page\",\"diagnose why a click-handler crash bypasses the error boundary and propagates to window.onerror\",\"pair an error boundary with a Suspense boundary so failed fetches show error UI while successful ones stream in\",\"integrate an error boundary with Sentry so caught errors are reported with the component tree context\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design where to place Suspense fallback boundaries (use suspense-patterns)\",\"design the API response contract for a 500 error (use api-design)\",\"set up Sentry SDK initialization (use error-tracking)\",\"handle a Promise rejection in an event handler (use code-review for the local try/catch pattern)\",\"configure the Sentry, Datadog, or other error-tracking SDK and dashboards (use error-tracking)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"suspense-patterns\",\"hooks-patterns\",\"error-tracking\",\"server-components-design\"],\"boundary\":[{\"skill\":\"suspense-patterns\",\"reason\":\"suspense-patterns owns the loading-state boundary mechanism; error-boundary owns the failure-state boundary mechanism. They pair in the canonical ErrorBoundary→Suspense→Component nesting but are distinct primitives that catch different signals (thrown Error vs thrown Promise).\"},{\"skill\":\"hooks-patterns\",\"reason\":\"hooks-patterns covers component-internal logic discipline; error-boundary is a tree-level mechanism that handles failures from anywhere in its descendant subtree. Class-component requirement of error boundaries is the one place hooks discipline does not apply.\"}],\"verify_with\":[\"code-review\",\"error-tracking\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     An error boundary is a React component (still class-only in React 19) that catches JS errors thrown anywhere in its DESCENDANT TREE during rendering, lifecycle methods, and constructors — and renders a fallback UI instead of unmounting the broken subtree all the way to the root. What it catches: render-phase throws, lifecycle method throws, constructor throws, hook-initializer throws (useState initial value, useEffect render-phase setup). What it does NOT catch: event handler throws, async/setTimeout/Promise rejections (run outside React's call stack), errors in the boundary itself (propagate to the next ancestor). Placement is a granularity decision: page-level (any error replaces the whole page), feature-level (a chart's error fallback while the rest of the page works), leaf-level (one widget's fallback). Pairs with Suspense (different primitives — thrown Error vs thrown Promise — must be distinct components).
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Before React 16, a render-phase throw had nowhere to go — the reconciler caught it, logged it, and produced a corrupted or blank tree. Error boundaries gave React the recovery primitive it had been missing: a throw in one subtree unmounts the broken subtree but leaves everything else running. The discipline replaces "one bug crashes the whole app" with "the smallest meaningful scope shows its fallback while the rest keeps working." The second-order property is HONESTY: a caught error is still an error. A boundary that swallows the throw without reporting externally degrades the UI silently — users see "Something went wrong," developers see nothing. Every boundary must pair with a report-to-Sentry (or equivalent) call so the fallback is the user-facing recovery and the developer-facing alarm.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from suspense-patterns, which owns the LOADING-state boundary mechanism — error-boundary owns the FAILURE-state boundary mechanism. They pair in the canonical ErrorBoundary→Suspense→Component nesting but are distinct primitives catching different signals (thrown Error vs thrown Promise) and must be distinct components. Distinct from hooks-patterns, which owns component-internal logic discipline — error-boundary is a TREE-LEVEL mechanism handling failures from anywhere in its descendant subtree (and the one place hooks discipline does not apply because boundaries require class components). Distinct from error-tracking, which owns the configuration of error reporting SDKs (Sentry, Datadog) and the dashboards/alerts — error-boundary is the React-level primitive; error-tracking is the infrastructure-level service the boundary reports into. Distinct from api-design, which owns backend error contracts (HTTP status codes, error envelope shapes) — error-boundary handles the rendering-side failure regardless of the underlying cause.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "An error boundary is to React's component tree what a circuit breaker is to a building's electrical system — when a fault occurs in one circuit, the breaker for THAT circuit trips, isolating the fault so the rest of the building keeps running, while sub-panels still healthy on other circuits keep lights and outlets working. A single master breaker would protect against fault propagation but at the cost of darkening everything; the right granularity is one breaker per useful zone."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that error boundaries catch all errors that happen "in the component." They do not. They catch errors thrown inside React's call stack during render, lifecycle methods, or constructors. Errors thrown in event handlers (`onClick`, `onChange`) run imperatively OUTSIDE the render phase — React never sees them, the boundary never fires, they propagate to `window.onerror`. Async errors (setTimeout, Promise rejections, fetch failures inside event handlers) escape the boundary entirely. The canonical fix is the local `try/catch` + `setState(error)` pattern: catch the async error locally, transfer it into React state via setState, the next render throws synchronously during render phase, NOW the boundary catches it.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"An error boundary is a React component that catches JavaScript errors thrown anywhere in its descendant tree during rendering, in lifecycle methods, and in constructors — and renders a fallback UI instead of unmounting the broken subtree to the root. As of React 19 it must still be implemented as a class component using getDerivedStateFromError and/or componentDidCatch; function components cannot themselves be error boundaries (they can render one and provide its fallback). React's design choice: failure in a subtree should not require crashing the whole tree, but the boundary itself must be a stable component above the failure point.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/error-boundary/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
