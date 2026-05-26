@@ -4,46 +4,131 @@ description: "Use when reasoning about the foundational theory beneath data mode
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: code-engineering
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/data
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"relational model\",\"Codd\",\"normalization\",\"normal forms\",\"functional dependency\",\"1NF\",\"2NF\",\"3NF\",\"BCNF\",\"4NF\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"what normal form is this\",\"should this be normalized or denormalized\",\"explain functional dependencies\",\"relational vs document model\",\"Codd's rules\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"explain why a table is in 2NF but not 3NF and what change would bring it to 3NF\",\"decide whether a workload's read pattern justifies denormalization against the theoretical baseline\",\"compare the relational, document, and event-sourced models at the conceptual level for a given domain\",\"trace a functional-dependency closure to find a candidate key\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design the practical schema for a new persistence layer (use data-modeling)\",\"apply an expand-contract migration to change an existing schema (use schema-evolution)\",\"choose which indexes to maintain (use indexing-strategy)\",\"discover business entities without implementation details (use conceptual-modeling)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"data-modeling\",\"conceptual-modeling\",\"entity-relationship-modeling\",\"schema-evolution\"],\"boundary\":[{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns the practical method of designing persistence — turn a conceptual model into a working schema with keys, constraints, indexing implications. This skill owns the theoretical foundations beneath that method — what normal forms guarantee, what Codd's relational model formally provides, the algebra that makes joins composable, and the principled justification for or against denormalization. They are companion skills: theory and practice.\"},{\"skill\":\"conceptual-modeling\",\"reason\":\"conceptual-modeling owns implementation-neutral business-concept discovery (entities, relationships, attributes as business reality). This skill owns the formal data-model layer below conceptual modeling: the relational model, the algebra, the dependency theory. The two compose: conceptual modeling identifies entities; data-modeling-fundamentals formalizes how those entities map to relations.\"},{\"skill\":\"entity-relationship-modeling\",\"reason\":\"entity-relationship-modeling owns the ER notation and method (entities, relationships, cardinality, ER diagrams) as developed by Chen and extended by Bachman, Barker, and others. This skill owns the broader theoretical frame including the relational model that ER diagrams typically translate into. The boundary: ER is the diagramming and discovery layer; the relational model is the formal target.\"},{\"skill\":\"schema-evolution\",\"reason\":\"schema-evolution owns the migration mechanics — how to change a deployed schema without downtime. This skill owns the static theory of what a good schema is. The decision 'this schema should be in 3NF' is grounded by this skill; the application of that decision to a live database is `schema-evolution`'s domain.\"}],\"verify_with\":[\"data-modeling\",\"entity-relationship-modeling\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Data-modeling fundamentals is the body of formal theory beneath practical database design. *Codd's relational model* (1970) represents data as relations (sets of tuples) and provides a *closed algebra* (selection σ, projection π, join ⋈, union ∪, intersection ∩, difference −, division ÷, rename ρ) where every operator's input and output is a relation — making JOIN of JOIN of JOIN composable, which SQL inherits. The *normal forms* are a precise sequence of constraint-elimination steps: 1NF (atomic values only — no repeating groups), 2NF (1NF + every non-key attribute fully depends on the whole key — eliminates partial-key dependencies), 3NF (2NF + no non-key attribute depends on another non-key — eliminates transitive non-prime dependencies), BCNF (every non-trivial functional dependency has a superkey on its left — eliminates anomalies in overlapping candidate keys), 4NF (no non-trivial multi-valued dependencies), 5NF (every join dependency is implied by candidate keys). *Functional dependencies and the closure algorithm* are the tools used to derive normal-form membership and candidate keys. *Chen's entity-relationship model* (1976) sits above the relational model as a higher-abstraction layer that translates downward into relations.
 
     *Alternative data models* — document (per-document atomicity, no cross-document joins; MongoDB), graph (relationship traversal; Neo4j), key-value (point access only; Redis), wide-column (distributed scale, no joins/transactions; Cassandra), columnar (analytical aggregation; BigQuery, ClickHouse), time-series (timestamp-indexed writes; TimescaleDB, InfluxDB), event-sourced (full history; append-only ledger) — each can be characterized by what relational primitives it preserves, relaxes, or trades. The choice is principled when the trade is named explicitly; tribal when the model is chosen by reflex.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces folklore-driven design ("normalize because someone said it's good"; "denormalize because joins are slow") with principled, theory-grounded reasoning. Solves the problem that *data outlives application code* — application code is rewritten in years; stored data and integrations persist for decades — making a bad data model the most expensive kind of technical debt, with every consumer (application, report, integration, analytical job) depending on it and changes requiring coordinated migration across all of them. The discipline of getting the model right early pays back over the data's full lifetime. Sub-purposes: (1) make normalization decisions on functional dependencies and named anomaly classes (update, insert, delete anomalies) rather than aesthetic preference, (2) justify denormalization with measured read-performance need and a documented consistency-maintenance plan (not by reflex), (3) characterize alternative models against the relational baseline (what is being traded, for what gain), (4) keep integrity constraints (primary keys, foreign keys, NOT NULL, CHECK, UNIQUE) at the database layer where the theory requires them rather than delegating to application code.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from data-modeling, which owns the *practical method* of designing persistence — turn a conceptual model into a working schema with keys, constraints, and indexing implications. This skill owns the *theoretical foundations* beneath that method (what normal forms guarantee, what Codd's relational model formally provides, the algebra that makes joins composable, the principled justifications for denormalization). They are companion skills: theory and practice. Distinct from conceptual-modeling, which owns implementation-neutral business-concept discovery — that sits above this layer; the two compose (conceptual modeling identifies entities; this skill formalizes how those entities map to relations). Distinct from entity-relationship-modeling, which owns the ER notation and method (entities, relationships, cardinality, ER diagrams) — ER is the diagramming and discovery layer; the relational model in this skill is the formal target ER diagrams translate into. Distinct from schema-evolution, which owns the migration mechanics — this skill owns the static theory of what a good schema is; schema-evolution owns the application of that theory to a live database. Distinct from indexing-strategy and query-optimization (operational concerns about the schema's runtime behavior, not its formal shape).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Data-modeling fundamentals is to schema design what Euclidean geometry is to architecture — the architect does not draw a right-angled wall by intuition each time; they draw it because the geometry guarantees stability and squares lock together. A schema in 3NF is the wall built to plumb, where every dependency is structural and no anomaly is hiding in the carpentry. Denormalization is the deliberate decision to cut a non-load-bearing wall for an open floor plan — defensible when the workload justifies it, indefensible when the cost is invisible."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that "normalize until 3NF" or "always normalize to BCNF" is a universal rule, and that "denormalize for speed" is the inevitable counter. Both are folklore without the theory. Normalization is a principled cleanup procedure where each normal form eliminates a *specific class of anomaly* — the question is not "what normal form is this in" but "are the anomalies this form admits operationally relevant to our workload." A read-heavy reporting table can defensibly live in 2NF if its update anomalies don't matter; a write-heavy transactional table needs BCNF to avoid the anomalies that produce data corruption. Denormalization isn't "always wrong" or "always right" — it is a workload-driven decision with a *cost* (the redundant data must be maintained consistently, application-side) that must be made deliberately and documented. Adjacent misconceptions: that document and key-value stores "don't need data modeling" (they need it more — they trade relational primitives, and the trade must be made deliberately, not by reflex); that JSON columns are a substitute for proper schema design (they are not — they often hide anomalies the relational model would have surfaced, and queries over them are slow and brittle); that EAV (entity-attribute-value) tables are flexible (they trade integrity for flexibility and produce queries that are slow and brittle); and that the choice between relational, document, graph, columnar, time-series, and event-sourced is a "stack choice" rather than a *model* choice — each model trades specific relational primitives for specific access patterns, and the trade must be matched to the dominant workload, not the team's familiarity with a particular database product.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Data-modeling fundamentals is the body of formal theory beneath practical database design: Codd's relational model (1970), which represents data as relations (sets of tuples) and provides a closed algebra (selection, projection, join, union, intersection, difference, division) for querying them; the normal forms (1NF through 5NF and BCNF), each defined by the elimination of a specific class of dependency anomaly; the theory of functional dependencies and the closure algorithm used to derive normal-form membership and candidate keys; Chen's entity-relationship model (1976), which sits above the relational model as a higher-abstraction modeling layer that translates downward into relations; the principled justifications for normalization (avoid update, insert, delete anomalies) and for denormalization (workload-driven performance trade-offs against the normal-form baseline); and the alternative data models — document, graph, key-value, columnar, event-sourced — each of which can be characterized by what relational primitives it preserves, relaxes, or trades for a different access pattern. The skill is the *theory* a practitioner draws on when deciding what shape data should take and why; the practical application of that theory is `data-modeling`.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/data-modeling-fundamentals/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
