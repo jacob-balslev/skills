@@ -4,46 +4,131 @@ description: "Use when structuring a component library or design system for reus
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: design
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: design-craft
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: design/component-systems
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"component library design\",\"atomic design layering\",\"component primitives\",\"component composites\",\"compound components\",\"polymorphic component\",\"asChild prop\",\"headless component\",\"styled component\",\"controlled component\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"structure components for reuse\",\"how do I design this component API\",\"controlled or uncontrolled\",\"should I use props or composition\",\"compound component pattern\",\"headless vs styled\",\"primitive vs composite\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design the API surface for a Dialog component that must work in multiple products with different visual languages\",\"decide whether a Form component should be controlled, uncontrolled, or both\",\"structure a component library so primitives can be themed without rewriting the composites\",\"refactor a 30-prop component into a compound API that surfaces the right primitives\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"decide where the form's state lives across page navigations (use state-management)\",\"pick the design tokens for color and spacing (use visual-design-foundations)\",\"decide how a single product's modules are wired together internally (use design-module-composition)\",\"implement a specific React hook for form management (library docs / tactical decision)\",\"decide where state lives across the app — server, client UI, URL, or persistent (use state-management)\",\"design the application-level folder structure, routing, build, and deployment (use frontend-architecture)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"design-system-architecture\",\"design-module-composition\",\"visual-design-foundations\",\"state-management\",\"frontend-architecture\",\"typography-system\",\"color-system-design\"],\"boundary\":[{\"skill\":\"design-module-composition\",\"reason\":\"design-module-composition owns how a SINGLE PRODUCT's modules compose internally — layout, slots, named regions, within-product composition patterns. This skill owns the layer above: how components are STRUCTURED to be reusable across products, with API surfaces that survive multiple visual languages and interaction contracts. They compose: this skill says how to build the components; design-module-composition says how a product wires them up.\"},{\"skill\":\"design-system-architecture\",\"reason\":\"design-system-architecture owns the META structure of a design system: tokens, foundations, governance, documentation, distribution. This skill owns one stratum inside that: how components themselves are structured. A design system is a system of components plus tokens plus foundations plus distribution; this skill is the component stratum.\"},{\"skill\":\"visual-design-foundations\",\"reason\":\"visual-design-foundations owns the design language itself: color theory, typography, spacing, grid, motion. This skill owns the structural mechanism by which that language is delivered to product code — components that bind to tokens and surface the language in reusable form.\"}],\"verify_with\":[\"design-system-architecture\",\"design-module-composition\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Four interlocking questions answered for every component: (1) LAYER — primitive, composite, or product-specific assembly (dependencies flow downward; assemblies depend on composites depend on primitives; reversing destroys reuse); (2) API SURFACE — which props, slots, refs, callbacks, render functions, and which are open for extension vs closed for modification; (3) STATE CONTRACT — controlled (consumer owns the value), uncontrolled (component owns the value internally), or hybrid (defaultValue + onChange); (4) THEMING — headless/styled split as the architectural mechanism where behavior reuse and visual treatment evolve independently. The component's API is the public contract between its author and every future consumer; every prop, slot, and event becomes a thing future versions must support or break consumers.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "design system as a pile of components" with "components designed so their APIs outlive single products and single visual languages." Without component-architecture discipline, the first product produces a library that works for it, and the second product requires a rewrite — because primitives were coupled to that product's visual language, composites assumed that product's data shapes, and the API surface did not anticipate the variations the second product needs. The discipline is upstream of any specific framework or visual language: layering, composition, headless/styled split, controlled/uncontrolled, the open-closed principle are properties of how components are *structured*, independent of implementation. Teams that internalize these properties produce libraries that survive a decade of framework changes, brand refreshes, and product evolution.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from design-module-composition, which owns how a SINGLE PRODUCT's modules compose internally (layout, slots, named regions, within-product composition patterns) — component-architecture owns the LAYER ABOVE: how components are STRUCTURED to be reusable across products, with API surfaces that survive multiple visual languages. The two compose: this skill says how to build the components; design-module-composition says how a product wires them up. Distinct from design-system-architecture, which owns the META structure of a design system (tokens, foundations, governance, documentation, distribution) — component-architecture owns one stratum inside that: how the components themselves are structured. Distinct from visual-design-foundations, which owns the design language itself (color theory, typography, spacing, grid, motion) — component-architecture owns the structural mechanism by which that language is delivered to product code. Distinct from state-management, which owns where state lives across the app — component-architecture owns the state-contract API exposed by the component (controlled / uncontrolled / hybrid).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Component architecture is to a UI library what API design is to a backend service — the public contract is the only thing consumers see; every consumer depends on shape, behavior, and naming for things that may seem internal to the author; once a version ships, every prop and slot becomes a thing future versions must continue to support, just as every endpoint and field of a public API does. The headless/styled split is to component libraries what the data-plane/control-plane split is to distributed systems: separating the part that changes slowly (behavior, contracts) from the part that changes fast (visual treatment, theming)."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that a "design system" is a pile of components you can pick from. It is not. A design system is at minimum tokens + foundations + components + distribution + governance, and the components themselves are at minimum primitives + composites + product-specific assemblies with dependencies flowing strictly downward. Picking up a flat pile of components produces architectural mistakes: a primitive that imports product-specific tokens (can't be reused), a composite that wraps a styled primitive when it should compose a headless one (can't be re-themed), a 30-prop component with mostly-independent flags (should have been a compound API with sub-components). The discipline is to ask "what layer is this, what does it depend on, what's its API contract?" before reaching for it — and to design new components with the same questions explicit, not implicit.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Component architecture is the architectural discipline of structuring a library of UI components so that they can be reused across products, themes, and teams without each reuse requiring a rewrite. The discipline answers four interlocking questions: (1) at what LAYER does a given concern belong — primitive, composite, product-specific assembly; (2) what is the API SURFACE — which props, slots, refs, callbacks, render functions, and which are open for extension vs closed for modification; (3) what STATE CONTRACT does the component expose — controlled, uncontrolled, hybrid; (4) what THEMING and styling mechanism allows the component's behavior to remain stable while its visual language changes. The discipline is distinct from the visual design language itself (which colors, which type scale) and from within-product wiring (which screens compose which modules) — it is the architectural stratum that makes both possible by producing components whose API outlives any single product instance and any single visual treatment.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/component-architecture/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1107"
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
