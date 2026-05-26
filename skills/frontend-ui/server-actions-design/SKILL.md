@@ -4,44 +4,129 @@ description: "Use when designing or reviewing Server Actions: the 'use server' d
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: frontend-ui
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/frontend
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"Server Actions\",\"Server Function declaration\",\"form action attribute\",\"useActionState\",\"useFormStatus\",\"forms that work without JavaScript\",\"revalidatePath\",\"revalidateTag\",\"server mutation Next.js\",\"validate Server Action inputs\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"how do I submit a form to the server\",\"do I need an API route for this mutation\",\"how do I call a server function from a button\",\"why is my Server Action exposed as an endpoint\",\"useActionState vs useFormState\",\"how do I revalidate after mutation\",\"can Server Actions run in event handlers\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design a 'create comment' form using Server Actions plus useActionState so it works without JavaScript and reports server-side validation errors\",\"decide whether a delete button should call a Server Action or an API route\",\"audit a Server Action for missing authorization (the function looks like a normal call but is publicly invokable)\",\"design the revalidation strategy for a mutation that affects multiple cached routes\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design a Server Component that reads data on render (use server-components-design)\",\"design a public REST API consumed by mobile clients (use api-design)\",\"choose between SSR and SSG (use rendering-models)\",\"design the visual UX of a form's validation states (use form-ux-architecture)\",\"design the visual states and accessibility of a form (use form-ux-architecture)\",\"design a public HTTP contract for mobile, third-party, or server-to-server callers (use api-design)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"server-components-design\",\"client-server-boundary\",\"form-ux-architecture\",\"api-design\",\"hooks-patterns\"],\"boundary\":[{\"skill\":\"server-components-design\",\"reason\":\"server-components-design owns the read path — Server Components fetch data on render; server-actions-design owns the write path — Server Actions execute mutations triggered from the client. They share infrastructure (RSC, 'use server') but solve distinct problems.\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the serialization and directive mechanics of the boundary itself; server-actions-design owns the discipline of using the 'use server' side of that boundary for mutations.\"}],\"verify_with\":[\"code-review\",\"api-design\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     A Server Action is a JavaScript function marked with `'use server'` (either at the module level for a whole file of actions, or as the first line of a single function body) that executes on the server but is invokable from the client. The bundler turns calls to it from Client Components into a network round-trip: arguments are serialized, the function runs server-side, the return value is serialized back. Integration with HTML forms via `<form action={action}>` works WITHOUT JavaScript (progressive enhancement — the browser performs native POST, server returns redirect, page navigates). React 19's `useActionState` (was `useFormState` in 18.4) gives React-aware state across action calls; `useFormStatus` gives pending UI. Revalidation primitives (`revalidatePath`, `revalidateTag`, `redirect`) participate in the mutation pipeline. The central design: a Server Action that LOOKS like a function call is a public POST endpoint.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces the two-parallel-structures pattern (client-side fetch + server-side route handler with manual wire format) with a single declaration. Before Server Actions, every mutation required: a client-side `fetch('/api/foo', {method: 'POST', body: JSON.stringify({...})})`, a server-side route handler that parsed the body, validated, authorized, and serialized a response, agreement on a wire format, and CSRF tokens plumbed through. Server Actions collapse that into one function with `'use server'`. The collapse is SYNTACTIC, not SEMANTIC — the function is still invoked over the network by anyone who finds its identifier with arguments they control. The discipline is to treat the function as a public endpoint disguised as a function: validate every input, authorize every call, fail loudly on any assumption that the caller is your own UI rather than an attacker with curl.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from server-components-design, which owns the READ path (Server Components fetch data on render) — server-actions-design owns the WRITE path (Server Actions execute mutations triggered from the client). They share infrastructure (RSC, `'use server'` directive) but solve distinct problems. Distinct from client-server-boundary, which owns the SERIALIZATION and directive mechanics of the boundary itself — server-actions-design owns the discipline of using the `'use server'` side of that boundary for mutations specifically. Distinct from api-design, which owns externally-facing API surface (REST/GraphQL, public mobile/third-party consumers) — server-actions-design owns the in-app mutation endpoint that is tightly bound to the codebase that calls it (not for external consumers; if mobile/third-party need it, use a real API route). Distinct from form-ux-architecture, which owns the visual UX of form states (validation feedback, layout, microcopy) — server-actions-design owns the wire-and-execution side of the mutation.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Server Actions are to React mutations what stored procedures are to database access — the function looks like an ordinary call in client code, but the work happens on the privileged side of a trust boundary, with the same security implications: the caller controls the arguments, but cannot see the implementation; the implementation must validate every input and authorize every call as if the caller were a hostile script with curl, because functionally they could be."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that `'use server'` makes a function "internal" — that because it looks like an imported function call in client code, callers must come from the application's own UI. They do not. The bundler exposes every Server Action as a publicly-reachable POST endpoint with a generated identifier; anyone who finds that identifier can hit it with arbitrary arguments. The discipline is to treat every Server Action as a public API endpoint with all the security obligations that implies: validate inputs structurally (the bytes may not be the expected shape) and semantically (the values may not be in the expected range), authenticate the caller, authorize the action against the caller's permissions, rate-limit hot endpoints, and log for audit. A Server Action without these is a public POST endpoint hoping nobody will find it.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"A Server Action is a JavaScript function marked with 'use server' (either at the module level or as the first line of the function body) that executes on the server but is invokable from the client. The bundler turns calls to it from Client Components into a network round-trip: arguments are serialized, the function runs server-side, the return value is serialized back. The function itself looks like an ordinary import in client code, which is the design's main strength and its main security trap — what looks like a function call is a public POST endpoint.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/server-actions-design/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
