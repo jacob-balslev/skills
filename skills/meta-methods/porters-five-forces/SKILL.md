@@ -6,41 +6,129 @@ compatibility:
   notes: "Markdown, strategy memos, market-entry analysis, competitive strategy, executive decision-making"
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: foundations
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: meta-methods
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: foundations/strategy
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-26"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check:
     last_verified: "2026-05-26"
     truth_source_hashes:
       "skills/foundations/porters-five-forces/references/porters-five-forces-sources.md": "66c6fd769ae91f3815b7c34e4fe2c80809b12203bf4e2c5c05220517b4746511"
       "skills/foundations/porters-five-forces/references/upstream-displacement-2026-05-26.md": "eab1270c9ca85a16946d067291a2e74d4effa88ea1649a7f2c3de3914e515b8c"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: stable
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"porter five forces\",\"porters five forces\",\"five forces\",\"industry structure\",\"competitive forces\",\"industry attractiveness\",\"buyer power\",\"supplier power\",\"threat of entrants\",\"threat of substitutes\",\"competitive rivalry\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"analyze this market with Porter's Five Forces\",\"which forces make this industry unattractive?\",\"is supplier power or buyer power the bigger risk in this category?\",\"we are entering a new market; diagnose industry structure before we choose a position\",\"map how substitutes and new entrants could change the profit pool\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"turn this vague product strategy into where-to-play and how-to-win choices\",\"rank these roadmap items by expected impact\",\"estimate the TAM for this market\",\"classify this company's durable moat source\",\"write OKRs for the chosen strategy\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"playing-to-win\",\"reason\":\"playing-to-win owns integrated strategy choices; porters-five-forces owns upstream industry-structure diagnosis\"},{\"skill\":\"prioritization\",\"reason\":\"prioritization scores tasks or options; porters-five-forces analyzes industry forces and profit-pool pressure\"},{\"skill\":\"framework-fit-analysis\",\"reason\":\"framework-fit-analysis chooses among methods or technologies; porters-five-forces applies one specific competitive-structure framework\"}],\"related\":[\"playing-to-win\",\"constraint-awareness\",\"epistemic-grounding\",\"framework-fit-analysis\"],\"verify_with\":[\"epistemic-grounding\",\"constraint-awareness\"]}"
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: "{\"domain_object\":\"Porter's Five Forces competitive strategy framework\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://www.isc.hbs.edu/strategy/business-strategy/Pages/the-five-forces.aspx\",\"https://hbr.org/2008/01/the-five-competitive-forces-that-shape-strategy\",\"skills/foundations/porters-five-forces/references/porters-five-forces-sources.md\",\"skills/foundations/porters-five-forces/references/upstream-displacement-2026-05-26.md\"],\"failure_modes\":[\"industry_boundary_too_broad\",\"direct_competitor_only_view\",\"force_names_listed_without_drivers\",\"firm_strength_confused_with_industry_structure\",\"substitutes_confused_with_rivals\",\"market_size_substituted_for_profitability\",\"static_snapshot_ignores_trends\"],\"evidence_priority\":\"general_knowledge_first\"}"
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Porter's Five Forces treats profitability as a structural outcome of five pressures around an industry, not just the visible fight among direct competitors. The primitives are the industry boundary, buyers, suppliers, potential entrants, substitutes, current rivals, structural drivers behind each force, and the resulting division of economic value across the profit pool."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: "This skill prevents agents from mistaking a market summary, TAM estimate, competitor list, or company-strength memo for competitive strategy analysis. It replaces shallow market attractiveness prose with a force-by-force diagnosis of who can capture value, who can bid it away, which forces are changing, and what strategic position or no-go decision follows."
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: "Five Forces is for industry-structure and profit-pool diagnosis. It is not a Playing to Win strategy cascade, Seven Powers moat taxonomy, SWOT inventory, PESTEL macro scan, market-sizing model, OKR system, backlog prioritization method, or firm-specific capability audit. Those tools can feed or follow the analysis, but they do not replace the five structural forces."
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Five Forces is like checking the pressure on all sides of a container: the firm may be strong, but the industry's structure determines where the pressure leaks value away."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is treating Five Forces as a checklist of five labels or as a direct-competitor analysis. The method only works when each force is tied to structural drivers and then translated into profitability, positioning, and change over time."
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: PASS
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 last_audited: 2026-05-26
 lint_verdict: PASS
