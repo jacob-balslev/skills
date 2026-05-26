@@ -64,7 +64,7 @@ metadata:
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/product/keywords/SKILL.md
+  skill_graph_canonical_skill: skills/product-domain/keywords/SKILL.md
   structural_verdict: UNVERIFIED
   truth_verdict: UNVERIFIED
   comprehension_verdict: UNVERIFIED

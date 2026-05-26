@@ -41,7 +41,7 @@ metadata:
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/quality/testing/test-driven-development/SKILL.md
+  skill_graph_canonical_skill: skills/quality-assurance/test-driven-development/SKILL.md
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   lifecycle: "{\"stale_after_days\":180,\"review_cadence\":\"quarterly\"}"
   structural_verdict: UNVERIFIED

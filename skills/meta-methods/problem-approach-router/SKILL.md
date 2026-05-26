@@ -30,7 +30,7 @@ metadata:
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/foundations/problem-approach-router/SKILL.md
+  skill_graph_canonical_skill: skills/meta-methods/problem-approach-router/SKILL.md
   structural_verdict: UNVERIFIED
   truth_verdict: UNVERIFIED
   comprehension_verdict: UNVERIFIED
