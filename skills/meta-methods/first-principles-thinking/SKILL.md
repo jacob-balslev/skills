@@ -4,23 +4,90 @@ description: "Use when a problem is trapped inside inherited assumptions, copied
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 7
+
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
-  type: capability
-  category: foundations
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: meta-methods
+
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
-  domain: foundations/reasoning
+
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments (e.g., `foundations/reasoning`). Remove when `subject` alone is sufficient.
+  domain: foundations/reasoning
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # Authors of NEW skills must NOT carry `type` / `category`. The schema currently still
+  # accepts them as optional properties pending schema-level removal.
+
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
+  type: capability
+
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
+  category: foundations
+
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
-  freshness: "2026-05-20"
+
+  # freshness: ISO date the skill body was last reviewed or updated.
+  freshness: "2026-05-26"
+
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check:
     last_verified: "2026-05-20"
+
+  # === Eval-health: three orthogonal axes ===
+  # Introduced in schema_version 2 to split what v1's single `eval_status` enum collapsed.
+  # The three fields answer three different questions and must NOT be collapsed back to a boolean.
+  # See docs/field-rationale.md § eval_artifacts + § eval_state + § routing_eval for rationale.
+
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
+
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords:
     - first principles thinking
     - first principle
@@ -32,22 +99,42 @@ metadata:
     - inherited assumptions
     - reasoning from basics
     - ab initio reasoning
+
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended (rare; keywords + examples are usually enough).
   triggers:
     - reason from first principles
     - rebuild this from fundamentals
     - strip the assumptions
     - what are the primitive truths here
     - stop reasoning by analogy
+
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice, not imperative abstract form. Improves retrieval recall
+  # beyond keywords alone. Required when `routing_eval: present`.
   examples:
     - "We keep copying the old pricing model. Rebuild the problem from first principles."
     - "This architecture decision is full of assumptions. What facts and constraints are actually irreducible?"
     - "Everyone says this workflow needs five steps, but why? Strip it to fundamentals."
     - "The analogy to competitors is misleading. Derive the design from user needs and constraints instead."
+
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
+  # Leave absent until you have SEEN the router misfire — speculative anti_examples rarely match reality.
   anti_examples:
     - "This incident happened yesterday. Find the root cause."
     - "Update the probability after new evidence arrives."
     - "Score these options by expected monetary value."
     - "Imagine this plan failed and list why."
+
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations:
     related:
       - epistemic-grounding
@@ -58,29 +145,74 @@ metadata:
     verify_with:
       - epistemic-grounding
       - conceptual-modeling
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # Required to be populated when the skill needs concept transfer. Each is one paragraph
+  # that teaches a specific facet of the concept. Universal, no repo-specific nouns.
+
+  # mental_model: the primitives of the concept and how they relate.
   mental_model: |
     First-principles thinking has three primitives: candidate beliefs, primitive premises, and derived conclusions. Candidate beliefs are everything currently accepted in the problem frame: facts, rules, conventions, analogies, preferences, constraints, and proxy metrics. Primitive premises are the subset that cannot be derived from another premise inside the relevant domain and that survives evidence, definition, or constraint tests. Derived conclusions are rebuilt from those primitives through explicit inference steps. The method moves downward from inherited belief to irreducible premise, then upward from premise to design, decision, or explanation.
+
+  # purpose: the problem this concept solves and why the field exists.
   purpose: |
     Replaces reasoning by inheritance with reasoning by construction. Without it, teams copy existing solutions, argue from analogy, preserve outdated constraints, and optimize around proxy rules whose original purpose has been forgotten. First-principles thinking strips those inherited layers away until only load-bearing facts, definitions, laws, constraints, and values remain; then it rebuilds a solution that is justified by those primitives rather than by precedent.
+
+  # boundary: what this concept is NOT. Distinguishes it from adjacent skills by naming
+  # the MECHANISM that differs, not just the label. Universal terms only — no repo nouns.
   boundary: |
     Distinct from root-cause analysis, which starts after an observed failure and asks what caused that failure; first-principles thinking can be used before anything fails, when the problem frame itself may be wrong. Distinct from inversion, which asks what would make the goal fail; first-principles thinking asks what must be true before any solution is valid. Distinct from Bayesian reasoning, which updates belief weights after evidence; first-principles thinking identifies the premises whose truth or falsity should be weighted. Distinct from expected-value reasoning, which compares options once the option space exists; first-principles thinking may reveal that the inherited option space is wrong.
+
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "First-principles thinking is like dismantling a machine to its load-bearing parts, discarding decorative casing and copied attachments, then rebuilding only the mechanism that the physics of the problem requires."
+
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The common misconception is that first-principles thinking means ignoring all prior work. It does not. Prior work is useful evidence and can supply candidate premises, but it is not automatically foundational. The test is whether a belief is derivable, contingent, negotiable, or merely conventional. A copied rule may survive as a primitive if it encodes a real constraint; it fails if it is only inherited habit.
+
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt).
+  # targets — array; currently only `skill-md` is in the enum.
   portability:
     readiness: declared
     targets:
       - skill-md
+
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle:
     stale_after_days: 365
     review_cadence: quarterly
+
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim (DOES NOT match `schema_version` semantics).
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped for the field's contract.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v7
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/meta-methods/first-principles-thinking/SKILL.md
+
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. Each verdict is set by a specific audit gate;
+  # UNVERIFIED is the honest default until that gate has run against the skill.
+
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
