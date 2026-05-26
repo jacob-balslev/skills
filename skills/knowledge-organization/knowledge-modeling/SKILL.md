@@ -6,48 +6,141 @@ compatibility:
   notes: "Theory-level skill. Applies to any AI-coding workspace that maintains structured knowledge artefacts: skill libraries, reference docs, decision records, runbooks, agent memory systems, RAG/GraphRAG pipelines."
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: foundations
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: knowledge-organization
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: foundations/knowledge
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-18"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-18\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"knowledge representation\",\"knowledge graph\",\"frames and slots\",\"production rules\",\"semantic network\",\"concept map\",\"procedural ontology PKO\",\"hybrid knowledge representation\",\"tacit to explicit knowledge\",\"knowledge acquisition pipeline\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"should this domain knowledge be a graph, a set of rules, a frame structure, or a hybrid?\",\"our skill library keeps adding prose but the agent can't reason over relationships — which representation should change?\",\"the agent retrieves topically similar passages but misses structurally related facts — is GraphRAG the right shift?\",\"how do I capture decision traces and triggers as first-class entities so the agent can replay why it chose Y?\",\"we have facts, exceptions, and procedural decisions for an audit system — what representation keeps both retrieval and reasoning tractable?\",\"should this workflow stay a human concept map or be promoted to machine-usable production rules?\",\"we want to validate the knowledge base against real scenarios — what completeness / consistency / relevance / currency checks should run?\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design the database tables and foreign keys for this schema\",\"I just need a clean IS-A category hierarchy with no rules or graph behavior\",\"I need formal OWL axioms with class restrictions and reasoning semantics\",\"I want the exact edge labels (hypernymy / meronymy / synonymy) between concepts\",\"I need to maintain the skill library tooling and overlap detector\",\"abstract the domain into entities and relationships in human-readable terms before any database talk\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"conceptual-modeling\",\"reason\":\"conceptual-modeling is the human-readable domain analysis layer (entities, attributes, relationships, cardinality); knowledge-modeling is the representation-strategy layer above that — choosing between graphs, frames, rules, and hybrids\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns logical and physical data structures such as tables, columns, constraints, and persistence shape; knowledge-modeling owns meaning structures and representation paradigms\"},{\"skill\":\"taxonomy-design\",\"reason\":\"taxonomy-design owns pure IS-A hierarchy design and browse/category structure; knowledge-modeling owns broader representation choice across graphs, frames, rules, concept maps, and hybrids\"},{\"skill\":\"ontology-modeling\",\"reason\":\"ontology-modeling owns formal axioms, OWL/RDFS-style constraints, and automated reasoning semantics; knowledge-modeling decides whether that level of formality is needed\"},{\"skill\":\"semantic-relations\",\"reason\":\"semantic-relations owns exact edge-label semantics such as hypernymy, meronymy, synonymy, and polysemy; knowledge-modeling chooses the representation paradigm that will contain those edges\"},{\"skill\":\"context-graph\",\"reason\":\"context-graph is one specific application of knowledge modeling to workspace context topology; knowledge-modeling is the general theory it draws on\"},{\"skill\":\"skill-infrastructure\",\"reason\":\"skill-infrastructure is the live tooling that maintains the skill library; knowledge-modeling is the theory of what kind of knowledge artefact a SKILL.md is and why frames are the right paradigm for one\"}],\"related\":[\"conceptual-modeling\",\"ontology-modeling\",\"taxonomy-design\",\"semantic-relations\",\"context-graph\",\"context-engineering\",\"skill-infrastructure\"],\"verify_with\":[\"conceptual-modeling\",\"ontology-modeling\"]}"
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: "{\"domain_object\":\"Knowledge representation paradigm choice and GraphRAG-ready knowledge modeling\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"https://doi.org/10.1016/0004-3702(82)90012-1\",\"https://books.google.com/books/about/Knowledge_Representation_and_Reasoning.html?id=ln6Ux-EZm6YC\",\"https://courses.media.mit.edu/2004spring/mas966/Minsky%201974%20Framework%20for%20knowledge.pdf\",\"https://www.w3.org/TR/skos-reference/\",\"https://arxiv.org/abs/2404.16130\"],\"failure_modes\":[\"representation_chosen_by_familiarity_not_query_pattern\",\"graph_structure_too_sparse_for_graphrag\",\"formalism_overfit_to_theory_not_maintenance\",\"tacit_knowledge_transcribed_without_validation\",\"taxonomy_used_when_rules_or_frames_are_required\"],\"evidence_priority\":\"equal\"}"
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Knowledge modeling is the discipline of choosing a *representation paradigm* — knowledge graph (nodes + edges + properties), frames (structured records with slots and inheritance), semantic network (labelled IS-A/HAS-A concepts), production rules (IF→THEN decision logic), concept map (propositions for human reading), procedural ontology / PKO (decisions + state changes + triggers as first-class entities), or hybrid — that fits how the knowledge will be queried, reasoned over, and maintained. Drawing from Newell's *knowledge level* and Brachman & Levesque's KR&R tradition, it treats representation as a *strategic choice with explicit expressiveness-tractability trade-offs* rather than as a default.
 
     *Choose by the primary query pattern*: "what is related to X?" → graph; "what should I do when X?" → rules; "what are the properties of X?" → frames; "what concepts connect these ideas for a human reader?" → concept map; "why did the agent decide X, and through what intermediate states?" → procedural ontology (PKO). Most real systems converge on a *hybrid*. *Tacit-to-explicit pipeline*: elicitation → articulation → formalization → expert validation → encoding; the most valuable knowledge is *tacit* (things experts do automatically but cannot articulate without prompting); *negative knowledge* ("never do X because Y happened") is as valuable as positive. *GraphRAG patterns* (entity-anchored retrieval, relationship-aware context, path-based reasoning, subgraph summarization, hybrid vector+graph) ground retrieval in a modelled knowledge graph; only win when the graph is *well modelled* — a sparse, mislabelled, or synonym-inconsistent graph retrieves *worse* than plain vector search.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "use whichever knowledge format is familiar" with paradigm choice driven by the dominant query pattern. Solves the problem that AI-agent systems are *knowledge systems in disguise* — every SKILL.md is a knowledge artefact, every reference doc, every routing rule, every memory file, every decision record. The question is never *whether* the workspace has a knowledge model (it always does, even when implicit), but *whether the model fits the dominant query pattern*. Multi-hop reasoning needs a graph. Decision logic needs production rules. Object-like domain entities need frames. "Why did the agent decide X?" needs a procedural ontology. Pick the wrong paradigm and the agent's reasoning breaks *against the representation rather than against the domain*. The *expressiveness-vs-tractability* trade-off is non-negotiable: more expressive representations (OWL-DL, full first-order logic) admit fewer fast queries; more tractable representations (property graphs, key-value) admit fewer formal proofs. For most product teams the right answer is "Markdown with conventions" — which is what a SKILL.md is — not formal ontology; escalate formality only when automated reasoning or multi-system interop genuinely requires it.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from conceptual-modeling, which is the *human-readable domain analysis* layer (entities, attributes, relationships, cardinality) — this skill is the *representation-strategy layer above that* (choosing between graphs, frames, rules, hybrids). Distinct from context-graph, which is one specific *application* of knowledge modeling (the multi-graph context architecture for skills + docs + memory + scripts) — this skill is the general theory it draws on. Distinct from skill-infrastructure, which is the *live tooling* that maintains the skill library — this skill is the theory of *what kind of knowledge artefact* a SKILL.md is and why frames are the right paradigm for one. Distinct from database-migration / data-modeling (concerns *data* structure — tables, columns, FK constraints; this skill concerns *meaning* structure). Distinct from ontology-modeling (formal axioms with reasoning constraints — the layer *above* this skill) and from semantic-relations (typing individual concept edges).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Knowledge modeling is to a knowledge artefact what choosing between blueprint, schematic, exploded view, flowchart, and storyboard is to documenting a complex device — the device hasn't changed, but each format makes different questions easy or impossible to answer. A blueprint answers 'where does this part go?'; a schematic answers 'what is connected to what?'; a flowchart answers 'what happens when?'. Showing a customer a wiring schematic when they want to know how the product is assembled is choosing the wrong representation, not failing at the documentation."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that *any structured format is a knowledge model* — JSON files, Markdown docs, database tables are all "knowledge" in a loose sense. They are not, in the technical sense this skill cares about. *Knowledge is not data*: data records facts ("order #1247 has status `refunded`"); knowledge encodes the judgment and context needed to act on those facts ("refunds after 30 days require manager approval"; "the upstream fulfilment pipeline has a known 48-hour delay"). The agent with only the data hallucinates the policy; the agent with the knowledge applies it. Adjacent misconceptions: that *one paradigm fits all* (it does not — most real systems are hybrid: graph for entities and relationships, rules for decision logic, frames for stable domain objects, PKO when decision-trace replay matters); that *more formal is more capable* (it is not — OWL-DL admits fewer fast queries than property graphs; for most product teams Markdown with conventions is better than RDF triples); that *GraphRAG always beats plain RAG* (it does not — GraphRAG only wins when the underlying graph is well modelled; a sparse, mislabelled, or synonym-inconsistent graph retrieves *worse* than plain vector search because the structure becomes noise); and that *knowledge once captured is durable* (it is not — knowledge has a *lifecycle*: Create → Validate → Publish → Use → Monitor → Update → Retire; periodic currency checks are scheduled, not aspirational, because domain knowledge drifts faster than code).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Knowledge modeling is the discipline of choosing a representation paradigm — knowledge graph, frames, production rules, semantic network, concept map, procedural ontology, or a hybrid — that fits how knowledge will be queried, reasoned over, validated, and maintained.\",\"mental_model\":\"Choose by the dominant query pattern and operating constraint. Graphs answer relationship questions, rules answer decision questions, frames answer object-property questions, concept maps communicate to humans, procedural ontologies preserve why/how traces, and hybrids handle real systems when one paradigm is insufficient.\",\"purpose\":\"It prevents teams from treating all structured text as equivalent. The goal is to make agent and product knowledge explicit enough to retrieve, reason over, validate, update, and retire without over-formalizing beyond the system's real needs.\",\"boundary\":\"It is representation strategy, not human-readable domain analysis, database/data modeling, pure taxonomy design, formal ontology axiom authoring, exact semantic edge labeling, or live skill-library operations.\",\"taxonomy\":\"Core paradigms include knowledge graphs, frames, semantic networks, production rules, concept maps, procedural knowledge ontologies, and hybrids. Core lifecycle stages include create, validate, publish, use, monitor, update, and retire.\",\"analogy\":\"Knowledge modeling is like choosing between a blueprint, schematic, flowchart, and storyboard for the same device: each representation makes different questions easy and different mistakes visible.\",\"misconception\":\"The common mistake is believing more structure or more formalism is automatically better. A sparse graph, vague edge labels, or OWL-level formality without query demand can make the system harder to validate and worse for retrieval than plain text with conventions.\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/knowledge-organization/knowledge-modeling/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
