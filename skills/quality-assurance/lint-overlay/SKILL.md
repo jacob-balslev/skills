@@ -6,35 +6,113 @@ compatibility:
   notes: "Markdown, Git, any codebase with a lint tool"
 allowed-tools: Read Grep Bash
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: overlay
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: modify
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: quality
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: quality-assurance
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-04-18"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-13\",\"truth_source_hashes\":{\"scripts/skill-lint.js\":\"3a78f75f8921542b91dc619cd41bde29bf379de3c16bdcf3653c854ecbe9fa29\",\"scripts/lint/check-routing-quality.js\":\"b57d10f4c7c4e42a1a86c2741cbac6708e2de7dedb51b13f707283fbf91e32b5\",\"scripts/lint/check-routing-eval.js\":\"ab541922dfcbfb2cd7740c4abebb892e8b26477643e9d802fd0ea4cfbc8de649\",\"examples/evals/lint-overlay.json\":\"d60dcd4512904f36e56702d5338295dbf1238448b988dc60225fdd77285eaff9\",\"skills/testing-strategy/SKILL.md\":\"9c5da135ab8834843367da9e9120c92b57e81d1680ef84a0ea9e32f362e1456e\"}}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: passing
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
   extends: testing-strategy
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"lint\",\"linting\",\"lint rules\",\"lint integration\",\"static analysis\",\"eslint\",\"format check\",\"add eslint rule\",\"lint is failing\",\"add lint check\",\"noImplicitAny\",\"phased lint rollout\",\"lint rule migration\",\"pre-commit lint\",\"ci lint gate\",\"lint rule violations\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"lint-overlay\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"plan ESLint rule introduction for a monorepo that has never had linting\",\"which lint rules should block CI and which should warn-only for now?\",\"migrate these legacy noImplicitAny violations in phased gates\",\"decide whether this new rule runs pre-commit or in CI only\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"decide whether to unit-test or integration-test this handler\",\"extract this repeated code pattern into a shared util\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"debugging\",\"reason\":\"debugging fixes a specific failing lint result; lint-overlay plans rule selection and gate placement\"},{\"skill\":\"refactor\",\"reason\":\"refactor changes behavior-preserving code shape; lint-overlay is verification-plan authoring, not code modification\"},{\"skill\":\"testing-strategy\",\"reason\":\"base testing-strategy owns unit-vs-integration scope selection; lint-overlay extends it only for lint-specific gate placement\"},{\"skill\":\"integration-test-design\",\"reason\":\"integration-test-design owns the design of integration-level tests including the unit-vs-integration choice; lint-overlay owns lint-rule rollout and CI gate placement — deciding test level is a testing concern, not a lint concern\"},{\"skill\":\"pattern-recognition\",\"reason\":\"pattern-recognition owns detecting and naming repeated patterns in code; lint-overlay owns lint-rule planning — extracting repeated code into a shared util is a refactor/pattern-extraction task, not a lint-rule decision\"}]}"
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: "{\"domain_object\":\"Lint-specific verification planning in the Skill Graph starter library\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"scripts/skill-lint.js\",\"scripts/lint/check-routing-quality.js\",\"scripts/lint/check-routing-eval.js\",\"examples/evals/lint-overlay.json\",\"skills/testing-strategy/SKILL.md\"],\"failure_modes\":[\"lint_failure_triaged_as_strategy_problem\",\"overlay_loaded_without_base_testing_strategy\",\"rule_migration_lacks_gate_placement\",\"routing_eval_claim_not_backed_by_harness\"],\"evidence_priority\":\"repo_code_first\"}"
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/lint-overlay/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
