@@ -4,46 +4,131 @@ description: "Use when reasoning about the security properties any application m
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: quality
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: quality-assurance
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: quality/security
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"security fundamentals\",\"threat modeling\",\"input validation\",\"authentication\",\"authorization\",\"authn\",\"authz\",\"least privilege\",\"defense in depth\",\"secure by default\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"is this secure\",\"where should validation happen\",\"authentication vs authorization\",\"what could go wrong here\",\"threat model\",\"OWASP\",\"do I need to check permissions here\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"audit a route handler for authn, authz, and input validation\",\"decide where to validate inbound data when the same shape comes in through multiple endpoints\",\"decide whether a piece of data is a secret, a credential, or non-sensitive — and what handling each requires\",\"produce a threat model for a new feature before any code is written\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"implement HMAC verification for a Shopify webhook (use webhook-integration)\",\"configure a SAST scanner for the CI pipeline (use security-scanning)\",\"store an OAuth refresh token in an encrypted column (use credential-encryption)\",\"respond to a GDPR data-subject-access request (use gdpr-compliance)\",\"defend an LLM agent against prompt injection (use prompt-injection-defense)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"type-safety\",\"api-design\",\"http-semantics\",\"prompt-injection-defense\"],\"boundary\":[{\"skill\":\"type-safety\",\"reason\":\"type-safety provides compile-time guarantees about the SHAPE of data inside the program; security-fundamentals provides the runtime discipline that decides what to trust and what to validate at the system's TRUST BOUNDARIES. The two compose: validate at the boundary, then trust the type inside.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external surface contract (endpoints, methods, schemas); this skill owns the security properties any such surface must enforce regardless of design choices (authn, authz, input validation, rate limiting).\"},{\"skill\":\"prompt-injection-defense\",\"reason\":\"prompt-injection-defense owns the LLM-specific threat class where untrusted text is interpreted as instructions by a model; this skill owns the general security framing that prompt injection specializes from. Prompt injection is one row in the OWASP LLM Top 10; this skill covers the broader discipline.\"},{\"skill\":\"http-semantics\",\"reason\":\"http-semantics owns the protocol-level meaning of methods, status codes, and headers; this skill owns the security properties that protocol must enforce at every endpoint (authn, authz, rate limiting, validation). They compose: HTTP gives the protocol; this skill gives the security discipline applied to it.\"}],\"verify_with\":[\"type-safety\",\"api-design\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Four-question threat model (what are we working on? / what can go wrong? / what are we going to do about it? / did we do a good job?) iterated with every system change. Layered on top: Saltzer and Schroeder's eight design principles (1975) — economy of mechanism, fail-safe defaults, complete mediation, open design, separation of privilege, least privilege, least common mechanism, psychological acceptability — that describe security as properties, not implementations. The authn/authz distinction ("who are you?" verified at session establishment vs "are you allowed to do this?" verified at every privileged action). Trust boundaries as the architectural primitives that organize where validation, authentication, authorization, and rate-limiting checks live.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "security as feature added after the system works" with "security as a property of the design from the first commit." Without security-fundamentals as a discipline, security retrofitting costs order-of-magnitude more than designing security in, produces worse results, and accumulates structural debt that compounds with each release. The discipline does not promise prevention — any non-trivial system will be attacked, and some attacks will succeed. The goal is to make attacks expensive, slow, traceable, and limited in blast radius. Every design choice is evaluated by what it costs the defender vs what it costs the attacker, and secure-by-default choices place costs on attackers rather than defenders.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from prompt-injection-defense, which owns the LLM-specific specialization where untrusted text is interpreted as instructions by a model — security-fundamentals owns the general framing that prompt injection specializes from (prompt injection is OWASP LLM01, one row in the LLM Top 10). Distinct from credential-encryption, which owns specific schemes for encrypted credential storage and key management — security-fundamentals owns the upstream discipline of deciding what counts as a secret and where it lives in the trust hierarchy. Distinct from security-scanning, which owns the configuration of static and dynamic analysis tools (SAST, DAST, dependency scanning) — security-fundamentals owns the design discipline that scanning verifies. Distinct from gdpr-compliance, which owns regulatory artifacts (DSARs, lawful basis, data minimization) — security-fundamentals owns the design properties that make compliance achievable.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Security fundamentals is to a software system what structural engineering is to a building — load-bearing walls, fire egress, electrical isolation, foundation depth are not features added after the building works; they are properties of the design from the first sketch, and retrofitting them costs ten times more and produces worse results than designing them in. A building that survives an earthquake does so because of decisions made at the structural-engineering stage, not because of decorations added later."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that security is a checklist of mitigations to add. It is not. Security is a property of trust boundaries and the discipline that decides where they sit. A system with twenty mitigations but unclear trust boundaries is less secure than a system with five mitigations and rigorously specified boundaries — because the mitigations cluster in the wrong places, the boundaries leak in unexpected directions, and the security argument cannot be made without the boundary map. The discipline is to think in terms of "what crosses what boundary, who controls each side, what's the cost if the boundary fails?" — and to place mitigations as derivatives of that map, not as a generic shopping list.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Security fundamentals are the cross-cutting design principles, threat-modeling discipline, and recurring vulnerability classes that determine whether a system can be trusted to handle data, identity, and authority safely under adversarial conditions. The discipline is upstream of any specific vulnerability or vendor tool: it asks 'what are we protecting,' 'from whom,' 'what could go wrong,' and 'what's the cost if it does' before any implementation choice is made. Security fundamentals are not a feature added after the system works; they are a property of the design from the first commit, encoded in trust boundaries, validation choices, default permissions, and the placement of authentication and authorization checks. The discipline acknowledges that perfect security is impossible (any system can be attacked given sufficient resources and time), so the goal is to make attacks expensive, traceable, and limited in blast radius — defense in depth rather than perimeter security, least privilege rather than convenience, secure defaults rather than opt-in protections.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/security-fundamentals/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1212"
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
