@@ -6,42 +6,135 @@ compatibility:
   notes: "Provider- and harness-agnostic. Patterns apply across Claude Code, Cursor, Copilot, OpenCode, Aider, Continue, custom Anthropic/OpenAI/Google SDK loops, and self-hosted multi-agent systems. Specific filenames in this skill (continuation.json, claim.lock, session-logs.jsonl) are example artefacts -- substitute your harness's equivalents."
 allowed-tools: Read Grep Bash Edit Write
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.1.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: code-engineering
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: ai-engineering/architecture
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-18"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-18\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"agent engineering\",\"agentic engineering\",\"multi-agent systems\",\"production agent system\",\"orchestration patterns\",\"orchestrator worker\",\"fan-out merge\",\"consensus pattern\",\"evaluator optimizer\",\"sequential chain\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"we want to fan out 40 classification subtasks to subagents — what coordination pattern should we use and what are the failure modes?\",\"two of our agents claimed the same task and produced duplicate PRs — what atomicity guarantee prevents this?\",\"the orchestrator burns 6x the budget we planned every Tuesday — where do we add cost visibility and caps?\",\"an agent loop ran for four hours without progress before anyone noticed — how do we detect silent stalls?\",\"we keep getting context-contamination bugs where agent B uses stale output from agent A's failed run — fix the protocol\",\"audit this agent loop and tell me whether it's production-ready or still a demo\",\"is consensus-of-three worth the 3x cost for security-critical decisions, or is two-pass cheaper and good enough?\",\"design the lifecycle for a long-running autonomous agent that survives crashes mid-task\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"improve this prompt's wording to get better outputs\",\"the agent made 17 read calls when 3 greps would have done\",\"design what skills get loaded for which prompts\",\"scaffold a new SKILL.md for our orchestration runbook\",\"review this AI-generated PR for correctness\",\"the test suite is failing after my change — find the cause\",\"draft an architecture note explaining why we chose Postgres\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"prompt-craft\",\"reason\":\"prompt-craft optimises a single LLM call's wording; agent-engineering optimises the entire system that composes many calls into a workflow\"},{\"skill\":\"tool-call-strategy\",\"reason\":\"tool-call-strategy owns per-call efficiency decisions inside one agent; agent-engineering owns the multi-agent architecture those calls run within\"},{\"skill\":\"context-engineering\",\"reason\":\"context-engineering owns what reaches a single agent's context window; agent-engineering owns the system architecture that decides which agent runs at all\"},{\"skill\":\"context-window\",\"reason\":\"context-window owns token-budget thresholds and compaction timing; agent-engineering uses those signals as one part of lifecycle and coordination design\"},{\"skill\":\"debugging\",\"reason\":\"debugging chases a specific runtime failure; agent-engineering is about preventing classes of coordination failure through architecture\"},{\"skill\":\"architecture-decision-records\",\"reason\":\"architecture-decision-records records and explains decisions; agent-engineering designs the agent-system architecture being decided\"}],\"related\":[\"context-engineering\",\"context-window\",\"tool-call-strategy\",\"prompt-craft\",\"summarization\"],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: "{\"domain_object\":\"Production AI agent system architecture and multi-agent coordination\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"https://www.anthropic.com/engineering/building-effective-agents\",\"https://www.anthropic.com/engineering/multi-agent-research-system\",\"https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents\",\"https://openai.github.io/openai-agents-python/tracing/\",\"https://arxiv.org/abs/2308.08155\"],\"failure_modes\":[\"coordination_pattern_mismatch\",\"unbounded_agent_loop\",\"missing_observability\",\"duplicate_task_claims\",\"handoff_context_loss\",\"over_delegation_cost_spike\"],\"evidence_priority\":\"equal\"}"
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Agent engineering treats LLM calls as unreliable, tool-using components inside a larger workflow. The core move is to make lifecycle, delegation, coordination, verification, observability, budgets, and recovery explicit so model variability is contained by system design."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: "This skill prevents agent systems from shipping as impressive demos that stall, duplicate work, over-spend, lose handoff state, or silently produce unverified results under real workload pressure."
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: "This skill does not optimize one prompt, choose individual tool calls, design one agent's context payload, debug a single live incident, review generated code, or write the architecture decision record. It owns the architecture of agent loops and multi-agent coordination."
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Agent engineering is like operating a crew of contractors on a construction site: each specialist may be capable, but the project succeeds only if the plan, locks, handoffs, inspections, budget, and stop conditions are explicit."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is thinking more agents automatically means more capability. Extra agents also add coordination cost, context transfer risk, merge work, and failure modes; delegation is valuable only when independence, specialization, context protection, or cost reduction outweighs the overhead."
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Agent engineering is the discipline of designing production AI agent systems: loops, handoffs, coordination patterns, lifecycle state, verification gates, observability, budgets, and recovery mechanisms around one or more LLM agents.\",\"mental_model\":\"Treat each LLM call as an unreliable component in a larger system. Use architecture to constrain variance: explicit state, clear ownership, durable handoffs, verification, stop conditions, and measurable operating limits.\",\"purpose\":\"It turns ad hoc prompt-and-tool demos into systems that can run unattended, survive crashes, coordinate multiple agents, control cost, and produce verifiable outcomes.\",\"boundary\":\"It is not prompt wording, per-tool efficiency, single-agent context assembly, incident debugging, code review, or ADR writing. Neighboring skills own those surfaces; agent-engineering owns the workflow architecture that composes them.\",\"taxonomy\":\"Core areas include lifecycle management, task decomposition, coordination patterns, handoff protocols, observability, cost controls, idempotency, failure recovery, safety caps, claim locks, and staged rollout.\",\"analogy\":\"Agent engineering is like operating a crew of contractors on a construction site: each specialist may be capable, but the project succeeds only if the plan, locks, handoffs, inspections, budget, and stop conditions are explicit.\",\"misconception\":\"More agents is not automatically better. Extra agents add coordination overhead, duplicated work risk, context-transfer loss, and merge complexity; delegation needs a positive expected value.\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/code-engineering/agent-engineering/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
