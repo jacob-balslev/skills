@@ -6,49 +6,139 @@ compatibility:
   notes: "Language- and stack-agnostic. The recognition loop, clustering method, eval pipeline, and 5-Whys ladder apply to any codebase; the grep patterns and example detection rules are illustrative — substitute the equivalents of your stack."
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: foundations
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: meta-methods
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: foundations/cognition
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-18"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-18\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"recurring code pattern detection\",\"anti-pattern audit\",\"convention drift detection\",\"error cluster triage\",\"normalize-then-hash error grouping\",\"five-whys root cause ladder\",\"eval as pattern test\",\"heading hierarchy violation\",\"design token drift\",\"null-vs-zero domain encoding\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"I keep seeing the same null-pointer crash in three different files — what's the systemic fix?\",\"audit this codebase for hardcoded colors instead of design tokens\",\"cluster the errors from this session log into root-cause buckets\",\"I've fixed this bug five times in five different places — how do I codify a detection rule?\",\"the agent keeps treating null and zero as the same thing in financial calculations — flag the pattern class\",\"every PR introduces a new convention violation — what's the lint rule that would prevent it?\",\"the same Linear ticket keeps reappearing under different titles — how do I deduplicate?\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"review this code for semantic correctness\",\"find where the user-auth helper is defined\",\"design a MECE classification taxonomy for our error catalogue\",\"investigate why this single failing test is breaking\",\"trigger an alert when CPU exceeds 80% for 5 minutes\",\"rewrite this function to be cleaner\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"debugging\",\"reason\":\"debugging fixes one specific bug; pattern-recognition identifies the recurring class behind many bugs and proposes a structural fix that prevents the whole class — same recurring-bug prompt routes to debugging for the immediate fix and to pattern-recognition for the systemic rule\"},{\"skill\":\"code-review\",\"reason\":\"code-review judges quality of a specific change at PR scope; pattern-recognition systematically detects recurring structural issues across the entire codebase — same 'recurring violation in PRs' prompt routes to code-review for blocking that PR and to pattern-recognition for adding a lint rule\"}],\"related\":[\"refactor\",\"naming-conventions\",\"lint-overlay\",\"diagnosis\"],\"verify_with\":[\"context-graph\",\"skill-infrastructure\",\"tool-call-strategy\"]}"
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Pattern recognition is the cognitive and methodological discipline of *identifying recurring structures across instances* — separating signal from noise, naming the structure once detected, and elevating it into durable, transmissible knowledge. Drawing from Gestalt perception (Wertheimer 1923), expert intuition research (Klein 1998 recognition-primed decision; Chase & Simon 1973 chess chunking — masters perceive board positions as small numbers of meaningful patterns), and the software-pattern tradition (Alexander 1977 *A Pattern Language*; Gamma et al. 1994 *Design Patterns*), it treats *pattern* as a class noun: a regularity worth naming because it explains many observations through one structure.
 
     *Six-step recognition loop*: Observe (see it 3+ times — one is a bug, two is coincidence, three is a pattern), Cluster (group similar instances and verify they share a root cause — similar symptoms may have different roots), Name (give it a name short enough to grep for, 3-5 words), Codify (document in a skill or rules file or lint rule), Detect (automate via grep, lint, board-health check, or eval), Prevent (restructure so the pattern becomes impossible — type constraint, hook, architectural change). An optional *Refine* stage closes the loop: monitor the fix's effectiveness and update the rule if false positives emerge or the pattern mutates. *Three-instance threshold*: one is a bug, two is a coincidence, three is a pattern worth codifying — premature codification creates false rules that block valid code; failure to codify after the third instance leaves the team paying the review cost on every future commit. *Subordinate disciplines*: error-pattern clustering (normalize-then-hash session-log errors into root-cause buckets), board-health patterns (nine named patterns each implying a structural fix), domain-encoding patterns (null-vs-zero, integer cents, magnitude-conversion-at-display-boundary — the silent-incorrect-calculation class), 5-Whys ladder (work down to the level where a fix prevents *all* future instances), pattern lifecycle (Active / Fixed / Stale / Migrated states).
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces *symptom-by-symptom fixing* (which burns tokens and effort without building leverage) with *systemic detection-and-prevention* that addresses the recurring class. Solves the problem that an agent operating symptom-by-symptom can fix the same bug five times in five different files and never see that the underlying root cause produces another instance next week — while an agent recognizing the pattern can propose a systemic fix, write an automated detection rule, and *prevent the entire class from recurring*. In a high-velocity agentic environment, manual review scales poorly; pattern recognition lets agents "see" the codebase as a system of rules rather than a collection of files. The *eval-as-pattern-test* pipeline is the durable artifact — every recognized pattern should become a testable eval so future sessions verify they detect it reliably under new inputs; without the eval, a skill section about "null-vs-zero confusion" may be read and then misapplied on the next input (the agent learned the name but not the detection logic). Closes the loop with *prevention*: the goal is not detecting the pattern more reliably; it is restructuring the system so the pattern becomes impossible (type constraint, hook, architectural change, lint rule that fails CI).
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from debugging, which fixes one specific bug — this skill identifies the *recurring class* behind many bugs and proposes a structural fix that prevents the whole class; the same "recurring bug" prompt routes to debugging for the immediate fix and to this skill for the systemic rule. Distinct from code-review, which judges quality of a specific change at PR scope — this skill systematically detects recurring structural issues *across the entire codebase*; the same "recurring violation in PRs" prompt routes to code-review for blocking the PR and to this skill for adding a lint rule. Distinct from diagnosis, which triages an unknown software failure into a problem class before debugging begins — diagnosis owns per-incident triage; this skill owns *cross-incident class analysis*. Distinct from refactor, which restructures code once a pattern is identified (refactor *enacts* the change; this skill *decides what needs changing*). Distinct from naming-conventions, which establishes the rules themselves (this skill detects violations of rules that already exist). Distinct from lint-overlay, which owns the rule machinery (this skill decides which patterns warrant a rule). Distinct from skill-infrastructure (skill library health tooling and structural-graph audits) and tool-call-strategy (per-action tool selection).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Pattern recognition is to a codebase what epidemiology is to a city's public health — a doctor (debugging) treats one patient with one infection; the epidemiologist (this skill) notices that fourteen patients across three hospitals all have the same infection, traces it back to a contaminated water source (root cause), names the outbreak, prescribes a public-health intervention (lint rule, type constraint, architectural fix) that prevents the next thousand cases, and updates the surveillance protocol so the next outbreak is caught at three cases instead of fourteen."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that *every recurring observation is a pattern* — that two similar bugs justify a framework, a lint rule, or a refactoring sweep. They do not. The *three-instance threshold* is load-bearing: one is a bug, two is a coincidence, three is a pattern. Premature codification creates false rules that block valid code and produces "pattern-inflation" (pareidolia — seeing patterns in noise) where the team responds to every coincidence with abstraction. Adjacent misconceptions: that *similar symptoms imply a shared root cause* (they do not — a cluster of "null reference" errors may have 3 different call sites with 3 different missing guards; verify each cluster member shares a root before proposing a unified fix); that *fixing at the symptom level eventually fixes the pattern* (it does not — the symptom loop is the most expensive form of pattern work; without the 5-Whys to the root level, every new instance generates a new fix; aim for level 4-5, not level 1-2); that *abstractions are always proportional to pattern recurrence* (they are not — building a framework or lint plugin for one pattern is over-abstraction; detection should be proportional to frequency: one pattern = grep rule; three patterns = lint plugin; complex wrapper harder to maintain than the duplication is its own anti-pattern); that *every match is a violation* (it is not — false-positive discipline matters: test fixtures are intentional, token files are exempt, inline `// @intentional:` comments document legitimate deviations; document exclusion rules in the grep pattern itself, not in memory); that *detection rules are evergreen* (they are not — patterns have *lifecycle states*: Active / Fixed / Stale / Migrated; a fixed pattern's detection rule should be archived; a migrated pattern requires dual detection of old AND new violations); and that *naming a pattern is enough* (it is not — pattern recognition completes the loop through Codify, Detect, Prevent, and ideally Eval; the eval step is non-optional because a skill section documents a pattern for humans, but an eval tests whether an agent applies the pattern reliably under new inputs).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Pattern recognition is the cognitive and methodological discipline of identifying recurring structures across instances — separating signal from noise, naming the structure once detected, and elevating it into durable, transmissible knowledge. Drawing from Gestalt perception (Wertheimer 1923), expert intuition research (Klein 1998, Chase & Simon 1973), and the software-pattern tradition (Alexander 1977, Gamma et al. 1994), it treats pattern as a class noun: a regularity worth naming because it explains many observations through one structure.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/pattern-recognition/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1041"
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
