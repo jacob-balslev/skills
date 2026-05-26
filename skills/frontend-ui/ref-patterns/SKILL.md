@@ -4,44 +4,129 @@ description: "Use when designing or reviewing React ref usage: the distinction b
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: frontend-ui
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/frontend
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-17"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-17\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"useRef hook\",\"forwardRef\",\"useImperativeHandle\",\"ref callback\",\"DOM ref React\",\"ref forwarding compound component\",\"React 19 ref as prop\",\"mutable ref vs state\",\"current property ref\",\"Radix Slot ref forwarding\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"how do I focus an input on mount\",\"how do I pass a ref through a wrapper component\",\"do I still need forwardRef in React 19\",\"when should I use a ref instead of state\",\"how do I expose a method like open or close to the parent\",\"how do I measure a DOM element\",\"why is my ref.current null on first render\",\"how do I integrate a non-React DOM library\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design a Modal component that exposes open() and close() to the parent via useImperativeHandle so the parent can trigger it imperatively without lifting full state\",\"forward a ref through a styled Button wrapper to the underlying <button> element using React 19 ref-as-prop (or forwardRef on React 18 and earlier)\",\"integrate a third-party chart library that needs a DOM container by handing it a ref callback that initializes on mount and tears down on unmount\",\"replace a useState that nobody reads in render with a useRef because the value drives an imperative side effect (interval id, latest-args closure) not the render output\",\"audit a component that uses a ref to read 'current form values' instead of reading from controlled state — usually a sign the wrong primitive was chosen\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design the Rules of Hooks and dependency-array discipline for useEffect (use hooks-patterns)\",\"decide whether the form state lives in URL, server, client, or persistent storage (use state-management)\",\"design the headless-vs-styled layering of a component library (use component-architecture)\",\"explain how 'use client' marks a component boundary (use client-server-boundary)\",\"design the validation-state UX of an input (use form-ux-architecture)\",\"design the layering and API surface of a cross-product component library (use component-architecture)\",\"design the validation states, layout, and microcopy of a form (use form-ux-architecture)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"hooks-patterns\",\"component-architecture\",\"state-management\",\"client-server-boundary\",\"form-ux-architecture\"],\"boundary\":[{\"skill\":\"hooks-patterns\",\"reason\":\"hooks-patterns owns the broader hook discipline — Rules of Hooks, dependency arrays, custom hooks, the You Might Not Need an Effect rule, the render/effect/cleanup mental model. ref-patterns covers the ref family specifically (useRef, forwardRef, useImperativeHandle, ref callbacks) and the design rule for when a ref is the right primitive vs when state is. They cross-reference but solve different problems.\"},{\"skill\":\"state-management\",\"reason\":\"state-management owns the location and ownership decisions for the four kinds of state (server / client UI / URL / persistent). ref-patterns is about the mutable-handle primitive that is NOT state — using a ref when a useState was needed (or vice versa) is the most common ref misuse. ref-patterns covers the boundary; state-management owns state itself.\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the serialization and directive mechanics. Refs only work in Client Components — a ref cannot be passed through a Server Component or serialized across the 'use client' boundary. ref-patterns notes this constraint; client-server-boundary owns the broader boundary semantics that explain why.\"}],\"verify_with\":[\"code-review\",\"hooks-patterns\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     A ref is a mutable object `{ current: T }` created by `useRef(initial)` that persists across renders WITHOUT participating in the render cycle — writing to `ref.current` does NOT trigger a re-render; reading from it does NOT subscribe the component to changes. The ref exists OUTSIDE the reactive graph. Two canonical uses: (1) DOM access — holding a stable handle to a DOM node for focus, measurement, animation, or handoff to a non-React library; (2) mutable instance values — interval id, latest-arguments closure, previous-value snapshot, values driving side effects but not part of what gets rendered. Sharp design rule: if the value should cause a re-render when it changes, it is STATE; if it should not, it is a REF. No middle ground. Layered on top: ref callbacks for fine-grained mount/unmount hooks, `forwardRef` (pre-React-19) and ref-as-prop (React 19+), `useImperativeHandle` for exposing a controlled imperative surface, ref forwarding through compound-component primitives (Radix Slot pattern).
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "useState for everything mutable" with deliberate primitive choice. Without ref-patterns discipline, components accumulate useState for values nobody renders (interval ids, third-party DOM library handles, latest-arguments closures), each of which triggers pointless re-renders, breaks effect dependency arrays, and obscures what is actually reactive. The alternative — "use refs everywhere mutable" — fails worse: a ref used as a substitute for state silently breaks React's contract (the value changes, the UI does not update, the bug surfaces somewhere remote from the cause). The discipline is the sharp ref-or-state question for every mutable value, and the recognition that refs are an escape hatch — appropriate for the few cases where they are the right primitive, never as a substitute for state.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from hooks-patterns, which owns the broader hook discipline (Rules of Hooks, dependency arrays, custom hooks, You-Might-Not-Need-an-Effect rule, render/effect/cleanup mental model) — ref-patterns covers the ref FAMILY specifically (useRef, forwardRef, useImperativeHandle, ref callbacks) and the design rule for when a ref is the right primitive vs when state is. Distinct from state-management, which owns the LOCATION and ownership decisions for the four kinds of state (server / client UI / URL / persistent) — ref-patterns is about the mutable-handle primitive that is NOT state (using a ref when a useState was needed, or vice versa, is the most common ref misuse). Distinct from client-server-boundary, which owns the serialization and directive mechanics — ref-patterns notes the constraint that refs only work in Client Components (cannot cross the `'use client'` boundary), but client-server-boundary owns the broader boundary semantics. Distinct from component-architecture, which owns the cross-product layering — ref-patterns is in-component primitive discipline, not cross-product API design.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A ref is to a React component what a static local variable is to a C function — it persists across calls (renders), reading it does not make the function 'depend on' it, writing to it does not change the function's signature or trigger any caller-visible event, and its single purpose is to hold the state that is not part of the function's interface. State, by contrast, is to the component what the function's return value is to the caller: every read participates in the contract, every change requires a re-evaluation."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that refs and state are interchangeable mutable-value primitives, and the choice is "ref if you do not want a re-render, state if you do." That sentence is true but incomplete: it makes "do not want a re-render" sound like an optimization choice when it is actually a SEMANTIC choice. The correct framing: refs are for values OUTSIDE the render cycle — values that drive imperative side effects but are not displayed; state is for values INSIDE the render cycle — values that, when changed, must re-evaluate the output. The misconception leads to: useRef holding form values that should be useState (UI does not update on edit), useState holding interval ids that should be useRef (re-render storm on every tick), or useState holding "previous value" snapshots that should be useRef-with-useEffect-update.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"A React ref is a mutable object — `{ current: T }` — created by `useRef(initial)` that persists across renders without participating in the render cycle. Writing to `ref.current` does not trigger a re-render; reading from it does not subscribe the component to changes. The two canonical uses are (1) holding a reference to a DOM node so it can be focused, measured, or handed to a non-React library, and (2) holding a mutable value (an interval id, a latest-arguments closure, a previous-value snapshot) that drives side effects but is not part of what gets rendered. The design rule is: if the value should cause a re-render when it changes, it is state. If it should not, it is a ref.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/ref-patterns/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
