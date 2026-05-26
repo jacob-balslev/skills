@@ -4,46 +4,131 @@ description: "Use when reasoning about the protocol-level cycle by which a langu
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: agent
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: agent-ops
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: agent/protocol
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-15"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-15\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"tool call\",\"tool use\",\"function calling\",\"MCP\",\"Model Context Protocol\",\"tool result\",\"parallel tool calls\",\"tool schema\",\"JSON Schema\",\"assistant turn\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"how does tool calling actually work\",\"what's the message shape for a tool result\",\"MCP vs function calling vs Anthropic tools\",\"can the model call tools in parallel\",\"where do tool errors live in the message history\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design the message-shape contract between a model and a tool runtime\",\"explain why a tool result must be appended to the message history before the next assistant turn\",\"decide whether to expose a capability as a tool, an MCP server, or an inline API\",\"diagnose why a model keeps re-calling the same tool with the same arguments\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"decide whether to call a tool or write a script (use tool-call-strategy)\",\"choose a multi-agent coordination pattern (use agent-engineering)\",\"design an eval suite that tests tool-call correctness (use agent-eval-design)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"tool-call-strategy\",\"agent-engineering\",\"api-design\",\"type-safety\",\"client-server-boundary\"],\"boundary\":[{\"skill\":\"tool-call-strategy\",\"reason\":\"tool-call-strategy owns the decision of when, how many, and which tools to call (token cost, redundancy, parallelization, decision gate). tool-call-flow owns the protocol-level cycle that makes any call possible. The two compose: strategy decides what to do; flow describes the mechanism that carries it out.\"},{\"skill\":\"agent-engineering\",\"reason\":\"agent-engineering owns multi-agent and multi-step system architecture (orchestrator/worker, consensus, sequential chains). tool-call-flow is one cycle inside a single agent — the protocol for a single model-to-runtime interaction.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external API surface that tools may wrap. tool-call-flow owns the model-facing contract: how the tool is declared to the model, how the result is encoded back to it, and how the cycle is structured.\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the serialization frontier between server and client code. tool-call-flow is an analogous frontier between a language model (which produces structured intent) and a runtime (which executes the intent) — the trust direction is different but the discipline of explicit serialization is identical.\"}],\"verify_with\":[\"tool-call-strategy\",\"agent-eval-design\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     A tool-call flow is the multi-turn protocol by which a language model uses external capabilities. *Four phases* identical across every vendor protocol: (1) *Declaration* — runtime tells the model which tools exist and their JSON-Schema parameter spec; (2) *Request* — model emits an assistant message with one or more tool-call blocks (or a final-answer message ending the cycle); (3) *Execution* — runtime invokes the underlying capability with the supplied arguments; (4) *Continuation* — runtime appends the result to the message history, paired with the request by ID, and re-prompts the model, which either continues with another tool call or produces a final answer. The cycle ends when the model emits an assistant message *without* tool-call blocks.
 
     *State lives in the message history*; the model is stateless across calls — there is no hidden runtime memory the model cannot see. *Vendor protocols differ only in encoding* (Anthropic `tool_use` blocks inside `content` with `tool_result` paired by `tool_use_id`; OpenAI `tool_calls` adjacent to `content` with `role: "tool"` for results paired by `tool_call_id`; MCP externalizes the declaration phase via JSON-RPC `tools/list` and `tools/call` over stdio or SSE; Gemini `function_call` / `function_response` message parts) — the four-phase cycle is identical. Parallel tool calls are encoded as multiple tool-call blocks in one assistant message — *independent only*; dependent calls must be sequential because parallel calls all execute against the same pre-result state. Streaming is an optimization, not a different cycle: streamed tokens that form a complete tool-call block can begin executing speculatively before the full message finishes streaming.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces *fused planning-and-execution* (model executes code directly) with the *separation of planning from execution* (model produces structured intent; runtime carries it out). Solves the problem that fusion gives the model unaudited access to side effects, while separation makes the system *auditable* (every call is a message in the history; logs can replay full cycles), *composable* (any tool with a JSON-Schema input can be plugged in; vendors are interchangeable with a translation layer), and *recoverable* (failures are tool-result messages with error content, not exceptions that break the loop). The separation is not a workaround for current model capabilities; it is a deliberate design choice that places side-effect discipline, schema validation, dispatch policy, timeout/retry/rate-limit policy, parallelism limits, and audit/persistence on the runtime side, leaving the model with only the planning (which tool, which arguments, when to stop). A practitioner who understands the cycle can move between Anthropic, OpenAI, MCP, and Gemini at the cost of a translation layer; a practitioner who understands only one vendor's encoding cannot.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from tool-call-strategy, which owns the decision of *when, how many, and which* tools to call (token cost, redundancy, parallelization, decision gate) — this skill owns the protocol-level cycle that makes any call possible. The two compose: strategy decides what to do; flow describes the mechanism that carries it out. Distinct from agent-engineering, which owns multi-agent and multi-step system architecture (orchestrator/worker, consensus, sequential chains) — this skill is one cycle inside a *single* agent. Distinct from api-design, which owns the external API surface that tools may wrap — this skill owns the *model-facing contract* (how the tool is declared to the model, how the result is encoded back). Distinct from client-server-boundary, which owns the bundler serialization frontier — this skill is an *analogous frontier* between a language model (planner) and a runtime (executor); the discipline of explicit serialization is identical but the trust direction differs. Distinct from agent-eval-design (eval suites that test tool-call correctness; that skill measures what this skill describes) and from prompt-craft (the wording of the declaration's `description` field, which is a prompt fragment rather than documentation).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A tool-call flow is to a language model what a procurement system is to an executive — the executive does not personally drive to the supplier; they sign a typed purchase order, the procurement department validates the order, executes it, and returns the receipt with whatever was delivered or with a documented reason it could not be. The executive's signature is intent; the department's stamp is authorization; the receipt is the only state of the cycle that survives, and the next decision is made against that record."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that the model "calls a function" the way a programming language does — that the tool-call is a direct invocation with stack semantics, exceptions propagating, and shared memory. It is not. The model emits a *structured message*; the runtime parses, validates, dispatches, and replies with another structured message. All failures — schema mismatch, tool exception, timeout, permission denied, unknown tool — are encoded as *tool-result messages with an error field*, never as out-of-band exceptions that break the loop. The model sees the error in its next turn and can choose: retry with corrected arguments, try a different tool, abandon the goal, or surface the failure to the user with context. Adjacent misconceptions: that the runtime can hold hidden state the model can use later (no — message history is the only state; anything the model needs in turn N+1 must be visible in the messages by turn N); that parallel tool calls can be dependent (they cannot — parallel calls all execute against the same pre-result state; dependent calls must be sequential); that side-effecting tools are safe by default (they are not — the model does not enforce side-effect discipline; the runtime must gate destructive actions via confirmation, dry-run mode, or allow-list, and side-effecting tools have explicit gating); and that the four-phase cycle is vendor-specific (it is not — Anthropic, OpenAI, MCP, Gemini all implement the same cycle with different message encodings; the cycle is the *concept*, the encoding is the *syntax*, and conflating them produces brittle code that breaks when the vendor changes).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"A tool-call flow is the multi-turn protocol by which a language model uses external capabilities. It has four phases — declaration (the runtime tells the model which tools exist and their parameter schemas), request (the model emits a structured tool-call message specifying tool name and arguments), execution (the runtime invokes the underlying capability and produces a result), continuation (the runtime appends the result to the message history and re-prompts the model, which either continues with another tool call or produces a final answer). The state of the cycle lives in the message history; the model is stateless across calls.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/tool-call-flow/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
