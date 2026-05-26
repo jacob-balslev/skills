@@ -4,46 +4,131 @@ description: "Use when designing or reviewing Next.js Route Handlers (the `route
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: product-domain
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/frontend
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-17"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-17\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"Next.js Route Handler\",\"route.ts file\",\"API endpoint via route.ts\",\"GET POST PUT DELETE export\",\"Web Request Response API\",\"NextRequest NextResponse\",\"request.json formData parsing\",\"dynamic force-dynamic segment config\",\"revalidate Route Handler\",\"Edge runtime vs Node runtime\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"how do I expose an API endpoint in Next.js App Router\",\"when should I use a Route Handler instead of a Server Action\",\"how do I receive a webhook in Next.js\",\"how do I return a streaming response from an API route\",\"how do I parse a JSON body in route.ts\",\"why is my Route Handler GET cached\",\"how do I set CORS headers on a Next.js API route\",\"Edge runtime vs Node runtime for an API route\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design the route.ts that receives a Stripe webhook — verify signature before parsing the body, return 200 immediately, queue the heavy work\",\"decide whether a 'export user data' endpoint should be a Route Handler or a Server Action\",\"add CORS to a Route Handler that mobile clients call from a different origin\",\"opt a GET Route Handler out of the default static cache because it depends on the request user\",\"return a streaming binary response (PDF generation, large CSV export) from a Route Handler\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design an internal create-comment form mutation triggered only from this app's UI (use server-actions-design)\",\"define the REST contract and resource model for a v2 public API (use api-design)\",\"explain what an HTTP 422 means vs 400 (use http-semantics)\",\"add an auth check that runs before every protected route (use middleware-patterns)\",\"design the idempotency-key + retry + dead-letter-queue strategy for a webhook (use webhook-integration)\",\"design the resource model, versioning, pagination, or error envelope of an HTTP API (use api-design)\",\"decide what an HTTP method, status code, or header should mean per RFC 9110 (use http-semantics)\",\"design signature verification, idempotency keys, retry semantics, or dead-letter queues for vendor webhooks (use webhook-integration)\",\"design a cross-cutting streaming model with Web Streams, SSE, or backpressure (use streaming-architecture)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"server-actions-design\",\"api-design\",\"http-semantics\",\"middleware-patterns\",\"webhook-integration\",\"streaming-architecture\",\"client-server-boundary\"],\"boundary\":[{\"skill\":\"server-actions-design\",\"reason\":\"server-actions-design owns the internal mutation surface — a function the bundler turns into a network call from your own UI. route-handler-design owns the public-endpoint surface — a Web-standard Request/Response handler invoked by callers (mobile, third-party, webhooks, your own client-side fetches) that are not the Next.js bundler's typed call sites. Use Server Actions when the only caller is this app's UI; use Route Handlers when the caller is anything else or when you need fine-grained HTTP control.\"},{\"skill\":\"middleware-patterns\",\"reason\":\"middleware runs once before route resolution and applies to many routes via a `matcher`; route-handler-design runs for one route and one method. Use middleware for cross-cutting concerns (auth gate, header injection, locale rewrite); use Route Handlers for the per-route logic that runs after middleware passes.\"}],\"verify_with\":[\"code-review\",\"api-design\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     A Next.js Route Handler is a file named `route.ts` (or `route.js`) under the `app/` directory that exports one async function per HTTP method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS). Each export receives a standard Web `Request` and returns a standard Web `Response` (or `NextResponse` which extends it). *The file shape IS the contract* — the filesystem path defines the URL; the export name defines the method; the function body defines the handler. No Node-style `req`/`res`; no middleware chain; no per-method routing config. Unhandled methods auto-return `405`. The five body-reading methods (`request.json()`, `request.formData()`, `request.text()`, `request.blob()`, `request.arrayBuffer()`) are mutually exclusive — *a body can be read only once*; if you need both raw and parsed (for webhook HMAC verification), read `text()` and parse yourself.
 
     *Default caching*: GET handlers that don't read request-scoped sources are statically cached in production; opt out via `export const dynamic = 'force-dynamic'`, `export const revalidate = 60`, or read cookies/headers (which auto-opts out by inference). POST/PUT/PATCH/DELETE are never cached. *Runtime selection* (`export const runtime = 'edge' | 'nodejs'`) controls the capability surface — Edge offers Web Crypto, Web Streams, fast cold start (~10-50ms), lower memory ceiling, no Node modules; Node offers full Node ecosystem at the cost of higher cold start (~200-1000ms). Streaming responses return a `ReadableStream` with appropriate headers (`Content-Type: text/event-stream` for SSE, etc.); Edge runtime is the safe choice for long-lived streams. *Webhook pattern*: read `request.text()` for raw bytes, verify HMAC signature against the raw body before any parsing, ACK fast (return 200 immediately), queue heavy work asynchronously — vendors interpret slow ACKs as failures and retry.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces the Pages Router's Node-style `/api/*` endpoints with Web-standard handlers that compose into the App Router's file-system convention. Solves the problem that Pages Router endpoints were tied to Node's `req`/`res` interface (not portable to Edge, Cloudflare Workers, or Deno) and required separate routing-layer registration. The deeper purpose emerges from the App Router introducing *Server Actions* as a competing mutation surface: Route Handlers become *purely the public HTTP endpoint surface*, used when the caller is *not your own typed UI* — mobile apps, third-party integrations, webhooks, server-to-server calls, cross-origin client-side fetches, binary downloads, server-sent events, anything that benefits from explicit HTTP semantics. The single most common Route Handler mistake in App Router code is using one for an internal mutation that a Server Action would serve better — duplicate type contracts, manual fetch wiring, no progressive enhancement, no built-in revalidation.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from server-actions-design, which owns the *internal* mutation surface — a function the bundler turns into a network call from your own UI; this skill owns the *public-endpoint* surface for callers who aren't the Next.js bundler's typed call sites. Use Server Actions when the only caller is this app's UI; use Route Handlers when the caller is anything else or when you need fine-grained HTTP control. Distinct from middleware-patterns, which runs once before route resolution and applies to many routes via a `matcher` — Route Handlers run for one route and one method *after* middleware passes. Distinct from api-design, which owns the broader REST/contract/versioning discipline — this skill owns the Next.js implementation surface that hosts the contract. Distinct from http-semantics, which owns the abstract method/status/header semantics — this skill owns honoring them in App Router. Distinct from webhook-integration, which owns the full webhook reliability story (HMAC details, idempotency keys, retry semantics, dead-letter queues) — this skill covers the endpoint surface only. Distinct from streaming-architecture, which owns the cross-cutting streaming model — this skill covers Route Handler streaming specifically. Distinct from client-server-boundary (which owns the bundler's component split, a different boundary).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A Route Handler is to a Next.js app what a service window at a government office is to its workflow — different windows handle different services (`GET /posts`, `POST /comments`); each window has a posted sign saying which forms it accepts and what stamps it returns; you do not walk into the back office (Server Action) unless you work there. The window is the contract: filesystem path = window number, export name = service offered, function body = the clerk's actual work."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that Route Handlers are "Next.js's API routes" and that every HTTP endpoint in a Next.js app belongs there. They are, but with a critical refinement after App Router: *internal mutations from your own UI belong in Server Actions, not Route Handlers*. Using a Route Handler for an internal mutation duplicates the type contract (request shape + response shape + manual fetch wiring + manual revalidation), loses progressive enhancement (form submission without JS), and loses built-in revalidation. Adjacent misconceptions: that `request.body` can be read multiple times (it cannot — pick one of `json`/`formData`/`text`/`blob`/`arrayBuffer`; if you need both raw and parsed, read `text()` and parse yourself); that GET responses are never cached (they are — by default, in production, GETs that don't read request-scoped sources are statically cached and the same response is served to every caller; opt out explicitly or read cookies/headers); that calling `request.json()` on a webhook is fine (it is not — the parse can mutate whitespace and break HMAC signature verification; read raw bytes via `text()`, verify, then parse); that webhooks should do heavy work inline (they should not — vendors interpret slow ACKs as failures and retry, producing duplicate processing; ACK fast with 200 and queue the work); that `Access-Control-Allow-Origin: '*'` works with credentialed requests (it does not — browsers refuse to send credentials with wildcard origin; allowlist explicit origins); that Edge runtime is always faster (it is not — cold start is faster, but Edge has a tight capability surface, ~1MB bundle ceiling, and many vendor SDKs require Node's `crypto` module; default to Node and switch only when the gain matters and the dependencies are compatible).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"A Next.js Route Handler is a file named route.ts (or route.js) under the app/ directory that exports one async function per HTTP method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS). Each export receives a standard Web Request object and returns a standard Web Response (or NextResponse, which extends it). The file's filesystem path defines the URL; the export name defines the method; the function body defines the handler. There is no Node-style req/res, no middleware chain, no per-method routing config — the file shape IS the contract.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/route-handler-design/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
