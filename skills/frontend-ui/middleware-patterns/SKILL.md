@@ -4,46 +4,131 @@ description: "Use when designing or reviewing Next.js middleware (the single `mi
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: frontend-ui
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/frontend
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-17"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-17\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"Next.js middleware\",\"middleware.ts file\",\"NextRequest NextResponse\",\"matcher config middleware\",\"Edge Runtime constraints\",\"NextResponse.redirect rewrite next\",\"auth check before route\",\"locale routing i18n middleware\",\"A/B testing variant rewrite\",\"CSP nonce middleware\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"how do I redirect unauthenticated users to login in Next.js\",\"how do I run code before every request in Next.js\",\"how do I set security headers globally in Next.js\",\"how do I do locale routing in App Router\",\"how do I do an A/B test with rewrites\",\"why does my middleware run on static assets\",\"can middleware do a database query\",\"how do I generate a CSP nonce per request\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design middleware that redirects unauthenticated users to /login while letting public routes through, configured via a matcher\",\"add a middleware that generates a per-request CSP nonce and injects it into both the request and response headers\",\"implement locale routing that detects Accept-Language and rewrites /about to /en/about for new visitors\",\"add bot blocking that returns 403 for known scraper user-agents while letting search-engine bots through\",\"tune a middleware that runs on every request down to 5ms so it stops adding latency to image fetches\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"implement a /api/posts POST endpoint (use route-handler-design)\",\"implement a delete-comment mutation triggered from a form button (use server-actions-design)\",\"explain what an HTTP 308 means vs 307 (use http-semantics)\",\"design the full CSP policy and the rest of the security-header strategy (use security-fundamentals)\",\"design a long-lived SSE stream from middleware (use streaming-architecture)\",\"design the CSP policy, threat model, or OWASP audit for a system (use security-fundamentals)\",\"decide what an HTTP method, status code, or header should mean per RFC 9110 (use http-semantics)\",\"design signature verification, idempotency, or retry semantics for vendor webhooks (use webhook-integration)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"route-handler-design\",\"server-actions-design\",\"http-semantics\",\"security-fundamentals\",\"server-components-design\",\"client-server-boundary\",\"webhook-integration\"],\"boundary\":[{\"skill\":\"route-handler-design\",\"reason\":\"middleware runs once before route resolution and applies to many routes via a matcher; route-handler-design runs for one route and one method after route resolution. Middleware owns the cross-cutting layer (auth gate, locale rewrite, header injection); route handlers own the per-route logic. They compose: middleware passes through to the handler, the handler executes, the response flows back.\"},{\"skill\":\"server-actions-design\",\"reason\":\"server-actions-design owns the internal-mutation surface invoked from the app's own UI; middleware is the cross-cutting request preprocessor that runs before any route or action. A Server Action call passes through middleware on its way to the server.\"},{\"skill\":\"server-components-design\",\"reason\":\"server-components-design owns the render path that produces a page; middleware runs upstream of render and can rewrite, redirect, or pass through. Middleware does not replace render; it gates and rewrites it.\"}],\"verify_with\":[\"code-review\",\"security-fundamentals\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Next.js middleware is a single async function exported from `middleware.ts` at the project root that runs on the *Edge Runtime* before route resolution for every request matching its `matcher` config. It receives a `NextRequest` and returns a `NextResponse` with one of *four response shapes*: (1) `next()` — pass through to the route, possibly with modified headers/cookies; (2) `rewrite()` — internally route to a different path with the URL bar unchanged (A/B test, locale variant, feature flag); (3) `redirect()` — send a 30x to the browser with URL-bar change (login redirect, canonical redirect, locale-detection redirect); (4) *direct response* — short-circuit with a body and status (bot blocked, rate-limit hit, missing auth on protected API). Runs *once per request before any page render, Server Component fetch, Server Action, or Route Handler executes* — the only place to apply genuinely cross-cutting concerns without per-route ceremony.
 
     *Edge Runtime constraints*: `fetch`, Web Crypto, Web Streams, URL, Request/Response are available; Node `crypto`/`fs`/`child_process`/`net`/`dns` and most non-pure-JS npm packages are not; bundle size is capped (~1MB on Vercel) and a single Node-only `import` breaks the build. *Canonical pattern library*: authentication gate (fast cookie check, not DB lookup — 50ms hits every protected page), locale routing (Accept-Language detection + redirect once to `/{locale}/{path}`), A/B testing via rewrite (cookie pins variant; URL stays canonical for analytics), security header injection (per-request CSP nonce flows to request headers via `NextResponse.next({ request: { headers } })` so Server Components can read it via `headers()`, and to response headers so the browser enforces the CSP), geo-routing (`request.geo.country` populated by Vercel; defensively read), bot blocking (UA regex for noise reduction, not security — UAs are trivially spoofable), request-ID correlation. Compose multiple concerns in named helpers; when the chain grows past ~5 concerns, push some down to per-route logic.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces per-route duplication of cross-cutting concerns (every route checking auth, every route setting a CSP header, every route detecting locale) with a single upstream layer that applies the concern across many routes via a `matcher` config. Solves the problem that *some concerns apply across the entire app or large subsets of it* — every request needs an auth check, every request needs a request-ID, every request to `/admin/*` needs a role check, every page needs a CSP nonce — and these cannot be implemented per-route without duplication and drift. Middleware is the *only* layer where you can intercept a request *before* knowing which route it will eventually hit, making it the right home for genuinely cross-cutting concerns. The architectural trade is *breadth for power*: middleware can shape the entire request/response edge in one place, but runs on every matched request (performance ceiling matters — target <10ms p99), has no per-route knowledge until rewrite/redirect resolves (cannot read route-specific params or query the database for that route's data), runs on Edge Runtime (limited APIs), and cannot read the response body (sits in front of the response, not over it). Done well, it removes ceremony from every route; done badly, it adds latency to every request and concentrates business logic in a file that's hard to test. *The discipline: keep middleware small, fast, and cross-cutting.*
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from route-handler-design, which runs *after* route resolution for one route and one method — middleware runs *once before* route resolution and applies to many routes via a matcher; middleware owns the cross-cutting layer (auth gate, locale rewrite, header injection); route handlers own the per-route logic. They compose: middleware passes through to the handler. Distinct from server-actions-design, which owns the internal-mutation surface invoked from the app's own UI — a Server Action call passes through middleware on its way to the server; middleware is upstream of, not in place of, actions. Distinct from server-components-design, which owns the render path that produces a page — middleware runs *upstream of render* and can rewrite/redirect/pass through; middleware does not replace render, it gates and rewrites it. Distinct from http-semantics, which owns the abstract HTTP method/status/header semantics middleware operates on (this skill is *honoring* those semantics in Next.js middleware specifically). Distinct from security-fundamentals, which owns the broader Content Security Policy and hardening discipline — middleware is *one delivery surface* for the policy, not the policy itself. Distinct from streaming-architecture (middleware can set headers for streamed responses but does not author the streaming logic) and webhook-integration (webhook routes should generally be *excluded* from the matcher so middleware doesn't consume the raw body required for HMAC verification or interfere with signature checks).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Middleware is to a Next.js app what a building's lobby concierge is to its offices — every visitor passes through the lobby before reaching any specific floor; the concierge can check ID badges (auth gate), redirect visitors to the right elevator (locale or A/B rewrite), hand out lanyards with security policies attached (CSP nonce, request-ID header), or turn away bad-faith visitors at the door (bot block). The concierge cannot do the work of any specific office (per-route business logic) — that happens after the visitor gets off the elevator — but they enforce the rules that apply to every floor."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that middleware is a place to put any code that "runs before the request" and that more in middleware is always better. It is neither. Middleware runs on the *Edge Runtime* with a tight capability surface — a single `import` of a Node-only package (Node `crypto`, `fs`, `child_process`, `net`, full vendor SDK that ships Node modules) breaks the build, and reaching for an ORM is a category mismatch. Middleware runs on *every matched request* — a database query that adds 50ms to every request degrades every page on the site; the budget is <10ms p99. Adjacent misconceptions: that the default matcher is fine (it is not — without a matcher, middleware runs on every static asset including `/_next/static/*`, `/_next/image/*`, and `/favicon.ico`, adding latency to image fetches on the hot path; *always set a matcher* with negative lookahead excluding these); that per-route business logic belongs in middleware (it does not — when logic only applies to one route, it belongs *in that route*; centralizing per-route logic in middleware hides it from the route that owns it and makes the code untestable); that `rewrite` and `redirect` are interchangeable (they are not — rewrites are *invisible to the user URL-bar*; redirects are *visible and the browser does a second request*; choose based on whether the user should see the URL change); that cookies set on the request reach the client (they do not — middleware can't modify the request cookies the client sees; cookies must be set on the *response* via `response.cookies.set`); that headers modified on the request automatically reach the route (they do not — use `NextResponse.next({ request: { headers: requestHeaders } })`); and that webhook routes should pass through middleware (they should not — middleware can consume the body or otherwise interfere with HMAC verification; webhook paths should be *excluded* from the matcher).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Next.js middleware is a single async function exported as default from `middleware.ts` at the project root that runs on the Edge Runtime before route resolution for every request matching its `matcher` config. It receives a `NextRequest` and returns a `NextResponse` (or implicitly `NextResponse.next()`), and can do four things: pass through (`next`), rewrite to a different internal path (`rewrite`), redirect to a different URL (`redirect`), or short-circuit with a direct response. It runs once per request before any page render, Server Component fetch, Server Action, or Route Handler executes — making it the only place to apply genuinely cross-cutting concerns without per-route ceremony.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/middleware-patterns/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
