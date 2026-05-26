@@ -1,0 +1,106 @@
+{
+  "skill_name": "skill-infrastructure",
+  "subject": "deterministic skill-library health tooling",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skill-graph/docs/research/skill-system-teaching-audit-2026-05-26.md",
+    "skill-graph/scripts/skill-lint.js",
+    "skill-graph/lib/audit/skill-audit.js",
+    "skill-graph/scripts/skill-graph-drift.js",
+    "skill-graph/lib/audit/skill-evolution-loop.js"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "audit-false-green",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A skill audit runner shells out to skill-lint. In one install, skill-lint exits 1 because it cannot find the packaged schema, but stderr does not contain parseable lint diagnostics. The audit runner currently parses zero errors and stamps lint_verdict: PASS and structural_verdict: PASS.",
+      "context": "The user wants the Skill Audit Loop to be honest end to end. This is an infrastructure failure, not a skill-quality finding. The correct fix must make the failure visible and prevent PASS writeback.",
+      "question": "Diagnose the failure mode and propose the concrete health-tooling change.",
+      "expected_flags": [
+        "Flags this as a false-green infrastructure path, not as a passing lint run.",
+        "Identifies that non-zero subprocess exit with zero parseable diagnostics must synthesize an error finding.",
+        "Prevents lint_verdict and structural_verdict from being stamped PASS when lint infrastructure failed."
+      ],
+      "expected_fix_hints": [
+        "Pass package/workspace root environment to the lint subprocess.",
+        "Add a synthetic P1 diagnostic for non-zero lint exits with no parseable error lines.",
+        "Make dry-run return non-zero when the normalized lint diagnostics include errors."
+      ],
+      "absent_signals": [
+        "Do not recommend ignoring stderr because the schema failure is not a skill issue.",
+        "Do not stamp PASS based only on an empty parsed-diagnostics array."
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "schema-cross-field-invariant",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "The schema description says subjects[0] must match subject, but JSON Schema is not enforcing that sibling equality. A malformed skill can declare subject: code-engineering and subjects: [quality-assurance].",
+      "context": "The goal is deterministic, CI-safe skill-library health tooling. The invariant is part of the Skill Metadata Protocol and should not rely on reviewer memory.",
+      "question": "Which layer should enforce this and what should the check report?",
+      "expected_flags": [
+        "Recognizes this as a protocol invariant that belongs in deterministic lint or a focused protocol check.",
+        "Explains that JSON Schema alone cannot portably express this sibling equality in the current setup.",
+        "Requires a clear lint error on subjects[0] when it differs from subject."
+      ],
+      "expected_fix_hints": [
+        "Add a custom check after schema validation in skill-lint.js.",
+        "Report the expected subject value and the actual first subjects[] value.",
+        "Keep the schema description and linter behavior aligned."
+      ],
+      "absent_signals": [
+        "Do not remove the invariant from documentation merely because schema cannot enforce it.",
+        "Do not treat subjects[] order as irrelevant tag-bag metadata."
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "standalone-package-root",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user installs the Skill Graph CLI globally and runs skill-graph lint from a copied skill workspace that has SKILL.md files but no local schemas/ directory. The lint command looks for schemas/skill.schema.json in the caller workspace and fails.",
+      "context": "Skill Graph should operate as an installable CLI: package-owned schemas, caller-owned skill files. The health tooling must distinguish those roots.",
+      "question": "What design should skill-infrastructure recommend?",
+      "expected_flags": [
+        "Separates package root from workspace root.",
+        "Requires schemas/templates to resolve from the package when absent in the workspace.",
+        "Keeps skill discovery rooted in the caller workspace or configured skill_roots."
+      ],
+      "expected_fix_hints": [
+        "Use a shared roots helper for packageRoot, workspaceRoot, and resolveSchemaPath.",
+        "Ensure delegated subprocesses receive SKILL_GRAPH_PACKAGE_ROOT and SKILL_GRAPH_WORKSPACE.",
+        "Keep error messages clear about whether a schema came from the package or the workspace."
+      ],
+      "absent_signals": [
+        "Do not tell users to copy schemas into every skill workspace.",
+        "Do not hardcode the maintainer's Development directory."
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "boundary-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user asks: 'Scaffold a new SKILL.md for our deployment checklist, including a template body and frontmatter.'",
+      "context": "This is authoring one individual skill, not designing the health-tooling layer for a whole library.",
+      "question": "Should skill-infrastructure own the answer? If not, what should happen?",
+      "expected_flags": [
+        "Refuses over-ownership by skill-infrastructure.",
+        "Routes the task to skill-scaffold or the authoring template workflow.",
+        "Preserves skill-infrastructure for library-wide health checks such as lint, manifest, routing, drift, overlap, and eval coverage."
+      ],
+      "expected_fix_hints": [
+        "Name the correct owner skill or workflow for individual skill authoring.",
+        "Do not inject library-health tooling unless the user asks how to maintain a library."
+      ],
+      "absent_signals": [
+        "Must not answer by designing CI health checks for a one-skill scaffolding request.",
+        "Must not claim skill-infrastructure owns all SKILL.md work."
+      ]
+    }
+  ]
+}

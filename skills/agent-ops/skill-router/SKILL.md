@@ -42,7 +42,7 @@ metadata:
   eval_state: passing
   routing_eval: present
   stability: experimental
-  keywords: "[\"skill routing\",\"skill dispatch\",\"keyword routing\",\"route skill\",\"which skill to use\",\"skill selector\",\"routing table\",\"coverage gap\",\"ambiguous skill activation\",\"skill activate\"]"
+  keywords: "[\"skill routing\",\"skill dispatch\",\"agent request routing\",\"activate right skill\",\"which skill to use\",\"routing table\",\"agent request coverage gap\",\"ambiguous skill activation\",\"skill activate\",\"coverage gap\"]"
   triggers: "[\"skill-router\"]"
   examples: "[\"activate the right skill for this agent request: 'my tests are failing in CI'\",\"build a routing table that covers every agent request type we see\",\"why did the documentation skill activate when the user asked about a11y?\",\"find the coverage gaps — which agent requests match no skill at all?\"]"
   anti_examples: "[\"audit the graph-audit skill for schema conformance\",\"write a guide explaining how our routing works\",\"reproduce this routing mis-dispatch from production logs\"]"

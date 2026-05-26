@@ -1,0 +1,81 @@
+{
+  "skill_name": "skill-router",
+  "subject": "agent request to skill routing",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skill-graph/scripts/skill-graph-route.js",
+    "skill-graph/scripts/skill-graph-routing-eval.js",
+    "skills/skills/agent-ops/skill-router/SKILL.md"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "explicit-trigger-routing",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An agent request includes the trigger label skill-router and asks why a query activated the wrong skill.",
+      "context": "The manifest contains trigger, path, keyword, description, scope, and relation signals. The request explicitly names skill-router.",
+      "question": "Which routing surface should decide first, and what should the router do before consulting lower-priority signals?",
+      "expected_flags": [
+        "Trigger-label matching is the highest-priority routing surface.",
+        "A unique trigger hit should stop the chain before path or keyword matching.",
+        "The answer should explain why lower-priority evidence is not used after a unique trigger hit."
+      ],
+      "expected_fix_hints": [
+        "Return skill-router as the owner.",
+        "Record trigger-label evidence in the explanation.",
+        "Treat any downstream disagreement as a routing-table audit concern, not a reason to ignore the trigger."
+      ],
+      "absent_signals": [
+        "Do not rank by popularity, recency, or author preference.",
+        "Do not let keyword overlap override a unique trigger hit."
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "coverage-gap-detection",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks for a skill that no trigger, path, keyword, or description surface matches.",
+      "context": "The router can either pick a weak nearest neighbor or surface a gap to the maintainer.",
+      "question": "What should skill-router recommend?",
+      "expected_flags": [
+        "An explicit coverage gap is better than a silent wrong fallback.",
+        "The router should report the missing activation surface and suggest authoring or broadening a skill.",
+        "The explanation should preserve uncertainty instead of pretending there is a confident winner."
+      ],
+      "expected_fix_hints": [
+        "Return no confident winner.",
+        "Name candidate metadata to add, such as keywords or trigger labels.",
+        "Capture the query as a future routing-eval case."
+      ],
+      "absent_signals": [
+        "Do not force-route to a default skill.",
+        "Do not call the nearest semantic match correct without evidence."
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "single-skill-quality-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user says: 'Audit the graph-audit skill for schema conformance and broken relation targets.'",
+      "context": "The target skill is already known and the request is about one skill's quality.",
+      "question": "Should skill-router own the task?",
+      "expected_flags": [
+        "The correct owner is graph-audit, not skill-router.",
+        "skill-router is for choosing between skills when ownership is unknown or ambiguous.",
+        "Known-target quality review should bypass the router."
+      ],
+      "expected_fix_hints": [
+        "Load graph-audit directly.",
+        "Use skill-router only if the request is about dispatch logic or coverage gaps."
+      ],
+      "absent_signals": [
+        "Do not add routing-table advice to a one-skill schema audit.",
+        "Do not treat every SKILL.md task as skill-router work."
+      ]
+    }
+  ]
+}

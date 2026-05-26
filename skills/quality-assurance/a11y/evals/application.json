@@ -1,0 +1,80 @@
+{
+  "skill_name": "a11y",
+  "subject": "interactive accessibility behavior",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/skills/quality-assurance/a11y/SKILL.md",
+    "skill-graph/examples/evals/a11y.json"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "modal-keyboard-trap",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A custom modal opens from a button. Keyboard users cannot Escape to close it, tab focus escapes behind the overlay, and focus is lost after close.",
+      "context": "The modal is implemented in React with divs and custom click handlers.",
+      "question": "What accessibility fixes should be required?",
+      "expected_flags": [
+        "Keyboard operation and focus management are core accessibility behavior.",
+        "Focus should move into the modal on open, stay contained while open, and return to the trigger on close.",
+        "Escape close behavior and visible focus must be tested."
+      ],
+      "expected_fix_hints": [
+        "Use an accessible dialog pattern or native primitives where available.",
+        "Wire Escape, tab containment, aria-modal/dialog labelling, and focus return.",
+        "Verify with keyboard-only navigation and assistive technology announcements."
+      ],
+      "absent_signals": [
+        "Do not treat this as visual polish.",
+        "Do not add ARIA without matching keyboard behavior."
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "form-state-announcement",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A form shows validation errors visually after submit, but screen reader users do not hear that the state changed.",
+      "context": "Inputs have visible text labels, but errors are rendered in a toast at the bottom of the page.",
+      "question": "How should the implementation change?",
+      "expected_flags": [
+        "Validation state changes must be perceivable to assistive technology.",
+        "Errors need programmatic association with their fields or a live region summary.",
+        "Visible-only toast feedback is insufficient."
+      ],
+      "expected_fix_hints": [
+        "Use aria-describedby or equivalent field-error association.",
+        "Add a role=status or role=alert/live region for summary changes when appropriate.",
+        "Keep labels and error text programmatically reachable."
+      ],
+      "absent_signals": [
+        "Do not only rewrite the text tone.",
+        "Do not rely on color or toast placement as the accessibility fix."
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "reading-level-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user says: 'Rewrite this error message at a sixth-grade reading level.'",
+      "context": "No interactive behavior, semantic HTML, keyboard flow, focus management, or assistive-technology announcement issue is present.",
+      "question": "Should a11y own this request?",
+      "expected_flags": [
+        "This is language/readability work, not interactive accessibility implementation.",
+        "The correct owner is linguistics, documentation, or microcopy depending on context.",
+        "a11y should not over-trigger on every use of the word accessible."
+      ],
+      "expected_fix_hints": [
+        "Route to the wording skill.",
+        "Only re-enter a11y if the message has programmatic labeling, announcement, or interaction implications."
+      ],
+      "absent_signals": [
+        "Do not claim reading level alone proves accessibility compliance.",
+        "Do not prescribe ARIA for a pure copy rewrite."
+      ]
+    }
+  ]
+}

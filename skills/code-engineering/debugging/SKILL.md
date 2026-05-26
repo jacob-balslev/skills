@@ -20,7 +20,7 @@ metadata:
   eval_state: passing
   routing_eval: present
   stability: experimental
-  keywords: "[\"debugging\",\"reproduce failure\",\"reproduce bug\",\"failing test\",\"root cause\",\"symptom vs cause\",\"minimum reproduction\",\"bisect\",\"what caused it\",\"my tests are failing\"]"
+  keywords: "[\"reproduce failure\",\"tests fail CI\",\"root cause\",\"symptom\",\"nil panic\",\"used to work\",\"yesterday\",\"what changed\",\"failing after edit break\",\"lint failure\"]"
   triggers: "[\"debugging-skill\"]"
   examples: "[\"my tests pass locally but fail in CI — why?\",\"this function used to work yesterday; what changed?\",\"reproduce this Stripe webhook failure from production logs\",\"I see the symptom but can't find the root cause of this nil panic\"]"
   anti_examples: "[\"plan test coverage for a new feature\",\"document what this function does for future readers\",\"refactor this messy code while the test suite is green\"]"

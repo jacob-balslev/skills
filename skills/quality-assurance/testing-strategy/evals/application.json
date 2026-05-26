@@ -1,0 +1,80 @@
+{
+  "skill_name": "testing-strategy",
+  "subject": "test-scope and test-level selection",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/skills/quality-assurance/testing-strategy/SKILL.md",
+    "skill-graph/examples/evals/testing-strategy.json"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "test-level-selection",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A pure currency formatter was extracted from a checkout flow. The user asks whether a unit test is enough or whether an integration test is needed.",
+      "context": "The formatter has no I/O, no framework dependency, and deterministic input/output behavior. Checkout already has a separate smoke test.",
+      "question": "Choose the test level and explain the evidence target.",
+      "expected_flags": [
+        "Unit test is the right primary level for pure deterministic logic.",
+        "The test target should be behavior and edge cases, not coverage percentage.",
+        "Integration coverage is not needed solely because the formatter is used by checkout."
+      ],
+      "expected_fix_hints": [
+        "Add table-driven unit cases for currency, rounding, and invalid input boundaries.",
+        "Leave checkout integration coverage to the existing smoke path unless wiring changed.",
+        "State what regression the test would catch."
+      ],
+      "absent_signals": [
+        "Do not default to e2e because checkout is user-visible.",
+        "Do not recommend tests with no explicit behavior target."
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "production-regression",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A production bug let duplicate webhook events create duplicate invoices. The code fix adds idempotency by event id.",
+      "context": "The bug slipped past unit tests because the failure depended on repeated delivery through the handler boundary.",
+      "question": "What test should be added so the bug cannot slip through again?",
+      "expected_flags": [
+        "Regression test should run at the level where the bug escaped.",
+        "Duplicate delivery through the handler boundary is the behavior to pin.",
+        "The test should fail before the idempotency fix and pass after it."
+      ],
+      "expected_fix_hints": [
+        "Use an integration or contract-style handler test with two deliveries of the same event id.",
+        "Assert one invoice side effect, not just one function call.",
+        "Keep a cheap unit test only for pure idempotency helpers if extracted."
+      ],
+      "absent_signals": [
+        "Do not settle for a mocked unit test that cannot observe duplicate side effects.",
+        "Do not add broad e2e coverage for every webhook path."
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "active-failure-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user says: 'My existing test is failing after yesterday's edit; what broke?'",
+      "context": "There is an observed failure and the user needs root-cause isolation, not a plan for future coverage.",
+      "question": "Should testing-strategy own this request?",
+      "expected_flags": [
+        "The correct owner is debugging.",
+        "testing-strategy plans what to test before or after a change, not root-cause analysis of a current failure.",
+        "The response should preserve the failing test as evidence for debugging."
+      ],
+      "expected_fix_hints": [
+        "Route to debugging.",
+        "After the cause is fixed, return to testing-strategy only if the regression target is unclear."
+      ],
+      "absent_signals": [
+        "Do not start by redesigning the whole test suite.",
+        "Do not ignore the existing failing evidence."
+      ]
+    }
+  ]
+}
