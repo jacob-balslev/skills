@@ -69,6 +69,8 @@ relations:
       reason: "troubleshooting owns resolving a specific broken behavior; task-path-optimization owns selecting the execution path, not fixing a live fault"
     - skill: spec-driven-development
       reason: "spec-driven-development owns writing and executing against a spec or plan; task-path-optimization owns the upstream plan-vs-act decision and approach selection, not executing the chosen plan"
+    - skill: test-driven-development
+      reason: "test-driven-development owns the test-first methodology of writing test cases ahead of implementation; task-path-optimization owns the higher-level choice of execution approach (plan-vs-act, agent architecture, decomposition) — not authoring tests or running them"
   verify_with:
     - task-evaluation
     - code-review
