@@ -4,44 +4,129 @@ description: "Use when designing or reviewing React Suspense usage: where to pla
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: frontend-ui
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/frontend
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"React Suspense\",\"Suspense boundary\",\"streaming HTML\",\"loading.tsx Next.js\",\"useTransition\",\"startTransition\",\"use hook React 19\",\"error boundary with Suspense\",\"Suspense waterfall\",\"parallel data fetching\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"where should I put the Suspense boundary\",\"why is my page waiting for the slowest query\",\"how do I show partial loading states\",\"Suspense vs loading.tsx\",\"do I need useTransition here\",\"error boundary not catching\",\"data is waterfalling instead of parallel\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design a dashboard that streams three independent widgets in as their data resolves, with skeleton fallbacks for each\",\"decide whether a tab switch should use useTransition or a top-level Suspense fallback\",\"diagnose why a Suspense boundary is showing its fallback on every prop change\",\"pair a Suspense boundary with an ErrorBoundary so failed fetches show an error UI while successful ones stream in\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"choose between Server Components and Client Components (use server-components-design)\",\"design the dependency array for a useEffect that fetches data (use hooks-patterns)\",\"pick the streaming protocol for an LLM response (use streaming-architecture)\",\"decide between SSR and SSG for a marketing page (use rendering-models)\",\"design the streaming protocol itself — SSE, HTTP/2, chunked transfer-encoding (use streaming-architecture)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"server-components-design\",\"hooks-patterns\",\"streaming-architecture\",\"rendering-models\"],\"boundary\":[{\"skill\":\"server-components-design\",\"reason\":\"server-components-design owns the discipline of which work runs on the server side of the RSC boundary; suspense-patterns owns the orthogonal discipline of where to place Suspense boundaries within a tree (RSC or Client).\"},{\"skill\":\"hooks-patterns\",\"reason\":\"hooks-patterns covers state, effects, and the closure model on Client Components; suspense-patterns covers the boundary-level loading-state model that operates on whole subtrees.\"}],\"verify_with\":[\"code-review\",\"rendering-models\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     A Suspense boundary is a React component that catches a thrown Promise (or unresolved async RSC render) from anywhere in its descendant tree and shows a fallback UI until the Promise resolves. The component that needs data THROWS a Promise; the boundary catches the throw and renders the fallback for the entire subtree. Boundary placement is the central design decision: three placement strategies — PAGE-level (one boundary near root, whole page waits for everything), FEATURE-level (one boundary per widget/section, each streams in independently), LEAF-level (boundary as close as possible to the suspending component, each tiny piece has its own fallback). Pairs with error boundary (must be distinct components — thrown Promise vs thrown Error). Composes with `useTransition` (changes whether updates show the boundary's fallback or keep the previous content visible) and React 19's `use` hook (lets Client Components unwrap Promises directly).
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces local imperative loading-state plumbing (every component owns its own `isLoading` flag) with declarative boundary-based placement. The classic React loading pattern was conditional rendering: each component returned a spinner when `isLoading` was true and re-rendered when its data resolved. That pattern is local — each component decides HOW to communicate "I'm waiting" and WHERE in its render output the placeholder goes — and it does not compose (two sibling components loading in parallel produce two independent spinners with no coordinated layout). Suspense inverts the responsibility: the boundary owns the placeholder UI; the component declares "I need this data" without owning the loading state. The design discipline becomes about boundary placement, not about loading-state plumbing.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from error-boundary, which owns the FAILURE-state boundary mechanism (thrown Error) — suspense-patterns owns the LOADING-state boundary mechanism (thrown Promise). They pair in the canonical ErrorBoundary→Suspense→Component nesting but catch different signals and must be distinct components. Distinct from server-components-design, which owns the discipline of which work runs on the server side of the RSC boundary — suspense-patterns owns the orthogonal discipline of where to place Suspense boundaries within a tree (RSC or Client). Distinct from hooks-patterns, which covers state/effects/closure model on Client Components — suspense-patterns covers the boundary-level loading-state model that operates on whole subtrees. Distinct from rendering-models, which owns the rendering-strategy choice (SSR vs SSG vs streaming SSR vs RSC) — suspense-patterns is one of the primitives streaming SSR and RSC compose with.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Suspense boundaries are to React's component tree what a restaurant's seating policy is to a multi-course meal — the policy decides whether courses arrive together (boundary around the whole meal, everyone waits for the slowest dish) or course-by-course (boundary per dish, each appears when ready). The component (the kitchen) just signals 'this course needs more time'; the boundary (the maître d') decides who waits for what and what placeholder shows in the meantime."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that Suspense is a state-machine pattern with `isLoading`/`isReady` states a component checks. It is not. Suspense is THROW-AND-CATCH for unresolved data: the component does not have a `loading` state at all — it just reads the data, and if the data is not ready, reading it throws a Promise. React catches the throw at the nearest Suspense boundary and shows the fallback. The component code reads as if the data were already there. This is a different mental model from conditional rendering: the component never checks if the data is ready; React handles the wait at the boundary. The misconception leads to "Suspense plus useState plus useEffect" patterns that replicate the old loading-flag plumbing instead of using the throw-catch semantics.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"A Suspense boundary is a React component that catches a thrown Promise (or, in RSC, an unresolved async render) from anywhere in its descendant tree and shows a fallback UI until the Promise resolves. It is a declarative loading-state mechanism: the consuming component requests data without knowing whether it is loading, and the ancestor Suspense boundary handles the rendering branch.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/suspense-patterns/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
