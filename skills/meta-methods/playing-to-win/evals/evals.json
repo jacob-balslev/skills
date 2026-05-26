@@ -1,0 +1,138 @@
+{
+  "skill_name": "playing-to-win",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A strategy draft says: \"We will grow fast by serving all small businesses with an AI-powered platform, ship many useful features, and become the market leader.\" Apply Playing to Win and identify what is missing.",
+      "expected_output": "The draft is not a strategy cascade yet. It has a vague aspiration but no concrete where-to-play, no differentiated how-to-win, no must-have capabilities, no management systems, and no explicit trade-offs. The agent should ask or propose choices for target segment, need/occasion, channel/category, advantage mechanism, capability system, metrics, cadence, and no-go areas.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Identifies that the draft lacks a real cascade",
+        "Names all five missing or weak choices",
+        "Calls out missing trade-offs or no-go choices",
+        "Does NOT treat broad growth language as a complete strategy"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A team has chosen to win with white-glove enterprise onboarding, but its must-have capabilities are listed as SEO, viral loops, and self-serve checkout optimization. Critique the cascade.",
+      "expected_output": "The choices do not fit. White-glove enterprise onboarding would require capabilities such as consultative implementation, change management, integration support, security/procurement handling, and customer success. SEO and self-serve checkout may support a different where/how choice, but they do not directly build the chosen advantage.",
+      "type": "fit-check",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Detects advantage/capability mismatch",
+        "Explains capabilities must follow from how-to-win",
+        "Suggests capabilities consistent with enterprise onboarding",
+        "Does NOT accept generic growth capabilities as must-have capabilities"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 3,
+      "prompt": "A founder asks for Porter's Five Forces because they need to choose a target customer, channel, and advantage for a new product. Should Playing to Win own this?",
+      "expected_output": "Playing to Win should own the strategy-cascade work because the immediate task is choosing where to play and how to win. Five Forces can support industry-structure analysis if attractiveness, bargaining power, entrants, substitutes, or rivalry are the question, but it does not replace the cascade.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes strategy-cascade formulation to Playing to Win",
+        "Explains Five Forces as industry-structure support",
+        "Distinguishes choosing an arena/advantage from diagnosing industry forces",
+        "Does NOT use Five Forces as a substitute for the five cascade choices"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A strategy cascade has a clear aspiration, where-to-play, how-to-win, and capabilities, but the management systems section says only: \"Track KPIs and communicate progress.\" What should the agent do?",
+      "expected_output": "The management systems choice is under-specified. The agent should add the operating mechanisms that build and sustain the capabilities: owners, leading and lagging metrics, review cadence, decision rights, resource allocation rules, incentives if relevant, and kill/pivot triggers.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Flags management systems as weak",
+        "Names concrete systems beyond generic KPI tracking",
+        "Connects systems to sustaining capabilities",
+        "Does NOT leave execution as vague communication"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "The proposed where-to-play is \"all online merchants,\" and the how-to-win is \"best experience.\" Rewrite these into a stronger Playing to Win shape using reasonable placeholders.",
+      "expected_output": "The agent should narrow the where-to-play across customer, need/occasion, channel/category, geography or value-chain scope, and explicit no-go segments. It should rewrite how-to-win as a mechanism such as \"fastest trusted reconciliation for multi-channel merchants who lack finance staff\" and state the relevant alternative, why the target chooses it, and what evidence would prove it.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Narrows where-to-play with multiple concrete dimensions",
+        "Replaces \"best experience\" with an advantage mechanism",
+        "Includes an explicit no-go or excluded segment",
+        "Labels placeholders or assumptions instead of inventing certainty"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A team asks for OKRs. Their stated strategy is still: \"Win in our market by being innovative.\" What should happen first?",
+      "expected_output": "Do not start with OKRs. First build or repair the strategy cascade: define the winning aspiration, where to play, how to win, capabilities, and management systems. OKRs can translate a chosen strategy into execution goals after the choices are explicit.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Refuses to jump straight to OKRs",
+        "Explains OKRs are downstream execution goals",
+        "Requires the five strategy choices first",
+        "Does NOT mistake a slogan for a strategy"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "prompt": "A cascade looks polished, but every competitor would also choose the opposite of none of its choices: \"serve customers well, build a great product, hire strong people, measure progress.\" What is the problem?",
+      "expected_output": "The cascade fails the reverse test. These are platitudes rather than strategy choices because no competitor would choose the opposite. The agent should force trade-offs: which customers, which needs, which channels, which advantage mechanism, which capabilities, and which no-go choices.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "adversarial",
+      "expectations": [
+        "Applies the reverse test",
+        "Identifies platitudes rather than real choices",
+        "Requires concrete trade-offs and no-go choices",
+        "Does NOT reward polished but non-exclusive strategy prose"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}
