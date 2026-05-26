@@ -4,46 +4,131 @@ description: "Use when reasoning about the pattern where a language model emits,
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: agent
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: agent-ops
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: agent/ui
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"generative UI\",\"generative interface\",\"structured output\",\"component schema\",\"typed UI spec\",\"JSON Schema\",\"function calling UI\",\"RSC streaming UI\",\"model-rendered components\",\"assistant UI\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"the assistant should show a chart not a paragraph\",\"how does the model render a card\",\"structured output for UI\",\"is it safe to render what the model returned\",\"should this be a tool call or a UI emission\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design the component schema for an assistant that can render a date picker, a chart, or a confirmation card depending on the question\",\"decide whether the model should emit a UI spec or call a tool that returns prerendered HTML\",\"explain why the model's output must be schema-validated before rendering\",\"design the interaction loop so a user clicking a button in a model-rendered card produces a follow-up turn the model can reason about\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design the JSON shape of an HTTP API endpoint (use api-design)\",\"decide the page-level rendering model (CSR vs SSR vs RSC) (use rendering-models)\",\"design the design-system component library itself (use design-system-architecture)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"tool-call-flow\",\"rendering-models\",\"client-server-boundary\",\"prompt-injection-defense\",\"api-design\",\"type-safety\"],\"boundary\":[{\"skill\":\"tool-call-flow\",\"reason\":\"tool-call-flow owns the protocol cycle by which a model invokes external capabilities and receives results; this skill owns the pattern where the model's output is itself a UI specification rendered by the application. The two compose — a UI spec may be emitted via a tool-call-flow-shaped mechanism — but the conceptual surfaces differ.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the page-level rendering taxonomy (CSR/SSR/SSG/RSC/streaming); this skill owns the model→spec→component pipeline that operates inside any of those rendering models. They compose.\"},{\"skill\":\"prompt-injection-defense\",\"reason\":\"prompt-injection-defense owns the security property that a system must preserve against attacker-controlled directives in model input; this skill owns the rendering pattern whose threat surface includes rendering attacker-influenced output. The two skills are read together for security analysis.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external HTTP request/response surface; this skill owns the model-to-renderer schema surface. Both are typed contracts, but between different actors.\"},{\"skill\":\"design-system-architecture\",\"reason\":\"design-system-architecture owns the component library and its tokens; this skill consumes a design system as the component palette the model can draw from.\"}],\"verify_with\":[\"api-design\",\"type-safety\",\"prompt-injection-defense\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Generative UI is the pattern in which a language model emits, as structured output constrained by a typed schema, a specification of a UI component or sub-tree that an application then renders for the user. The model's output is *not* a chat response, *not* a tool call asking for execution, *not* raw code — it is a *typed instance of a component-vocabulary schema*. Three load-bearing contracts: (1) *component schema* — the typed vocabulary the model and application share (JSON Schema, TypeScript discriminated union, or equivalent); (2) *generation constraint* — the mechanism that forces the model's output to be a valid schema instance (grammar-constrained decoding like OpenAI Structured Outputs and Gemini response schema, function calling with strict schemas, or free-form-with-post-validation; production-grade uses grammar-constrained or function calling, not free-form); (3) *render pipeline* — the application code that turns a validated spec into pixels via schema validation, component lookup, props validation (defense in depth), per-component safety policy (image-URL origin allowlist, link-target sanitization, content-length cap, recursion-depth limit), recursive render, and interaction wiring.
 
     The application owns the rendering, the interaction layer, and the visual design; the model owns the choice of which components to compose and with what data. *Interaction loop*: every interactive component has a defined action shape (typed event), encoding in history (user-role message with `ui_event` content in Anthropic encoding, or equivalent), and side-effect policy (clicks produce a structured event the model reasons about; destructive actions are *separate tool calls gated by user identity*, never auto-executed from the click). The render pipeline *never executes model-authored markup, HTML, or code* — the only thing the model authors is a typed selection from the published palette.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "model emits text; user reads text" with "model emits a typed component specification; application renders the specification; user sees a UI surface authored by the application's design system but composed by the model." Solves the problem that chat-with-markdown is too low-bandwidth for many response shapes (a question that wants a date picker, a chart, a comparison table, a confirmation card cannot be served by text), while model-emits-HTML is too dangerous (the model's output reaches the DOM unchecked, design consistency breaks, security goes out the window). The pattern is simultaneously *safe* (application owns rendering — the model can only ask for components the application has exposed, with data the schema permits) and *expressive* (model composes components, chooses presentations per response, adapts to the question at hand without the developer pre-building every variant). The indirection — model → typed spec → application-controlled render pipeline → DOM — is what makes the simultaneity possible.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from tool-call-flow, which owns the protocol cycle by which a model invokes external capabilities and receives results — this skill owns the pattern where the model's *output is itself a UI specification* rendered by the application; the two compose (a UI spec may be emitted via a tool-call-flow-shaped mechanism), but the conceptual surfaces differ. Distinct from rendering-models, which owns the page-level rendering taxonomy (CSR/SSR/SSG/RSC/streaming) — this skill owns the model→spec→component pipeline that operates *inside* any of those rendering models. Distinct from prompt-injection-defense, which owns the security property a system must preserve against attacker-controlled directives in model input — this skill owns the rendering pattern whose threat surface *includes* rendering attacker-influenced output; the two skills are read together for security analysis. Distinct from api-design, which owns the external HTTP request/response surface — this skill owns the model-to-renderer schema surface (both are typed contracts, but between different actors). Distinct from design-system-architecture, which owns the component library and its tokens — this skill *consumes* a design system as the palette the model can draw from. Distinct from eval-driven-development, which measures whether the model's UI choices are correct (this skill is the pattern being evaluated).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Generative UI is to a model-rendered interface what a building's framework is to a tenant's customization — the architect (application) lays the structural floor plan, frames the walls, and provides a catalog of approved fixtures (component palette); the tenant (model) picks which fixtures to install where for this particular layout, but cannot punch new holes in load-bearing walls or wire fixtures that don't exist in the catalog. The freedom is in the composition; the safety is in the structure."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that generative UI is "the model writes HTML/JSX/markup that the page renders" — model-emits-code is a different and *dangerous* pattern, not this one. Generative UI is *typed selection from a published palette*, never authoring of arbitrary markup; the render pipeline never executes model-authored HTML, code, or markup. Adjacent misconceptions: that the schema's existence alone is enough (it is not — the *generation constraint* must force the model's output to be a valid schema instance; free-form-with-post-validation is a prototype mechanism, not production-grade, and produces retry loops in production); that schema validation alone authorizes rendering (it does not — per-component *safety policies* enforce origin allowlists for image URLs, sanitize link targets, cap content length, limit recursion depth; the schema describes structure, the safety policy describes acceptable content; both are required); that interactive components can auto-execute destructive actions on click (they cannot — a click is a *user signal*, not authorization; the destructive operation must be a separate tool call gated by user identity through normal authorization, never auto-executed from the rendered-component event); that accessibility comes for free (it does not — accessibility is the responsibility of the application's component implementations; generative UI *delegates* it to the design system, but does not produce accessible UI by itself); and that the pattern fits every use case (it does not — for *known repeated workflows*, traditional UI design is the better fit; generative UI is for *open-ended assistant responses* where the right presentation varies per question, and forcing it on stable workflows adds runtime variance without benefit).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Generative UI is the pattern in which a language model emits, as structured output constrained by a typed schema, a specification of a UI component or sub-tree that an application then renders for the user. The model's output is not a chat response, not a tool call asking for execution, and not raw code — it is a typed instance of a component-vocabulary schema. The application owns the rendering, the interaction layer, and the visual design; the model owns the choice of which components to compose and with what data. The pattern depends on three contracts holding simultaneously: the schema (the typed component vocabulary the model and application share), the generation constraint (the model's emission is restricted to valid instances of the schema), and the render policy (the application renders only what the schema describes, with no escape to model-authored markup or code).\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/generative-ui/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
