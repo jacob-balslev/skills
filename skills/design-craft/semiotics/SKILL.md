@@ -6,48 +6,141 @@ compatibility:
   notes: "Stack-agnostic sign-system analysis. The Peirce / Saussure / Barthes models, color-as-sign rules, iconography principles, and affordance taxonomy apply to any UI; example surfaces use generic e-commerce framings — substitute the equivalents from your domain."
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: design
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: design-craft
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: design/semantics
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-18"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-18\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"sign-system analysis\",\"icon polysemy\",\"signifier signified mapping\",\"denotation versus connotation\",\"affordance signifier match\",\"icon-index-symbol trichotomy\",\"visual metaphor clarity\",\"color connotation audit\",\"cross-surface sign drift\",\"semiotic coherence audit\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"our dashboard uses green for both revenue increase and cost increase, so users read both as good — what semiotic failure is that and how should we correct it?\",\"we use a gear icon for settings on one page and preferences on another — is this just a naming issue, or an interface sign conflict?\",\"a disabled button still looks clickable because only the color changed — which signifier or affordance rule is failing?\",\"we need an icon for reconciliation in a financial workflow — which metaphors are available, and when must text stay paired with the icon?\",\"an API function is named processData() — from a sign-system perspective, what is wrong with that name?\",\"audit this status-badge color system for denotation vs connotation conflicts\",\"explain why users keep clicking a non-interactive label that looks like a link\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"I need formal class hierarchies, axioms, and what-exists rules for our knowledge base\",\"I need physical database schema design and relationship constraints\",\"I need the relation type between two concepts — synonymy, polysemy, or meronymy\",\"draft the exact wording for a button label or tooltip after the sign system is chosen\",\"give me the live color-token values, APCA contrast math, and palette enforcement\",\"explain the morphology rule behind verb-first function names\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"semantics\",\"reason\":\"semantics owns meaning encoding for individual textual identifiers and signals (function names, design tokens, HTTP status codes, branded types, SemVer, conventional commits); semiotics owns sign-system analysis for visual + textual sign systems (icons, color as sign, affordances, signifier/signified mappings) — the same 'what does this mean?' prompt routes by whether the trigger is one identifier's encoding or a multi-channel sign system\"},{\"skill\":\"microcopy\",\"reason\":\"microcopy owns the actual UI wording (button labels, empty states, tooltips, dialogs); semiotics owns the sign-system reasoning that determines what the words and accompanying visual signs should communicate — the same 'fix this UI element' prompt routes by whether the trigger is the wording itself or the sign system the wording sits inside\"},{\"skill\":\"semantic-relations\",\"reason\":\"semantic-relations owns the typed connections between concepts (IS-A, PART-OF, thematic roles); semiotics owns the signifier-to-signified mapping in interface and naming surfaces — the same 'how does this relate to that?' prompt routes by whether the trigger is a conceptual relation type or a sign-system relationship\"},{\"skill\":\"visual-design-foundations\",\"reason\":\"visual-design-foundations owns visual craft decisions such as palette, type, spacing, and hierarchy; semiotics owns what those signs communicate\"}],\"related\":[\"linguistics\",\"a11y\",\"intent-recognition\",\"visual-design-foundations\"],\"verify_with\":[\"a11y\",\"code-review\"]}"
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Semiotics is the study of *sign systems* — how *signifiers* (perceivable forms: icons, colors, shapes, positions, words) point to *signifieds* (concepts, states, actions) via convention, resemblance, or causal connection. Applied to interfaces, it is the discipline of designing and auditing the *multi-channel sign systems* through which a product communicates with its users. Drawing from Peirce's *icon/index/symbol* trichotomy (icon resembles, index causally connects, symbol arbitrarily conventions), Saussure's signifier/signified dyad, Barthes' three layers (denotation / connotation / myth), and Norman's affordance theory (real affordance / perceived affordance / signifier / anti-affordance).
 
     *Visual semiotics*: *color as sign* (red = error/loss; green = success/growth — *but never color alone* as differentiator; ~8% of males have deuteranopia per WCAG 1.4.1; pair with icon, text, or shape), *shape and position as sign channels* (top-left = primary; circle = status; triangle = direction; pill = category/state/count). *Iconography as a sign system*: consistency (same concept = same icon across product), metaphor clarity (legible without specialist training), pairing (abstract or unfamiliar icons need text pairing until learned), system coherence (one icon family); common breakdowns are icon polysemy (one icon means several things), opacity (abstract mark with no clear signified), cultural collision (metaphor fails outside one audience's assumptions), obsolete metaphor (the floppy-disk save icon — convention learned by some but dead to others). *Code and API semiotics*: vague names like `processData()` are signifier failures even when the implementation works — the reader has to *open the function* to learn its meaning, which is exactly the inference cost a good sign eliminates.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "design by aesthetic intuition" with explicit reasoning about *what each visual element communicates*. Solves the problem that every interface element is *already communicating*, whether the designer intended it to or not — a button that looks clickable but is disabled, a green badge that signals "good" when the metric is actually worsening, or a gear icon that means different things on different pages are not visual quirks; they are *sign failures that erode user trust one micro-misread at a time*. The core rule: *one signifier should point clearly to one intended signified within a given system context*. The more a sign drifts, the more users (and agents) are forced to infer meaning from guesswork rather than from the system itself. Sign drift compounds — a single ambiguous icon is a small cost; ten ambiguous icons across a product is a learned distrust of the entire surface. *Denotation vs connotation matters in financial UI*: an *increase* (denotation: direction) is not always *good* (connotation: judgment); a green up-arrow signaling "cost increased 30%" reads as positive to the user even though the business meaning is negative — Barthes' three-layer analysis catches this exactly.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from semantics, which owns meaning encoding for *individual textual identifiers and signals* (function names, design tokens, HTTP status codes, branded types, SemVer, conventional commits) — this skill owns *sign-system analysis for visual + textual sign systems* (icons, color as sign, affordances, signifier/signified mappings); the same "what does this mean?" prompt routes by whether the trigger is one identifier's encoding or a multi-channel sign system. Distinct from microcopy, which owns the actual UI wording — this skill owns the *sign-system reasoning that determines what the words and accompanying visual signs should communicate*. Distinct from semantic-relations, which owns typed connections between *concepts* (IS-A, PART-OF, thematic) — this skill owns the *signifier-to-signified mapping* in interface and naming surfaces. Distinct from linguistics (word form rules — this skill owns broader sign systems including visual ones), a11y (accessibility contracts — semiotics may inform them but does not own them), visual-design-foundations (palette, typography, spacing, hierarchy, craft — this skill asks what the visual element *signifies*), and ontology-modeling (formal class hierarchies — this skill owns sign meaning in interfaces).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Semiotics is to interface design what choreography is to a play — the words are the script, but the actor's stance, hand position, gaze direction, and proximity to other actors are the choreography. A line that lands flat with the wrong choreography lands well with the right one; same words, different signs. A disabled button that uses only a paler color (signifier too quiet) is a stage actor whispering an exit cue the audience cannot hear."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that *visual design is taste* and that sign-system audits are aesthetic preferences. They are not — *every interface element is communicating something whether the designer intended or not*, and the question is whether the communication is intentional and coherent. Adjacent misconceptions: that *color alone can signal state* (it cannot — the never-color-alone rule is not preference but accessibility and clarity: ~8% of males have deuteranopia; the WCAG 1.4.1 success criterion codifies this; pair with icon, text, or shape); that *direction equals judgment* (it does not — Barthes' denotation/connotation distinction: an *increase* is direction; *good* is judgment; in financial UI, a 30% increase in COGS is denotationally an increase but connotationally bad; using green-up-arrow conflates them); that *one icon means one thing universally* (it does not — icon polysemy is the most common UI sign failure; the gear icon means "settings" in one product and "preferences" in another and "build" in yet another; either follow strong existing convention or pair with text); that *abstract marks gain meaning with exposure* (they sometimes do, but require pairing-with-text until learned; the floppy-disk save icon was symbol once, learned for decades, now obsolete metaphor — users under 25 don't recognize the referent); that *disabled states need only a color change* (they do not — disabled states need a *strong anti-affordance*: greying alone is too subtle, and combined with hover effects can read as "loading" rather than "unavailable"); and that *code naming and visual signs are separate concerns* (they are not — `processData()` is a signifier failure for the same reason the gear icon's polysemy is: the sign forces inference rather than transferring meaning).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Semiotics is the study of sign systems: how signifiers such as icons, colors, shapes, positions, words, names, and interaction cues point to signified concepts, states, actions, or judgments through resemblance, causal trace, convention, and cultural association.\",\"mental_model\":\"Treat an interface as a layered sign system. Peirce helps classify icon, index, and symbol; Saussure separates signifier from signified; Barthes separates denotation, connotation, and myth; Norman's signifiers connect perceivable cues to expected action. A good surface aligns those layers so the user reads the intended meaning without extra inference.\",\"purpose\":\"It makes implicit communication explicit before users misread the product. The goal is to prevent sign drift, color-only state signaling, icon polysemy, misleading affordances, and code/API names that force readers to inspect implementation before they understand intent.\",\"boundary\":\"It owns sign-to-meaning analysis across visual and textual systems, not the final wording, visual craft, accessibility compliance, formal ontology, database modeling, or morphology rules.\",\"taxonomy\":\"Core lenses include Peircean icon/index/symbol, Saussurean signifier/signified, Barthesian denotation/connotation/myth, affordance/signifier/anti-affordance, color-as-sign, shape/position channels, icon-system coherence, and code/API signifiers.\",\"analogy\":\"Semiotics is like stage direction for an interface: the words matter, but gesture, placement, lighting, costume, and timing tell the audience what the scene means before anyone explains it.\",\"misconception\":\"The common mistake is treating sign-system failures as taste or polish. They are communication failures: if green signals good in one place and bad in another, or a non-interactive label looks clickable, the system is teaching users the wrong language.\"}"
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: "{\"domain_object\":\"Interface sign-system analysis for icons, color, badges, affordances, visual metaphors, and code/API signifiers\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://plato.stanford.edu/archives/spr2024/entries/peirce-semiotics/\",\"https://openlibrary.org/books/OL23291521M/Course_in_general_linguistics.\",\"https://openlibrary.org/books/OL21215289M/Mythologies\",\"https://jnd.org/signifiers-not-affordances/\",\"https://www.nngroup.com/articles/icon-usability/\",\"https://www.w3.org/WAI/WCAG22/Understanding/use-of-color\"],\"failure_modes\":[\"icon_polysemy_masked_as_style_issue\",\"color_connotation_conflated_with_metric_direction\",\"disabled_state_lacks_anti_affordance\",\"abstract_icon_unpaired_before_convention_is_learned\",\"identifier_or_api_name_forces_reader_to_open_implementation\"],\"evidence_priority\":\"equal\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/design-craft/semiotics/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
