@@ -1,6 +1,6 @@
 ---
 name: context-management
-description: "Use when deciding what to load into an active agent session, recovering from context drift, preparing compaction or restart, distilling raw inputs into a working summary, or writing a handoff another agent can resume quickly. Covers intake triage, the six-step context-management loop, working-set shaping, evidence-first loading, drift signals, anti-drift rules, compaction-ready handoffs, and selective rebuild after context loss. Do NOT use for token math (use `context-window`), prompt wording (use `prompt-craft`), persistent memory curation, or multi-graph context architecture (use `context-graph`)."
+description: "Use when deciding what to load into an active agent session, recovering from context drift, preparing compaction or restart, distilling raw inputs into a working summary, or writing a handoff another agent can resume quickly. Do NOT use for token math (use `context-window`), prompt wording (use `prompt-craft`), persistent memory curation, or multi-graph context architecture (use `context-graph`). Covers intake triage, the six-step context-management loop, working-set shaping, evidence-first loading, drift signals, anti-drift rules, compaction-ready handoffs, and selective rebuild after context loss."
 license: MIT
 compatibility:
   notes: "Runtime-agnostic. The intake-triage / loop / drift / handoff discipline applies to any LLM-coding harness regardless of context window size or compaction implementation."

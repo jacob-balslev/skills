@@ -1,6 +1,6 @@
 ---
 name: problem-approach-router
-description: "Use when facing a new problem and unsure which problem-solving methodology or foundational skill to apply first. Routes between first-principles-thinking, pattern-recognition, mental-models, constraint-awareness, and task-analysis by classifying the problem type. Activate before choosing any other foundational skill. Do NOT use to execute the selected approach (use the specific routed skill directly), for implementation work (use the relevant engineering skill), or when the correct approach is already known."
+description: "Use when facing a new problem and unsure which problem-solving methodology or foundational skill to apply first. Do NOT use to execute the selected approach (use the specific routed skill directly), for implementation work (use the relevant engineering skill), or when the correct approach is already known. Routes between first-principles-thinking, pattern-recognition, mental-models, constraint-awareness, and task-analysis by classifying the problem type. Activate before choosing any other foundational skill."
 license: MIT
 compatibility:
   notes: "Domain-agnostic dispatch. The routing table applies to any problem a human or agent faces — software, design, product, or strategy. The skill names in the Routing Rules refer to sibling skills in the foundations category."

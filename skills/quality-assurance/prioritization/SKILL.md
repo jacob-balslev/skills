@@ -1,6 +1,6 @@
 ---
 name: prioritization
-description: "This skill provides prioritization frameworks for AI engineering: RICE-A (adding AI Ambiguity to RICE) for product features, ICE for research experiments, and MoSCoW for MVP/Release scoping. Use when ranking the backlog, deciding which model research path to follow, or defining the scope of a new feature. Do NOT use for one-off task sequencing (use task skill) or personal time management."
+description: "Use when ranking the backlog, deciding which model research path to follow, or defining the scope of a new feature. Do NOT use for one-off task sequencing (use task skill) or personal time management. This skill provides prioritization frameworks for AI engineering: RICE-A (adding AI Ambiguity to RICE) for product features, ICE for research experiments, and MoSCoW for MVP/Release scoping."
 license: MIT
 compatibility:
   notes: "Markdown, Git, agent-skill runtimes"

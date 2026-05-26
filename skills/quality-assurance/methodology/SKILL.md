@@ -1,6 +1,6 @@
 ---
 name: methodology
-description: "Use when planning multi-step implementations, designing quality gates, establishing verification protocols, or building agent checklists calibrated to known failure modes. Covers methodology/method/process distinctions, Cleanroom, PSP/TSP, hypothesis-driven development, DMAIC, checklist design, V&V frameworks, EDDOps, quality gates, and PDCA. Do NOT use for code-review verdicts (use `code-review`), behavior-preserving implementation work (use `refactor`), or test strategy (use `testing-strategy`)."
+description: "Use when planning multi-step implementations, designing quality gates, establishing verification protocols, or building agent checklists calibrated to known failure modes. Do NOT use for code-review verdicts (use `code-review`), behavior-preserving implementation work (use `refactor`), or test strategy (use `testing-strategy`). Covers methodology/method/process distinctions, Cleanroom, PSP/TSP, hypothesis-driven development, DMAIC, checklist design, V&V frameworks, EDDOps, quality gates, and PDCA."
 license: MIT
 compatibility:
   notes: "Markdown, Git, agent-skill runtimes"

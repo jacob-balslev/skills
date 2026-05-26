@@ -1,6 +1,6 @@
 ---
 name: guardrails
-description: "Use when planning or executing agent/tool operations that touch protected files, credentials, destructive git commands, destructive SQL, PII, secrets, deployments, package publication, or irreversible system mutations. Covers proactive safety policy, tool-call tripwires, blocking vs advisory enforcement, secret-exposure prevention, and excessive-agency containment. Do NOT use for application input validation, routine git workflow design, migration authoring, or general code correctness review (use `code-review`, `version-control`, or `database-migration`)."
+description: "Use when planning or executing agent/tool operations that touch protected files, credentials, destructive git commands, destructive SQL, PII, secrets, deployments, package publication, or irreversible system mutations. Do NOT use for application input validation, routine git workflow design, migration authoring, or general code correctness review (use `code-review`, `version-control`, or `database-migration`). Covers proactive safety policy, tool-call tripwires, blocking vs advisory enforcement, secret-exposure prevention, and excessive-agency containment."
 license: MIT
 compatibility:
   notes: "Markdown, Git, agent-skill runtimes"

@@ -1,6 +1,6 @@
 ---
 name: real-time-updates
-description: "Use when designing browser freshness for live dashboards, notifications, progress views, or data that can change after initial render. Covers transport choice among polling, Server-Sent Events, and bidirectional sockets; webhook-to-UI propagation; optimistic updates; stale-data indicators; reconnect and catch-up behavior; and avoiding disruptive auto-refresh. Do NOT use for low-level stream/backpressure protocol design (use `streaming-architecture`), recurring schedule design (use `cron-scheduling`), or background worker execution semantics (use `background-jobs`)."
+description: "Use when designing browser freshness for live dashboards, notifications, progress views, or data that can change after initial render. Do NOT use for low-level stream/backpressure protocol design (use `streaming-architecture`), recurring schedule design (use `cron-scheduling`), or background worker execution semantics (use `background-jobs`). Covers transport choice among polling, Server-Sent Events, and bidirectional sockets; webhook-to-UI propagation; optimistic updates; stale-data indicators; reconnect and catch-up behavior; and avoiding disruptive auto-refresh."
 license: MIT
 compatibility:
   notes: "Portable browser freshness guidance for web applications. Transport limits vary by hosting platform, proxy, browser, and runtime; verify those limits before production rollout."

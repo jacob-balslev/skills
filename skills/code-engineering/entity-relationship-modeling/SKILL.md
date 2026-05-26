@@ -1,6 +1,6 @@
 ---
 name: entity-relationship-modeling
-description: "Use when designing database tables, reviewing schema changes, planning migrations, or translating conceptual models into physical database structures. Covers ER notation, entity/attribute/key design, normalization and denormalization, junction tables, inheritance mapping, temporal modeling, ER-to-SQL translation, indexing, and constraints. Do NOT use for conceptual domain analysis (use `conceptual-modeling`), formal ontology (use `ontology`), or cross-system API contracts (use `system-interface-contracts`)."
+description: "Use when designing database tables, reviewing schema changes, planning migrations, or translating conceptual models into physical database structures. Do NOT use for conceptual domain analysis (use `conceptual-modeling`), formal ontology (use `ontology`), or cross-system API contracts (use `system-interface-contracts`). Covers ER notation, entity/attribute/key design, normalization and denormalization, junction tables, inheritance mapping, temporal modeling, ER-to-SQL translation, indexing, and constraints."
 license: MIT
 compatibility:
   notes: "Markdown, Git, agent-skill runtimes"

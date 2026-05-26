@@ -1,6 +1,6 @@
 ---
 name: http-semantics
-description: "Use when designing or reviewing HTTP-based systems where method semantics, status codes, idempotency, safe methods, conditional requests, content negotiation, caching headers, or representation metadata are load-bearing. Covers the RFC 9110/9111/9112 contract layer below any specific framework. Do NOT use for API surface shape and route taxonomy (use api-design), for WebSocket or SSE bidirectional streams (use streaming-architecture skill when available), for vendor-specific webhook signing (use webhook-integration), or for transport-level concerns like TLS or QUIC (use platform-level documentation)."
+description: "Use when designing or reviewing HTTP-based systems where method semantics, status codes, idempotency, safe methods, conditional requests, content negotiation, caching headers, or representation metadata are load-bearing. Do NOT use for API surface shape and route taxonomy (use api-design), for WebSocket or SSE bidirectional streams (use streaming-architecture skill when available), for vendor-specific webhook signing (use webhook-integration), or for transport-level concerns like TLS or QUIC (use platform-level documentation). Covers the RFC 9110/9111/9112 contract layer below any specific framework."
 license: MIT
 allowed-tools: Read Grep
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: diagnosis
-description: "Use when facing an unknown software failure, when symptoms point to different root causes, or when an initial debugging attempt has not converged. Provides a triage-first diagnostic routing framework: classify the failure, collect the right evidence, choose a technique, track confidence, and escalate when stuck. Do NOT use for executing scientific debugging after triage (use `debugging`), code-quality review (use `code-review`), or proactive observability setup."
+description: "Use when facing an unknown software failure, when symptoms point to different root causes, or when an initial debugging attempt has not converged. Do NOT use for executing scientific debugging after triage (use `debugging`), code-quality review (use `code-review`), or proactive observability setup. Provides a triage-first diagnostic routing framework: classify the failure, collect the right evidence, choose a technique, track confidence, and escalate when stuck."
 license: MIT
 compatibility:
   notes: "Language- and stack-agnostic. The classification taxonomy, evidence protocol, and confidence ladder apply to any software failure investigation; specific technique names (git bisect, EXPLAIN plans, HMAC verification) are illustrative — substitute the equivalents of your stack."

@@ -1,6 +1,6 @@
 ---
 name: bayesian-reasoning
-description: "Use when updating beliefs, forecasts, diagnoses, or decision assumptions under uncertainty using Bayesian reasoning: priors/base rates, likelihood, evidence strength, posterior direction, and residual uncertainty. Covers base-rate discipline, likelihood-vs-posterior separation, independent evidence updates, natural-frequency examples, confidence calibration, and when to stop at qualitative probability instead of fake precision. Do NOT use for expected monetary value calculations, strategy-cascade choices (use playing-to-win), industry-structure analysis (use porters-five-forces), or generic task prioritization (use prioritization)."
+description: "Use when updating beliefs, forecasts, diagnoses, or decision assumptions under uncertainty using Bayesian reasoning: priors/base rates, likelihood, evidence strength, posterior direction, and residual uncertainty. Do NOT use for expected monetary value calculations, strategy-cascade choices (use playing-to-win), industry-structure analysis (use porters-five-forces), or generic task prioritization (use prioritization). Covers base-rate discipline, likelihood-vs-posterior separation, independent evidence updates, natural-frequency examples, confidence calibration, and when to stop at qualitative probability instead of fake precision."
 license: MIT
 compatibility:
   notes: "Markdown, decision memos, diagnostic reasoning, research synthesis, forecasting, agent confidence calibration"

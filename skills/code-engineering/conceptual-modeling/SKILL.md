@@ -1,6 +1,6 @@
 ---
 name: conceptual-modeling
-description: "Use when translating messy business requirements, stakeholder language, or early product ideas into an implementation-neutral domain model before database schemas, API endpoints, or DDD aggregates are named. Covers entities, attributes, named relationships, cardinality, identity criteria, specialization/generalization, aggregation/composition, reification, abstraction-level control, stakeholder validation, and modeling anti-patterns. Do NOT use for database ER diagrams with keys and normalization, formal ontology axioms with OWL/RDFS, or DDD tactical design; use those dedicated skills instead."
+description: "Use when translating messy business requirements, stakeholder language, or early product ideas into an implementation-neutral domain model before database schemas, API endpoints, or DDD aggregates are named. Do NOT use for database ER diagrams with keys and normalization, formal ontology axioms with OWL/RDFS, or DDD tactical design; use those dedicated skills instead. Covers entities, attributes, named relationships, cardinality, identity criteria, specialization/generalization, aggregation/composition, reification, abstraction-level control, stakeholder validation, and modeling anti-patterns."
 license: MIT
 compatibility:
   notes: "Domain- and language-agnostic. The conceptual / logical / physical ladder applies across relational, document, graph, event-sourced, and service-oriented systems. Examples use generic commerce and education nouns only as public, portable modeling examples."

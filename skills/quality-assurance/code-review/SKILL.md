@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: "Use when reviewing a pull request, diff, or proposed code change for correctness, clarity, security, performance, and conformance to project conventions — whether the author is a human, an AI agent, or a peer. Covers the pre-review fact-gathering pass, the read-order strategy (tests first, then implementation, then call sites), the severity-grading rubric, the comment-phrasing discipline, and the no-rubber-stamp rule for AI-generated diffs. Do NOT use for AUTHORING the code (use `refactor` for behaviour-preserving changes or `skill-scaffold` for new skills), for chasing a known bug after merge (use `debugging`), or for security-only audits (use `owasp-security` for vulnerability-focused review)."
+description: "Use when reviewing a pull request, diff, or proposed code change for correctness, clarity, security, performance, and conformance to project conventions — whether the author is a human, an AI agent, or a peer. Do NOT use for AUTHORING the code (use `refactor` for behaviour-preserving changes or `skill-scaffold` for new skills), for chasing a known bug after merge (use `debugging`), or for security-only audits (use `owasp-security` for vulnerability-focused review). Covers the pre-review fact-gathering pass, the read-order strategy (tests first, then implementation, then call sites), the severity-grading rubric, the comment-phrasing discipline, and the no-rubber-stamp rule for AI-generated diffs."
 license: MIT
 compatibility:
   notes: "Language-agnostic; assumes a diff or PR as input"

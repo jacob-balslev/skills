@@ -1,6 +1,6 @@
 ---
 name: type-safety
-description: "Use when reasoning about types as a quality property of code: what guarantees the type system actually provides, the difference between sound and unsound systems, structural vs nominal typing, type narrowing and exhaustiveness, the runtime/compile-time boundary, and where validation must happen because the type system cannot. Covers TypeScript, Flow, Hindley-Milner languages, and gradual typing in general. Do NOT use for runtime input validation library choice (use api-design for API surface validation; use individual library docs for library mechanics), for SQL type mapping (use data-modeling), or for type system implementation (compilers — out of scope)."
+description: "Use when reasoning about types as a quality property of code: what guarantees the type system actually provides, the difference between sound and unsound systems, structural vs nominal typing, type narrowing and exhaustiveness, the runtime/compile-time boundary, and where validation must happen because the type system cannot. Do NOT use for runtime input validation library choice (use api-design for API surface validation; use individual library docs for library mechanics), for SQL type mapping (use data-modeling), or for type system implementation (compilers — out of scope). Covers TypeScript, Flow, Hindley-Milner languages, and gradual typing in general."
 license: MIT
 allowed-tools: Read Grep
 metadata:

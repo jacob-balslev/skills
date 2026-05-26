@@ -1,6 +1,6 @@
 ---
 name: first-principles-thinking
-description: "Use when a problem is trapped inside inherited assumptions, copied convention, analogy, or local optimization and needs to be rebuilt from irreducible premises. Covers decomposition to primitives, assumption stripping, primitive tests, reconstruction from constraints, derivation chains, and reality checks. Do NOT use for root-cause analysis of an observed failure (use debugging or problem-locating-solving), formal argument grounding (use epistemic-grounding), domain entity modeling (use conceptual-modeling), or recurring issue clustering (use pattern-recognition)."
+description: "Use when a problem is trapped inside inherited assumptions, copied convention, analogy, or local optimization and needs to be rebuilt from irreducible premises. Do NOT use for root-cause analysis of an observed failure (use debugging or problem-locating-solving), formal argument grounding (use epistemic-grounding), domain entity modeling (use conceptual-modeling), or recurring issue clustering (use pattern-recognition). Covers decomposition to primitives, assumption stripping, primitive tests, reconstruction from constraints, derivation chains, and reality checks."
 license: MIT
 allowed-tools: Read Grep
 metadata:

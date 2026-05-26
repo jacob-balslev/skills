@@ -1,0 +1,143 @@
+{
+  "skill_name": "seven-powers",
+  "subject": "Seven Powers",
+  "adjacent_concepts": [
+    "Porter's Five Forces",
+    "Playing to Win",
+    "Blue Ocean Strategy",
+    "VRIO",
+    "SWOT/TOWS",
+    "expected value",
+    "prioritization"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define Seven Powers in 2-3 sentences. Name all seven powers and explain what the framework diagnoses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names scale economies",
+        "Names network economies",
+        "Names counter-positioning",
+        "Names switching costs",
+        "Names branding",
+        "Names cornered resource",
+        "Names process power",
+        "Explains durable firm-level power or moat diagnosis"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Seven Powers. Name at least 7 primitives and describe how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "At least 7 of: power, benefit, barrier, persistence, rival imitation, firm-level economics, customer value, value capture, company phase, false positive",
+        "Explains benefit and barrier are both required",
+        "Explains power is firm-level, not merely industry-level",
+        "Explains a moat claim can be candidate or false positive"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents calling every strong business a moat",
+        "Prevents growth being confused with power",
+        "Prevents benefit-without-barrier claims",
+        "Prevents network effects being claimed from user growth alone",
+        "Prevents brand awareness being confused with branding power",
+        "Prevents industry attractiveness being confused with firm power"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish Seven Powers from Porter's Five Forces, Playing to Win, Blue Ocean Strategy, VRIO, and SWOT/TOWS. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Porter's Five Forces diagnoses industry-structure and profit-pool pressure",
+        "Playing to Win formulates integrated strategy choices",
+        "Blue Ocean Strategy designs uncontested or differentiated value curves",
+        "VRIO tests resources/capabilities for advantage",
+        "SWOT/TOWS inventories factors and converts them into strategic options",
+        "Seven Powers classifies durable firm-level power sources"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "workflow",
+      "prompt": "List the ordered workflow taught by the skill, then identify which steps catch growth-only moat claims, benefit-without-barrier claims, and industry-attractiveness confusion.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Scope the business and arena",
+        "Extract candidate power claims",
+        "Test benefit and barrier separately",
+        "Check timing and phase",
+        "Rank the power diagnosis",
+        "Translate into strategy implications",
+        "Growth-only moat claims caught by candidate-power and benefit/barrier tests",
+        "Benefit-without-barrier claims caught by separate barrier test",
+        "Industry-attractiveness confusion caught by business/arena scope and boundary check"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for Seven Powers that preserves benefit plus barrier. Then name one bad analogy and explain what it gets wrong.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy with two required parts, such as lock/key, bridge/load, or engine/moat",
+        "Maps one part to company benefit",
+        "Maps one part to competitor barrier",
+        "Rejects a bad analogy that reduces Seven Powers to a checklist of strengths or growth traits"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A developer platform says it has power because it has many users, a plugin ecosystem, high migration cost, and a faster internal release process. Apply Seven Powers by identifying candidate powers, testing benefit and barrier, labeling false positives, and naming strategy implications.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Identifies possible network economies through plugin ecosystem",
+        "Identifies possible switching costs through migration cost",
+        "Treats faster internal release process as possible process power only if hard to replicate",
+        "Does not accept many users alone as network economies",
+        "Tests benefit and barrier for each candidate",
+        "Labels missing evidence or false positives",
+        "Names at least one strategy implication"
+      ]
+    }
+  ]
+}
