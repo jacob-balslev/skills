@@ -4,46 +4,131 @@ description: "Use when reasoning about horizontal partitioning of data across no
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: code-engineering
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/data
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"sharding\",\"partitioning\",\"horizontal partitioning\",\"shard key\",\"hash partitioning\",\"range partitioning\",\"consistent hashing\",\"hot shard\",\"resharding\",\"cross-shard query\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"how should we shard\",\"what's the right shard key\",\"hot shard\",\"cross-shard transaction\",\"consistent hashing\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"choose a shard key for a multi-tenant system where 90% of queries are tenant-scoped\",\"diagnose a hot shard caused by skewed shard-key distribution\",\"design the resharding strategy when adding nodes to a hash-sharded cluster\",\"decide whether to accept cross-shard JOIN complexity or denormalize\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design replication topology for the same data (use replication-patterns)\",\"tune a single slow query (use query-optimization)\",\"design indexes within one shard (use indexing-strategy)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"replication-patterns\",\"cap-theorem-tradeoffs\",\"indexing-strategy\",\"data-modeling\"],\"boundary\":[{\"skill\":\"replication-patterns\",\"reason\":\"replication-patterns owns copying the same data across nodes; this skill owns splitting different data across nodes. The two compose: a sharded system can replicate each shard. They answer different questions.\"},{\"skill\":\"cap-theorem-tradeoffs\",\"reason\":\"cap-theorem-tradeoffs owns the theoretical consistency-availability frame; this skill owns the operational partitioning that often interacts with it (cross-shard transactions have stronger consistency requirements than single-shard ones).\"},{\"skill\":\"indexing-strategy\",\"reason\":\"indexing-strategy owns within-node retrieval; this skill owns how data is divided across nodes. Indexes within a shard are designed normally; cross-shard secondary indexes are a separate, harder problem.\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns schema and access-pattern design; this skill owns the partitioning of that schema across nodes. The shard key is a schema design decision with operational consequences.\"}],\"verify_with\":[\"replication-patterns\",\"data-modeling\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Sharding (horizontal partitioning) is the discipline of dividing a database's data across multiple nodes so each node holds a subset — a *shard*. The unit of judgment is the *shard key*: the column or columns the system uses to route each row to a specific shard. Three foundational schemes: *range partitioning* (contiguous shard-key value ranges per shard — strong for range queries `BETWEEN x AND y`; weak for hotspots at range boundaries and for resharding-by-split), *hash partitioning* (`hash(shard_key) % N` — strong for even balance and no range hotspots; weak for range queries which become scatter-gather, and for resharding which rehashes nearly all data), *consistent hashing* (hash ring with each key routed to the nearest clockwise shard — adding shards moves only 1/N of data; the practical refinement that makes hash partitioning operationally reasonable for systems that grow), and *directory / lookup partitioning* (explicit map per key or key-range — strong for arbitrary placement; weak because the directory itself becomes a bottleneck).
 
     The shard-key selection rules: (1) appears in nearly every query's WHERE clause (shard-locality so queries hit one shard), (2) distributes data evenly (high cardinality, no value dominates traffic), (3) immutable for a row (moving rows between shards is expensive), (4) predictable growth (won't shift hotspots over time), (5) matches natural grain of operations (common transactions are single-shard). Common keys: `tenant_id` for multi-tenant SaaS, `user_id` for per-user data, `time_bucket(timestamp)` for time-series (recent shards hot, older cold — often acceptable), `region` for geographic placement.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "scale vertically forever" with horizontal capacity for write throughput, storage, and geographic placement. Solves the problem that when write throughput exceeds the primary's capacity, when storage approaches the node's limit, or when geographic placement is regulatory or latency-driven, the simpler single-node tools — replication (scales reads), caching (reduces load), denormalization (eliminates joins), vertical scaling (adds capacity) — are no longer sufficient. Sharding is the *scaling tool of last resort* — reached for only when the simpler tools are exhausted, because it adds operational complexity proportional to the gain. The shard key is the most consequential design decision: a well-chosen key gives nearly linear scaling; a poorly-chosen key pays operational complexity without capacity gain — hotspots concentrate on one shard, common queries scatter-gather across all shards, transactions require two-phase commit and become slow and failure-prone. The schema must be designed *with sharding in mind from the start*, or significant refactoring is required when sharding is later introduced.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from replication-patterns, which owns copying the *same* data across nodes for fault tolerance and read scaling; this skill owns dividing *different* data across nodes for write throughput and storage capacity. The two compose in production (sharded systems replicate each shard) but answer different questions. Distinct from cap-theorem-tradeoffs, which owns the theoretical consistency-availability frame; this skill is operational partitioning that often interacts with it (cross-shard transactions require stronger consistency than single-shard ones, and the application typically pays that cost as two-phase commit or distributed consensus latency). Distinct from indexing-strategy, which owns within-node retrieval — indexes within a shard are designed normally; cross-shard secondary indexes are a separate, harder problem. Distinct from data-modeling, which owns schema and access-pattern design — the shard key is a schema decision with operational consequences. Distinct from query-optimization (single-query performance, within a shard) and acid-fundamentals (single-system transactional frame; cross-shard transactions need distributed commit which is a different problem at a different layer).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Sharding is to a database what tenant-based building partitioning is to a multinational corporation — replicating each office to multiple cities is fault tolerance (replication); putting *Sales* in Building A and *Engineering* in Building B *because they do not talk to each other* is sharding. The shard key is the rule that decides who goes in which building, and the most catastrophic operational outcome is choosing a rule that puts everyone in Building A on Monday morning and Building B on Tuesday morning — the hot shard, where the structure was right but the routing rule was wrong."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that sharding is a database scaling lever you reach for to handle load, separately from schema design. It is not. Sharding is a *schema architecture* — queries must filter on the shard key for single-shard performance, related data must be co-located on the same shard for JOIN and transaction locality, cross-shard operations must be rare or accepted as slow, and the schema must be designed with sharding in mind from the start or significant refactoring is required when sharding is later introduced. Adjacent misconceptions: that sharding is "early-stage scaling" — it is the scaling tool of *last resort*, reached for only after replication, caching, denormalization, and vertical scaling are exhausted; that any column can be a shard key — `created_at` causes a range hotspot at the latest range, `status` has low cardinality with one value dominating traffic, and any column not in most queries' WHERE clauses turns every query into a scatter-gather; that resharding is "just rebalancing" — naive hash modulo locks the shard count and changing N rehashes nearly all data, while consistent hashing solves this but only if it was the chosen scheme from the start; that cross-shard transactions are normal — they require two-phase commit or distributed consensus, are slow, and are failure-prone, so applications under sharding are designed to make transactions single-shard by co-locating related data; that sharding and replication are alternatives — they are orthogonal axes, and a production system typically does both (shard for capacity, replicate each shard for HA).
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"Sharding (horizontal partitioning) is the discipline of dividing a database's data across multiple nodes such that each node holds a subset (a shard) of the data. The unit of judgment is the *shard key*: the column or columns the system uses to route each row to a specific shard. Three foundational schemes exist — **range partitioning** (rows with shard-key values in a contiguous range go to the same shard), **hash partitioning** (the shard-key value is hashed; the hash determines the shard), and **directory / lookup partitioning** (an explicit map records which shard owns each key or key-range). Each scheme has its own access-pattern fit, resharding complexity, and hot-shard risk profile. The strategic discipline of sharding is choosing the shard key and scheme such that (a) the per-shard load is balanced, (b) common queries can be answered by a single shard (no cross-shard scatter-gather), and (c) the system can be resharded (add nodes, rebalance data) without unacceptable downtime.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/sharding-strategy/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
