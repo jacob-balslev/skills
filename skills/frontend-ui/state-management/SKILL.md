@@ -4,46 +4,131 @@ description: "Use when deciding where state lives, how it propagates, and how it
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: frontend-ui
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/frontend
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"state management\",\"state colocation\",\"lifting state\",\"state derivation\",\"single source of truth\",\"server state\",\"client state\",\"URL state\",\"persistent state\",\"ephemeral state\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"where should this state live\",\"should this be in component state or global\",\"I have state across multiple routes\",\"this prop is drilled through 5 components\",\"is this server state or client state\",\"should this be in the URL\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"decide where the filter/sort/page state for a data table should live\",\"decide whether a piece of state should be in the URL, component state, or persistent storage\",\"diagnose whether a piece of duplicated state is a real performance need or accidental sprawl\",\"structure state for a form that spans multiple steps and survives navigation\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"implement a specific Redux reducer (tactical, library-specific)\",\"design the JSON shape of an API response (use api-design)\",\"model the state transitions of a multi-step workflow (use state-machine-modeling)\",\"configure HTTP cache headers on the server (use rendering-models or http-semantics)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"rendering-models\",\"client-server-boundary\",\"frontend-architecture\",\"api-design\",\"state-machine-modeling\"],\"boundary\":[{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the line between code-that-runs-where (server components, client components, the serialization boundary); this skill owns the orthogonal question of which side owns which piece of state. They compose: the boundary skill says what code runs where; this skill says what state lives where.\"},{\"skill\":\"state-machine-modeling\",\"reason\":\"state-machine-modeling owns finite-state representation of workflows (states, transitions, guards); this skill owns the decision of where state of any kind lives. The two compose when a workflow has a finite state space whose value still has to live somewhere — the machine names the values, this skill names the location.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external request/response shape; this skill owns where the response data lives once it arrives, and how it's invalidated. Server state cache management (React Query / SWR doctrine) is in scope of this skill; the API surface itself is not.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the question of when content is generated (SSR, RSC, CSR, ISR); this skill owns the question of where data backing that content lives. The two intersect in 'server state' — data fetched on the server that the client needs.\"}],\"verify_with\":[\"rendering-models\",\"api-design\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     State is not one thing — it is a category with FOUR distinct kinds: SERVER state (owned by backend, has cache invalidation, time-and-event-based revalidation, lives in React Query / SWR / RTK Query / Apollo / Server Components); CLIENT UI state (ephemeral within a render lifecycle, owned by component or hook in the active session, lives in useState / useReducer / Context / Zustand / Jotai); URL state (encoded in the URL itself, lifetime = until navigation, framework-router-owned); PERSISTENT state (browser local storage / IndexedDB / cookies, lifetime = until cleared, manual invalidation by app code). Each has different lifetimes, invalidation rules, and consistency requirements. Layered on top: the colocation default (Kent C. Dodds) — start local, lift only when needed, use Context for tree-scoped values, reach for a global store only when many components depend on many slices of a value that changes often. Single source of truth — never have two places that both claim to own one value.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces "global store for everything" or "useState everywhere" with classification-driven placement. Without state-management discipline, most recurring frontend bugs (broken back-button, stale data, prop-drilling, "why is this re-rendering," changes not reflected everywhere) are violations of the four-kinds-of-state classification: server data in a general-purpose store loses automatic revalidation; URL-worthy state in component state breaks the back-button; persistent state in component state loses on refresh; globally-shared state that should be local re-renders everything on every change. The discipline asks "which kind is this?" before "where should it live?" and reaches for the tool best suited to the kind, not a one-size-fits-all store.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from client-server-boundary, which owns the SERIALIZATION line between code that runs where (`'use client'`, `'use server'`) — state-management owns the orthogonal question of which side owns which piece of state; the two compose (boundary says what code runs where, state-management says what state lives where). Distinct from state-machine-modeling, which owns the finite-state representation of workflows (states, transitions, guards, side effects) — state-management owns the decision of WHERE state of any kind lives; the machine names values, this skill names locations. Distinct from api-design, which owns the request/response shape of the external API — state-management owns where the response data lives once it arrives and how it is invalidated. Distinct from rendering-models, which owns when content is generated (SSR / RSC / CSR / ISR) — state-management owns where the data backing that content lives.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "State management is to a frontend application what addressing is to a postal system — you do not ask 'should this letter exist?', you ask 'where does it live?', and the right destination depends entirely on the letter's kind: a registered package (server data with provable delivery), a postcard (URL state, public on the back), a private letter (client UI state, inside an envelope), a deed (persistent state, kept in the safe). One mailbox for everything produces predictable failures."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that state is one thing and the question is "which library should hold it?" It is not. State is at minimum FOUR kinds with different lifetimes and invalidation rules. Picking a library before classifying produces the same library used wrongly for all four kinds — Redux for server data (you reinvent React Query badly), Zustand for URL-worthy filter state (you break the back-button), Context for everything (you re-render the world on every change). The discipline is to classify first (server / client UI / URL / persistent), then pick the right tool per kind, then ask "do I even need a library, or is colocation enough?" Most state should live locally with the component that uses it; a global store is the exception, not the default.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"State management is the architectural discipline of deciding, for each distinct piece of data that an application reads or writes, where that data lives, who owns it, how it propagates to the components that need it, and how it stays consistent across changes. The discipline is upstream of any specific state library: it asks 'should this be local, lifted, global, server-cached, URL-encoded, or persisted' before asking 'which library do I use to hold it.' State is not a single thing; it is a category with at least four distinct kinds (server state, client UI state, URL state, persistent state), each with different lifetimes, invalidation rules, and consistency requirements. The discipline is the recognition that treating all state the same — putting all of it in one global store, or scattering it across every component — produces the recurring frontend problems of prop drilling, stale data, broken back-buttons, and tests that pass while users are confused.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/state-management/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1122"
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
