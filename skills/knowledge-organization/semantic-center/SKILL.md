@@ -22,45 +22,138 @@ grounding:
 drift_check:
   last_verified: "2026-05-19"
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: workflow
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: do
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: foundations
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: knowledge-organization
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: foundations/semantics
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: portable
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-19"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: '["semantic center","semantic-center workflow","one-primary-part reduction","removal test","governance test","load-bearing part","typed relation map","center-finding method","structural importance","single primary part","figure-ground reduction","explanation structure","relation typing rules","supporting-relation map","analysis-vs-prioritization distinction","what is the core","what is load bearing","how do these parts connect","relation map around a center"]'
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: '["what is the most important part of this dashboard, and how do the surrounding widgets relate to it?","explain how the order, fulfillment, and payment systems relate -- what is the semantic center of that flow?","break down the access-control layer; what is the governing policy and how do the other parts depend on it?","we need to understand the onboarding flow, not implement it -- what is the primary part and how do the steps relate around it?","a skill system has frontmatter, body, and references -- which part is the semantic center, and what roles do the others play?","untangle these dense module dependencies into one core plus typed relations","explain at a high level how this system hangs together","what is the load-bearing part of this proposal, and what is merely supporting evidence?"]'
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"implement the new chart component for the reports page\",\"which task should I work on next from the board?\",\"design bounded contexts and aggregate ownership for the domain\",\"review this PR for code quality and missing tests\",\"decide kebab-case vs camelCase for new database columns\",\"rewrite this UI button label to be specific and action-oriented\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"task-analysis","reason":"task-analysis decomposes a route or flow around the user goal, top task, friction, and first-viewport hierarchy; semantic-center decomposes a system or concept around the single load-bearing part. The same primary thing prompt routes by whether the lens is user-task fit or structural importance."},{"skill":"conceptual-modeling","reason":"conceptual-modeling builds a full implementation-neutral model of entities, attributes, relationships, identity, and cardinality; semantic-center reduces a unit to one primary part plus typed relations. The same how do these concepts relate prompt routes by whether the user wants a full model or a load-bearing reduction."},{"skill":"semantic-relations","reason":"semantic-relations decides the precise type of one edge such as IS-A, PART-OF, causal, thematic, or associative; semantic-center uses a coarser relation vocabulary to explain many secondary parts around one center."},{"skill":"pattern-recognition","reason":"pattern-recognition surfaces recurring pattern classes across many instances; semantic-center forces one-primary reduction within a single instance. The same how does this hang together prompt routes by whether the unit of analysis is many instances or one instance."}],"related":["intent-recognition","diagnosis","knowledge-modeling","semantic-relations"],"verify_with":["semantic-relations","code-review"]}'
+  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
+  # Declares the truth sources the skill anchors to and the failure modes those sources
+  # prevent. Omit when the skill is universal-knowledge.
   grounding: '{"domain_object":"Semantic-center analysis for explaining one unit of analysis through a single load-bearing part plus typed supporting relations","grounding_mode":"universal","truth_sources":["https://networkx.org/documentation/stable/reference/algorithms/centrality.html","https://www.w3.org/TR/skos-reference/","https://www.barbaraminto.com/"],"failure_modes":["everything_is_important_flattening","visibility_recency_or_sequence_mistaken_for_structural_importance","relation_map_uses_proximity_or_chronology_without_a_stronger_relation","multiple_primary_parts_hidden_as_parallel_key_points","semantic_center_analysis_overowns_task_prioritization_formal_modeling_or_implementation"],"evidence_priority":"equal"}'
+  # portability: external-runtime export claims. Object with:
+  # readiness — declared (claim only) / scripted (export tooling exists) /
+  #             verified (proven with a receipt artifact).
+  # targets — array; currently only `skill-md` is in the enum.
   portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
+  # lifecycle: maintenance policy for the drift sentinel.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Semantic-center analysis is a figure-ground reduction method. Treat the unit of analysis as a graph of parts, then name the one part that carries the most structural load and place every other part in relation to it. The center is not automatically the most visible, newest, largest, or first-in-sequence part; it is the part whose removal, governing role, purpose explanation, semantic weight, or decision leverage best explains the whole.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     This skill prevents flat explanations. It turns "here are all the parts" into "this is the primary part, these are the supporting parts, and this is how each support, constrains, feeds, or depends on the primary." That makes dense systems, pages, workflows, and concepts easier to understand without turning the answer into a prioritized task list or a formal domain model.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     This skill owns explanatory reduction for one system, feature, workflow, concept, decision, problem, or page. It does not own user-goal decomposition and friction scoring, full conceptual modeling, precise edge semantics for a single relation, cross-instance pattern detection, implementation, code review, model routing, or project prioritization. Use the specialist skill once the work changes from explanation to those activities.
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Semantic-center analysis is like finding the load-bearing column in a room: furniture, paint, wiring, and fixtures all matter, but the explanation becomes useful only after the column that everything else depends on is named."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is believing the semantic center is whatever is most visible or most recently discussed. Visibility is a UI fact, recency is a conversation fact, sequence is a timeline fact, and none of them alone proves structural importance."
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: '{"definition":"Semantic-center analysis identifies the single load-bearing part of a system, feature, workflow, concept, decision, problem, or page, then maps all secondary parts by typed relations to that primary part.","mental_model":"Treat the unit as a graph of parts. Choose one primary node using removal, governance, purpose, weight, or decision tests, then explain every other node by how it supports, constrains, feeds, depends on, or contrasts with that primary node.","purpose":"It prevents flat list explanations and chronology-only walkthroughs by forcing one-primary reduction plus explicit relation mapping.","boundary":"It does not implement, prioritize tasks, choose AI models, design formal domain models, perform code review, or replace precise semantic relation typing for one edge.","taxonomy":"Workflow steps: classify unit, choose primary part, map secondary parts, produce structured output, reduce to one sentence. Primary-part tests: removal, governance, purpose, weight, decision. Relation families: dependency, input/output, containment, source/consumer, cause/effect, authority, trigger/result, semantic grouping, constraint/enabler, sequence, contrast.","analogy":"It is finding the load-bearing column in a room: many visible parts matter, but the explanation becomes useful when the load-bearing part is named.","misconception":"The common mistake is treating visibility, recency, sequence, or stakeholder emphasis as proof of centrality. They are signals, not tests."}'
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/knowledge-organization/semantic-center/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
