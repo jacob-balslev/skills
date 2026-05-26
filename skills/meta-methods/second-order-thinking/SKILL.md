@@ -8,6 +8,8 @@ metadata:
   version: "1.0.0"
   type: capability
   category: foundations
+  subject: meta-methods
+  operation: decide
   domain: foundations/reasoning
   scope: portable
   owner: skill-graph-maintainer
