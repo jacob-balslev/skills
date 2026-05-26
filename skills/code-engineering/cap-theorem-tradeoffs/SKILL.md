@@ -4,46 +4,131 @@ description: "Use when reasoning about the consistency-availability-partition-to
 license: MIT
 allowed-tools: Read Grep
 metadata:
+  # schema_version: protocol contract version this skill conforms to.
+  # Integer 7 or 8. v8 is canonical (2026-05-26).
   schema_version: 8
+  # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
+
+  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
+  # type: v7 classification — DEPRECATED, replaced by `operation`.
+  # Legacy values: capability / workflow / router / overlay.
   type: capability
+  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
+  # know (declarative — concepts, vocabulary, reference) /
+  # do (procedural — step-by-step execution) /
+  # decide (judgment — choosing, dispatching) /
+  # modify (context injection — shapes how other skills execute).
   operation: know
+  # category: v7 classification — DEPRECATED, replaced by `subject`.
+  # Legacy values: foundations / engineering / design / quality / agent / product.
   category: engineering
+
+  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: code-engineering
+  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
+  # kebab-case segments. Remove when flat `subject` is sufficient.
   domain: engineering/data
+  # scope: deployment targeting. One of three closed values:
+  # portable (any project) / workspace (this workspace only) /
+  # project (one specific repo; requires populated `grounding` block).
   scope: workspace
+  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
+  # freshness: ISO date the skill body was last reviewed or updated.
   freshness: "2026-05-16"
+  # drift_check: truth-source verification record. Object with required `last_verified`
+  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
+  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
+
+  # === Eval-health: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
+  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
+  # eval_state: runtime-truth — has the eval been run and passed?
+  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
+  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: absent
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
   comprehension_state: present
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
   keywords: "[\"CAP theorem\",\"Brewer\",\"Gilbert Lynch\",\"consistency availability partition\",\"CP system\",\"AP system\",\"PACELC\",\"eventual consistency\",\"linearizability\",\"distributed system\"]"
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"CAP theorem\",\"CP or AP\",\"what should we do on partition\",\"is this strongly consistent\",\"PACELC\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"decide whether a new distributed service should be CP or AP given its workload\",\"explain why CAP's C and ACID's C are different concepts despite sharing the letter\",\"diagnose a system claiming 'CA' (consistency + availability without P) — likely confused, since P is not optional\",\"design the partition-mode behavior of a multi-region service\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"choose a transaction isolation level (use transaction-isolation)\",\"explain the four ACID properties (use acid-fundamentals)\",\"design the replication topology of a database (use replication-patterns)\"]"
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"acid-fundamentals\",\"transaction-isolation\",\"replication-patterns\",\"sharding-strategy\"],\"boundary\":[{\"skill\":\"acid-fundamentals\",\"reason\":\"acid-fundamentals owns the single-system transactional frame; this skill owns the distributed-system frame. CAP's C (replica agreement) is not ACID's C (constraint satisfaction); conflating them is the most common misconception in this space.\"},{\"skill\":\"transaction-isolation\",\"reason\":\"transaction-isolation owns single-cluster concurrency-correctness; this skill owns multi-replica consistency under network partition. The two layers can compose (a CP system may run at serializable isolation locally) but address different threats.\"},{\"skill\":\"replication-patterns\",\"reason\":\"replication-patterns owns the design patterns for multi-replica systems (primary-replica, multi-primary, leaderless quorum); this skill owns the C/A/P trade-off that motivates choosing among them. The two compose: this is the theoretical frame; replication-patterns is the operational realization.\"},{\"skill\":\"sharding-strategy\",\"reason\":\"sharding-strategy owns horizontal partitioning of data across nodes; this skill owns the C/A trade-off when those shards must coordinate or recover from network partition between them.\"}],\"verify_with\":[\"acid-fundamentals\",\"replication-patterns\"]}"
+
+  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     CAP is Brewer's 2000 conjecture (formal proof by Gilbert & Lynch 2002) that in a distributed data system you cannot simultaneously guarantee all three of: *Consistency* (every read returns the most recent write or an error — replica agreement, often linearizability), *Availability* (every request receives a non-error response), *Partition tolerance* (the system continues despite arbitrary message loss between nodes). Real-world networks partition; P is *not optional*. The choice is between C and A *during a partition*: a *CP system* refuses to serve some requests during partition to preserve consistency (Spanner, etcd, MongoDB with majority, ZooKeeper); an *AP system* serves all requests but may return stale data (Cassandra default, DynamoDB default, Riak). "CA" is not a real choice — partitions happen, and systems that claim it have not actually been tested under partition.
 
     *PACELC* (Abadi 2010) extends CAP by naming the *Else* case: even without partition, the system must trade Latency against Consistency, because synchronous replication for strong consistency takes time. Four PACELC quadrants: *PA/EL* (Cassandra, DynamoDB default, MongoDB default), *PA/EC* (rare; often misconfiguration), *PC/EL* (mixed-mode systems), *PC/EC* (Spanner, Cosmos DB strong, MongoDB with majority-read). Most systems spend the overwhelming majority of their time *not* partitioned, so the steady-state latency-vs-consistency trade-off is where most users' actual experience lives. The consistency-model spectrum — linearizability, sequential, causal, read-your-writes, monotonic reads, eventual — is the vocabulary for naming the C side of the trade-off precisely.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: |
     Replaces contradictory distributed-systems claims with shape. Before CAP, the industry claimed simultaneous strong consistency, full availability, and partition tolerance; after Brewer's conjecture and Gilbert & Lynch's formal proof, those claims have constraints. The discipline is making the C-vs-A choice *per workload, intentionally*: a banking core ledger is right to be CP (correctness over availability); a shopping cart's session state is right to be AP (availability over strict consistency); a multi-region CDN is right to be AP with eventual consistency; a schema registry or coordination service is right to be CP. PACELC makes the frame practical — a team that designs for CAP without PACELC has optimized for the rare event (partition) and ignored the daily one (steady-state latency vs consistency). The choice procedure: name what the system must do under partition (lose money if stale → CP; lose users if unavailable → AP), then choose the steady-state PACELC quadrant for the common case.
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: |
     Distinct from acid-fundamentals, which owns the single-system transactional frame — this skill owns the distributed-system frame; CAP's C (replica agreement) is *not* ACID's C (constraint satisfaction), and conflating them is the most common misconception in the space. Distinct from transaction-isolation, which owns single-cluster concurrency correctness — this skill owns multi-replica consistency under network partition; the two layers can compose (a CP system may run at serializable isolation locally) but address different threats. Distinct from replication-patterns, which owns the operational design patterns (primary-replica, multi-primary, leaderless quorum) — this skill owns the theoretical C/A/P trade-off that motivates choosing among them; replication-patterns is the operational realization. Distinct from sharding-strategy, which owns horizontal partitioning across nodes — this skill owns the C/A trade-off when those shards must coordinate or recover from partition between them. Distinct from high-availability or reliability frameworks for single-node systems (HA on a single node is not a CAP concern; CAP applies to distributed-data systems specifically).
+  # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "CAP is to a distributed database what the Heisenberg uncertainty principle is to physics — you cannot simultaneously have a fully consistent reading and a fully available reading when the network has partitioned, just as you cannot simultaneously measure a precise position and a precise momentum. The trade-off is not a limit of the engineering, it is a limit of the physics; pretending otherwise is the source of every 'CA' system that claims to defy CAP and chooses one side anyway on its first partition."
+  # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that CAP says "pick any two of three" as if all three combinations are real choices. They are not. P is mandatory in real networks — physics imposes partitions, and a system that claims "CA" has not been tested under partition; when partition arrives, the system chooses C or A and the team finds out which. Adjacent misconceptions: that CAP-C is the same as ACID-C (they share the letter but measure different things — replica agreement vs constraint satisfaction; a multi-region banking system can have CAP-inconsistent replicas while every replica satisfies the balance ≥ 0 constraint, and can have CAP-consistent replicas while one of them violates the constraint); that CAP is the dominant design concern (most systems are not partitioned most of the time; PACELC's E case — the steady-state latency-vs-consistency trade-off — is the daily experience and the dominant design question); that "strong consistency" is precise (the consistency-model spectrum is wide — linearizability, sequential, causal, read-your-writes, monotonic, eventual; "strong" without specification is imprecise and the choice within the spectrum affects achievable throughput); that single-node systems need CAP analysis (they don't); and that AP means "no consistency at all" (it means *eventually* consistent, with a chosen convergence strategy: vector clocks, CRDTs, last-write-wins, anti-entropy — tunable systems like Cassandra and DynamoDB let the application choose per-operation, and the default settings are not assumed correct without verification per workload). A final misconception: that partition behavior is theoretical — it isn't; chaos engineering and network-partition simulation are how teams verify the system behaves as designed when partition actually arrives.
+  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
+  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
   concept: "{\"definition\":\"CAP is the theorem (Brewer 2000 as a conjecture; Gilbert & Lynch 2002 as a formal proof) that, in a distributed data system, you cannot simultaneously guarantee all three of: Consistency (every read returns the most recent write or an error), Availability (every request receives a non-error response), Partition tolerance (the system continues despite arbitrary message loss between nodes). Since real-world networks can and do partition, P is not optional — the choice is between C and A *during a partition*. A CP system refuses to serve some requests during partition to preserve consistency; an AP system serves all requests but may return stale data. PACELC (Abadi 2010) extends CAP by naming the *Else* case: even without partition, the system must trade Latency against Consistency, because synchronous replication for strong consistency takes time. The discipline is choosing C-vs-A *intentionally per workload*, knowing that P is given by physics and that even outside partition, latency-vs-consistency is a continuous choice.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
   skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/cap-theorem-tradeoffs/SKILL.md
+  # === Health Block (written by the audit loop, not hand-authored) ===
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  #
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
+  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: UNVERIFIED
+  # truth_verdict: truth sources vs declared hashes (gates 3-6).
+  # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
+  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
+  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
+  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
 ---
 
