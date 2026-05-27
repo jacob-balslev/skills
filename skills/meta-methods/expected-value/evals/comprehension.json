@@ -1,0 +1,139 @@
+{
+  "skill_name": "expected-value",
+  "subject": "Expected Value",
+  "adjacent_concepts": [
+    "expected utility",
+    "expected monetary value",
+    "Bayesian reasoning",
+    "prioritization",
+    "second-order thinking",
+    "sensitivity analysis",
+    "value of information"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define expected value in 2-3 sentences. Your definition must include probabilities, values or utilities, summation across outcomes, and the fact that expected value ranks actions under quantified uncertainty.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names probabilities",
+        "Names values or utilities",
+        "Explains probability-weighted summation",
+        "Frames expected value as action ranking under uncertainty"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of expected value as a weighted average over possible futures. Name at least 6 primitives and explain how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "At least 6 of: actions, outcomes, probabilities, values or utilities, costs, constraints, sensitivity ranges, expected value",
+        "Explains multiply probability by value",
+        "Explains summing across outcomes for each action",
+        "Explains constraints can veto optimization"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does the expected-value skill exist for agents? Name the failure modes it prevents and the behavior it replaces.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents best-case or vivid-outcome reasoning",
+        "Prevents unweighted option lists",
+        "Prevents fake certainty around quantified bets",
+        "Replaces intuition-only recommendation with explicit probability-weighted comparison"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish expected value from bayesian-reasoning, prioritization, second-order-thinking, and constraint-awareness. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Bayesian reasoning updates probabilities from evidence",
+        "Prioritization ranks broad work with mixed qualitative criteria",
+        "Second-order thinking traces consequences before outcomes are modeled",
+        "Constraint-awareness identifies non-negotiable feasible-set limits",
+        "Expected value compares actions by probability-weighted value once inputs are accepted"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "List the ordered expected-value workflow taught by the skill. Then explain which steps catch probability errors, unit mixing, and positive-expected-value-but-ruin decisions.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Decision/action framing",
+        "Outcome enumeration",
+        "Probability assignment",
+        "Value or utility assignment",
+        "Cost inclusion",
+        "Expected-value calculation",
+        "Sensitivity or break-even check",
+        "Constraint check",
+        "Probability errors caught by probability assignment/coherence",
+        "Unit mixing caught by value assignment",
+        "Ruin decisions caught by constraint check"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for expected value that preserves probability weighting, outcome magnitude, costs, and constraints. Then name one bad analogy and explain what it gets wrong.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses a scale, weighted basket, or similar weighted-futures analogy",
+        "Maps probability to weight",
+        "Maps outcome magnitude to size/value",
+        "Includes costs or subtraction",
+        "Explains constraints can remove an option before weighing",
+        "Rejects a bad analogy that treats expected value as a guaranteed single outcome"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: Compare Option A, which costs 8 units and has a 30% chance of +80, 40% chance of +15, and 30% chance of -10, against Option B, which costs 2 units and has a 100% chance of +18. Apply expected-value reasoning, include the calculation, sensitivity caveat, constraint check, and recommendation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Computes Option A gross EV as 27",
+        "Subtracts A cost to get 19",
+        "Computes Option B net EV as 16",
+        "Recommends A only if downside and assumptions are acceptable",
+        "Mentions sensitivity or break-even around A's success probability/value",
+        "Checks constraints or ruin risk before final recommendation"
+      ]
+    }
+  ]
+}

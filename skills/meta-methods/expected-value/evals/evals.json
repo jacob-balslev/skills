@@ -1,0 +1,138 @@
+{
+  "skill_name": "expected-value",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A feature experiment has a 20% chance of producing 120 units of reusable learning, a 50% chance of producing 25 units, and a 30% chance of costing 20 units with no useful signal. It costs 10 units to run. A maintenance alternative is worth 25 units with certainty. Apply expected-value reasoning and recommend an action.",
+      "expected_output": "The experiment gross expected value is (0.20 * 120) + (0.50 * 25) + (0.30 * -20) = 30.5. After the 10-unit cost, net expected value is 20.5, below the maintenance option's 25, so choose maintenance unless the experiment cost can be reduced, the probabilities change, or there is strategic value not captured in the unit.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Computes gross expected value correctly",
+        "Subtracts the experiment cost",
+        "Compares against the maintenance alternative",
+        "Does NOT recommend the experiment based only on the upside case"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A proposal has a 5% chance of a huge win and a 95% chance of a small loss. The expected value is positive, but the loss case would exhaust the team's entire compliance budget and create privacy exposure. What should the agent do?",
+      "expected_output": "A positive expected value is not enough. The compliance and privacy downside is a hard constraint or ruin-style veto. The agent should reject, redesign, or mitigate the proposal before optimization; it should not recommend the highest expected-value option outside the feasible set.",
+      "type": "constraint",
+      "grounding": "principle",
+      "difficulty": "adversarial",
+      "expectations": [
+        "Recognizes that hard constraints can veto positive expected value",
+        "Mentions privacy/compliance as a non-negotiable downside",
+        "Recommends reject, redesign, or mitigate before choosing",
+        "Does NOT treat positive expected value as automatically sufficient"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 3,
+      "prompt": "The agent has accepted probabilities and payoffs for three possible actions. A teammate says to use Bayesian reasoning to choose the action. Is that the right owner?",
+      "expected_output": "No. Bayesian reasoning updates probabilities when evidence arrives. If probabilities and payoffs are already accepted, expected value owns the action comparison: compute probability-weighted value for each action, then check sensitivity and constraints.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes the choice to expected-value",
+        "Explains Bayesian reasoning updates probabilities",
+        "Explains expected value compares actions with accepted probabilities and payoffs",
+        "Does NOT apply Bayes theorem when no evidence update is needed"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "An option has outcomes listed as: 40% strong success, 40% partial success, 30% failure. The agent proceeds with expected-value math. Critique the setup.",
+      "expected_output": "The setup is incoherent because the mutually exclusive outcome probabilities sum to 110%. The agent must repair the outcome model before computing expected value: split overlapping outcomes, normalize only if justified, or rebuild the scenario set so the probabilities are conditional on the action and sum coherently.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "adversarial",
+      "expectations": [
+        "Catches probabilities summing to 110%",
+        "Explains the issue as an outcome-model problem",
+        "Requires repair before expected-value calculation",
+        "Does NOT normalize mechanically without checking overlap"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A choice has a thin expected-value lead of 2 units under the base estimate, but the decision flips if the success probability moves from 42% to 39%. What should the agent recommend?",
+      "expected_output": "The recommendation should not be overconfident. The agent should report that the expected-value lead is fragile, identify the success probability as the dominant assumption, calculate or state the break-even probability, and consider gathering information or running a smaller probe if that information costs less than the possible decision improvement.",
+      "type": "process",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Flags fragile sensitivity",
+        "Names the success probability as the dominant assumption",
+        "Mentions break-even probability or equivalent",
+        "Does NOT present the thin expected-value lead as a settled recommendation"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A user asks for broad backlog ranking across reach, impact, confidence, effort, strategic fit, and a few qualitative constraints. Some probabilities are not quantified. Should expected-value own the analysis?",
+      "expected_output": "Not primarily. Use prioritization for broad backlog ranking with mixed criteria and non-quantified inputs. Expected value can support a sub-decision once a specific option has modeled outcomes, probabilities, values, and costs.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes broad mixed-criteria backlog ranking to prioritization",
+        "Keeps expected value for quantified sub-decisions",
+        "Explains that expected value requires modeled probabilities and values",
+        "Does NOT force fake expected-value math onto qualitative backlog criteria"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "prompt": "A one-time decision has positive expected monetary value, but a 45% chance of a painful loss and a 55% chance of a larger gain. The user cannot repeat the bet many times. What caveat belongs in the answer?",
+      "expected_output": "Expected value is not a single-trial promise. The agent should report variance and risk tolerance, consider expected utility instead of expected monetary value, and check whether the downside is acceptable for this user. It should not imply the average outcome will occur once.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "adversarial",
+      "expectations": [
+        "States that expected value is not a single-trial guarantee",
+        "Mentions variance or risk tolerance",
+        "Considers expected utility/nonlinear pain",
+        "Does NOT imply the average outcome is what will happen once"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}
