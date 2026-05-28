@@ -6,7 +6,7 @@ compatibility:
   notes: "Markdown, JSON Schema, Node.js"
 allowed-tools: Read Grep Bash
 grounding:
-  domain_object: "Skill Metadata Protocol and Skill Graph manifest consistency"
+  subject_matter: "Skill Metadata Protocol and Skill Graph manifest consistency"
   grounding_mode: "repo_specific"
   truth_sources:
     - schemas/skill.schema.json
@@ -37,37 +37,25 @@ drift_check:
     "examples/evals/graph-audit.json": "4fc0fa157b363c9d5675112bfe860ed48a599d05c41720b387aa2d8798eab5a3"
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: know
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: quality
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: quality-assurance
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: quality/audit
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: project
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: project
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: quality/audit
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -77,7 +65,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-13\",\"truth_source_hashes\":{\"schemas/skill.schema.json\":\"370a021a129cba5b54cd15daaaa934fbb172df306dc0095608ea4a5607fe2526\",\"schemas/manifest.schema.json\":\"b5181764e0b645d01a8b6918c78463e53a2f28669a6883365c3a1d132323c066\",\"docs/skill-metadata-protocol.md\":\"bce8933a4f4f6386e36e618f2de97f0f6feb864a4c1aaeec225291110e7f8a76\",\"scripts/skill-lint.js\":\"3a78f75f8921542b91dc619cd41bde29bf379de3c16bdcf3653c854ecbe9fa29\",\"scripts/lib/alias-contract.js\":\"ab7b4f15c13caf1ff1f3205e285415b086f7b6cbc3fcfaba982a590cc56b49cd\",\"scripts/check-protocol-consistency.js\":\"0ff39406d36e7a9e51c176f657f4f426d8bd5a3fe6411d28b9e9a93dc7d89f29\",\"scripts/generate-manifest.js\":\"9d7bbbdae440fdb1763d61ffa7bda10c9efae92359d1c2139d0e971582d59e0e\",\"examples/evals/graph-audit.json\":\"8edab7bc057c65c8fd43f6ca17863c7a12ea831f6eb2158f1b2fde2ba03ad4b2\"}}"
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
@@ -117,10 +105,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"refactor\",\"reason\":\"refactor changes skill body structure; graph-audit is read-only metadata verification\"},{\"skill\":\"debugging\",\"reason\":\"debugging chases a specific runtime failure; graph-audit is bulk static verification of every skill\"},{\"skill\":\"eval-driven-development\",\"reason\":\"eval-driven-development owns LLM eval iteration discipline and writing reference documentation; graph-audit is read-only static verification of skill metadata schemas — writing an explanatory doc about a pipeline is documentation work, not a schema audit\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns Next.js server/client component boundaries and import-graph architecture concerns; graph-audit owns static verification of skill metadata schemas — an import-cycle build break is a code-architecture concern, not a skill-metadata audit\"},{\"skill\":\"autonomous-loop-patterns\",\"reason\":\"autonomous-loop-patterns owns the runtime mechanics of agent loops (claim, retry, halt, stuck-loop diagnosis); graph-audit owns static verification of skill-library metadata — diagnosing a stuck agent is a runtime/agent-design concern, not a metadata schema check\"},{\"skill\":\"replication-patterns\",\"reason\":\"replication-patterns owns stateful replication design and explanatory documentation about pipelines; graph-audit owns static metadata verification — writing a reference doc explaining a pipeline is documentation work, not a schema audit\"}],\"verify_with\":[\"testing-strategy\"]}"
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: "{\"domain_object\":\"Skill Metadata Protocol and Skill Graph manifest consistency\",\"grounding_mode\":\"repo_specific\",\"truth_sources\":[\"schemas/skill.schema.json\",\"schemas/manifest.schema.json\",\"docs/skill-metadata-protocol.md\",\"scripts/skill-lint.js\",\"scripts/lib/alias-contract.js\",\"scripts/check-protocol-consistency.js\",\"scripts/generate-manifest.js\",\"examples/evals/graph-audit.json\"],\"failure_modes\":[\"schema_drift\",\"manifest_sample_out_of_sync\",\"broken_relation_targets\",\"eval_artifacts_mismatch\",\"name_directory_mismatch\"],\"evidence_priority\":\"repo_code_first\"}"
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: "{\"subject_matter\":\"Skill Metadata Protocol and Skill Graph manifest consistency\",\"grounding_mode\":\"repo_specific\",\"truth_sources\":[\"schemas/skill.schema.json\",\"schemas/manifest.schema.json\",\"docs/skill-metadata-protocol.md\",\"scripts/skill-lint.js\",\"scripts/lib/alias-contract.js\",\"scripts/check-protocol-consistency.js\",\"scripts/generate-manifest.js\",\"examples/evals/graph-audit.json\"],\"failure_modes\":[\"schema_drift\",\"manifest_sample_out_of_sync\",\"broken_relation_targets\",\"eval_artifacts_mismatch\",\"name_directory_mismatch\"],\"evidence_priority\":\"repo_code_first\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
@@ -144,7 +132,7 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
-last_audited: 2026-05-25
+last_audited: 2026-05-28
 lint_verdict: PASS
 ---
 

@@ -5,37 +5,25 @@ license: MIT
 allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: know
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: quality
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: quality-assurance
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: quality/testing
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: workspace
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: quality/testing
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -45,7 +33,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -86,7 +74,7 @@ metadata:
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"test-coverage-strategy\",\"test-driven-development\",\"testing-strategy\",\"eval-driven-development\"],\"boundary\":[{\"skill\":\"test-coverage-strategy\",\"reason\":\"test-coverage-strategy owns the structural signal of which code the test suite reaches; mutation-testing owns the behavioral signal of whether the test suite would catch a defect at that code location. The two compose: coverage is a necessary precondition for mutation testing to apply (an uncovered mutant trivially survives); mutation is the next layer of test-quality signal.\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what to test at which level; this skill owns one measurement of how good the tests at any level actually are.\"},{\"skill\":\"test-driven-development\",\"reason\":\"TDD produces tests with high behavioral specificity as a side effect; mutation testing is one way to measure whether that specificity is in fact present in a given test suite.\"}],\"verify_with\":[\"test-coverage-strategy\",\"testing-strategy\"]}"
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Mutation testing is the behavioral signal of test-suite quality. The tool automatically modifies the production code by small, syntactically-valid changes called *mutants* — replace `<` with `<=`, negate a condition, flip a Boolean, alter a constant from 42 to 43, delete a statement, swap a return value for null, no-op a void method call — and runs the test suite against each modified version. If the tests fail on a mutant, the mutant is *killed* — the tests caught the change. If the tests still pass, the mutant *survived* — the tests do not actually verify the behavior at that code location, even if coverage said they reached it. The *mutation score* is killed / (total − equivalent mutants), where *equivalent mutants* are syntactic changes that produce no observable behavior difference (5-15% noise typical).
@@ -119,10 +107,10 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
+  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
@@ -130,6 +118,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 # Mutation Testing

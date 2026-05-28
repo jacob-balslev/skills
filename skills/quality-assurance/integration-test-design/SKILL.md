@@ -5,37 +5,25 @@ license: MIT
 allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: do
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: quality
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: quality-assurance
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: quality/testing
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: workspace
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: quality/testing
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -45,7 +33,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -86,7 +74,7 @@ metadata:
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"testing-strategy\",\"test-doubles-design\",\"test-driven-development\",\"e2e-test-design\",\"contract-testing\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of how much of each test level to invest in; this skill owns the design of integration-level tests specifically.\"},{\"skill\":\"test-doubles-design\",\"reason\":\"test-doubles-design owns the construction of mocks/stubs/fakes; this skill owns the per-dependency real-vs-faked decision in integration scope. Integration tests use real collaborators where practical and fakes only at true external boundaries.\"},{\"skill\":\"e2e-test-design\",\"reason\":\"e2e-test-design owns user-journey-scope tests that exercise the full stack including UI; this skill owns scope below that — interaction of units inside the system, often without UI.\"},{\"skill\":\"contract-testing\",\"reason\":\"contract-testing owns consumer-driven contract verification between services; this skill owns the in-system interaction of modules. Contract tests verify the *interface*; integration tests verify the *implementation through* the interface.\"}],\"verify_with\":[\"testing-strategy\",\"e2e-test-design\"]}"
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Integration test design verifies the interaction between two or more units of a system — modules within a process, services across processes, layers within an architecture — to catch defects that emerge only at the boundaries between those units. The five primitives are: *boundary* (module-to-module, layer-to-layer, service-to-database, service-to-message-bus, service-to-third-party, service-to-service), *scope* (which collaborators are real, which are faked, which are out of scope), *real-vs-faked-collaborator decision per dependency* (real where the boundary's failure modes are integration-bug-finders — database, message bus, cache; faked where the realness adds cost without proportional defect-detection — paid third-party APIs, email/SMS providers), *test-data lifecycle* (full reset, transaction rollback per test, container reset, shared snapshot with no-mutation discipline), and *pyramid-vs-trophy framing* (Cohn 2009: many unit, fewer integration, fewest e2e; Dodds 2018: many integration, fewer unit, fewer e2e, static-analysis stem — integration-heavy when modern tooling makes integration cheap).
@@ -119,10 +107,10 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
+  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
@@ -130,6 +118,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 # Integration-Test Design

@@ -5,37 +5,25 @@ license: MIT
 allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: know
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: quality
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: quality-assurance
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: quality/testing
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: workspace
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: quality/testing
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -45,7 +33,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-16\"}"
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -86,7 +74,7 @@ metadata:
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"related\":[\"testing-strategy\",\"test-driven-development\",\"type-safety\",\"mutation-testing\"],\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what test levels to invest in; this skill owns one tactical technique (generative tests with universal properties) within that strategy. Property-based testing is a complement to example-based tests, not a replacement.\"},{\"skill\":\"mutation-testing\",\"reason\":\"mutation-testing measures whether the test suite catches code-level defects; property-based testing is one source of high-mutation-killing tests because universal properties tend to be specific about behavior across many inputs. They compose: PBT writes the tests; mutation testing measures their effectiveness.\"},{\"skill\":\"type-safety\",\"reason\":\"type-safety constrains the input space at compile time; property-based testing samples the runtime input space within the type-constraint envelope. Stronger types reduce the property-test surface needed; PBT is most valuable where types alone cannot encode the invariants (algorithmic correctness, business rules, round-trips).\"}],\"verify_with\":[\"testing-strategy\",\"mutation-testing\"]}"
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Property-based testing changes the unit of specification from the example to the universal contract. The four primitives are: the *property* (a forall-quantified claim that must hold for all inputs in a domain), the *generator* (produces random inputs spanning the domain including its edges — empty, single-element, boundary values, Unicode pathologies), the *shrinker* (when the property fails, reduces the failing input to its minimal demonstration — without shrinking, a failing input is random noise; with shrinking, it is the smallest case that exhibits the bug), and the *trial budget* (how many inputs the framework tries before declaring the property held — 100 for cheap properties, 1000+ for slow code or rare-bug input spaces, nightly long-running campaigns for production-critical properties).
@@ -119,10 +107,10 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
+  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
@@ -130,6 +118,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 # Property-Based Testing
