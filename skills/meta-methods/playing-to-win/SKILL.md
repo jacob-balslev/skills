@@ -7,37 +7,25 @@ compatibility:
 allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: do
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: foundations
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: meta-methods
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: foundations/strategy
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: foundations/strategy
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -51,7 +39,7 @@ metadata:
       "skills/meta-methods/playing-to-win/references/playing-to-win-sources.md": "893c99345dc9ee846548ff71f3b1cea07bdf5286c3ab10429705f9b139cb4599"
       "skills/meta-methods/playing-to-win/references/upstream-displacement-2026-05-26.md": "c47197db5053b744d57abd323670098df4f555171a0ad9d5324adf259b445403"
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
@@ -88,10 +76,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"prioritization\",\"reason\":\"prioritization scores a queue of work; playing-to-win owns the upstream integrated strategy choices that decide what work should exist\"},{\"skill\":\"framework-fit-analysis\",\"reason\":\"framework-fit-analysis selects among methods; playing-to-win applies one specific strategy-cascade method once selected\"},{\"skill\":\"methodology\",\"reason\":\"methodology designs rigorous process and verification gates; playing-to-win owns competitive and organizational strategy choices\"}],\"related\":[\"constraint-awareness\",\"methodology\",\"framework-fit-analysis\"],\"verify_with\":[\"methodology\",\"epistemic-grounding\"]}"
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: "{\"domain_object\":\"Playing to Win strategy cascade by A.G. Lafley and Roger L. Martin\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://hbr.org/books/playing-to-win\",\"https://hbr.org/webinar/2013/04/a-playbook-for-winning\",\"https://www-2.rotman.utoronto.ca/insightshub/strategy-value-creation/playing-to-win-how-strategy-re\",\"skills/meta-methods/playing-to-win/references/playing-to-win-sources.md\",\"skills/meta-methods/playing-to-win/references/upstream-displacement-2026-05-26.md\"],\"failure_modes\":[\"goal_list_without_choice\",\"where_to_play_too_broad\",\"how_to_win_not_differentiated\",\"capabilities_not_tied_to_advantage\",\"management_systems_missing\",\"cascade_choices_do_not_reinforce\",\"strategy_confused_with_planning\"],\"evidence_priority\":\"general_knowledge_first\"}"
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: "{\"subject_matter\":\"Playing to Win strategy cascade by A.G. Lafley and Roger L. Martin\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://hbr.org/books/playing-to-win\",\"https://hbr.org/webinar/2013/04/a-playbook-for-winning\",\"https://www-2.rotman.utoronto.ca/insightshub/strategy-value-creation/playing-to-win-how-strategy-re\",\"skills/meta-methods/playing-to-win/references/playing-to-win-sources.md\",\"skills/meta-methods/playing-to-win/references/upstream-displacement-2026-05-26.md\"],\"failure_modes\":[\"goal_list_without_choice\",\"where_to_play_too_broad\",\"how_to_win_not_differentiated\",\"capabilities_not_tied_to_advantage\",\"management_systems_missing\",\"cascade_choices_do_not_reinforce\",\"strategy_confused_with_planning\"],\"evidence_priority\":\"general_knowledge_first\"}"
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -102,7 +90,7 @@ metadata:
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Playing to Win treats strategy as five mutually reinforcing choices, not as a plan, goal list, or analysis deck. The primitives are a winning aspiration, a chosen playing field, a differentiated way to win there, the capabilities required to deliver that advantage, and the management systems that build and sustain those capabilities. The cascade works only when the answers fit together and force trade-offs."
   # purpose: the problem this concept solves and why the field exists. One paragraph.
@@ -130,7 +118,7 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
-last_audited: 2026-05-26
+last_audited: 2026-05-28
 lint_verdict: PASS
 ---
 

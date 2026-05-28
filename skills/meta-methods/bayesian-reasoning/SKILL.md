@@ -7,37 +7,25 @@ compatibility:
 allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: do
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: foundations
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: meta-methods
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: foundations/decision-quality
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: foundations/decision-quality
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -51,7 +39,7 @@ metadata:
       "skills/meta-methods/bayesian-reasoning/references/bayesian-reasoning-sources.md": "64efb763c7b63802a0ed16080d20cbc147600090f114cbd498153bf2618e05b3"
       "skills/meta-methods/bayesian-reasoning/references/upstream-displacement-2026-05-26.md": "ec0ddfb8bf6a254b9ad4e107d29c40ab33ca24a7524f1cba1560e2847dfa7baa"
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
@@ -88,10 +76,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"prioritization\",\"reason\":\"prioritization ranks work items or options; bayesian-reasoning owns updating probability beliefs before a ranking or decision uses them\"},{\"skill\":\"playing-to-win\",\"reason\":\"playing-to-win owns integrated strategy choices; bayesian-reasoning owns uncertainty updates about assumptions, evidence, and confidence\"},{\"skill\":\"porters-five-forces\",\"reason\":\"porters-five-forces owns industry-structure diagnosis; bayesian-reasoning owns how new evidence changes belief strength\"}],\"related\":[\"mental-models\",\"constraint-awareness\",\"epistemic-grounding\",\"problem-approach-router\"],\"verify_with\":[\"epistemic-grounding\",\"methodology\"]}"
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: "{\"domain_object\":\"Bayesian reasoning for decision-making under uncertainty\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://plato.stanford.edu/entries/bayes-theorem/\",\"https://plato.stanford.edu/entries/epistemology-bayesian/\",\"https://pubmed.ncbi.nlm.nih.gov/17835457/\",\"skills/meta-methods/bayesian-reasoning/references/bayesian-reasoning-sources.md\",\"skills/meta-methods/bayesian-reasoning/references/upstream-displacement-2026-05-26.md\"],\"failure_modes\":[\"base_rate_neglect\",\"likelihood_confused_with_posterior\",\"anecdote_overweighted\",\"correlated_evidence_double_counted\",\"prior_hidden_or_smuggled\",\"false_precision_from_weak_inputs\",\"binary_answer_given_under_uncertainty\"],\"evidence_priority\":\"general_knowledge_first\"}"
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: "{\"subject_matter\":\"Bayesian reasoning for decision-making under uncertainty\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://plato.stanford.edu/entries/bayes-theorem/\",\"https://plato.stanford.edu/entries/epistemology-bayesian/\",\"https://pubmed.ncbi.nlm.nih.gov/17835457/\",\"skills/meta-methods/bayesian-reasoning/references/bayesian-reasoning-sources.md\",\"skills/meta-methods/bayesian-reasoning/references/upstream-displacement-2026-05-26.md\"],\"failure_modes\":[\"base_rate_neglect\",\"likelihood_confused_with_posterior\",\"anecdote_overweighted\",\"correlated_evidence_double_counted\",\"prior_hidden_or_smuggled\",\"false_precision_from_weak_inputs\",\"binary_answer_given_under_uncertainty\"],\"evidence_priority\":\"general_knowledge_first\"}"
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -102,7 +90,7 @@ metadata:
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Bayesian reasoning treats belief as a state that changes when evidence arrives. The primitives are a hypothesis, prior probability or base rate, evidence, likelihood of seeing that evidence if the hypothesis were true, likelihood of seeing it if the hypothesis were false, posterior belief, residual uncertainty, and update history. The key move is comparing how much better the evidence is explained by one hypothesis than by alternatives, then updating from the prior instead of starting from the vividness of the evidence."
   # purpose: the problem this concept solves and why the field exists. One paragraph.
@@ -130,7 +118,7 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
-last_audited: 2026-05-26
+last_audited: 2026-05-28
 lint_verdict: PASS
 ---
 

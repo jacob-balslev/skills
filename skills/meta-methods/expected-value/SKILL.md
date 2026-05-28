@@ -13,29 +13,24 @@ allowed-tools: Read Grep
 # metadata: Skill Metadata Protocol fields consumed by Skill Graph tooling.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.0.0"
 
-  # === v8 Classification (5-axis model - see ADR-0017) ===
-  # subject: primary browse shelf - what the skill teaches. One of nine closed values:
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: meta-methods
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative - concepts, vocabulary, reference) /
-  # do (procedural - step-by-step execution) /
-  # decide (judgment - choosing, dispatching) /
-  # modify (context injection - shapes how other skills execute).
-  operation: decide
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: foundations/decision-quality
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: foundations/decision-quality
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -48,15 +43,16 @@ metadata:
     truth_source_hashes:
       "skills/skills/meta-methods/expected-value/references/expected-value-sources.md": "06c13a11c9ee43cce442d9d4fc079054c1fbbab4ca2fbcb0a0e244d4ac19a2e7"
       "skills/skills/meta-methods/expected-value/references/upstream-displacement-2026-05-27.md": "6408903a99d80484f747b4d275ea634199f191322f1fb18d5352603f10ffde67"
-  # === Eval-health: three orthogonal axes ===
-  # eval_artifacts: disk-truth - does an eval file exist on disk?
+
+  # === Evaluation Status: three orthogonal axes ===
+  # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: present
-  # eval_state: runtime-truth - has the eval been run and passed?
+  # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` - a forward state for continuous runs.
+  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
   eval_state: unverified
-  # routing_eval: routing-coverage - is the skill's activation verified by the harness?
+  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
   routing_eval: present
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
@@ -65,6 +61,7 @@ metadata:
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
   stability: stable
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
@@ -100,10 +97,11 @@ metadata:
     - "Trace the second- and third-order consequences before we model outcomes."
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins - name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead") /
+  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
+  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
+  #           rename to `suppresses` pending ADR-0018) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
-  # depends_on (composition; transitive - A->B->C loads all three) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations:
     boundary:
@@ -123,11 +121,11 @@ metadata:
       - methodical
       - epistemic-grounding
       - constraint-awareness
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
   grounding:
-    domain_object: "Expected value as a portable probability-weighted decision method"
+    subject_matter: "Expected value as a portable probability-weighted decision method"
     grounding_mode: universal
     truth_sources:
       - https://plato.stanford.edu/entries/rationality-normative-utility/
@@ -144,27 +142,27 @@ metadata:
       - treating_expected_value_as_probability_update
     evidence_priority: general_knowledge_first
   # portability: external-runtime export claims. Object with:
-  # readiness - declared (claim only) / scripted (export tooling exists) /
+  # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
-  # targets - array; currently only `skill-md` is in the enum.
+  # targets — array; currently only `skill-md` is in the enum.
   portability:
     readiness: scripted
     targets:
       - skill-md
   # lifecycle: maintenance policy for the drift sentinel.
-  # stale_after_days - skill flagged STALE when N days past `drift_check.last_verified`.
-  # review_cadence - process commitment (quarterly / weekly / on-truth-source-change), not a calendar fact.
+  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
+  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle:
     stale_after_days: 365
     review_cadence: quarterly
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Expected value is a weighted average over possible futures. The primitives are actions, mutually exclusive outcomes, probabilities conditional on each action, values or utilities in one shared unit, costs, constraints, and sensitivity ranges. For each action, multiply each outcome value by its probability, sum the products, subtract costs, and compare the resulting expectation against alternatives inside the feasible set."
   # purpose: the problem this concept solves and why the field exists. One paragraph.
   purpose: "This skill prevents agents from choosing by best-case story, worst-case fear, or unweighted option lists when probabilities and payoffs are already available. It replaces intuition-only recommendations with an explicit probability-weighted comparison, plus sensitivity checks that show which assumptions drive the decision."
   # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
-  # MECHANISM that differs, not just the label. Universal terms only - no repo-specific nouns.
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
   boundary: "Expected value chooses among actions once probabilities and values are accepted or can be reasonably estimated. It does not update probabilities from evidence, trace unmodeled downstream consequences, run broad backlog scoring with qualitative criteria, or perform domain-specific valuation work. Those tools may feed the outcome model, but this skill owns probability-weighted action comparison."
   # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Expected value is like a scale that weighs every possible future by both its size and its chance of happening, then subtracts the cost of putting that future on the scale."
@@ -173,20 +171,20 @@ metadata:
   # last_changed: ISO date the skill body or frontmatter was last edited.
   last_changed: 2026-05-27
   # last_audited: ISO date `audit` last ran against this skill.
-  last_audited: 2026-05-27
+  last_audited: 2026-05-28
   # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md Section The Health Block. UNVERIFIED is the honest default.
+  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
   #
-  # structural_verdict: form/export shape (gates 1-2, 7 - external mandates only).
+  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
   structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
-  # comprehension_verdict: gate 8 - cheap recitation smoke test. Never alone certifies.
+  truth_verdict: BROKEN
+  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
   comprehension_verdict: UNVERIFIED
-  # application_verdict: gate 9 - the primary quality signal. APPLICABLE is the only verdict
+  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
