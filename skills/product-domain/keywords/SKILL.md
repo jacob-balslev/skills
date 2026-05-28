@@ -6,7 +6,7 @@ compatibility:
   notes: "Portable keyword research and marketplace keyword-mapping guidance. Platform limits and field names can drift; verify against current marketplace docs before high-stakes listing work."
 allowed-tools: Read Grep Bash
 grounding:
-  domain_object: "Keyword research, intent mapping, topical clustering, and marketplace/search field translation for public e-commerce, marketplace, SaaS, and content surfaces"
+  subject_matter: "Keyword research, intent mapping, topical clustering, and marketplace/search field translation for public e-commerce, marketplace, SaaS, and content surfaces"
   grounding_mode: "universal"
   truth_sources:
     - https://help.etsy.com/hc/en-gb/articles/360000336307-How-to-Use-Tags-to-Get-Found-in-Search
@@ -32,37 +32,25 @@ drift_check:
   last_verified: "2026-05-19"
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: know
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: product
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: product-domain
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: product/search
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: product/search
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -72,7 +60,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -112,10 +100,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"seo-strategy","reason":"seo-strategy owns page construction, schema markup, programmatic SEO, internal linking, and implementation strategy after keywords are selected; keywords owns research, clustering, intent mapping, and field translation before construction."},{"skill":"writing-humanizer","reason":"writing-humanizer owns the finished prose quality and AI-tell removal; keywords can supply target terms and intent but must not stuff or write the final copy."},{"skill":"information-architecture","reason":"information-architecture owns navigation, sitemap shape, page hierarchy, and content grouping; keywords may reveal demand but does not decide the IA alone."}],"related":["seo-strategy","writing-humanizer","information-architecture"],"verify_with":["seo-strategy","writing-humanizer"]}'
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: '{"domain_object":"Keyword research, intent mapping, topical clustering, and marketplace/search field translation for public e-commerce, marketplace, SaaS, and content surfaces","grounding_mode":"universal","truth_sources":["https://help.etsy.com/hc/en-gb/articles/360000336307-How-to-Use-Tags-to-Get-Found-in-Search","https://help.etsy.com/hc/en-us/articles/115015628707-How-to-Create-a-Listing","https://sellercentral.amazon.com/seller-forums/discussions/t/923d53dc-a182-4475-a164-6b2500dbaf2d","https://sellercentral.amazon.com/seller-forums/discussions/t/b2b15728-0d43-453e-974f-59eb63f73059/","https://developers.google.com/search/docs/appearance/title-link","https://developers.google.com/search/docs/appearance/snippet","https://help.shopify.com/en/manual/promoting-marketing/seo/adding-keywords","https://help.shopify.com/en/manual/promoting-marketing/seo/seo-overview"],"failure_modes":["keyword_stuffing_mistaken_for_strategy","platform_field_limits_drift_silently","marketplace_tags_padded_with_irrelevant_terms","amazon_search_terms_repeat_title_or_brand_fields","shopify_keyword_guidance_ignores_readability","intent_mapping_skipped_before_page_or_listing_targeting","cannibalization_collapses_distinct_search_intents","rank_tracking_claims_made_without_baseline_or_cadence","keyword_skill_overowns_seo_implementation_finished_prose_or_information_architecture"],"evidence_priority":"equal"}'
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: '{"subject_matter":"Keyword research, intent mapping, topical clustering, and marketplace/search field translation for public e-commerce, marketplace, SaaS, and content surfaces","grounding_mode":"universal","truth_sources":["https://help.etsy.com/hc/en-gb/articles/360000336307-How-to-Use-Tags-to-Get-Found-in-Search","https://help.etsy.com/hc/en-us/articles/115015628707-How-to-Create-a-Listing","https://sellercentral.amazon.com/seller-forums/discussions/t/923d53dc-a182-4475-a164-6b2500dbaf2d","https://sellercentral.amazon.com/seller-forums/discussions/t/b2b15728-0d43-453e-974f-59eb63f73059/","https://developers.google.com/search/docs/appearance/title-link","https://developers.google.com/search/docs/appearance/snippet","https://help.shopify.com/en/manual/promoting-marketing/seo/adding-keywords","https://help.shopify.com/en/manual/promoting-marketing/seo/seo-overview"],"failure_modes":["keyword_stuffing_mistaken_for_strategy","platform_field_limits_drift_silently","marketplace_tags_padded_with_irrelevant_terms","amazon_search_terms_repeat_title_or_brand_fields","shopify_keyword_guidance_ignores_readability","intent_mapping_skipped_before_page_or_listing_targeting","cannibalization_collapses_distinct_search_intents","rank_tracking_claims_made_without_baseline_or_cadence","keyword_skill_overowns_seo_implementation_finished_prose_or_information_architecture"],"evidence_priority":"equal"}'
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -126,7 +114,7 @@ metadata:
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: '{"stale_after_days":90,"review_cadence":"quarterly"}'
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Keyword work is demand translation. Raw queries are evidence of language, intent, and platform constraints; the skill turns them into targetable clusters, page/listing assignments, and measurement baselines without pretending that keywords alone create rankings."
   # purpose: the problem this concept solves and why the field exists. One paragraph.
@@ -153,7 +141,7 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
@@ -164,6 +152,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 # Keywords
