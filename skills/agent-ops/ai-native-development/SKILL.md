@@ -7,37 +7,25 @@ compatibility:
 allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.1.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: know
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: agent
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: agent-ops
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: agent/concepts
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: agent/concepts
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -47,7 +35,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: "{\"last_verified\":\"2026-05-18\"}"
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -81,10 +69,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"prompt-craft\",\"reason\":\"prompt-craft is the per-prompt authoring discipline; ai-native-development is the meta-frame that explains why prompts are source code\"},{\"skill\":\"agent-engineering\",\"reason\":\"agent-engineering owns the production reliability discipline (orchestration, error budgets, observability); ai-native-development owns the conceptual model that motivates those concerns\"},{\"skill\":\"code-review\",\"reason\":\"code-review evaluates the AI-generated output; ai-native-development frames why that output exists and how to size the gates around it\"},{\"skill\":\"tool-call-strategy\",\"reason\":\"tool-call-strategy is the tactical layer for an agent's tool dispatch; ai-native-development is the conceptual layer above it\"}],\"related\":[\"prompt-craft\",\"agent-engineering\",\"code-review\",\"skill-router\"],\"verify_with\":[\"code-review\",\"testing-strategy\"]}"
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: "{\"domain_object\":\"AI-native software development discipline for prompt-as-code workflows, agent autonomy calibration, metric-gated auto-improvement loops, and quality gates for AI-generated code\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"https://www.youtube.com/watch?v=LCEmiRjPEtQ\",\"https://github.com/karpathy/autoresearch\",\"https://arxiv.org/abs/2211.03622\",\"https://arxiv.org/abs/2504.20814\",\"https://snyk.io/lp/secure-adoption-in-the-genai-era/\",\"https://owasp.org/www-project-top-10-for-large-language-model-applications/\"],\"failure_modes\":[\"unintentional_high_autonomy_for_high_risk_work\",\"accepting_ai_generated_code_without_review_or_tests\",\"treating_prompts_and_skills_as_throwaway_notes\",\"optimizing_agent_loops_against_multiple_moving_metrics\",\"citing_stale_ai_code_security_statistics_as_fixed_truth\",\"shipping_agentic_systems_without_prompt_injection_or_excessive_agency_controls\"],\"evidence_priority\":\"equal\"}"
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: "{\"subject_matter\":\"AI-native software development discipline for prompt-as-code workflows, agent autonomy calibration, metric-gated auto-improvement loops, and quality gates for AI-generated code\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"https://www.youtube.com/watch?v=LCEmiRjPEtQ\",\"https://github.com/karpathy/autoresearch\",\"https://arxiv.org/abs/2211.03622\",\"https://arxiv.org/abs/2504.20814\",\"https://snyk.io/lp/secure-adoption-in-the-genai-era/\",\"https://owasp.org/www-project-top-10-for-large-language-model-applications/\"],\"failure_modes\":[\"unintentional_high_autonomy_for_high_risk_work\",\"accepting_ai_generated_code_without_review_or_tests\",\"treating_prompts_and_skills_as_throwaway_notes\",\"optimizing_agent_loops_against_multiple_moving_metrics\",\"citing_stale_ai_code_security_statistics_as_fixed_truth\",\"shipping_agentic_systems_without_prompt_injection_or_excessive_agency_controls\"],\"evidence_priority\":\"equal\"}"
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -106,7 +94,7 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
@@ -117,6 +105,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 # AI-Native Development

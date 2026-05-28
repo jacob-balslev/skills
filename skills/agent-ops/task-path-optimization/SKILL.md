@@ -2,36 +2,23 @@
 name: task-path-optimization
 description: "This skill provides decision frameworks for choosing the optimal execution path before starting work: plan-vs-act gates, agent architecture selection (chaining, routing, parallelization, orchestrator-worker, evaluator-optimizer), scope management heuristics, critical-path analysis across task networks, and context budget awareness. Use when deciding how to approach a task (plan first vs act immediately), decomposing complex work into parallelizable subtasks, choosing between subagent patterns, or when a task has failed twice and needs a fresh approach. Do NOT use for executing the chosen plan (use task-execution), debugging failures (use troubleshooting or diagnosis), or tool-level efficiency (use tool-call-strategy)."
 # schema_version: protocol contract version this skill conforms to.
-# Integer 7 or 8. v8 is canonical (2026-05-26).
+# Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
 schema_version: 8
 # version: skill content version (semver). Bumped when the instructional content changes.
 version: 1.1.0
 
-# === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-# type: v7 classification — DEPRECATED, replaced by `operation`.
-# Legacy values: capability / workflow / router / overlay.
-type: capability
-# operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-# know (declarative — concepts, vocabulary, reference) /
-# do (procedural — step-by-step execution) /
-# decide (judgment — choosing, dispatching) /
-# modify (context injection — shapes how other skills execute).
-operation: know
-# scope: deployment targeting. One of three closed values:
-# portable (any project) / workspace (this workspace only) /
-# project (one specific repo; requires populated `grounding` block).
-scope: portable
-# category: v7 classification — DEPRECATED, replaced by `subject`.
-# Legacy values: foundations / engineering / design / quality / agent / product.
-category: agent
 
-# === v8 Classification (5-axis model — see ADR-0017) ===
+# === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
 # subject: primary browse shelf — what the skill teaches. One of nine closed values:
 # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
 # product-domain / knowledge-organization / meta-methods / data-analytics.
 subject: agent-ops
+# deployment_target: where this skill applies. One of two closed values:
+# portable (any project, repo-agnostic) /
+# project (one or more specific projects; requires populated `grounding` and `project[]`).
+deployment_target: portable
 
-# === Eval-health: three orthogonal axes ===
+# === Evaluation Status: three orthogonal axes ===
 # eval_artifacts: disk-truth — does an eval file exist on disk?
 # none (no intent) / planned (intent declared, no file yet) / present (file exists).
 eval_artifacts: present
@@ -87,14 +74,11 @@ freshness: "2026-05-18"
 drift_check:
   last_verified: "2026-05-18"
   truth_source_hashes: {}
-primaryCategory: Agent System
-layerPrimary: meta
-routingRole: primary
 # comprehension_state: marker that this skill has populated v6+ Understanding fields
 # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
 comprehension_state: present
 
-# === v6+ Understanding fields (when comprehension_state: present) ===
+# === Understanding fields (when comprehension_state: present) ===
 # mental_model: the primitives of the concept and how they relate. One paragraph.
 mental_model: "Task path optimization is route planning before execution: classify the task shape, choose the lightest sufficient approach, sequence dependencies, isolate exploration when context would get polluted, and switch strategy after repeated failure instead of pushing harder on a bad path."
 # purpose: the problem this concept solves and why the field exists. One paragraph.
@@ -114,6 +98,8 @@ misconception: "The common mistake is treating more process as safer. The safest
 # verify_with (cross-check; co-loaded as one-hop expansion) /
 # depends_on (composition; transitive — A→B→C loads all three) /
 # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+last_audited: 2026-05-28
+lint_verdict: PASS
 relations:
   related:
     - task-lifecycle
@@ -141,10 +127,10 @@ relations:
 #
 # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
 # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-structural_verdict: UNVERIFIED
+structural_verdict: PASS
 # truth_verdict: truth sources vs declared hashes (gates 3-6).
 # PASS / DRIFT / BROKEN / UNVERIFIED.
-truth_verdict: UNVERIFIED
+truth_verdict: PASS
 # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
 # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
 comprehension_verdict: UNVERIFIED
