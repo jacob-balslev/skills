@@ -6,7 +6,7 @@ compatibility:
   notes: "Domain- and language-agnostic. The conceptual / logical / physical ladder applies across relational, document, graph, event-sourced, and service-oriented systems. Examples use generic commerce and education nouns only as public, portable modeling examples."
 allowed-tools: Read Grep
 grounding:
-  domain_object: "Implementation-neutral conceptual modeling for business domains before logical schema, physical database, ontology, API, or DDD tactical design"
+  subject_matter: "Implementation-neutral conceptual modeling for business domains before logical schema, physical database, ontology, API, or DDD tactical design"
   grounding_mode: "universal"
   truth_sources:
     - https://doi.org/10.1145/320434.320440
@@ -27,37 +27,25 @@ drift_check:
   last_verified: "2026-05-19"
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.1.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: know
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: engineering
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: code-engineering
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: engineering/modeling
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: engineering/modeling
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -67,7 +55,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -104,10 +92,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"data-modeling","reason":"data-modeling owns logical and physical persistence decisions such as keys, constraints, normalization, denormalization, provenance, and indexing; conceptual-modeling stays implementation-neutral and validates business meaning first."},{"skill":"entity-relationship-modeling","reason":"entity-relationship-modeling owns database-oriented ER notation, primary and foreign keys, junction tables, inheritance mapping, and SQL translation; conceptual-modeling owns pre-database entity, attribute, relationship, and cardinality discovery."},{"skill":"ontology-modeling","reason":"ontology-modeling formalizes classes, properties, axioms, validation shapes, and reasoning semantics; conceptual-modeling produces stakeholder-readable domain structure without OWL/RDFS/SHACL commitments."},{"skill":"semantic-relations","reason":"semantic-relations types individual meaning edges such as IS-A, PART-OF, synonymy, and thematic roles; conceptual-modeling assembles the full implementation-neutral domain model that may consume those relation tests."},{"skill":"bounded-context-mapping","reason":"bounded-context-mapping owns DDD context boundaries, translations, and anti-corruption layers; conceptual-modeling owns the concept inventory before tactical DDD boundaries are chosen."},{"skill":"naming-conventions","reason":"naming-conventions owns how settled concepts are named in code, schemas, or APIs; conceptual-modeling decides which concepts exist and what their identity and relationships are before naming."},{"skill":"code-review","reason":"code-review evaluates an implementation diff; conceptual-modeling happens upstream before code or schema review exists."}],"related":["data-modeling","entity-relationship-modeling","semantic-relations","ontology-modeling","taxonomy-design","bounded-context-mapping","naming-conventions"],"depends_on":[],"verify_with":["semantic-relations","data-modeling","ontology-modeling"]}'
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: '{"domain_object":"Implementation-neutral conceptual modeling for business domains before logical schema, physical database, ontology, API, or DDD tactical design","grounding_mode":"universal","truth_sources":["https://doi.org/10.1145/320434.320440","https://www.omg.org/spec/UML/2.5.1/PDF","https://opentextbc.ca/dbdesign01/chapter/chapter-8-entity-relationship-model/","https://www.ibm.com/think/topics/conceptual-data-model"],"failure_modes":["implementation_leakage_turns_conceptual_model_into_physical_schema","unnamed_relationships_hide_business_meaning","cardinality_or_optionality_left_implicit","identity_criteria_missing_for_entities","relationship_with_attributes_not_reified","generalization_claim_lies_about_disjointness_or_totality","stakeholder_validation_skipped","conceptual_model_overowns_ontology_data_modeling_or_ddd_design"],"evidence_priority":"equal"}'
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: '{"subject_matter":"Implementation-neutral conceptual modeling for business domains before logical schema, physical database, ontology, API, or DDD tactical design","grounding_mode":"universal","truth_sources":["https://doi.org/10.1145/320434.320440","https://www.omg.org/spec/UML/2.5.1/PDF","https://opentextbc.ca/dbdesign01/chapter/chapter-8-entity-relationship-model/","https://www.ibm.com/think/topics/conceptual-data-model"],"failure_modes":["implementation_leakage_turns_conceptual_model_into_physical_schema","unnamed_relationships_hide_business_meaning","cardinality_or_optionality_left_implicit","identity_criteria_missing_for_entities","relationship_with_attributes_not_reified","generalization_claim_lies_about_disjointness_or_totality","stakeholder_validation_skipped","conceptual_model_overowns_ontology_data_modeling_or_ddd_design"],"evidence_priority":"equal"}'
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -118,7 +106,7 @@ metadata:
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: '{"stale_after_days":365,"review_cadence":"quarterly"}'
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Conceptual modeling is a meaning-first translation layer. It turns stakeholder language and domain scenarios into an implementation-neutral map of entities, attributes, identity criteria, relationships, cardinalities, and specialization constraints. The model is not the database, not the API, and not the ontology; it is the shared domain agreement those later artifacts must preserve.
@@ -151,7 +139,7 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
@@ -162,6 +150,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 # Conceptual Modeling
