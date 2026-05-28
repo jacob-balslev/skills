@@ -6,7 +6,7 @@ compatibility:
   notes: "Domain-agnostic explanation method. The five-step workflow, primary-part tests, and typed-relation taxonomy apply to systems, features, modules, workflows, concepts, decisions, or problems in any stack — substitute the relevant domain vocabulary for the structural skeleton."
 allowed-tools: Read Grep
 grounding:
-  domain_object: "Semantic-center analysis for explaining one unit of analysis through a single load-bearing part plus typed supporting relations"
+  subject_matter: "Semantic-center analysis for explaining one unit of analysis through a single load-bearing part plus typed supporting relations"
   grounding_mode: "universal"
   truth_sources:
     - https://networkx.org/documentation/stable/reference/algorithms/centrality.html
@@ -23,37 +23,25 @@ drift_check:
   last_verified: "2026-05-19"
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: workflow
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: do
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: foundations
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: knowledge-organization
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: foundations/semantics
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: foundations/semantics
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -63,7 +51,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -100,10 +88,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"task-analysis","reason":"task-analysis decomposes a route or flow around the user goal, top task, friction, and first-viewport hierarchy; semantic-center decomposes a system or concept around the single load-bearing part. The same primary thing prompt routes by whether the lens is user-task fit or structural importance."},{"skill":"conceptual-modeling","reason":"conceptual-modeling builds a full implementation-neutral model of entities, attributes, relationships, identity, and cardinality; semantic-center reduces a unit to one primary part plus typed relations. The same how do these concepts relate prompt routes by whether the user wants a full model or a load-bearing reduction."},{"skill":"semantic-relations","reason":"semantic-relations decides the precise type of one edge such as IS-A, PART-OF, causal, thematic, or associative; semantic-center uses a coarser relation vocabulary to explain many secondary parts around one center."},{"skill":"pattern-recognition","reason":"pattern-recognition surfaces recurring pattern classes across many instances; semantic-center forces one-primary reduction within a single instance. The same how does this hang together prompt routes by whether the unit of analysis is many instances or one instance."}],"related":["intent-recognition","diagnosis","knowledge-modeling","semantic-relations"],"verify_with":["semantic-relations","code-review"]}'
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: '{"domain_object":"Semantic-center analysis for explaining one unit of analysis through a single load-bearing part plus typed supporting relations","grounding_mode":"universal","truth_sources":["https://networkx.org/documentation/stable/reference/algorithms/centrality.html","https://www.w3.org/TR/skos-reference/","https://www.barbaraminto.com/"],"failure_modes":["everything_is_important_flattening","visibility_recency_or_sequence_mistaken_for_structural_importance","relation_map_uses_proximity_or_chronology_without_a_stronger_relation","multiple_primary_parts_hidden_as_parallel_key_points","semantic_center_analysis_overowns_task_prioritization_formal_modeling_or_implementation"],"evidence_priority":"equal"}'
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: '{"subject_matter":"Semantic-center analysis for explaining one unit of analysis through a single load-bearing part plus typed supporting relations","grounding_mode":"universal","truth_sources":["https://networkx.org/documentation/stable/reference/algorithms/centrality.html","https://www.w3.org/TR/skos-reference/","https://www.barbaraminto.com/"],"failure_modes":["everything_is_important_flattening","visibility_recency_or_sequence_mistaken_for_structural_importance","relation_map_uses_proximity_or_chronology_without_a_stronger_relation","multiple_primary_parts_hidden_as_parallel_key_points","semantic_center_analysis_overowns_task_prioritization_formal_modeling_or_implementation"],"evidence_priority":"equal"}'
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -114,7 +102,7 @@ metadata:
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Semantic-center analysis is a figure-ground reduction method. Treat the unit of analysis as a graph of parts, then name the one part that carries the most structural load and place every other part in relation to it. The center is not automatically the most visible, newest, largest, or first-in-sequence part; it is the part whose removal, governing role, purpose explanation, semantic weight, or decision leverage best explains the whole.
@@ -144,7 +132,7 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
@@ -155,6 +143,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 # Semantic Center

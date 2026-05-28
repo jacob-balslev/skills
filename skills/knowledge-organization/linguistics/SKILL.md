@@ -6,7 +6,7 @@ compatibility:
   notes: "Provider-, runtime-, stack-, and language-agnostic. The morphology, polysemy, register, and error-message rules apply to any software product; substitute the artifact conventions and project language of the local stack while preserving the meaning-level checks."
 allowed-tools: Read Grep
 grounding:
-  domain_object: "Linguistic precision for software identifiers, UI copy, error messages, technical documentation, and cross-cultural language choices"
+  subject_matter: "Linguistic precision for software identifiers, UI copy, error messages, technical documentation, and cross-cultural language choices"
   grounding_mode: "universal"
   truth_sources:
     - https://developers.google.com/style/voice
@@ -31,37 +31,25 @@ drift_check:
   last_verified: "2026-05-19"
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: know
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: foundations
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: knowledge-organization
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: foundations/language
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: foundations/language
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -71,7 +59,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -108,10 +96,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"naming-conventions","reason":"naming-conventions owns artifact-specific casing, prefix/suffix policy, and deterministic convention choice; linguistics owns the meaning-level rationale behind morphology, polysemy resolution, register, and error wording."},{"skill":"refactor","reason":"refactor owns behavior-preserving rename mechanics across call sites; linguistics owns choosing a precise name before or during the rename."},{"skill":"information-architecture","reason":"information-architecture owns docs/navigation/page hierarchy and findability; linguistics owns sentence-level and identifier-level meaning inside that structure."},{"skill":"microcopy","reason":"microcopy owns specialized in-product UI-text patterns such as button, empty-state, tooltip, dialog, and toast structures; linguistics owns underlying language rules and register diagnostics."},{"skill":"writing-humanizer","reason":"writing-humanizer owns prose polish, AI-tell removal, and rhythm repair; linguistics owns morphology, semantic ambiguity, audience register, and blame-free error language."}],"related":["semantics","writing-humanizer","microcopy","prompt-craft","intent-recognition","code-review"],"verify_with":["naming-conventions","code-review","writing-humanizer"]}'
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: '{"domain_object":"Linguistic precision for software identifiers, UI copy, error messages, technical documentation, and cross-cultural language choices","grounding_mode":"universal","truth_sources":["https://developers.google.com/style/voice","https://developers.google.com/style/tone","https://developers.google.com/style/translation","https://learn.microsoft.com/en-us/windows/apps/design/style/writing-style","https://learn.microsoft.com/en-us/windows/win32/debug/error-message-guidelines","https://www.w3.org/TR/WCAG22/","https://www.nngroup.com/articles/ten-usability-heuristics/","https://www.nngroup.com/articles/hostile-error-messages/"],"failure_modes":["naming_taste_mistaken_for_linguistic_fit","artifact_casing_policy_confused_with_semantic_naming","polysemous_identifier_left_unqualified","generic_handle_process_or_utils_names_hide_contracts","error_copy_blames_user_or_hides_action","agent_register_leaks_into_end_user_copy","global_audience_copy_uses_idioms_jargon_or_untranslatable_phrasing","linguistics_overowns_refactor_docs_ia_microcopy_or_i18n_implementation"],"evidence_priority":"equal"}'
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: '{"subject_matter":"Linguistic precision for software identifiers, UI copy, error messages, technical documentation, and cross-cultural language choices","grounding_mode":"universal","truth_sources":["https://developers.google.com/style/voice","https://developers.google.com/style/tone","https://developers.google.com/style/translation","https://learn.microsoft.com/en-us/windows/apps/design/style/writing-style","https://learn.microsoft.com/en-us/windows/win32/debug/error-message-guidelines","https://www.w3.org/TR/WCAG22/","https://www.nngroup.com/articles/ten-usability-heuristics/","https://www.nngroup.com/articles/hostile-error-messages/"],"failure_modes":["naming_taste_mistaken_for_linguistic_fit","artifact_casing_policy_confused_with_semantic_naming","polysemous_identifier_left_unqualified","generic_handle_process_or_utils_names_hide_contracts","error_copy_blames_user_or_hides_action","agent_register_leaks_into_end_user_copy","global_audience_copy_uses_idioms_jargon_or_untranslatable_phrasing","linguistics_overowns_refactor_docs_ia_microcopy_or_i18n_implementation"],"evidence_priority":"equal"}'
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -122,7 +110,7 @@ metadata:
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: '{"stale_after_days":365,"review_cadence":"quarterly"}'
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Treat every name or visible string as a small language artifact. Its form carries a contract: morphology makes the artifact parseable, semantics fixes what it means, pragmatics fits the situation, and register fits the audience.
@@ -158,7 +146,7 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
@@ -169,6 +157,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 # Linguistics

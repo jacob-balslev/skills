@@ -7,37 +7,25 @@ compatibility:
 allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: know
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: foundations
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: knowledge-organization
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: foundations/semantics
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: foundations/semantics
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -47,7 +35,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -84,10 +72,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"linguistics","reason":"linguistics owns word-form rules, polysemy phrasing, morphology, audience register, and blame-free wording; semantics owns what a name or signal communicates about the underlying concept or behavior."},{"skill":"naming-conventions","reason":"naming-conventions owns casing, prefix/suffix conventions, and rename mechanics per artifact kind; semantics owns whether the chosen words encode the right meaning before any casing rule is applied."},{"skill":"semantic-relations","reason":"semantic-relations owns typed connections between concepts such as IS-A, PART-OF, causal, and thematic relations; semantics owns the meaning encoded by one identifier, token, status, or signal."},{"skill":"microcopy","reason":"microcopy owns concrete UI-text patterns such as button labels, empty states, dialogs, validation, and toasts; semantics owns the cross-domain meaning rule those words must preserve."},{"skill":"taxonomy-design","reason":"taxonomy-design owns classification structures, facets, and category governance; semantics owns the names and signals inside or around that structure."},{"skill":"a11y","reason":"a11y owns accessibility compliance and assistive-technology behavior; semantics can flag a missing non-color signal but a11y verifies the actual accessibility contract."},{"skill":"version-control","reason":"version-control owns branch, commit, tag, and release-history shape; semantics owns the meaning encoded by version numbers and conventional-commit type choice."}],"related":["linguistics","naming-conventions","semantic-relations","microcopy","semantic-center","conceptual-modeling","taxonomy-design"],"verify_with":["naming-conventions","semantic-relations","a11y","code-review"]}'
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: '{"domain_object":"Cross-domain meaning encoding in software names, status signals, versions, commits, APIs, design tokens, UI signals, and semantic types","grounding_mode":"universal","truth_sources":["https://martinfowler.com/bliki/UbiquitousLanguage.html","https://hilton.org.uk/blog/naming-smells","https://semver.org/","https://www.conventionalcommits.org/en/v1.0.0/","https://www.rfc-editor.org/rfc/rfc9110.html","https://www.designtokens.org/tr/drafts/format/","https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html","https://www.typescriptlang.org/docs/handbook/type-compatibility.html","https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/"],"failure_modes":["identifier_name_still_matches_syntax_but_not_behavior","domain_language_drift_creates_translation_tax","http_status_code_contradicts_response_body","version_bump_understates_api_breakage","commit_type_hides_feature_or_breaking_change","design_token_name_coupled_to_appearance_instead_of_purpose","primitive_type_allows_id_or_unit_mixups","color_is_the_only_state_signal","concept_block_contains_placeholder_values","semantics_overowns_morphology_relation_typing_or_microcopy_work"],"evidence_priority":"equal"}'
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: '{"subject_matter":"Cross-domain meaning encoding in software names, status signals, versions, commits, APIs, design tokens, UI signals, and semantic types","grounding_mode":"universal","truth_sources":["https://martinfowler.com/bliki/UbiquitousLanguage.html","https://hilton.org.uk/blog/naming-smells","https://semver.org/","https://www.conventionalcommits.org/en/v1.0.0/","https://www.rfc-editor.org/rfc/rfc9110.html","https://www.designtokens.org/tr/drafts/format/","https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html","https://www.typescriptlang.org/docs/handbook/type-compatibility.html","https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/"],"failure_modes":["identifier_name_still_matches_syntax_but_not_behavior","domain_language_drift_creates_translation_tax","http_status_code_contradicts_response_body","version_bump_understates_api_breakage","commit_type_hides_feature_or_breaking_change","design_token_name_coupled_to_appearance_instead_of_purpose","primitive_type_allows_id_or_unit_mixups","color_is_the_only_state_signal","concept_block_contains_placeholder_values","semantics_overowns_morphology_relation_typing_or_microcopy_work"],"evidence_priority":"equal"}'
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -98,7 +86,7 @@ metadata:
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: '{"stale_after_days":365,"review_cadence":"quarterly"}'
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "Semantics in software is meaning encoding: every name, status code, version number, commit type, token, and typed value is a sign that points at a referent under a convention. Good semantics keeps the sign, referent, and convention aligned as the system changes."
   # purpose: the problem this concept solves and why the field exists. One paragraph.
@@ -125,7 +113,7 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
@@ -136,6 +124,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 # Semantics

@@ -7,37 +7,25 @@ compatibility:
 allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
-  # Integer 7 or 8. v8 is canonical (2026-05-26).
+  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
   version: "1.2.0"
 
-  # === v7 Classification (DEPRECATED 2026-05-26 — kept for back-compat only) ===
-  # type: v7 classification — DEPRECATED, replaced by `operation`.
-  # Legacy values: capability / workflow / router / overlay.
-  type: capability
-  # operation: cognitive operation enabled (Bloom-grounded). One of four closed values:
-  # know (declarative — concepts, vocabulary, reference) /
-  # do (procedural — step-by-step execution) /
-  # decide (judgment — choosing, dispatching) /
-  # modify (context injection — shapes how other skills execute).
-  operation: know
-  # category: v7 classification — DEPRECATED, replaced by `subject`.
-  # Legacy values: foundations / engineering / design / quality / agent / product.
-  category: foundations
 
-  # === v8 Classification (5-axis model — see ADR-0017) ===
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
   # product-domain / knowledge-organization / meta-methods / data-analytics.
   subject: knowledge-organization
-  # domain: optional hierarchical sub-path within `subject`. Slash-delimited lowercase
-  # kebab-case segments. Remove when flat `subject` is sufficient.
-  domain: foundations/semantics
-  # scope: deployment targeting. One of three closed values:
-  # portable (any project) / workspace (this workspace only) /
-  # project (one specific repo; requires populated `grounding` block).
-  scope: portable
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: portable
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: foundations/semantics
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
@@ -47,7 +35,7 @@ metadata:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check: '{"last_verified":"2026-05-19"}'
 
-  # === Eval-health: three orthogonal axes ===
+  # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
   eval_artifacts: planned
@@ -84,10 +72,10 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: '{"boundary":[{"skill":"linguistics","reason":"linguistics owns word form, morphology, register, and identifier-level phrasing; semantic-relations owns the typed meaning connection between concepts such as IS-A, PART-OF, causal, thematic, synonymy, polysemy, and homonymy."},{"skill":"conceptual-modeling","reason":"conceptual-modeling builds the full pre-implementation domain structure of entities, attributes, relationships, and cardinality; semantic-relations supplies the relation-type vocabulary used inside or around that structure."},{"skill":"knowledge-modeling","reason":"knowledge-modeling chooses the representation paradigm such as graph, frame, rules, concept map, or hybrid; semantic-relations chooses the edge vocabulary inside whichever representation is selected."},{"skill":"ontology-modeling","reason":"ontology-modeling formalizes classes, properties, axioms, constraints, and reasoning semantics; semantic-relations is the pre-formal relation-typing layer and must not imply OWL/RDFS/SHACL commitments by itself."},{"skill":"taxonomy-design","reason":"taxonomy-design governs browse/category hierarchies, facets, assignment rules, and SKOS-style classification; semantic-relations only tests whether a single relation is hierarchy, association, part-whole, thematic role, or another typed edge."},{"skill":"entity-relationship-modeling","reason":"entity-relationship-modeling owns physical or logical database relationships, keys, junction tables, and persistence constraints; semantic-relations owns conceptual meaning relations before schema implementation."}],"related":["linguistics","pattern-recognition","semantic-center","conceptual-modeling","knowledge-modeling","ontology-modeling","taxonomy-design"],"verify_with":["linguistics","taxonomy-design","ontology-modeling","code-review"]}'
-  # grounding: required when `scope: project` (or legacy alias `scope: codebase`).
-  # Declares the truth sources the skill anchors to and the failure modes those sources
-  # prevent. Omit when the skill is universal-knowledge.
-  grounding: '{"domain_object":"Semantic relation typing for concept edges, lexical sense relations, knowledge-organization links, thematic roles, and relation-property checks","grounding_mode":"universal","truth_sources":["https://wordnet.princeton.edu/","https://www.w3.org/TR/skos-reference/","https://www.w3.org/TR/owl2-primer/","https://framenet.icsi.berkeley.edu/WhatIsFrameNet"],"failure_modes":["generic_related_to_edges_collapse_relation_meaning","is_a_part_of_conflation_breaks_inheritance_reasoning","synonym_polysemy_homonymy_confusion_drives_wrong_rename_or_flattening","relation_properties_left_implicit","thematic_roles_conflate_actor_instrument_cause_or_goal","relation_typing_overowns_formal_ontology_taxonomy_or_database_design","publishability_scan_false_positive_from_customer_specific_examples"],"evidence_priority":"equal"}'
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent. Omit when the
+  # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
+  grounding: '{"subject_matter":"Semantic relation typing for concept edges, lexical sense relations, knowledge-organization links, thematic roles, and relation-property checks","grounding_mode":"universal","truth_sources":["https://wordnet.princeton.edu/","https://www.w3.org/TR/skos-reference/","https://www.w3.org/TR/owl2-primer/","https://framenet.icsi.berkeley.edu/WhatIsFrameNet"],"failure_modes":["generic_related_to_edges_collapse_relation_meaning","is_a_part_of_conflation_breaks_inheritance_reasoning","synonym_polysemy_homonymy_confusion_drives_wrong_rename_or_flattening","relation_properties_left_implicit","thematic_roles_conflate_actor_instrument_cause_or_goal","relation_typing_overowns_formal_ontology_taxonomy_or_database_design","publishability_scan_false_positive_from_customer_specific_examples"],"evidence_priority":"equal"}'
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -98,7 +86,7 @@ metadata:
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
   lifecycle: '{"stale_after_days":365,"review_cadence":"quarterly"}'
 
-  # === v6+ Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Semantic relations are the *typed connections between concepts in a meaning structure* -- the edges in a knowledge graph, concept map, taxonomy, ontology sketch, or hierarchy, each of a named kind rather than a generic association. Drawn from lexical semantics, Princeton WordNet, W3C SKOS, W3C OWL property semantics, and FrameNet-style semantic roles, this skill treats every edge as a claim about traversal, inference, substitution, or role assignment.
@@ -133,7 +121,7 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: UNVERIFIED
+  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
   truth_verdict: UNVERIFIED
@@ -144,6 +132,8 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
+  last_audited: 2026-05-28
+  lint_verdict: PASS
 ---
 
 
