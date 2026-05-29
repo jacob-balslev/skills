@@ -1,7 +1,7 @@
 ---
 # schema_version: protocol contract version this skill conforms to.
 # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-schema_version: 7
+schema_version: 8
 name: methodical
 description: "Enforces disciplined, complete, step-by-step execution that prevents the LLM failure modes of scope reduction, finding filtering, step skipping, assumed verification, and sycophantic output compression. Provides the explanatory model for WHY agents fail at completeness (RLHF training rewards shorter, cleaner, more positive outputs — 58% sycophancy rate measured in frontier models) and the structural countermeasures: pre-task declarations, step-level evidence receipts, generation/criticism separation, explicit completeness claims, and anti-pattern detection. Use when executing audits, producing reports, creating Linear tasks from findings, verifying acceptance criteria, or any task where completeness and honesty matter more than brevity. Do NOT use for task workflow sequencing (use task-execution), quality definitions per artifact type (use quality-doctrine), or the generate-critique-revise loop mechanics (use self-review-pattern)."
 
@@ -15,6 +15,8 @@ subject: meta-methods
 # portable (any project, repo-agnostic) /
 # project (one or more specific projects; requires populated `grounding` and `project[]`).
 deployment_target: portable
+# scope: free-text PRD-style statement of what the skill teaches and where it deploys.
+scope: "Portable across any project, repo, or agent runtime. Teaches the execution discipline that counters LLM completeness failures — scope reduction, finding filtering, step skipping, assumed verification, and sycophantic output compression — in any task where completeness and honesty outweigh brevity: audits, reports, converting findings into tracked tasks, and acceptance-criteria verification. Not bound to any codebase; the countermeasures (pre-task declarations, step-level evidence receipts, generation/criticism separation, explicit completeness claims) are universal."
 # version: skill content version (semver). Bumped when the instructional content changes.
 version: 1.0.0
 # triggers: explicit-match activation phrases the router fires on literally.
