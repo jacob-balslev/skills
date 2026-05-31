@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Writing and editing human-readable prose — docs, PRs, issues, release notes, errors, UI copy, commits, tooltips, support replies — especially when text sounds robotic, padded, monotonous, or overly formal: AI-tell removal, active voice, hedging reduction, readability diagnosis, sentence rhythm, vocabulary variety, tone mapping, paragraph rhythm, the bullets-vs-prose choice, and the 5-step humanization workflow. Portable across any written communication; principle-grounded, not repo-bound. Excludes documentation routing/type selection, code-identifier naming, and in-product UI-text pattern catalogs (microcopy)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
