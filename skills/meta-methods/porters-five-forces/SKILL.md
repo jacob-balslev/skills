@@ -22,6 +22,8 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: required free-text PRD-style statement of what the skill teaches and does not.
+  scope: "Industry competitive-structure analysis using Porter's Five Forces — defining industry boundaries, diagnosing each of the five forces (rivalry, new entrants, supplier power, buyer power, substitutes) by their structural drivers, reading dynamic trends, and translating force intensity into profit-pool and positioning implications. Portable across any domain doing competitive or market-structure analysis; principle-grounded, not repo-bound. Excludes integrated strategy-cascade design (playing-to-win), durable-moat classification (seven-powers), task/option scoring (prioritization), and generic market sizing."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
@@ -29,15 +31,15 @@ metadata:
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-26"
+  freshness: 2026-05-31
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
   drift_check:
     last_verified: "2026-05-26"
     truth_source_hashes:
-      "skills/foundations/porters-five-forces/references/porters-five-forces-sources.md": "66c6fd769ae91f3815b7c34e4fe2c80809b12203bf4e2c5c05220517b4746511"
-      "skills/foundations/porters-five-forces/references/upstream-displacement-2026-05-26.md": "eab1270c9ca85a16946d067291a2e74d4effa88ea1649a7f2c3de3914e515b8c"
+      "skills/meta-methods/porters-five-forces/references/porters-five-forces-sources.md": "66c6fd769ae91f3815b7c34e4fe2c80809b12203bf4e2c5c05220517b4746511"
+      "skills/meta-methods/porters-five-forces/references/upstream-displacement-2026-05-26.md": "eab1270c9ca85a16946d067291a2e74d4effa88ea1649a7f2c3de3914e515b8c"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
@@ -79,7 +81,7 @@ metadata:
   # grounding: required when `deployment_target: project`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
-  grounding: "{\"subject_matter\":\"Porter's Five Forces competitive strategy framework\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://www.isc.hbs.edu/strategy/business-strategy/Pages/the-five-forces.aspx\",\"https://hbr.org/2008/01/the-five-competitive-forces-that-shape-strategy\",\"skills/foundations/porters-five-forces/references/porters-five-forces-sources.md\",\"skills/foundations/porters-five-forces/references/upstream-displacement-2026-05-26.md\"],\"failure_modes\":[\"industry_boundary_too_broad\",\"direct_competitor_only_view\",\"force_names_listed_without_drivers\",\"firm_strength_confused_with_industry_structure\",\"substitutes_confused_with_rivals\",\"market_size_substituted_for_profitability\",\"static_snapshot_ignores_trends\"],\"evidence_priority\":\"general_knowledge_first\"}"
+  grounding: "{\"subject_matter\":\"Porter's Five Forces competitive strategy framework\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://www.isc.hbs.edu/strategy/business-strategy/Pages/the-five-forces.aspx\",\"https://hbr.org/2008/01/the-five-competitive-forces-that-shape-strategy\",\"skills/meta-methods/porters-five-forces/references/porters-five-forces-sources.md\",\"skills/meta-methods/porters-five-forces/references/upstream-displacement-2026-05-26.md\"],\"failure_modes\":[\"industry_boundary_too_broad\",\"direct_competitor_only_view\",\"force_names_listed_without_drivers\",\"firm_strength_confused_with_industry_structure\",\"substitutes_confused_with_rivals\",\"market_size_substituted_for_profitability\",\"static_snapshot_ignores_trends\"],\"evidence_priority\":\"general_knowledge_first\"}"
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -110,15 +112,17 @@ metadata:
   structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: BROKEN
+  truth_verdict: UNVERIFIED
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
+  comprehension_verdict: SKIPPED_BASELINE_HIGH
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   application_verdict: UNVERIFIED
-last_audited: 2026-05-28
+  eval_score: 4.17
+  eval_failed_ids: []
+last_audited: 2026-05-31
 lint_verdict: PASS
 ---
 
