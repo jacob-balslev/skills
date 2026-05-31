@@ -19,6 +19,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Establishing visual hierarchy — type-scale ratios, spacing rhythm, contrast as an ordering signal, weight and size as importance cues, and the layered relationship between primary, secondary, and tertiary information. Portable across any visual interface; principle-grounded, not repo-bound. Excludes content writing, information architecture, and specific color-palette construction (color-system-design)."
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
