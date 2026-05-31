@@ -19,6 +19,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing a typography system — typeface selection and pairing, a modular type scale, vertical rhythm, line-height and measure rules, and web font delivery (subsetting, font-display, variable fonts). Portable across any design system; principle-grounded, not repo-bound. Excludes body-copy writing, single-headline font pairing, and non-text design tokens."
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
