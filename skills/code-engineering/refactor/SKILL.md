@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Behavior-preserving restructuring of existing code — extracting functions, reducing duplication, renaming for clarity, splitting modules, and tightening structure, with every change verified against before/after behavior so external contracts stay identical. Portable across any language or codebase; principle-grounded, not repo-bound. Excludes bug investigation and root-cause isolation (debugging, diagnosis), adding new product behavior (feature implementation), and documentation authoring (doc-updater) even when the docs describe the refactored code."
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
