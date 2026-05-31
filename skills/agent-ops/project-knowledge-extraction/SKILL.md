@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Extracting durable project knowledge from code, docs, issues, incidents, reports, screenshots, or conversations into reusable context — skills, ADRs, glossaries, context docs, or memory entries. Portable across any project accumulating knowledge; principle-grounded, not repo-bound. Excludes writing a new skill contract (skill-scaffold), maintaining library tooling (skill-infrastructure), and generic documentation polish (documentation)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
