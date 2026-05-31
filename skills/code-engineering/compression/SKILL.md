@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Data and context compression — SaaS payload optimization (Zstd, Brotli, Gzip), database storage compression, and AI context-window compression (semantic summarization, token pruning) — applied to cut API latency, storage cost, and long-running agent context pressure. Portable across any service or agent runtime; principle-grounded, not repo-bound. Excludes lossy image/video compression (product-photo) and file archiving."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
