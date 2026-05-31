@@ -18,6 +18,9 @@ subject: agent-ops
 # project (one or more specific projects; requires populated `grounding` and `project[]`).
 deployment_target: portable
 
+# scope: free-text PRD-style statement of what the skill teaches and where it deploys
+# (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+scope: "Choosing the optimal execution path before starting work — plan-vs-act gates, agent-architecture selection (chaining, routing, parallelization, orchestrator-worker, evaluator-optimizer), scope-management heuristics, critical-path analysis across task networks, and context-budget awareness, including the fresh-approach reset when a task has failed twice. Portable across any agentic execution; principle-grounded, not repo-bound. Excludes executing the chosen plan (task-execution), debugging failures (troubleshooting, diagnosis), and tool-level efficiency (tool-call-strategy)."
 # === Evaluation Status: three orthogonal axes ===
 # eval_artifacts: disk-truth — does an eval file exist on disk?
 # none (no intent) / planned (intent declared, no file yet) / present (file exists).
