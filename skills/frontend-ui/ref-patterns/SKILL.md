@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing and reviewing React ref usage — refs (mutable handle that survives renders without triggering them) vs state (reactive value), useRef for DOM access and mutable instance values, ref callbacks for mount/unmount hooks, forwardRef (and the React 19 ref-as-prop change that retires it for new code), useImperativeHandle for a controlled imperative surface, ref forwarding through compound-component primitives (Radix Slot / Headless UI), and the rule that refs are an escape hatch (DOM access, non-React DOM libraries, focus, animation, measurement, imperative APIs) never a substitute for state. Portable across React codebases; principle-grounded, not repo-bound. Excludes broader hook discipline (hooks-patterns), component layering (component-architecture), state location and ownership (state-management), the use-client/use-server boundary (client-server-boundary), and form-state/validation (form-ux-architecture)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
