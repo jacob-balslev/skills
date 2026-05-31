@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing what information reaches an LLM agent before it reasons — system prompt, persistent memory, always-loaded rules, injected skills, and user prompt — and diagnosing wrong answers despite clear instructions. Covers the four context failure modes (missing, stale, wrong, overwhelming), the five-layer context stack, four context-quality metrics (injection precision/recall, utilization, freshness), the Frequent Intentional Compaction protocol, subagent delegation for context-heavy work, and the failure-mode decision tree. Portable across any agent runtime; principle-grounded, not repo-bound. Excludes prompt wording (prompt-craft), authoring a new SKILL.md (skill-scaffold), and which skill the router activates (skill-router)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
