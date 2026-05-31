@@ -19,6 +19,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Reframing a stated problem before solutions are committed — surfacing assumptions, separating symptoms from root needs, converting feature-request briefs into problem statements, and aligning a team on the problem before design proceeds. Portable across any design or product effort; principle-grounded, not repo-bound. Excludes code-level bug triage, runtime failure diagnosis, and root-cause analysis of system errors (engineering investigation, not design framing)."
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
