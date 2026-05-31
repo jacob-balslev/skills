@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Writing, tightening, evaluating, and repairing LLM prompts and reusable prompt templates for completion, agent dispatch, grading, structured extraction, tool use, and prompt-engineered workflows — instruction hierarchy, message roles, context placement, few-shot examples, structured output, positive constraints, reasoning guidance, prompt-injection resistance, provider differences, and eval-driven iteration. Portable across any LLM provider; principle-grounded, not repo-bound. Excludes whole context-system design (context-engineering), eval dataset or grader design (agent-eval-design), reviewing generated code (code-review), authoring SKILL.md files (skill-scaffold), choosing which skill or agent activates (skill-router), and root-causing a deployed failure after outputs exist (debugging)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
