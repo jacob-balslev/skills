@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Reasoning about agent autonomy levels, auto-improve loops, AI-generated code quality, and productivity in LLM-assisted codebases — Karpathy's three eras (1.0 explicit / 2.0 learned / 3.0 natural-language), the vibe-coding-vs-agentic-engineering distinction, the 0–5 autonomy slider with task-type recommendations, the one-asset/one-metric/one-time-box AutoResearch loop, Software 3.0 productivity metrics, and the documented regressions of ungated AI-generated code (the 'vibe hangover'). Portable across any LLM-assisted codebase; principle-grounded, not repo-bound. Excludes choosing a specific autonomy-loop topology (agent-engineering), per-prompt authoring discipline (prompt-craft), and reviewing the AI-generated code itself (code-review)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
