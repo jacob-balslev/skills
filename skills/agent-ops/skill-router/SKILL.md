@@ -43,6 +43,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: project
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Routing an agent request across multiple skills — building or auditing a routing table, detecting coverage gaps, and answering 'which skill handles this?' / 'why did skill A activate instead of B?' via trigger-label matching, file-path matching, keyword matching, description-based semantic matching, scope/type tiebreakers, and coverage-gap detection. Anchored to the Skill Graph routing harness (deployment_target: project); applies wherever a skill library uses this routing system. Excludes loading an already-known target skill directly, authoring a new skill (skill-metadata-template), and evaluating a single skill's quality (graph-audit)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
