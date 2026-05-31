@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "The consistency-availability-partition-tolerance trade-off for distributed data systems — Brewer's CAP conjecture (2000), Gilbert & Lynch's 2002 proof, why P is not optional, the CP-vs-AP dichotomy, PACELC as the latency-vs-consistency extension that holds even without partition, the CAP-C vs ACID-C distinction, and the choice procedure of naming what the system must guarantee under partition. Portable across any distributed data system; principle-grounded, not repo-bound. Excludes single-node transactional guarantees (acid-fundamentals), choosing an isolation level (transaction-isolation), replication topology design (replication-patterns), and sharding decisions (sharding-strategy)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
