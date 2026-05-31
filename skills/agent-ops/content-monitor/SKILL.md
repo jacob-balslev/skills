@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Building and operating multi-source intelligence pipelines across video, GitHub, Reddit, curated lists, search, and RSS — source adapters, the discovery/transcription/summarization/evaluation phases, deduplication, schedules, per-stage model choice, and actionable brief generation. Portable across any content-monitoring pipeline; principle-grounded, not repo-bound. Excludes SEO keyword research (keywords) and competitive product analysis (user-research)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
