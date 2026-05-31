@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "How an application manages its database connections — the server-side cost of a connection, application-level pools (HikariCP, pgx, node-postgres) vs proxy-level pools (PgBouncer, Pgpool, ProxySQL), the three PgBouncer modes (session/transaction/statement) and their feature compatibility, the pool-sizing math (Little's Law applied to database concurrency), the failure modes (connection exhaustion, hot-loop reconnects, prepared-statement breakage under transaction pooling, idle-in-transaction leaks), and the diagnostic procedure for connection contention. Portable across any DB-backed application; principle-grounded, not repo-bound. Excludes query-level performance (query-optimization), index design (indexing-strategy), read/write replica routing (replication-patterns), and cross-shard coordination (sharding-strategy)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
