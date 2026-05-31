@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing logical and physical data structures — entities as stored data, keys, constraints, normalization and denormalization, provenance, lifecycle, indexing implications, and schema tradeoffs. Portable across relational and document data stores; principle-grounded, not repo-bound. Excludes pre-implementation business-concept discovery (conceptual-modeling), migrations against an existing database (database-migration), and formal ontology semantics (ontology-modeling)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
