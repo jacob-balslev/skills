@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "The foundational theory beneath data modeling — Codd's relational model (1970) and its algebra, the normal forms (1NF–5NF, BCNF) as a constraint-elimination sequence, functional dependencies and the closure algorithm, Chen's entity-relationship model (1976), the principled case for and against denormalization, the relational-vs-document tradeoff at the conceptual level, and the immutable-data-model alternative (event sourcing, append-only tables) with its grounding literature. Portable across any data-modeling effort; principle-grounded, not repo-bound. Excludes practical persistence design and method (data-modeling), applying changes to an existing schema (schema-evolution), choosing indexes (indexing-strategy), and the conceptual-modeling layer above the data model (conceptual-modeling)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
