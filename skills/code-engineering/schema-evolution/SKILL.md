@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Evolving a database schema over time without breaking deployed application code — the expand/contract pattern, zero-downtime change rules, the backwards/forwards compatibility envelope (deploy ordering and rollback discipline), the per-change-type safe procedure (add/drop/rename column, type change, constraints, indexes), and dual-write/dual-read transitions. Portable across relational databases and deploy pipelines; principle-grounded, not repo-bound. Excludes mechanical execution of one migration (database-migration), schema design from scratch (data-modeling), query tuning (query-optimization), and distributed-data partitioning (sharding-strategy)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
