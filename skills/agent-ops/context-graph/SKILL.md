@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing and auditing the multi-graph context architecture of an AI-coding workspace — skill graph, document-routing graph, memory index, script registry, and the cross-graph edges between them. Covers edge typing, orphan detection, connectivity health, deterministic graph-synthesis signals, change-propagation checks, and drift / hub-and-spoke anti-patterns. Portable across any multi-graph agent workspace; principle-grounded, not repo-bound. Excludes authoring one SKILL.md (skill-scaffold), validating one skill (skill-infrastructure), live routing decisions (skill-router), context-window budgeting (context-window), and session load/drop choices (context-management)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
