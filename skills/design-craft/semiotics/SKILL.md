@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing and auditing icon systems, colors/badges/shapes, visual metaphors, interface signs, and naming-plus-visual surfaces that users misread — semiotic reasoning across icon/index/symbol, signifier/signified, denotation/connotation/myth, color/shape/position/iconography, affordances, code/API signifiers, and semiotic-coherence audits. Portable across any sign-bearing interface; principle-grounded, not repo-bound. Excludes actual UI wording (microcopy), palette/typography craft (visual-design-foundations), accessibility/contrast compliance (a11y), formal class hierarchies, and word morphology rules."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
