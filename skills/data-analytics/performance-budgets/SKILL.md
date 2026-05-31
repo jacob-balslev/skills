@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Declaring, measuring, and enforcing performance thresholds as a quality contract rather than an aspirational target — the three budget axes (time, size, count), the four governing properties of a real budget (metric, threshold, percentile, consequence), the Core Web Vitals set (LCP, INP, CLS), the RAIL model, Lighthouse budgets.json, lab vs field measurement, and treating budget breach as a build/deploy failure. Portable across any product with performance SLAs; principle-grounded, not repo-bound. Excludes profiling and optimizing a specific slow path (performance-engineering), the rendering-model choice that bounds achievable budgets (rendering-models), and observability/telemetry signal design (observability-modeling)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
