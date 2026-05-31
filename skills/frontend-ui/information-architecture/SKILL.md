@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Structuring information for findability — navigation, page hierarchy, docs architecture, sitemap shape, labeling systems, wayfinding, and content grouping. Portable across any product or docs surface; principle-grounded, not repo-bound. Excludes formal category-governance work (taxonomy-design), responsive page composition (layout-composition), component/token architecture (design-system-architecture), and sentence-level UI text (microcopy)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
