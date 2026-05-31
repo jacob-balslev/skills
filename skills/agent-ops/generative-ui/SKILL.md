@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "The pattern where a language model emits, as structured output, a description of UI components or a UI sub-tree that an application then renders — the typed-schema component palette, the structured-output mechanism (JSON Schema, function-calling) constraining emission to renderable specs, the application-side render pipeline, the interaction loop feeding user actions back into the next turn, the model-author/application-renderer security boundary, and the distinction from adjacent patterns (chat-with-markdown, prebuilt-widget routing, RSC streaming, model-emits-code). Portable across any LLM application that renders model-described UI; principle-grounded, not repo-bound. Excludes the page-level rendering taxonomy (rendering-models), the tool-call protocol cycle (tool-call-flow), the untrusted-content trust boundary (prompt-injection-defense), and general component-library architecture (design-system-architecture)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
