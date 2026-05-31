@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Classifying the intent of an operation BEFORE any tool call that could modify state, touch sensitive targets, rewrite history, install dependencies, publish packages, or expose credentials — sorting into Passive/Read, Reconnaissance, Modification, or Destructive/Irreversible by operation type plus target sensitivity, then running Identify / Confirm / Verify before action. Portable across any agent with tool access; principle-grounded, not repo-bound. Excludes deciding what code to write, executing already-classified work, reactive post-execution guardrails, and defining upstream governance policy."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
