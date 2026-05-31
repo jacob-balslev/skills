@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Creating a new SKILL.md from scratch, adapting an existing skill to a different archetype, or teaching the canonical Skill Metadata Protocol frontmatter and body structure — schema-conformant frontmatter, archetype-aware body layout, semantic-layer discipline (description vs Coverage), teaching-layer mechanics (TEMPLATE NOTE blockquotes), the focused authoring gates, and the routing-eval honesty rule. Portable across any Skill-Metadata-Protocol library; principle-grounded, not repo-bound. Excludes modifying an already-written skill (edit directly), general technical documentation (docs-development), and fixing a malformed skill detected by health tooling (skill-infrastructure)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
