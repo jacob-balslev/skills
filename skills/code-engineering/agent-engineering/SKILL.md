@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing and evaluating production AI agent systems — multi-agent coordination patterns (orchestrator/worker, fan-out, consensus, sequential chain, evaluator/optimizer), the four pillars (architecture/lifecycle, task decomposition, coordination, production reliability), the six reliability requirements (observability, cost budgets, idempotency, failure recovery, safety caps, claim locks), the delegation decision framework with overhead crossover, and coordination-failure diagnosis (claim races, silent stalls, context contamination, runaway loops). Portable across any agent runtime; principle-grounded, not repo-bound. Excludes prompt wording (prompt-craft), per-call tool efficiency (tool-call-strategy), single-agent context-stack design (context-engineering), and runtime debugging of a deployed system (debugging)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
