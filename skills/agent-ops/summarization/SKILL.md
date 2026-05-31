@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Condensing prose while preserving meaning — session findings, wrap reports, research briefs, executive summaries, TLDRs, agent handoffs, progressive summaries, audit summaries, and long-document distillation — covering extractive vs abstractive summarization, what to keep vs drop, evidence preservation, summary levels, handoff summaries, and audit-report condensation without hiding findings. Portable across any text-condensation task; principle-grounded, not repo-bound. Excludes byte/data compression algorithms (compression), context-window budget math and compaction triggers (context-window), working-set selection (context-management), prose tone repair (writing-humanizer), and quality scoring (evaluation)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
