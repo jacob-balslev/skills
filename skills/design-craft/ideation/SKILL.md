@@ -19,6 +19,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Generating a wide range of solution concepts before converging — running structured idea-generation sessions, breaking out of solution fixation, and moving from divergent to convergent selection with explicit criteria. Portable across any design or product effort; principle-grounded, not repo-bound. Excludes collaborative engineering domain discovery (event-storming), solo deep technical design, and final go/no-go investment decisions."
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
