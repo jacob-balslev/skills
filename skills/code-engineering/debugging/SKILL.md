@@ -95,9 +95,14 @@ metadata:
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
+  application_verdict: REDUNDANT
   last_audited: 2026-05-28
   lint_verdict: PASS
+eval_last_run:
+  at: "2026-05-31T13:46:54.722Z"
+  status: fail
+  runner: "node skill-graph/lib/audit/evaluate-skill.js --mode application"
+  artifact: "agent-orchestration/logs/eval-results/debugging/2026-05-31T13-46-54-721Z.json"
 ---
 
 # Debugging
