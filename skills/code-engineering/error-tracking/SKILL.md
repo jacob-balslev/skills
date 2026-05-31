@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing and extending an application exception-reporting pipeline — error-boundary placement, tracker-SDK wrappers, sanitized reporting calls, environment gating, PII-free user context, breadcrumbs, and per-layer reporting verification across component, route, global, and manual capture surfaces (central reportError/reportMessage patterns). Portable across any application stack; principle-grounded, not repo-bound. Excludes the user-facing error UX (a11y and interaction skills), chasing a single captured error (debugging), and broad privacy/retention policy (owasp-security)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
