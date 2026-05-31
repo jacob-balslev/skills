@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "React Hooks as a discipline — when a render is the right shape for state, why the Rules of Hooks exist as a compile-time invariant, how the dependency array encodes a closure/rerender contract, when useEffect is the wrong primitive, derived vs stored state, when to extract a custom hook, and when memoization (useMemo, useCallback) is a footgun. Covers React 18+ (automatic batching, concurrent rendering); portable across React codebases; principle-grounded, not repo-bound. Excludes general React rendering models (rendering-models), the client/server boundary (client-server-boundary), component composition (component-architecture), and application-wide state location (state-management)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
