@@ -19,6 +19,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing reusable component modules — composition patterns, compound components, slot/children APIs, render props, headless component contracts, and the configuration-vs-composition choice. Portable across any component-based UI; principle-grounded, not repo-bound. Excludes application-level architecture, single-use feature components, and visual styling decisions."
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
