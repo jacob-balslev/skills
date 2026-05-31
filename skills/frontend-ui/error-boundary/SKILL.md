@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing and reviewing React error boundaries — what a boundary catches (rendering, lifecycle, constructor errors) and what it does not (event-handler, async, SSR, in-boundary errors), why React still requires class components for boundaries, placement by granularity (page/feature/leaf), pairing with Suspense, the reset-and-recover pattern (resetKeys, error.reset), the Next.js error.tsx route-segment convention, and integration with error reporting. Covers React 18+ and Next.js App Router; portable across React codebases; principle-grounded, not repo-bound. Excludes Suspense boundary placement (suspense-patterns), general async error-handling and validation, backend error contracts (api-design), and observability infrastructure (error-tracking)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
