@@ -19,6 +19,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Implementing dark mode — prefers-color-scheme detection, theme persistence, flash-of-unstyled-theme prevention, color-token mirroring, image/asset variants, and meta theme-color updates. Portable across any web UI; principle-grounded, not repo-bound. Excludes designing the dark palette itself (color-system-design), token-architecture design, and generic theme-switching across more than two themes."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
