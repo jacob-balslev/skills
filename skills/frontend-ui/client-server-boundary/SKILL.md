@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Reasoning about the line at which execution context changes between a server runtime and a client runtime — what values can cross via serialization and what cannot, the directives that mark transitions ('use client', 'use server'), the difference between server-rendered HTML and a serialized component tree, the trust model that treats client input as adversarial, and the consequences of leaking server-only modules into client bundles. Portable across any server/client web framework; principle-grounded, not repo-bound. Excludes when and where the UI is produced (rendering-models), the HTTP wire protocol itself (http-semantics), frontend codebase organization (frontend-architecture), and API JSON-shape design (api-design)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
