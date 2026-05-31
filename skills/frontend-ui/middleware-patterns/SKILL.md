@@ -20,6 +20,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing and reviewing Next.js middleware (the single root middleware.ts) — the cross-cutting request/response transforms that run before route resolution, the Edge Runtime constraints, the matcher config, the NextRequest/NextResponse API (cookies/geo/IP), the four response shapes (next/rewrite/redirect/direct), the canonical patterns (auth gate, locale routing, A/B testing, header injection, geo-routing, bot blocking), the per-matched-request performance cost, and the rule that middleware is for cross-cutting concerns, never per-route business logic. Portable across Next.js App Router projects; principle-grounded, not repo-bound. Excludes per-route endpoint logic (route-handler-design), the Server Action surface (server-actions-design), abstract HTTP semantics (http-semantics), CSP and hardening (security-fundamentals), and the streaming model (streaming-architecture)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
