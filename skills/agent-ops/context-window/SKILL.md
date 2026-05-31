@@ -22,6 +22,9 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Allocating context-window budget across system, skill-injection, working, and output zones; monitoring context health; deciding when to compact; preserving state before compaction; and recovering after — zone budgets, model-budget tables, the 80% compaction rule, pre/post-compact protocols, the persistence hierarchy, per-operation token costs, and token-reduction techniques for 1M/200K/128K windows. Portable across any context-limited agent; principle-grounded, not repo-bound. Excludes deciding what belongs in the working set (context-management), prompt design (prompt-craft), graph architecture (context-graph), and memory curation."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
