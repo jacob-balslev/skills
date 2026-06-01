@@ -1,9 +1,8 @@
 ---
-# schema_version: protocol contract version this skill conforms to.
-# Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-schema_version: 8
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: methodical
-description: "Enforces disciplined, complete, step-by-step execution that prevents the LLM failure modes of scope reduction, finding filtering, step skipping, assumed verification, and sycophantic output compression. Provides the explanatory model for WHY agents fail at completeness (RLHF training rewards shorter, cleaner, more positive outputs — 58% sycophancy rate measured in frontier models) and the structural countermeasures: pre-task declarations, step-level evidence receipts, generation/criticism separation, explicit completeness claims, and anti-pattern detection. Use when executing audits, producing reports, creating Linear tasks from findings, verifying acceptance criteria, or any task where completeness and honesty matter more than brevity. Do NOT use for task workflow sequencing (use task-execution), quality definitions per artifact type (use quality-doctrine), or the generate-critique-revise loop mechanics (use self-review-pattern)."
+# description: routing contract for when this skill should activate and when it should not.
+description: "Enforces disciplined, complete, step-by-step execution that prevents the LLM failure modes of scope reduction, finding filtering, step skipping, assumed verification, and sycophantic output compression. Provides the explanatory model for WHY agents fail at completeness (RLHF training rewards shorter, cleaner, more positive outputs — 58% sycophancy rate measured in frontier models) and the structural countermeasures: pre-task declarations, step-level evidence receipts, generation/criticism separation, explicit completeness claims, and anti-pattern detection. Use when executing audits, producing reports, creating tracked tasks from findings, verifying acceptance criteria, or any task where completeness and honesty matter more than brevity. Do NOT use for task workflow sequencing (use `task-path-optimization`), artifact-quality breadth checks (use `best-practice`), result scoring (use `evaluation`), or compression after complete enumeration (use `summarization`)."
 
 
 # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -17,8 +16,6 @@ subject: meta-methods
 deployment_target: portable
 # scope: free-text PRD-style statement of what the skill teaches and where it deploys.
 scope: "Portable across any project, repo, or agent runtime. Teaches the execution discipline that counters LLM completeness failures — scope reduction, finding filtering, step skipping, assumed verification, and sycophantic output compression — in any task where completeness and honesty outweigh brevity: audits, reports, converting findings into tracked tasks, and acceptance-criteria verification. Not bound to any codebase; the countermeasures (pre-task declarations, step-level evidence receipts, generation/criticism separation, explicit completeness claims) are universal."
-# version: skill content version (semver). Bumped when the instructional content changes.
-version: 1.0.0
 # triggers: explicit-match activation phrases the router fires on literally.
 # Use when label-based routing is intended; usually keywords + examples are enough.
 triggers:
@@ -37,61 +34,37 @@ keywords:
   - sycophancy
   - intellectual honesty
   - no skipping
-# owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-owner: claude
-# freshness: ISO date the skill body was last reviewed or updated.
-freshness: "2026-04-01"
-
-# === Evaluation Status: three orthogonal axes ===
-# eval_artifacts: disk-truth — does an eval file exist on disk?
-# none (no intent) / planned (intent declared, no file yet) / present (file exists).
-eval_artifacts: present
-# eval_state: runtime-truth — has the eval been run and passed?
-# unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-# `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-eval_state: unverified
-# routing_eval: routing-coverage — is the skill's activation verified by the harness?
-# absent (not verified) / present (gated by lint check 12; harness must exit 0).
-routing_eval: absent
-# drift_check: truth-source verification record. Object with required `last_verified`
-# (ISO date) and optional `truth_source_hashes`. Record hashes with:
-# `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-drift_check:
-  last_verified: "2026-04-01"
-# lint_verdict: per-script signal from skill-lint.js. Rolls up into structural_verdict.
-# PASS / FAIL / UNKNOWN.
-lint_verdict: PASS
-# drift_status: per-script signal from skill-graph-drift.js. Rolls up into truth_verdict.
-# OK / DRIFT / BROKEN / STALE / NO_BASELINE / EXTERNAL_UNHASHED / UNKNOWN.
-drift_status: OK
-# last_audited: ISO date `audit` last ran against this skill.
-last_audited: 2026-05-28
-# relations: typed graph edges to sibling skills. Six edge types:
+# relations: typed graph edges to sibling skills. Current fields:
 # related (adjacency for browse / co-routing expansion) /
 # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
 #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-#           rename to `suppresses` pending ADR-0018) /
+#           see ADR-0018 for rename rationale) /
 # verify_with (cross-check; co-loaded as one-hop expansion) /
 # depends_on (composition; transitive — A→B→C loads all three) /
-# broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+# broader / narrower (SKOS-style generalization) /
+# disjoint_with (mutual exclusion for incompatible ownership).
 relations:
-  adjacent:
-    - self-review-pattern
-    - editorial-standards
+  related:
     - methodology
-    - quality-doctrine
-    - self-evaluation
+    - best-practice
+    - epistemic-grounding
+    - evaluation
+    - prioritization
   boundary:
-    - task-execution
-    - summarization
-    - context-management
+    - skill: task-path-optimization
+      reason: "task-path-optimization owns choosing or shortening the route through a task; methodical owns preserving complete evidence, counts, and verification while executing any route."
+    - skill: best-practice
+      reason: "best-practice owns broad artifact-quality standards; methodical owns complete and honest execution mechanics independent of artifact type."
+    - skill: summarization
+      reason: "summarization owns compression after the source material is complete; methodical owns preventing premature compression or item loss before summarization."
+    - skill: context-management
+      reason: "context-management owns what enters or leaves the working context; methodical owns making sure output and claims do not silently drop in-scope findings."
+    - skill: evaluation
+      reason: "evaluation owns scoring and verdict interpretation; methodical owns the evidence discipline that makes a later score defensible."
   verify_with:
-    - self-evaluation
-    - quality-doctrine
-    - agent-governance
-# comprehension_state: marker that this skill has populated v6+ Understanding fields
-# (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-comprehension_state: present
+    - best-practice
+    - epistemic-grounding
+    - evaluation
 
 # === Understanding fields (when comprehension_state: present) ===
 # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -100,27 +73,11 @@ mental_model: "LLMs are naturally sycophantic, lazy, and eager to summarize away
 purpose: "To prevent agents from silently filtering findings, skipping instructions, or hallucinating verification by enforcing a strict, step-by-step reporting and evidence protocol."
 # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
 # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
-boundary: "This skill enforces *how* to execute tasks transparently and completely. It does not dictate *what* quality means for a specific artifact (which is `quality-doctrine`), nor does it sequence the larger task phases (which is `task-execution`)."
+boundary: "This skill enforces *how* to execute tasks transparently and completely. It does not dictate broad artifact quality (which is `best-practice`), score a result (which is `evaluation`), compress complete output (which is `summarization`), or optimize the route through a task (which is `task-path-optimization`)."
 # analogy: one-sentence metaphor preserving the core mechanism.
 analogy: "Methodical execution is like aviation's 'read-do' checklist: you don't just glance at the panel and say 'looks good', you read the specific gauge, state the value, and check the box, every single time."
 # misconception: the wrong mental model people bring; corrected explicitly.
 misconception: "A common misconception is that 'prioritizing' means 'filtering'. In this methodology, prioritization is strictly a reordering operation; zero items are removed, and the full count is always presented."
-# === Health Block (written by the audit loop, not hand-authored) ===
-# See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
-#
-# structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
-# PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-structural_verdict: PASS
-# truth_verdict: truth sources vs declared hashes (gates 3-6).
-# PASS / DRIFT / BROKEN / UNVERIFIED.
-truth_verdict: PASS
-# comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
-# PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-comprehension_verdict: UNVERIFIED
-# application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
-# that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
-# APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-application_verdict: UNVERIFIED
 ---
 
 ## Concept Card
@@ -131,7 +88,7 @@ application_verdict: UNVERIFIED
 
 **Why it exists:** Unstructured multi-agent networks amplify errors. When agents act on assumed state, filter negative findings to appear "helpful", or summarize before enumerating, they create false state that poisons downstream tasks. 
 
-**What it is NOT:** It is not a guide for what makes code "good" (that is `quality-doctrine`). It is not the task workflow engine (that is `task-execution`). It is specifically the discipline of *how* an agent observes, reports, and verifies.
+**What it is NOT:** It is not a broad artifact-quality checklist (that is `best-practice`). It is not task route optimization (that is `task-path-optimization`). It is specifically the discipline of *how* an agent observes, reports, and verifies.
 
 **Adjacent concepts:** Intellectual honesty, System 1 vs System 2 thinking, Cleanroom formal specification, OODA loop.
 
@@ -152,10 +109,10 @@ application_verdict: UNVERIFIED
 | File | Purpose |
 |---|---|
 | `AGENTS.md` | Root source for complete-reporting, verification, and completeness-claim rules |
-| `skills/methodical/references/README.md` | Reference index for the research and source material behind this skill |
+| `skills/meta-methods/methodical/references/README.md` | Reference index for the research and source material behind this skill |
 | `.claude/commands/system-health.md` | Concrete command applying methodical completeness and self-critique requirements |
 | `scripts/memory/session-log.js` | Session finding extraction flow that depends on exhaustive reporting discipline |
-| `skills/no-cutting-corners/SKILL.md` | Adjacent enforcement skill that reuses the methodical anti-pattern model |
+| `skills/quality-assurance/best-practice/SKILL.md` | Adjacent broad quality-enforcement skill that methodical verifies against |
 
 ## Coverage
 
@@ -171,7 +128,7 @@ LLMs operate in permanent System 1 mode (Kahneman) — fast, automatic, pattern-
 
 ## Trio Boundaries
 
-methodical enforces *how* work is executed (completeness, evidence, honesty). It does NOT define *what quality means* per artifact type — use `quality-doctrine` for that. It does NOT provide the generate-critique-revise loop mechanics — use `self-review-pattern` for that. It does NOT sequence task phases — use `task-execution` for that.
+methodical enforces *how* work is executed (completeness, evidence, honesty). It does NOT define broad artifact quality — use `best-practice` for that. It does NOT score or interpret outcomes — use `evaluation` for that. It does NOT choose the task route — use `task-path-optimization` for that.
 
 ---
 
@@ -382,9 +339,9 @@ After applying this skill, verify:
 
 | Instead of this skill | Use | Why |
 |---|---|---|
-| Defining what "better" means per artifact type | `quality-doctrine` | quality-doctrine owns quality definitions; methodical owns execution discipline |
-| Implementing generate-critique-revise loops | `self-review-pattern` | self-review-pattern owns the loop mechanics; methodical provides the forcing function |
-| Sequencing task phases (claim, implement, verify, wrap) | `task-execution` | task-execution owns the workflow; methodical governs behavior within each phase |
+| Defining broad artifact quality expectations | `best-practice` | best-practice owns cross-domain quality standards; methodical owns execution discipline |
+| Scoring or interpreting whether an output is good enough | `evaluation` | evaluation owns scoring and verdict interpretation; methodical owns evidence completeness |
+| Choosing or shortening the route through a task | `task-path-optimization` | task-path-optimization owns the route; methodical governs behavior within each phase |
 | Compressing output for token efficiency | `summarization` | summarization has explicit level hierarchy; methodical requires completeness BEFORE summarization |
 | Managing what enters/exits context | `context-management` | context-management shapes the working set; methodical ensures nothing is silently dropped from output |
 
