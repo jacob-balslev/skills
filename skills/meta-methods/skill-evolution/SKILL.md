@@ -1,228 +1,220 @@
 ---
-schema_version: 7
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: skill-evolution
-description: "This skill is the corpus-level walker over the Skill Audit Loop's four operations (audit, improve, evaluate, evolve). It picks the next skill by priority (application_verdict first, then skill-graph centrality and Health Block staleness), runs one full read → fix → test → next cycle, writes back to the skill's flat Health fields, then advances. Use when running autonomous improvement sessions, identifying coverage gaps via the keyword matrix, or scheduling per-skill audit work. Do NOT use for initial skill scaffolding (use skill-scaffold). Do NOT use for single-skill audits (use the `audit` operation directly via Skill Graph)."
-version: 2.0.1
-triggers:
-  - skill-evolution
-  - skill-improve-loop
-owner: claude
-freshness: "2026-04-01"
-eval_artifacts: present
-eval_state: unverified
-routing_eval: absent
-drift_check:
-  last_verified: "2026-05-20"
-  truth_source_hashes:
-    "scripts/skill/skill-evolution-loop.js": "d814b6db98d80e262713454145063f2d72573f1d64da91ccbafb7e8c9dc901cd"
-    "scripts/skill/skill-evolution-analyzer.js": "cc2c45434484781199837e445717d31986491a4f5d51fadc8bf29567e10d96b4"
-    "scripts/skill/skill-keyword-matrix.js": "e8bb7c75580f3a8ff62ecda5326606a834b12c6ea49e25bf25f16b5fab0543b6"
-grounding:
-  domain_object: Corpus walker that runs audit → improve → evaluate per skill, prioritized by Health Block staleness + centrality
-  grounding_mode: repo_internal
-  truth_sources:
-    - scripts/skill/skill-evolution-loop.js
-    - scripts/skill/skill-evolution-analyzer.js
-    - scripts/skill/skill-keyword-matrix.js
-  failure_modes:
-    - walker_phase_reorder
-    - priority_signal_source_change
-    - understanding_field_contract_drift
-    - kept_counter_accounting_regression
-  evidence_priority: walker_source > analyzer_source > skill_body
-type: workflow
-layer: meta
-family: skill-system
-scope: codebase
-project_tags: [skill-graph, agent-orchestration]
-injection_priority: 8
-keywords:
-  - skill evolution
-  - auto-improve loop
-  - keyword matrix
-  - skill census
-  - skill coverage
-  - telemetry analysis
-  - skill discovery
-primaryCategory: Agent System
-layerPrimary: meta
-routingRole: primary
-lint_verdict: PASS
-drift_status: OK
-last_audited: 2026-05-22
-comprehension_state: present
-mental_model: "A corpus of skills, each carrying a Health Block (last_audited, verdicts, eval_score, drift_status). A walker reads those fields to compute priority (staleness + graph centrality), then per skill runs audit (read-only, writes verdicts) → improve (one field, one commit, keep-or-revert) → evaluate (writes eval_score). The Health Block is both the loop's input and its output, so the walk is self-driving across runs."
-purpose: "Guarantees the whole skill corpus is systematically re-grounded as the code it describes drifts, instead of only the skills someone happens to touch. Prioritizing by staleness + centrality revisits the riskiest skills first; the keep-or-revert gate guarantees an improve attempt can never leave the corpus worse than it found it."
-boundary: "Not the single-skill audit (one operation the walker calls), not skill scaffolding (creating a skill from scratch), and not the eval grader itself. It is only the corpus-level scheduler/walker around those. Use the `audit` operation directly for one skill; use skill-scaffold to create one."
-analogy: "Skill evolution is a building superintendent doing rounds — inspect each unit on a schedule that puts the longest-neglected and most-used first, fix one thing per visit, confirm the fix held, log it, move on."
-misconception: "That it crawls telemetry or logs to decide what to improve. It does not — the priority signal is the flat Health Block in each skill's frontmatter (last_audited ascending, weighted by centrality); telemetry and the coverage matrix feed a separate discovery command, not the walker."
-relations:
-  related:
-    - agent-orchestration
-    - dispatch-loop
-    - skill-infrastructure
-    - skill-scaffold
-  boundary:
-    - evaluation
-    - agent-observability
-    - skill-scaffold
-structural_verdict: PASS
-truth_verdict: PASS
-comprehension_verdict: UNVERIFIED
-application_verdict: UNVERIFIED
+# description: routing contract for when this skill should activate and when it should not.
+description: "Use when running or auditing Skill Graph's corpus-level `evolve` operation: the continuous skill-improvement loop that analyzes a skill library, triages a priority queue, executes bounded improve/scaffold/eval-generation actions, verifies the result, records checkpoints, and repeats. Covers `skill-graph evolve`, `lib/audit/skill-evolution-loop.js`, the Karpathy keep-or-revert spine, the priority signals based on Audit Status, standalone workspace flags, and the boundary between corpus walking and single-skill audit/improve/evaluate operations. Do NOT use for initial skill scaffolding alone (use skill-scaffold), single-skill schema/eval checks (use graph-audit or the audit operation), or generic evaluation rubric design (use evaluation / eval-driven-development)."
+# license: SPDX-compatible license identifier for the skill content.
+license: MIT
+# compatibility: runtime and portability notes for this project-grounded skill.
+compatibility:
+  notes: "Project-grounded to Skill Graph's Node.js CLI and bundled audit implementation. Use in repositories that run or adapt @skill-graph/cli."
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
+allowed-tools: Read Grep Bash
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
+metadata:
+  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
+  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
+  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
+  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  subject: meta-methods
+  # deployment_target: where this skill applies. One of two closed values:
+  # portable (any project, repo-agnostic) /
+  # project (one or more specific projects; requires populated `grounding` and `project[]`).
+  deployment_target: project
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Running and auditing Skill Graph's corpus-level `evolve` operation: analyze a skill library, triage a priority queue, execute bounded improve/scaffold/eval-generation actions, verify the result, checkpoint progress, and repeat. Project-targeted to the Skill Graph CLI and its bundled audit implementation. Excludes initial skill scaffolding alone (skill-scaffold), single-skill schema/eval checks (graph-audit or audit), and generic evaluation rubric design (evaluation / eval-driven-development)."
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. Remove when the flat `subject` is sufficient.
+  taxonomy_domain: skill-system/evolution
+  # project: belonging-entity references for project-targeted skills.
+  # Array of {handle, role}; required in practice when deployment_target is project.
+  project: '[{"handle":"skill-graph","role":"primary"}]'
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
+  keywords: '["skill evolution","skill-graph evolve","continuous skill improvement","auto-improve loop","skill audit queue","Karpathy keep-or-revert","audit-state priority","skill corpus walker","evolve standalone","skill improvement checkpoint"]'
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
+  triggers: '["skill-evolution","skill-graph evolve","audit:evolve"]'
+  # paths: glob array of code surfaces this skill governs. Supports gitignore-style
+  # negation. Each glob should map to one canonical skill.
+  paths: '["bin/skill-graph.js","lib/audit/skill-evolution-loop.js","lib/audit/run-skill-improvement-loop.js","lib/audit/evaluate-skill.js","skill-audit-loop/SKILL_AUDIT_LOOP.md","README.md"]'
+  # examples: realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
+  examples: '["run the evolve loop on the top five stale skills without breaking standalone install assumptions","audit whether skill-graph evolve still reads Audit Status from audit-state.json","explain how the evolve queue chooses which skill to improve next","diagnose why the evolve loop skipped a meta skill outside the pilot lane","check whether the auto-improve loop can resume from a checkpoint after a failure"]'
+  # anti_examples: near-miss prompts that should route elsewhere.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
+  anti_examples: '["audit this one skill for schema conformance","create a brand-new skill from a keyword matrix","design the scoring rubric for an application eval","why did the router choose graph-audit instead of skill-router?"]'
+  # relations: typed graph edges to sibling skills. Current fields:
+  # related / boundary / verify_with / depends_on / broader / narrower / disjoint_with.
+  # boundary excludes listed skills from co-routing when THIS skill wins.
+  relations: '{"related":["autonomous-loop-patterns","skill-infrastructure","graph-audit","evaluation"],"boundary":[{"skill":"graph-audit","reason":"graph-audit owns static consistency checks for one skill or manifest surface; skill-evolution owns walking the corpus and deciding what to improve next."},{"skill":"skill-scaffold","reason":"skill-scaffold owns creating the initial skill shape; skill-evolution may trigger scaffold actions inside a corpus queue, but it does not own first-principles skill authoring."},{"skill":"evaluation","reason":"evaluation owns scoring methodology and verdict interpretation; skill-evolution owns when and how the corpus walker invokes evaluation inside a loop."},{"skill":"eval-driven-development","reason":"eval-driven-development owns changing a system under an eval suite; skill-evolution owns the Skill Graph-specific corpus walker around skill artifacts."}],"verify_with":["skill-infrastructure","evaluation","graph-audit"]}'
+  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # the skill anchors to and the failure modes those sources prevent.
+  grounding: '{"subject_matter":"Skill Graph evolve operation and corpus-level skill-improvement loop","grounding_mode":"repo_specific","truth_sources":["bin/skill-graph.js","lib/audit/skill-evolution-loop.js","lib/audit/run-skill-improvement-loop.js","lib/audit/evaluate-skill.js","skill-audit-loop/SKILL_AUDIT_LOOP.md","README.md"],"failure_modes":["evolve_help_drift","priority_queue_drift","audit_state_write_surface_drift","standalone_path_escape_regression","auto_improve_action_contract_drift","single_skill_audit_confused_with_corpus_walk"],"evidence_priority":"repo_code_first"}'
+  # === Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
+  mental_model: "Skill evolution is the corpus walker around individual skill maintenance. The primitives are: a skill corpus; each skill's `SKILL.md` teaching/routing contract; each skill's `audit-state.json` Audit Status sidecar; an analyzer that turns Audit Status, scores, and registry facts into a priority queue; a triage step that selects bounded work; an executor that runs improve/scaffold/eval-generation actions; a verification step that keeps or reverts; and checkpoint logs that let the run resume. It is not one more single-skill audit command; it is the loop that decides which skill or asset to touch next and makes one bounded attempt at a time."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
+  purpose: "Guarantees that a skill corpus is maintained systematically instead of only when someone notices a stale file. The loop makes skill improvement operational: analyze the current corpus, pick the riskiest or most valuable item, make one bounded change, verify it, checkpoint the result, and repeat. It reduces silent decay while protecting the corpus with keep-or-revert behavior and failure budgets."
+  # boundary: what this concept is not; distinguish by mechanism, not just label.
+  boundary: "Not graph-audit: graph-audit inspects one skill or library artifact for schema, relation, manifest, and sidecar consistency. Not skill-scaffold: skill-scaffold creates a new skill's initial shape. Not evaluation: evaluation defines and interprets scoring. Not eval-driven-development: eval-driven-development changes a system under a test suite. Skill-evolution owns the Skill Graph corpus walker that composes those operations across many skills or assets by priority."
+  # analogy: one-sentence metaphor preserving the core mechanism.
+  analogy: "Skill evolution is a maintenance dispatcher for a building: it reads each unit's inspection record, sends a technician to the highest-priority room, verifies the repair, logs the result, then chooses the next room."
+  # misconception: the wrong mental model people bring; corrected explicitly.
+  misconception: "The wrong mental model is that `evolve` is just `audit -> improve -> evaluate` hard-coded for every skill. The current Skill Graph implementation is a continuous auto-improve loop: it analyzes, triages, executes allowed action types, verifies, checkpoints, and can re-analyze until convergence or a failure budget is reached. Another wrong model is that it reads stale Health Block fields from `SKILL.md`; current Audit Status state lives in `audit-state.json` and is joined with `SKILL.md` by the tooling."
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
+  skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
+  skill_graph_protocol: Skill Metadata Protocol v8
+  skill_graph_project: Skill Graph
+  skill_graph_canonical_skill: skills/meta-methods/skill-evolution/SKILL.md
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
 ---
 
-## Concept Card
-
-**What it is:** Skill evolution is the corpus-level discipline of continuously improving a whole library of agent skills by walking them one at a time — picking the next by priority, running a fixed inspect → change → verify cycle on each, recording the outcome, and advancing. It is the for-loop around a single-skill audit, not the audit itself.
-
-**Mental model:** A corpus of skills, each carrying a Health Block (last_audited, verdicts, eval_score, drift_status). A walker reads those fields to compute priority (staleness + graph centrality), then per skill runs three operations in order — audit (read-only, writes verdicts), improve (one field, one commit, keep-or-revert), evaluate (writes eval_score). The Health Block is both the input (priority signal) and the output (each operation stamps its fields), so the loop is self-driving across runs.
-
-**Why it exists:** Skills drift as the code they describe changes; without a systematic walker, only the skills someone happens to touch get re-grounded and the rest rot silently. A prioritized corpus walker guarantees the stalest, most-central skills are revisited first, and the keep-or-revert gate guarantees an improvement attempt can never leave the corpus worse than it found it.
-
-**What it is NOT:** Not the single-skill audit (that is one operation the walker calls), not skill scaffolding (creating a new skill from scratch), and not the eval grader itself. It is only the corpus-level scheduler-and-walker around those.
-
-**Adjacent concepts:** skill audit loop, Health Block, keep-or-revert, eval regression gate, skill-graph centrality, coverage matrix, continuous training.
-
-**One-line analogy:** Skill evolution is like a building superintendent doing rounds — inspect each unit on a schedule that puts the longest-neglected and most-used first, fix one thing per visit, confirm the fix held, log it, move to the next door.
-
-**Common misconception:** That it crawls telemetry or logs to decide what to improve. It does not — the priority signal is the flat Health Block on each skill's frontmatter (last_audited ascending, weighted by centrality); telemetry and the coverage matrix are side-channels that feed a separate discovery command, not the walker.
-
-# Skill Evolution (Continuous Improvement)
-
-## Domain Context
-
-**What is this skill?** This skill is the corpus-level walker over the Skill Audit Loop's four operations. Where `audit`, `improve`, and `evaluate` act on one skill at a time, `evolve` runs them in order across many skills, prioritised by skill-graph centrality and Health Block staleness. Use when running autonomous improvement sessions, identifying coverage gaps via the keyword matrix, or scheduling per-skill audit work across the corpus.
+# Skill Evolution
 
 ## Coverage
 
-This skill owns the corpus-level loop: how the next skill is picked, how the four operations chain together per skill, how telemetry-driven prioritisation works, and how the keyword matrix surfaces uncovered domains. The four operations' contract lives in `skill-graph/SKILL_AUDIT_LOOP.md`; `skill-audit-loop/` is only a frozen docs mirror. Their local implementations are the scripts in the Key Files table. This skill is only the walker.
+Skill evolution is the project-grounded discipline for running Skill Graph's corpus-level `evolve` operation. It covers:
+
+- The public command: `skill-graph evolve`
+- The bundled implementation: `skill-graph/lib/audit/skill-evolution-loop.js`
+- The action loop: analyze -> triage -> execute -> verify -> checkpoint
+- The priority model: Audit Status, application verdicts, scores, registry facts, staleness, and action types
+- The keep-or-revert spine for improvement actions
+- Standalone workspace flags and the removal of cross-repo path assumptions
+- The boundary between walking a corpus and auditing, improving, evaluating, or scaffolding one skill
+
+This skill is project-grounded to Skill Graph. It does not teach generic habit formation, generic evaluation theory, or first-time skill authoring.
 
 ## Philosophy
 
-The audit loop runs on one skill at a time. The evolution loop runs the audit loop in a for-loop. They share vocabulary instead of inventing parallel ones. The Health Block on every skill (`last_audited`, `last_changed`, `structural_verdict`, `truth_verdict`, `comprehension_verdict`, `application_verdict`, `eval_score`, `lint_verdict`, `drift_status`) is the priority signal — `application_verdict` and `last_audited` pick the next skill. No telemetry crawl, no log aggregation.
+Single-skill audit keeps one artifact honest. Skill evolution keeps the corpus from rotting silently. The loop exists because a large skill library has more potential drift than a human will remember to revisit.
+
+The current implementation is not a simple hard-coded `audit -> improve -> evaluate` script. It is a continuous queue driver: analyze the current corpus, triage bounded work, execute one allowed action, verify the result, record findings/checkpoints, and optionally re-analyze. That shape matters because the queue can include different action types, and because a failed change must leave the corpus no worse than before.
+
+Audit Status state lives in `audit-state.json`, not in `SKILL.md` frontmatter. `SKILL.md` teaches the skill; the sidecar records what the audit loop has proven about it. The evolve loop must preserve that split.
 
 ## Key Files
 
-| File | Purpose |
+| Workspace-relative file | Purpose |
 |---|---|
-| `scripts/skill/skill-evolution-loop.js` | The corpus walker — thin for-loop over the four operations. |
-| `scripts/skill/skill-evolution-analyzer.js` | Reads Health Block fields across all skills, returns priority order. |
-| `scripts/skill/skill-census.js` | Deterministic inventory and metadata validator. Reads the v7 four-verdict Health Block. |
-| `scripts/skill/skill-keyword-matrix.js` | Zero-AI coverage mapping. Finds uncovered surfaces. |
-| `scripts/skill/skill-lint.js` + `skill-graph/scripts/skill-graph-drift.js` | The `audit` operation's deterministic core — lint writes `lint_verdict`, drift writes `drift_status`. Both invoked per skill by the walker via `runNode`. |
-| `scripts/skill/run-skill-improvement-loop.js` | The `improve` operation. One field (`--field` HARD scope), time-boxed, keep-or-revert via `--commit` atomic merge. Invoked by the walker. |
-| `scripts/skill/evaluate-skill.js` | The `evaluate` operation. Writes `eval_score`, `eval_failed_ids`. Invoked by the walker. |
-| `skill-graph/SKILL_AUDIT_LOOP.md` | The four-operation contract — the canonical current spec for `audit`/`improve`/`evaluate`/`evolve`; the sibling `skill-audit-loop/` repo is a frozen docs mirror. |
-| `Analysis/audits/SKILL_OPTIMIZATION_LOG.md` | Persistent narrative log of improvements (evidence; not state). |
+| `skill-graph/bin/skill-graph.js` | Public CLI surface for `skill-graph evolve`, help text, bundled-script mapping, and standalone requirements. |
+| `skill-graph/lib/audit/skill-evolution-loop.js` | Current corpus walker: analyze, triage, execute, verify, checkpoint, continuous mode, pilot lanes, failure budget. |
+| `skill-graph/lib/audit/run-skill-improvement-loop.js` | Improvement executor used for bounded skill edits and keep-or-revert behavior. |
+| `skill-graph/lib/audit/evaluate-skill.js` | Evaluation runner that writes eval and behavior verdict state to `audit-state.json`. |
+| `skill-graph/skill-audit-loop/SKILL_AUDIT_LOOP.md` | Binding operation doctrine: audit, improve, evaluate, evolve, write surfaces, and Behavior Gate semantics. |
+| `skill-graph/README.md` | User-facing standalone install, smoke-test, `evolve` flags, and exit-code guidance. |
 
-## 1. The Walker
+## 1. The Corpus Walker
 
-The walker is the only thing this skill owns. The four operations live in the Skill Audit Loop.
+The current `evolve` operation is a corpus queue driver:
 
-```
-for skill in priority_order(application_verdict first, then centrality + staleness):
-  audit(skill)                                  # reads + writes audit fingerprint
-  if structural_verdict in {FAIL, PASS_WITH_FIXES}
-     or truth_verdict in {DRIFT, BROKEN}
-     or application_verdict in {UNVERIFIED, REDUNDANT, HARMFUL, MIXED}:
-    improve(skill, field=understanding_field)   # one v6+ Understanding field, keep-or-revert
-  evaluate(skill)                                # writes eval_score, eval_failed_ids
-  advance
+```text
+analyze current skill library
+triage top items by priority and allowed actions
+execute one bounded action per item
+verify the result
+checkpoint progress and findings
+repeat when continuous mode is enabled
 ```
 
-The walker picks `understanding_field` via `understandingField()` in
-`scripts/skill/skill-evolution-loop.js`: any empty/missing field wins outright
-(length 0), otherwise the shortest populated value among
-`description`, `mental_model`, `purpose`, `boundary`, `analogy`, `misconception`.
-Passing this — not the stalest Health date field — is what activates the
-improver's HARD CONSTRAINT block and makes the walker's revert path
-deterministic (one commit per kept change).
+The important operational guarantees are:
 
-Priority comes from `application_verdict` first, then `last_audited` ascending across the corpus weighted by skill-graph centrality. No telemetry crawl — the Health Block on each skill is the priority signal.
+- **Bounded work:** `--top`, `--max-cycles`, `--max-iterations`, `--min-priority`, `--actions`, and `--pilot` constrain the run.
+- **Failure containment:** `--failure-budget` stops repeated failures instead of letting the run thrash.
+- **Resumability:** checkpoints let interrupted runs continue.
+- **Standalone operation:** `--workspace-root`, `--skills-dir`, and `--output-dir` make the loop work outside the original Development monorepo.
+- **Meta-skill protection:** the implementation filters or gates meta skills unless an explicit pilot lane permits them.
 
-## 2. The Four Operations (owned by skill-audit-loop)
+## 2. Relationship to the Four Operations
 
-| Operation | Edits instructional content? | Writes which Health fields |
+| Operation | Unit of work | Writes |
 |---|---|---|
-| `audit` | No — writes Health Block fields only | `last_audited`, `structural_verdict`, `truth_verdict`, `comprehension_verdict` (`--graded`), `application_verdict` (`--graded`), `lint_verdict`, `drift_status` |
-| `improve` | Yes (one field, one commit) | the chosen field + `last_changed` |
-| `evaluate` | No — writes eval/Health Block fields only | `eval_score`, `eval_failed_ids`, `freshness`, `comprehension_verdict` / `application_verdict` when graders run |
+| `audit` | One skill's Integrity Gate and optional graded checks | `audit-state.json` plus evidence artifacts |
+| `improve` | One bounded edit to one skill or asset | `SKILL.md` or eval artifact, then keep-or-revert |
+| `evaluate` | One skill's eval suite | `audit-state.json` verdicts, scores, and receipts |
+| `evolve` | A prioritized corpus queue | The same writes as the operations/actions it invokes |
 
-Karpathy keep-or-revert is enforced at two layers:
+Use `audit`, `improve`, or `evaluate` when the target skill is already known. Use `evolve` when the work is to walk the corpus by priority, keep progress resumable, and decide which skill or asset should be improved next.
 
-1. **Inside `improve`** (the improvement loop's own gate): the model edits inside a git worktree; the gate runs the eval bundle against the candidate and either fast-forwards the change into main (`--commit` path) or restores from the snapshot.
-2. **Inside the walker** (this loop): after `improve` returns, the walker captures the new HEAD and runs `evaluate` against the official eval bundle. If `eval_score` regressed against the pre-improve baseline, the walker `git revert HEAD` undoes the single atomic commit the improver placed on main.
+## 3. Priority Signals
 
-The contract — one field, one commit — is enforced by the improvement loop's `--field` hard scope (refuses multi-field edits) and `--commit` atomic-merge flag. The walker passes both. Without them, the revert path would be unsafe because `git revert HEAD` only reverts ONE commit.
+The queue is not a telemetry crawler. It reads structured skill state and registry facts. Important signals include:
 
-## 3. Discovery Side-Channel
+- `application_verdict`: unverified or negative behavior signals raise priority.
+- `structural_verdict` and `truth_verdict`: failing Integrity Gate slices raise priority.
+- `last_audited`: older audit state raises priority.
+- `eval_score`: missing or lower scores raise priority when available.
+- Registry/pilot metadata: some meta skills are frozen unless a specific pilot lane is active.
 
-Telemetry feedback, coverage matrix, content-monitor auto-discovery, and **run-level writeback** feed the priority queue but are not part of the walker itself:
-
-### Run Findings Writeback (Browser Harness pattern)
-
-`scripts/skill/skill-writeback.js` exports `appendRunFindings()`, which appends structured
-post-run findings (selectors that worked, drifted, auth quirks) back into the skill's own
-`SKILL.md` under a `## Run Findings (auto-generated)` section.  This is the Browser Harness
-self-writeback pattern — instead of re-deriving selectors and login flows on every run, each
-run enriches the skill file in place.  Entries are capped at 20 with FIFO rotation; overflows
-land in `skills/<name>/run-findings-archive.jsonl`.
-
-The two pilot skills for this pattern are `playwright-cli` and `customer-journey`.  Future
-skills can opt in by calling `appendRunFindings()` at the end of any automated run.
-
-- **Telemetry feedback**: skill injection frequency + stall/abort signals augment `last_audited` for priority ranking.
-- **Coverage matrix**: `skill-app-coverage-matrix.js --summary` finds repo surfaces (routes, components) with no owning skill. Feeds `skill-discovery`, which is a separate command from the walker.
-- **Auto-Discovery**: content-monitor surfaces external patterns (GitHub, Reddit) that suggest new skills to bridge gaps. Also feeds `skill-discovery`, not the walker.
+The exact queue formula belongs to `skill-graph/lib/audit/skill-evolution-loop.js`; this skill teaches the operating model and the safety boundaries, not a duplicated formula.
 
 ## 4. Commands
 
 ```bash
-# Walk the top N stalest skills
-node scripts/skill/skill-evolution-loop.js --top 10
+# Process a bounded queue
+skill-graph evolve --top 5 --max-cycles 3
 
-# Walk a single skill (one full audit → improve → evaluate cycle)
-node scripts/skill/skill-evolution-loop.js --skill <name>
+# Re-analyze and repeat until the cycle cap, convergence, or failure budget
+skill-graph evolve --continuous --max-cycles 20 --min-priority 5
 
-# Deterministic audit-only sweep (lint + drift → structural + truth verdicts).
-# No LLM calls, no commits. Repopulates the two deterministic verdicts across
-# the corpus for free — use after a schema migration or a lint-rule change.
-node scripts/skill/skill-evolution-loop.js --top 600 --audit-only
+# Run the full auto-improve spine
+skill-graph evolve --auto-improve --max-cycles 3 --failure-budget 5
 
-# Skip just the evaluate phase (audit + improve, no LLM grader on eval bundles)
-node scripts/skill/skill-evolution-loop.js --top 10 --no-evaluate
+# Analyze without executing improvements
+skill-graph evolve --analyze-only
 
-# Surface priority order without acting
-node scripts/skill/skill-evolution-analyzer.js --plan
+# Resume from a checkpoint
+skill-graph evolve --resume
 
-# Run only the analyzer, output JSON
-node scripts/skill/skill-evolution-analyzer.js --json
+# Standalone workspace
+skill-graph evolve --workspace-root /path/to/my-skills --skills-dir /path/to/my-skills/skills --output-dir /path/to/my-skills/audits
 ```
 
-## 5. Verification Protocol
+Exit codes:
 
-- **No regression**: `improve` must auto-revert when `eval_score` drops. The walker records the failed attempt and proceeds.
-- **Health Block stamps**: every operation writes its date field (`last_audited`, `last_changed`, `freshness`). The walker reads them on the next iteration to pick priority.
-- **Version bumps on accept**: when an `improve` is kept, `version` is bumped semver-style by the `improve` operation.
+| Code | Meaning |
+|---|---|
+| `0` | Loop completed successfully, or `--analyze-only` finished. |
+| `1` | Fatal error: missing dependency, unresolvable skill root, invalid workspace, or equivalent setup failure. |
+| `2` | Failure budget exceeded. |
+
+## Evals
+
+This skill includes a sibling comprehension eval file for audit-loop grading. Keep `eval_state: unverified` until the eval is run by an independent grader and produces a receipt.
+
+## Verification
+
+After applying this skill, verify:
+
+- [ ] `skill-graph evolve --help` names the same flags and exit codes this skill teaches.
+- [ ] The implementation path in `skill-graph/bin/skill-graph.js` points to `skill-graph/lib/audit/skill-evolution-loop.js`.
+- [ ] Audit/eval/provenance writes are described as `audit-state.json` writes, not `SKILL.md` frontmatter writes.
+- [ ] The skill distinguishes corpus walking from one-skill audit, improve, evaluate, and scaffold work.
+- [ ] Local truth-source drift is PASS when hashes are recorded, or UNVERIFIED when hashes are absent.
 
 ## Do NOT Use When
 
 | Instead of this skill | Use | Why |
 |---|---|---|
-| Auditing one specific skill | `audit` operation directly via `skill-audit-loop` | skill-evolution is the corpus walker; single-skill work bypasses it |
-| Creating a new skill from scratch | `skill-scaffold` | scaffolding precedes any audit cycle |
-| Investigating one skill's score | `skill-status` | reads the Health Block without running the walker |
+| Auditing one specific skill for schema, relations, sidecar, or manifest consistency | `graph-audit` or the `audit` operation | Skill-evolution owns the corpus queue, not one artifact's static consistency. |
+| Creating a new skill from scratch | `skill-scaffold` | Scaffolding owns the initial skill shape; evolve may invoke scaffold-like actions inside a queue. |
+| Designing or interpreting a scoring rubric | `evaluation` or `eval-driven-development` | Skill-evolution decides when to invoke evaluation, not how evaluation is designed. |
+| Choosing which skill should route for a user request | `skill-router` | Routing picks an owner skill for a request; evolve picks maintenance work for a corpus. |
 
-## Verification
+## Key Sources
 
-After applying this skill, verify:
-- [ ] The walker reads `last_audited` directly from frontmatter (no log-file scan)
-- [ ] Each operation writes its target Health Block fields on completion
-- [ ] `improve` failures auto-revert the commit and record the attempt
-- [ ] No regression on `eval_score` is accepted
-
----
-
-*Version 2.0.1 — 2026-05-22. Fixed 3 broken Key Files paths (`skill-audit-loop/src/*.js` → the real walker-invoked scripts: `run-skill-improvement-loop.js`, `evaluate-skill.js`, `skill-lint.js` + `skill-graph-drift.js`); noted that `skill-audit-loop/` is a frozen docs mirror (canonical = Skill Graph); authored the Concept Card + v6+ Understanding fields + a gradeable comprehension.json.*
-*Version 2.0.0 — prior corpus-walker rewrite.*
+- `skill-graph/bin/skill-graph.js` — public command contract.
+- `skill-graph/lib/audit/skill-evolution-loop.js` — current implementation.
+- `skill-graph/lib/audit/run-skill-improvement-loop.js` — keep-or-revert executor.
+- `skill-graph/lib/audit/evaluate-skill.js` — evaluation and sidecar write behavior.
+- `skill-graph/skill-audit-loop/SKILL_AUDIT_LOOP.md` — operation doctrine.
+- `skill-graph/README.md` — user-facing standalone usage.
