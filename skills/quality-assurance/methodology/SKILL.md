@@ -1,16 +1,20 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: methodology
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when planning multi-step implementations, designing quality gates, establishing verification protocols, or building agent checklists calibrated to known failure modes. Covers methodology/method/process distinctions, Cleanroom, PSP/TSP, hypothesis-driven development, DMAIC, checklist design, V&V frameworks, EDDOps, quality gates, and PDCA. Do NOT use for code-review verdicts (use `code-review`), behavior-preserving implementation work (use `refactor`), or test strategy (use `testing-strategy`)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime or format notes for consumers that export or execute this skill.
 compatibility:
   notes: "Markdown, Git, agent-skill runtimes"
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep Bash
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.1.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -22,30 +26,13 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Portable methodology design for rigorous agent work: planning multi-step implementations, designing quality gates, establishing verification protocols, and building checklists calibrated to known failure modes. Covers methodology/method/process distinctions, Cleanroom defect prevention, PSP/TSP measurement discipline, hypothesis-driven development, DMAIC/PDCA quality management, checklist design, V&V frameworks, EDDOps, and hard-stop quality gates. Excludes concrete PR review (code-review), behavior-preserving implementation changes (refactor), test-level selection (testing-strategy), eval-case/rubric authoring (agent-eval-design), and high-risk action blocking (guardrails)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: quality/method
-  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
-  # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
-  # drift_check: truth-source verification record. Object with required `last_verified`
-  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
-  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-18\"}"
-
-  # === Evaluation Status: three orthogonal axes ===
-  # eval_artifacts: disk-truth — does an eval file exist on disk?
-  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
-  # eval_state: runtime-truth — has the eval been run and passed?
-  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
-  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
-  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -63,53 +50,39 @@ metadata:
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"review this PR and decide whether to approve it\",\"refactor this file while preserving behavior\",\"decide unit vs integration vs e2e coverage for this feature\",\"write the eval cases and grader rubric for this router\",\"block this dangerous git command or secret-bearing tool call\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
   relations: "{\"boundary\":[{\"skill\":\"code-review\",\"reason\":\"code-review evaluates a concrete diff or PR; methodology designs the process and gates that make rigorous execution possible before a diff exists\"},{\"skill\":\"refactor\",\"reason\":\"refactor changes code structure while preserving behavior; methodology defines why and when a process should contain gates, traces, and feedback loops\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy decides what software behavior deserves tests and at which level; methodology defines the broader quality-management frame behind verification gates\"},{\"skill\":\"agent-eval-design\",\"reason\":\"agent-eval-design authors agent eval cases, rubrics, and graders; methodology provides the process principles behind evidence-driven agent quality loops\"},{\"skill\":\"guardrails\",\"reason\":\"guardrails blocks or escalates high-risk tool actions at execution time; methodology designs the preventive process and checklist discipline around work\"}],\"related\":[\"best-practice\",\"agent-eval-design\",\"guardrails\",\"testing-strategy\",\"code-review\"],\"verify_with\":[\"best-practice\",\"agent-eval-design\"]}"
   # grounding: required when `deployment_target: project`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
   grounding: "{\"subject_matter\":\"Reference methodology for rigorous agent work: methodology-method-process layering, defect prevention, PSP/TSP measurement, hypothesis-driven development, DMAIC/PDCA, checklist design, V&V, and evaluation-driven LLM agent operations\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://voljournals.utk.edu/utk_harlan/18/\",\"https://www.sei.cmu.edu/library/the-team-software-process-tsp/\",\"https://www.sei.cmu.edu/library/team-software-process-tsp-and-personal-software-process-psp-materials/\",\"https://asq.org/Quality-resources/Dmaic\",\"https://asq.org/quality-resources/pdca-cycle\",\"https://www.who.int/publications/i/item/9789241598590\",\"https://www.nasa.gov/ivv-overview/\",\"https://www.nasa.gov/reference/system-engineering-handbook-appendix/\",\"https://barryoreilly.com/explore/blog/how-to-implement-hypothesis-driven-development/\",\"https://arxiv.org/abs/2411.13768\"],\"failure_modes\":[\"process_steps_followed_without_underlying_methodology\",\"quality_gate_treated_as_advisory\",\"verification_claim_without_evidence_receipt\",\"checklist_not_calibrated_to_known_failure_modes\",\"exact_cost_or_success_claim_made_without_source_or_eval\",\"non_public_neighbor_skill_used_as_public_boundary\",\"eval_or_routing_state_inflated_without_run\"],\"evidence_priority\":\"equal\"}"
-  # portability: external-runtime export claims. Object with:
-  # readiness — declared (claim only) / scripted (export tooling exists) /
-  #             verified (proven with a receipt artifact).
-  # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
-  # lifecycle: maintenance policy for the drift sentinel.
-  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
-  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/quality-assurance/methodology/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
 ---
 
 # Methodology
