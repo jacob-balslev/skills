@@ -1,16 +1,14 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: prompt-injection-defense
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when reasoning about systems that pass untrusted content to a language model: the data-vs-instruction collapse that makes this attack class a structural property of LLMs rather than a fixable bug, the direct/indirect/exfiltration/action-trigger taxonomy, the role of every untrusted surface (RAG retrievals, tool results, attachments, web content, document parsing, user-provided text), why content filters and improved system prompts do not solve it, and the defense-in-depth measures that do (capability constraint, content origin tracking, separate planning and execution stages, human-in-the-loop gates, principle-of-least-authority for tools). Do NOT use for jailbreaking and policy circumvention (use model-safety), for general API security (use api-security), for runtime input validation patterns (use type-safety + api-design), or for the protocol cycle of tool calls (use tool-call-flow)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
-  # schema_version: protocol contract version this skill conforms to.
-  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
-  # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
-
-
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
@@ -20,33 +18,13 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Reasoning about prompt-injection defense for systems that pass untrusted content to language models: data-vs-instruction collapse, direct and indirect injection, exfiltration, action-trigger attacks, untrusted content surfaces, and defense-in-depth through capability constraint, origin tracking, separated planning/execution, human approval, and least authority. Portable across LLM-integrated products and agent architectures. Excludes model jailbreaking/policy bypass, general API security, non-LLM input validation, and ordinary tool-call protocol design."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: quality/security
-  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
-  # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-16"
-  # drift_check: truth-source verification record. Object with required `last_verified`
-  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
-  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-16\"}"
-
-  # === Evaluation Status: three orthogonal axes ===
-  # eval_artifacts: disk-truth — does an eval file exist on disk?
-  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
-  # eval_state: runtime-truth — has the eval been run and passed?
-  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
-  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
-  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
-  # comprehension_state: marker that this skill has populated v6+ Understanding fields
-  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -64,15 +42,19 @@ metadata:
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design the JSON shape of a tool's parameters (use tool-call-flow)\",\"harden an HTTP API against SQL injection or XSS (use api-security)\",\"audit a model's refusal behavior on disallowed content (use model-safety)\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
   relations: "{\"related\":[\"tool-call-flow\",\"http-semantics\",\"type-safety\",\"api-design\"],\"boundary\":[{\"skill\":\"tool-call-flow\",\"reason\":\"tool-call-flow owns the protocol cycle by which a model invokes a tool; this skill owns the security property the cycle must preserve when any message carries untrusted content.\"},{\"skill\":\"type-safety\",\"reason\":\"type-safety owns preventing type errors at compile time; this skill owns preventing command-execution errors at the data-vs-instruction boundary. Both are validate-at-the-boundary problems with different threat models.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the request/response surface contract; this skill owns the constraint that no field carrying user content may be treated as commands by a downstream model.\"},{\"skill\":\"http-semantics\",\"reason\":\"http-semantics owns transport meaning (cache, idempotency, content type); this skill owns the threat that arrives over correct HTTP and is still harmful because the model interprets it as a command.\"}],\"verify_with\":[\"api-design\",\"tool-call-flow\"]}"
+  # grounding: required when `deployment_target: project`; optional for portable skills with
+  # fast-moving external truth sources. Declares sources and failure modes that keep the skill honest.
+  grounding: '{"subject_matter":"Portable prompt-injection threat modeling and defense-in-depth for LLM-integrated systems and agents","grounding_mode":"universal","truth_sources":["https://genai.owasp.org/llmrisk/llm01-prompt-injection/","https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html","https://www.anthropic.com/research/prompt-injection-defenses","https://csrc.nist.gov/pubs/ai/100/2/e2025/final","https://arxiv.org/abs/2302.12173"],"failure_modes":["treating_prompt_injection_as_a_model_bug_fixed_by_prompt_wording","confusing_jailbreak_policy_bypass_with_agent_action_exfiltration_risk","trusting_rag_tool_results_attachments_or_subagent_output_as_instructions","allowing_untrusted_content_and_high_impact_tools_in_the_same_turn","relying_on_content_filters_without_capability_constraint_or_human_approval","rendering_model_output_with_unrestricted_external_image_or_link_targets"],"evidence_priority":"equal"}'
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -90,34 +72,15 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that prompt injection is a bug in the model that better training, better system prompts, or content filters will fix. It is not. It is a structural property of how transformer-based language models consume their context: every token contributes to next-token prediction, and the model has no reliable mechanism to distinguish "directives from the application developer" from "directives in a document." A content filter that blocks one canonical attack phrase does not stop the broader class — paraphrasing, encoding, indirection, multimodal carriers, and the underlying structural property all combine to make the attack a moving target. The defenses that work are architectural (limit what tools the model exposed to untrusted content can call, separate planning from execution, require human confirmation for irreversible actions), not behavioral.
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"This attack class describes systems where untrusted content placed within a language model's input causes the model to follow attacker-controlled directives instead of, or in addition to, the application's legitimate ones. It is a structural property of how transformer-based language models consume their input — every token in the context window contributes to the next-token prediction, and the model has no reliable mechanism to distinguish 'directives from the application developer' from 'directives in a document the application happens to have loaded.' Defense, therefore, is not elimination of the vulnerability but architectural containment of its blast radius.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/prompt-injection-defense/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
-  #
-  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
-  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
-  # truth_verdict: truth sources vs declared hashes (gates 3-6).
-  # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
-  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
-  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
-  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
-  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
-  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  skill_graph_canonical_skill: skills/quality-assurance/prompt-injection-defense/SKILL.md
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
 ---
 
 # Prompt-Injection Defense
