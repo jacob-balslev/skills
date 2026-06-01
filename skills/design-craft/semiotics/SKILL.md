@@ -1,18 +1,17 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: semiotics
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when designing or auditing icon systems, colors/badges/shapes, visual metaphors, interface signs, or naming-plus-visual surfaces that users misread. Covers semiotic reasoning across icon/index/symbol, signifier/signified, denotation/connotation/myth, color/shape/position/iconography, affordances, code/API signifiers, and semiotic-coherence audits. Do NOT use for actual UI wording (use `microcopy`), palette/typography craft (use `visual-design-foundations`), accessibility or contrast compliance (use `a11y`), formal class hierarchies, or word morphology rules."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: optional runtime and portability notes for this skill.
 compatibility:
   notes: "Stack-agnostic sign-system analysis. The Peirce / Saussure / Barthes models, color-as-sign rules, iconography principles, and affordance taxonomy apply to any UI; example surfaces use generic e-commerce framings — substitute the equivalents from your domain."
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
-  # schema_version: protocol contract version this skill conforms to.
-  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
-  # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.2.0"
-
-
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
@@ -29,29 +28,6 @@ metadata:
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: design/semantics
-  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
-  # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
-  # drift_check: truth-source verification record. Object with required `last_verified`
-  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
-  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-18\"}"
-
-  # === Evaluation Status: three orthogonal axes ===
-  # eval_artifacts: disk-truth — does an eval file exist on disk?
-  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
-  # eval_state: runtime-truth — has the eval been run and passed?
-  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
-  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
-  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
-  # comprehension_state: marker that this skill has populated v6+ Understanding fields
-  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -70,20 +46,12 @@ metadata:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
   relations: "{\"boundary\":[{\"skill\":\"semantics\",\"reason\":\"semantics owns meaning encoding for individual textual identifiers and signals (function names, design tokens, HTTP status codes, branded types, SemVer, conventional commits); semiotics owns sign-system analysis for visual + textual sign systems (icons, color as sign, affordances, signifier/signified mappings) — the same 'what does this mean?' prompt routes by whether the trigger is one identifier's encoding or a multi-channel sign system\"},{\"skill\":\"microcopy\",\"reason\":\"microcopy owns the actual UI wording (button labels, empty states, tooltips, dialogs); semiotics owns the sign-system reasoning that determines what the words and accompanying visual signs should communicate — the same 'fix this UI element' prompt routes by whether the trigger is the wording itself or the sign system the wording sits inside\"},{\"skill\":\"semantic-relations\",\"reason\":\"semantic-relations owns the typed connections between concepts (IS-A, PART-OF, thematic roles); semiotics owns the signifier-to-signified mapping in interface and naming surfaces — the same 'how does this relate to that?' prompt routes by whether the trigger is a conceptual relation type or a sign-system relationship\"},{\"skill\":\"visual-design-foundations\",\"reason\":\"visual-design-foundations owns visual craft decisions such as palette, type, spacing, and hierarchy; semiotics owns what those signs communicate\"}],\"related\":[\"linguistics\",\"a11y\",\"intent-recognition\",\"visual-design-foundations\"],\"verify_with\":[\"a11y\",\"code-review\"]}"
-  # portability: external-runtime export claims. Object with:
-  # readiness — declared (claim only) / scripted (export tooling exists) /
-  #             verified (proven with a receipt artifact).
-  # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
-  # lifecycle: maintenance policy for the drift sentinel.
-  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
-  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -103,9 +71,6 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that *visual design is taste* and that sign-system audits are aesthetic preferences. They are not — *every interface element is communicating something whether the designer intended or not*, and the question is whether the communication is intentional and coherent. Adjacent misconceptions: that *color alone can signal state* (it cannot — the never-color-alone rule is not preference but accessibility and clarity: ~8% of males have deuteranopia; the WCAG 1.4.1 success criterion codifies this; pair with icon, text, or shape); that *direction equals judgment* (it does not — Barthes' denotation/connotation distinction: an *increase* is direction; *good* is judgment; in financial UI, a 30% increase in COGS is denotationally an increase but connotationally bad; using green-up-arrow conflates them); that *one icon means one thing universally* (it does not — icon polysemy is the most common UI sign failure; the gear icon means "settings" in one product and "preferences" in another and "build" in yet another; either follow strong existing convention or pair with text); that *abstract marks gain meaning with exposure* (they sometimes do, but require pairing-with-text until learned; the floppy-disk save icon was symbol once, learned for decades, now obsolete metaphor — users under 25 don't recognize the referent); that *disabled states need only a color change* (they do not — disabled states need a *strong anti-affordance*: greying alone is too subtle, and combined with hover effects can read as "loading" rather than "unavailable"); and that *code naming and visual signs are separate concerns* (they are not — `processData()` is a signifier failure for the same reason the gear icon's polysemy is: the sign forces inference rather than transferring meaning).
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"Semiotics is the study of sign systems: how signifiers such as icons, colors, shapes, positions, words, names, and interaction cues point to signified concepts, states, actions, or judgments through resemblance, causal trace, convention, and cultural association.\",\"mental_model\":\"Treat an interface as a layered sign system. Peirce helps classify icon, index, and symbol; Saussure separates signifier from signified; Barthes separates denotation, connotation, and myth; Norman's signifiers connect perceivable cues to expected action. A good surface aligns those layers so the user reads the intended meaning without extra inference.\",\"purpose\":\"It makes implicit communication explicit before users misread the product. The goal is to prevent sign drift, color-only state signaling, icon polysemy, misleading affordances, and code/API names that force readers to inspect implementation before they understand intent.\",\"boundary\":\"It owns sign-to-meaning analysis across visual and textual systems, not the final wording, visual craft, accessibility compliance, formal ontology, database modeling, or morphology rules.\",\"taxonomy\":\"Core lenses include Peircean icon/index/symbol, Saussurean signifier/signified, Barthesian denotation/connotation/myth, affordance/signifier/anti-affordance, color-as-sign, shape/position channels, icon-system coherence, and code/API signifiers.\",\"analogy\":\"Semiotics is like stage direction for an interface: the words matter, but gesture, placement, lighting, costume, and timing tell the audience what the scene means before anyone explains it.\",\"misconception\":\"The common mistake is treating sign-system failures as taste or polish. They are communication failures: if green signals good in one place and bad in another, or a non-interactive label looks clickable, the system is teaching users the wrong language.\"}"
   # grounding: required when `deployment_target: project`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
@@ -114,27 +79,11 @@ metadata:
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/design-craft/semiotics/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
-  #
-  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
-  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
-  # truth_verdict: truth sources vs declared hashes (gates 3-6).
-  # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
-  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
-  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
-  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
-  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
-  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
 ---
 
 # Semiotics
@@ -316,7 +265,7 @@ Use this checklist when reviewing a surface:
 
 ## Evals
 
-This public skill does not bundle a runnable eval artifact. The Skill Graph tooling repo has an early semiotics eval draft at [`examples/evals/semiotics.json`](https://github.com/jacob-balslev/skill-graph/blob/main/examples/evals/semiotics.json), but keep `eval_state: unverified` until a current eval with at least seven realistic scenarios, negative expectations, and resolved truth sources is added and run. The checklist below is the authoring gate for sign-system decisions.
+This skill includes a sibling comprehension eval file for audit-loop grading. Keep `eval_state: unverified` until the eval is run by an independent grader and produces a receipt. The checklist below is the authoring gate for sign-system decisions.
 
 ## Verification
 
