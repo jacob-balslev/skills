@@ -1,16 +1,20 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: agent-eval-design
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when designing evaluations for AI agents, skills, routers, prompts, tool-use policies, or multi-step workflows: task sets, rubrics, graders, hard negatives, regression cases, traces, and acceptance thresholds. Do NOT use for application test planning (use `testing-strategy`), skill-library health tooling (use `skill-infrastructure`), or live debugging of a failed run (use `debugging`)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime or format notes for consumers that export or execute this skill.
 compatibility:
   notes: "Portable eval-design discipline for agent workflows, skill routers, prompt systems, and tool-use policies."
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -22,30 +26,27 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing behavioral evaluations for AI agents, skills, routers, prompts, tool-use policies, and multi-step workflows: task sets, rubrics, graders, hard negatives, regression cases, traces, and acceptance thresholds. Portable across agentic systems and skill libraries. Excludes application-code test planning, skill-library health tooling, live failure debugging, and code-diff review."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: ai-engineering/evaluation
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-11"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-11\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -60,29 +61,28 @@ metadata:
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"plan unit, integration, and e2e tests for this product feature\",\"run the skill graph lint and overlap tooling\",\"debug why yesterday's agent run failed\",\"write production code to fix this failing test\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
   relations: "{\"boundary\":[{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy plans software tests; agent-eval-design designs behavioral evals for AI agents and skills\"},{\"skill\":\"skill-infrastructure\",\"reason\":\"skill-infrastructure owns library health tooling; agent-eval-design owns eval content and grading design\"},{\"skill\":\"debugging\",\"reason\":\"debugging investigates a live failure; agent-eval-design turns patterns into future evals\"},{\"skill\":\"code-review\",\"reason\":\"code-review evaluates diffs; agent-eval-design evaluates agent behavior\"}],\"related\":[\"skill-router\",\"context-engineering\",\"testing-strategy\",\"skill-infrastructure\"],\"verify_with\":[\"testing-strategy\",\"skill-infrastructure\"]}"
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/agent-eval-design/SKILL.md
   # === Health Block (written by the audit loop, not hand-authored) ===
@@ -90,19 +90,13 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
 ---
 
 # Agent Eval Design
@@ -127,6 +121,23 @@ The highest-value cases are hard negatives and prior failures. A routing eval wi
 6. Set pass thresholds and severity for failures.
 7. Add regression cases whenever a real agent failure is fixed.
 
+## Eval Case Matrix
+
+| Behavior surface | Positive cases | Hard negatives | Grader shape |
+|---|---|---|---|
+| Skill routing | Real prompts that should load the target skill | Near-miss prompts owned by boundary skills or no skill | Exact expected skill plus explanation check |
+| Grounded project work | Tasks with enough source files to answer correctly | Stale docs, missing files, or tempting unsupported claims | Rubric plus citation/trace inspection |
+| Tool-use policy | Cases where tool use is necessary and allowed | Cases where a tool would leak data, mutate state, or skip approval | Trace inspection against policy constraints |
+| Multi-step workflow | End-to-end tasks with intermediate checkpoints | Partial completion, skipped verification, or wrong order | Artifact check plus step-completion rubric |
+| Prompt/system behavior | Representative prompts from actual usage | Jailbreaks, prompt injection, ambiguity, or scope inversion | Rubric with refusal/boundary criteria |
+
+## Threshold Design
+
+- Set the pass bar from user and system risk, not from a desired green percentage.
+- Separate blocking failures from score-lowering failures; one critical privacy or mutation error should fail even if most rubric items pass.
+- Track regressions from prior failures as named cases so fixes stay fixed.
+- Keep hard negatives in the suite even when they feel adversarial; they are where overconfident agents reveal the real boundary.
+
 ## Verification
 
 - [ ] Eval cases include positives, hard negatives, and prior failures
@@ -145,4 +156,3 @@ The highest-value cases are hard negatives and prior failures. A routing eval wi
 | `skill-infrastructure` | You are building or running skill-library health tooling. |
 | `debugging` | You need to root-cause a specific failed run. |
 | `code-review` | You need to review a code diff. |
-
