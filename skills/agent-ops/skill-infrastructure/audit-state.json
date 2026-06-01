@@ -1,0 +1,40 @@
+{
+  "schema_version": 8,
+  "version": "1.1.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-01",
+  "drift_check": {
+    "last_verified": "2026-05-21",
+    "truth_source_hashes": {
+      "package.json": "5e6f9585d5363327a58ecfb39822ebed6fe508c3a2db2d98ebf02c6da1a735ae",
+      "bin/skill-graph.js": "d1e096d4de72032dc9c6de42faeef79b6e0cf92112cf9a7b6c2745683f2705ca",
+      "scripts/skill-lint.js": "e24c1f950520eb350432f2213150552d7f0b23f251d18810d06ea244ceeafd4c",
+      "scripts/lib/roots.js": "88d53b3dad82a2510ea74a9d18310fb24c5a8c7754fec893272a1075a1d82508",
+      "scripts/check-protocol-consistency.js": "22f1f747b6b578e83ae371ac3f9af4b6906d94529f383d1785ed3303b4c5a008",
+      "scripts/generate-manifest.js": "3db618ca6ee118d7ee5405ecd5806c8502a9e0c708688d559dc7a2f219c9294e",
+      "scripts/skill-graph-drift.js": "ac4c0571274e5a71d495081732d7a773ef4fa761ca1512dd5621b67dee571ce2",
+      "scripts/skill-overlap.js": "d5200a5ff88e82c5afdd482d191874511496bc6208882deb34be981c3db9d977",
+      "scripts/skill-graph-routing-eval.js": "fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb",
+      "docs/manifest-field-mapping.md": "0f2488dcde5634b04f33ca543d99059819a1242aa43dffb6cce50c555240391a"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-06-01",
+  "structural_verdict": "PASS",
+  "truth_verdict": "DRIFT",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 90,
+    "review_cadence": "quarterly"
+  }
+}

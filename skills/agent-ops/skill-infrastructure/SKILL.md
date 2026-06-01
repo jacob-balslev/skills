@@ -25,25 +25,10 @@ grounding:
     - eval_thresholds_become_self_attested
     - overlap_or_drift_checks_not_run_after_batch_changes
   evidence_priority: "repo_code_first"
-drift_check:
-  last_verified: "2026-05-21"
-  truth_source_hashes:
-    "package.json": "5e6f9585d5363327a58ecfb39822ebed6fe508c3a2db2d98ebf02c6da1a735ae"
-    "bin/skill-graph.js": "d1e096d4de72032dc9c6de42faeef79b6e0cf92112cf9a7b6c2745683f2705ca"
-    "scripts/skill-lint.js": "e24c1f950520eb350432f2213150552d7f0b23f251d18810d06ea244ceeafd4c"
-    "scripts/lib/roots.js": "88d53b3dad82a2510ea74a9d18310fb24c5a8c7754fec893272a1075a1d82508"
-    "scripts/check-protocol-consistency.js": "22f1f747b6b578e83ae371ac3f9af4b6906d94529f383d1785ed3303b4c5a008"
-    "scripts/generate-manifest.js": "3db618ca6ee118d7ee5405ecd5806c8502a9e0c708688d559dc7a2f219c9294e"
-    "scripts/skill-graph-drift.js": "ac4c0571274e5a71d495081732d7a773ef4fa761ca1512dd5621b67dee571ce2"
-    "scripts/skill-overlap.js": "d5200a5ff88e82c5afdd482d191874511496bc6208882deb34be981c3db9d977"
-    "scripts/skill-graph-routing-eval.js": "fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb"
-    "docs/manifest-field-mapping.md": "0f2488dcde5634b04f33ca543d99059819a1242aa43dffb6cce50c555240391a"
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 7
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.1.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -55,30 +40,27 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing deterministic health tooling for skill libraries, including inventory, protocol consistency, conflict detection, routing health, drift sentinels, eval-threshold checks, and maintenance workflows after batch skill changes. Portable across Skill Graph, Claude skills, Cursor rules, and custom in-house skill systems. Excludes authoring a single SKILL.md (skill-scaffold), running this repo's conformance audit (graph-audit), and selecting general codebase lint rules (lint-overlay)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: agent/skill-system
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-18\",\"truth_source_hashes\":{\"package.json\":\"7a3410a004aea78a2065092e289c0f3cf3c082298804dda6c5829eff22c14b62\",\"bin/skill-graph.js\":\"113a1e01ac7276ac1b5d77a1c32e35a73113da93fc33cfd0caf6db842d2d679f\",\"scripts/skill-lint.js\":\"3a78f75f8921542b91dc619cd41bde29bf379de3c16bdcf3653c854ecbe9fa29\",\"scripts/lib/roots.js\":\"e742efa57b6c33ff1c87034b16a689d1499f6d53c1e6b740f3e9783db7fd557f\",\"scripts/check-protocol-consistency.js\":\"0ff39406d36e7a9e51c176f657f4f426d8bd5a3fe6411d28b9e9a93dc7d89f29\",\"scripts/generate-manifest.js\":\"9d7bbbdae440fdb1763d61ffa7bda10c9efae92359d1c2139d0e971582d59e0e\",\"scripts/skill-graph-drift.js\":\"6b69c25b59c16b477a377e5ab40adb6ff30f72d5a12947772053a6cd16b1f409\",\"scripts/skill-overlap.js\":\"ed642cbc677cc76ec1321300b37d6752337b6b5541c7a9f558fd315d6f934e4b\",\"scripts/skill-graph-routing-eval.js\":\"fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb\",\"docs/manifest-field-mapping.md\":\"aca0b7f2d4631be24a3e7daed1a1d207b488f253164a7d514b9db7af21c6177f\"}}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: present
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -86,22 +68,23 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"skill library health\",\"skill system tooling\",\"skill library decay\",\"skill library maintenance\",\"skill census\",\"skill inventory\",\"frontmatter validation\",\"imperative conflict\",\"skill overlap detection\",\"skill conflict\",\"routing gap\",\"routing miss\",\"routing health\",\"eval threshold\",\"eval minimum\",\"contradiction check\",\"negative expectation\",\"drift sentinel\",\"truth source hash\",\"mirror parity\",\"skill graph health\",\"production skill library\",\"skill linter\",\"skill quality gate\",\"phantom ref\",\"schema conformance\",\"audit skills\",\"audit my skills\",\"skill schema conformance\",\"skill schema validation\",\"audit skill metadata\"]"
+  keywords: "[\"skill library health\",\"skill system tooling\",\"skill library decay\",\"skill inventory\",\"frontmatter validation\",\"imperative conflict\",\"skill overlap detection\",\"routing health\",\"eval threshold\",\"drift sentinel\"]"
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"our skill library is growing and we're getting silent decay — eval counts dropping, conflicts emerging — what tooling should we add?\",\"two of our skills give opposite instructions for the same function — how do we detect this automatically?\",\"we keep getting skill-router misses on real user queries — how do we surface and close routing gaps?\",\"design a health-check pipeline for a 200-skill library that runs in CI\",\"what's a reasonable minimum eval count per skill, and how do we enforce it?\",\"our skill mirror in `.claude/skills` keeps drifting from the source — what's the parity check?\",\"we want to add a contradiction-check eval pattern — what does it look like and when do we use it?\",\"skill-overlap-detector flagged 12 imperative conflicts — how do we triage which to fix vs suppress?\",\"audit my skills for schema conformance\",\"check that my skill frontmatter conforms to the schema\"]"
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"scaffold a new SKILL.md for our team's deploy procedure\",\"audit this Skill Graph repo for schema conformance and dangling relation targets\",\"the manifest sample drifted from the generator — find the mismatch\",\"improve this prompt's wording to get better outputs\",\"review this AI-generated PR for correctness\",\"set up ESLint for our TypeScript repo\",\"draft an architecture note explaining why we chose Postgres\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"boundary\":[{\"skill\":\"skill-scaffold\",\"reason\":\"skill-scaffold owns authoring methodology for one new SKILL.md; skill-infrastructure owns the deterministic health-tooling layer that watches the entire library after authoring\"},{\"skill\":\"graph-audit\",\"reason\":\"graph-audit is the operational audit of one specific library (Skill Graph), scope: codebase; skill-infrastructure is the portable discipline of designing health tooling for any skill library\"},{\"skill\":\"lint-overlay\",\"reason\":\"lint-overlay covers lint-rule selection and gate placement for general codebases; skill-infrastructure covers the skill-system-specific tooling category that includes lint but extends to overlap, routing-gap, drift, and mirror-parity\"}],\"related\":[\"skill-scaffold\",\"graph-audit\",\"testing-strategy\"],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
+  relations: "{\"boundary\":[{\"skill\":\"skill-scaffold\",\"reason\":\"skill-scaffold owns authoring methodology for one new SKILL.md; skill-infrastructure owns the deterministic health-tooling layer that watches the entire library after authoring\"},{\"skill\":\"graph-audit\",\"reason\":\"graph-audit is the operational audit of the Skill Graph project; skill-infrastructure is the portable discipline of designing health tooling for any skill library\"},{\"skill\":\"lint-overlay\",\"reason\":\"lint-overlay covers lint-rule selection and gate placement for general codebases; skill-infrastructure covers the skill-system-specific tooling category that includes lint but extends to overlap, routing-gap, drift, and mirror-parity\"}],\"related\":[\"skill-scaffold\",\"graph-audit\",\"testing-strategy\"],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
   # grounding: required when `deployment_target: project`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
@@ -110,11 +93,9 @@ metadata:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
@@ -127,19 +108,13 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: DRIFT
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
 ---
 
 # Skill Infrastructure
@@ -148,7 +123,7 @@ metadata:
 
 - The library-as-database mental model: skill-infrastructure as the linter, integrity checker, and query planner for a SKILL.md library
 - Why deterministic, zero-LLM tooling is mandatory for skill libraries (trustworthy enough for CI gates; LLM-based health checks are circular)
-- The five categories of skill-health tooling: (1) inventory and frontmatter validation, (2) protocol consistency, (3) conflict detection (overlap, imperative, code duplication, heading overlap), (4) routing health (gap analysis, miss tracking), (5) drift detection (truth-source hashing, mirror parity)
+- The five categories of skill-health tooling: (1) inventory and source validation, (2) protocol consistency, (3) conflict detection (overlap, imperative, code duplication, heading overlap), (4) routing health (gap analysis, miss tracking), (5) drift detection (truth-source hashing, mirror parity)
 - Eval quality patterns: minimum eval threshold per skill, the contradiction-check eval type, the negative-expectation requirement, valid eval-type taxonomy
 - Imperative conflict detection: the same-target-opposite-polarity rule, three-check false-positive suppression, when conflicts indicate scope-tightening vs merging
 - Routing gap analysis: how to read a "routing-misses" log, how to distinguish keyword gaps from skill content gaps, signal-hygiene rules to suppress noise
@@ -188,20 +163,21 @@ Every script in this domain reads files and computes — it does not reason. Out
 
 A production skill library needs all five. Missing any one allows a class of decay through.
 
-### 1. Inventory and Frontmatter Validation
+### 1. Inventory and Source Validation
 
 Walks the skill tree, parses every SKILL.md's frontmatter, and validates against the schema.
 
 | Check | Why it matters |
 |---|---|
-| Required fields present (`name`, `description`, `version`, `type`, `scope`, `owner`, `freshness`) | Missing fields break the manifest generator and the router |
-| Field-value enums valid (`type`, `scope`, `eval_state`) | Drift in valid values leaks invalid skills into routing |
+| Required frontmatter fields present (`name`, `description`, `subject`, `deployment_target`, `scope`) | Missing agent-facing fields break manifest generation, routing, and export |
+| Required sidecar fields present (`schema_version`, `owner`, `freshness`, `drift_check`, `eval_artifacts`, `eval_state`, `routing_eval`) | Missing audit/eval/provenance state prevents honest audit-loop writeback |
+| Field-value enums valid (`subject`, `deployment_target`, `eval_state`, `routing_eval`) | Drift in valid values leaks invalid skills into routing and audit reports |
 | Description-length and quality (≥ 100 chars, contains "Use when X / Do NOT use for Y") | Short or vague descriptions degrade router precision |
-| Eval-count per skill (warn at < 7, error at < 3 for non-reference skills) | Under-evaluated skills regress quality undetected |
+| Eval-count per skill (warn at < 7, error at < 3 unless the skill explicitly documents why evals are not meaningful) | Under-evaluated skills regress quality undetected |
 | Reference-path resolution (every `references/X.md` cited in frontmatter actually exists) | Dangling references mislead the agent at activation time |
-| Scope-grounding consistency (`scope: codebase` requires populated `grounding` block) | Codebase claims without grounding can hallucinate file paths |
+| Project-grounding consistency (`deployment_target: project` requires populated `grounding` plus `project[]`) | Project claims without grounding can hallucinate file paths |
 
-**Reference implementation:** `scripts/skill-lint.js` in this repo runs T5 per-skill lint covering most of these.
+**Reference implementation:** `scripts/skill-lint.js` validates the canonical source shape and sidecar schema; the routing eval, drift sentinel, overlap detector, and audit-ledger checks cover the rest of this category.
 
 ### 2. Protocol Consistency
 
@@ -209,8 +185,8 @@ Cross-checks that the schema, generator, sample manifest, and field-reference do
 
 | Check | Failure mode if missing |
 |---|---|
-| Cross-schema parity (versioned schemas describe the same fields) | Schema bumps silently drop fields |
-| Authored-to-generated parity (frontmatter fields match what the generator emits) | Generator drift breaks downstream consumers |
+| Frontmatter/sidecar field-reference parity | Schema bumps silently drop or misplace fields |
+| Authored-to-generated parity (`SKILL.md` plus `audit-state.json` match what the generator emits) | Generator drift breaks downstream consumers |
 | Sample manifest matches generator output | Sample stales as skills are added |
 | Generated field-reference matches authored field-reference | Documentation drift hides field changes |
 | Truth invariants on example evals (e.g. truth-source line ranges still resolve) | Eval expectations point at non-existent code |
@@ -296,7 +272,7 @@ Every active skill should have at least 7 evals. Most healthy skills carry 9–1
 
 **Recommended enforcement:**
 
-- **Error** if `eval_count < 3` (or **warn** for `scope: reference` skills, where the file is documentation more than testable behaviour)
+- **Error** if `eval_count < 3` unless the skill explicitly documents why evals are not meaningful for its behavior surface
 - **Warn** if `eval_count < 7`
 
 Below 7, the skill is statistically under-tested. Below 3, it is effectively un-evaluated.
@@ -401,12 +377,12 @@ Review the output of steps 1–5 before running step 6. The manifest and index s
 
 | Problem | Fix |
 |---|---|
-| `scope` field absent | Add the correct value (`portable` / `reference` / `codebase`) |
-| `drift_check.last_verified` absent or stale | Add or update to today's ISO date |
-| `eval_artifacts` absent | Set to `present` if eval files exist, `planned` if intended, `none` otherwise |
-| `keywords` empty or short | Add 5–15 natural-language phrases users would actually type |
+| `scope` field absent | Add a free-text PRD-style statement of what the skill teaches, where it deploys, and what it excludes |
+| `drift_check.last_verified` absent or stale | Add or update the sidecar date only after verifying the declared truth sources |
+| `eval_artifacts` absent | Set the sidecar field to `present` if eval files exist, `planned` if intended, `none` otherwise |
+| `keywords` empty, vague, or over cap | Add up to 10 natural-language phrases users would actually type |
 | `description` too short | Quote it; require ≥ 100 chars; include trigger phrases and a "Do NOT use for X (use Y)" exclusion |
-| `version` absent | Set to `1.0.0` for new skills; bump per semver on substantive change |
+| `version` absent | Set the sidecar version to `1.0.0` for new skills; bump per semver on substantive content change |
 
 After editing, re-run the inventory tool and confirm the skill no longer appears in the invalid-frontmatter list.
 
@@ -421,7 +397,7 @@ After editing, re-run the inventory tool and confirm the skill no longer appears
 | Un-backticking an identifier to suppress a false positive when the conflict is real | Hides a real boundary ambiguity | Fix the skill wording to accurately reflect the scope |
 | Adding routing keywords without a real skill to route to | Creates more broken mappings | Only add keywords that map to an existing skill |
 | Treating heading overlap as always wrong | Structural-template skills (model profiles, integration patterns) legitimately share structure | Review the differentiating content instead of restructuring |
-| Using `scope: reference` to mask threshold violations | Reference scope downgrades eval-error to warning, hiding real gaps | Use `reference` only for genuine reference docs (contracts, schemas), never to dodge threshold enforcement |
+| Using free-text `scope` wording to mask threshold violations | Vague scope text can hide missing evals or weak behavior claims | State the real deployment surface in `scope`, then document any eval exception explicitly |
 | Producing a thin audit summary after a multi-hour session | A two-hour audit that outputs "5 entities missing evals" has performed a *census*, not an *audit* — 95% of the invested tokens are wasted | Census counts things; audits verify claims against evidence. Every audited skill needs per-claim verdicts (verified / drift) referencing specific file:line evidence |
 | Running a "skill loop" without a minimum-output specification | Agents read methodology sections but skip output-format sections, then produce free-form summaries | Before any audit/eval/improvement session, define the output format up front. Templates exist — use them |
 | LLM-based health checks instead of deterministic ones | Probabilistic grading of probabilistic content is circular and unreliable | Health-tooling layer is zero-LLM by design. LLMs grade *task output*, not *skill metadata* |
