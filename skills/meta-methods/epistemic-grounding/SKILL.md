@@ -1,14 +1,17 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: epistemic-grounding
-description: "Use when authoring any artifact that makes claims — skill content, documentation, audit findings, architecture proposals, code review comments. Covers the discipline of grounding every claim to a verifiable source, distinguishing verified-by-evidence from inferred-from-context, using normative vocabulary precisely (RFC 2119 MUST/SHOULD/MAY), and structuring arguments so the warrant from data to claim is visible to a reader. Do NOT use for verification protocol mechanics in this repo (use the verification-protocol rule file), for output-completeness enforcement (use methodology), or for self-scoring on a 1-5 scale (use self-evaluation)."
+# description: routing contract for when this skill should activate and when it should not.
+description: "Use when authoring any artifact that makes claims — skill content, documentation, audit findings, architecture proposals, code review comments. Covers the discipline of grounding every claim to a verifiable source, distinguishing verified-by-evidence from inferred-from-context, using normative vocabulary precisely (RFC 2119 MUST/SHOULD/MAY), and structuring arguments so the warrant from data to claim is visible to a reader. Do NOT use for execution-level evidence protocols or output-completeness enforcement (use methodology), naming precision (use semantics), or grader/rubric design (use evaluation or agent-eval-design)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -20,33 +23,29 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Portable claim-grounding discipline for skill content, documentation, audit findings, architecture proposals, code review comments, and other artifacts that assert facts. Teaches Toulmin claim/data/warrant/backing/qualifier/rebuttal structure, RFC 2119 modality, verified/inferred/asserted labels, source-to-claim warrants, and honest hedging. Excludes execution-level evidence receipts and output completeness (methodology), naming precision (semantics), and grader/rubric design (evaluation or agent-eval-design)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: foundations/epistemics
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-15"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-15\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -64,15 +63,16 @@ metadata:
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"verify every step of an audit task with concrete evidence (use methodology)\",\"decide which lint rule to add for a specific kind of drift (use skill-infrastructure)\",\"evaluate a finished SKILL.md against the comprehension grader (use evaluation)\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"related\":[\"methodology\",\"semantics\"],\"boundary\":[{\"skill\":\"methodology\",\"reason\":\"methodology enforces output-level completeness and step-level evidence receipts; epistemic-grounding is the upstream discipline that decides what counts as evidence in the first place.\"},{\"skill\":\"semantics\",\"reason\":\"semantics owns the rules for naming and meaning-making; epistemic-grounding owns the rules for grounding a claim to a verifiable source.\"}],\"verify_with\":[\"methodology\",\"evaluation\"]}"
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
+  relations: "{\"related\":[\"methodology\",\"semantics\",\"evaluation\",\"agent-eval-design\",\"best-practice\"],\"boundary\":[{\"skill\":\"methodology\",\"reason\":\"epistemic-grounding owns what counts as a grounded claim; methodology owns execution-level completeness and step-level evidence receipts\"},{\"skill\":\"semantics\",\"reason\":\"epistemic-grounding owns source-to-claim warrants; semantics owns naming and meaning precision\"},{\"skill\":\"evaluation\",\"reason\":\"epistemic-grounding owns claim grounding before judgment; evaluation owns scoring frameworks and result interpretation\"}],\"verify_with\":[\"methodology\",\"evaluation\",\"best-practice\"]}"
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -90,34 +90,26 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that hedge words ("probably", "in most cases", "generally") are a form of grounding. They are not. Hedging is intentional reduction of claim strength; grounding is showing the source-to-claim chain. A sentence can be heavily hedged AND ungrounded ("probably the API returns JSON" with no citation), or unhedged AND grounded ("DELETE is idempotent (RFC 9110 § 9.3.5)"). The two are orthogonal axes: a strong claim can be properly grounded, and a weak claim can be entirely ungrounded. The misconception leads to "pseudo-hedge" output that looks careful but does not actually expose the source-warrant chain a reader needs to verify.
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"Epistemic grounding is the discipline of binding every assertion to a verifiable source, marking the modality (strength) of the claim, and making the warrant (the inference from source to claim) explicit. It is the practice that turns a generated statement into a defended statement.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/epistemic-grounding/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
 ---
 
 # Epistemic Grounding
@@ -208,8 +200,8 @@ After applying this skill, verify:
 |---|---|---|
 | Enforcing step-level evidence receipts and output completeness | `methodology` | methodology owns the execution discipline; this skill is the upstream grounding discipline that decides what counts as evidence in the first place |
 | Naming things precisely (variables, functions, files) | `semantics` | semantics owns naming precision; this skill owns claim grounding |
-| Drawing inferences from premises | `reasoning` | reasoning is the cognitive primitive; this skill is the marking discipline for distinguishing inference from observation |
-| Verifying that a specific implementation works | `evaluation` or repo-local verification protocol | evaluation owns grader frameworks; this skill is the structural discipline upstream of any verification |
+| Drawing inferences from premises | `first-principles-thinking` or `bayesian-reasoning` | those skills own reasoning moves; this skill is the marking discipline for distinguishing inference from observation |
+| Verifying that a specific implementation works | `evaluation` or `methodology` | evaluation owns grader frameworks and methodology owns execution evidence; this skill is the structural discipline upstream of any verification |
 | Designing the rules of a skill audit | `skill-infrastructure` | skill-infrastructure owns lint and census tooling; this skill governs what counts as a grounded claim that lint might check |
 
 ## Key Sources
@@ -217,5 +209,5 @@ After applying this skill, verify:
 - Toulmin, S. (1958). *The Uses of Argument*. Cambridge University Press. The canonical six-primitive argument structure (claim/data/warrant/backing/qualifier/rebuttal).
 - Bradner, S. (1997). [RFC 2119: Key words for use in RFCs to Indicate Requirement Levels](https://datatracker.ietf.org/doc/html/rfc2119). IETF. The standardized MUST/SHOULD/MAY normative vocabulary.
 - Leiba, B. (2017). [RFC 8174: Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words](https://datatracker.ietf.org/doc/html/rfc8174). IETF. Clarifies that only ALL-CAPS forms carry RFC 2119 weight.
-- Northeastern University (2025). "AI sycophancy: 58.19% rate across frontier models." The measurement that justifies structural countermeasures over behavioral ones.
-- Royal Society Open Science (2025). "LLM summarization bias: overgeneralization in 26-73% of cases." The measurement that justifies explicit source-to-claim warrant tracking.
+- Fanous et al. (2025). [SycEval: Evaluating LLM Sycophancy](https://ojs.aaai.org/index.php/AIES/article/view/36598). *AAAI/ACM AIES 2025*. Reports sycophantic behavior in 58.19% of evaluated cases; supports structural countermeasures over tone-based trust.
+- Peters, U., & Chin-Yee, B. (2025). [Generalization bias in large language model summarization of scientific research](https://doi.org/10.1098/rsos.241776). *Royal Society Open Science*. Reports overgeneralization in 26-73% of cases for several tested LLMs; supports explicit source-to-claim warrant tracking.
