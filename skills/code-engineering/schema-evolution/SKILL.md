@@ -1,16 +1,14 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: schema-evolution
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when reasoning about how a database schema changes over time without breaking deployed application code: the expand/contract pattern (Ambler & Sadalage), the zero-downtime change rules, the backwards-and-forwards compatibility envelope (deploy ordering and rollback discipline), the catalog of schema changes (add column, drop column, rename, type change, add constraint, add index) and the safe procedure for each, the dual-write and dual-read transitions that make non-trivial changes safe in production, and the relationship between schema evolution as a design discipline and database-migration mechanics as its tooling. Do NOT use for the mechanical execution of one migration (use database-migration), schema design from scratch (use data-modeling), query tuning (use query-optimization), or distributed-data partitioning (use sharding-strategy)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
-  # schema_version: protocol contract version this skill conforms to.
-  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
-  # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
-
-
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
@@ -27,29 +25,6 @@ metadata:
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: engineering/data
-  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
-  # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-16"
-  # drift_check: truth-source verification record. Object with required `last_verified`
-  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
-  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-16\"}"
-
-  # === Evaluation Status: three orthogonal axes ===
-  # eval_artifacts: disk-truth — does an eval file exist on disk?
-  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
-  # eval_state: runtime-truth — has the eval been run and passed?
-  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
-  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
-  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
-  # comprehension_state: marker that this skill has populated v6+ Understanding fields
-  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -64,15 +39,19 @@ metadata:
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: "[\"design the expand-contract sequence to rename a column from `name` to `full_name` across a deployed system\",\"decide whether to add a NOT NULL column with a default or with a separate backfill phase\",\"diagnose a deploy that broke because the schema change shipped before the code change\",\"explain why drop-column is the third phase of expand-contract, not the first\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
   relations: "{\"related\":[\"data-modeling\",\"database-migration\",\"indexing-strategy\",\"acid-fundamentals\"],\"boundary\":[{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns the design of a schema at a point in time; this skill owns how that schema changes between points in time. The two compose: data-modeling decides the target shape; this skill decides the safe path from current to target.\"},{\"skill\":\"database-migration\",\"reason\":\"database-migration owns the mechanics of applying one migration (ALTER TABLE, batched backfill, CONCURRENTLY indexes, unpooled connections); this skill owns the multi-step sequence of migrations and the deploy-coordination discipline that makes the sequence safe.\"},{\"skill\":\"indexing-strategy\",\"reason\":\"indexing-strategy owns which indexes the database has; this skill owns how the index set evolves over time. Adding or removing an index is one type of schema change governed by this skill's discipline.\"}],\"verify_with\":[\"data-modeling\",\"database-migration\"]}"
+  # grounding: required when `deployment_target: project`; optional for portable skills with
+  # fast-moving external truth sources. Declares sources and failure modes that keep the skill honest.
+  grounding: '{"subject_matter":"Portable database schema evolution, expand/contract sequencing, zero-downtime compatibility envelopes, online migrations, and production-safe constraint/index changes","grounding_mode":"universal","truth_sources":["https://martinfowler.com/articles/evodb.html","https://martinfowler.com/bliki/ParallelChange.html","https://www.postgresql.org/docs/current/sql-altertable.html","https://www.postgresql.org/docs/current/sql-createindex.html","https://stripe.com/blog/online-migrations"],"failure_modes":["treating_nontrivial_schema_change_as_one_alter_table","dropping_old_shape_before_all_code_and_data_migrate","deploying_code_and_schema_outside_a_backward_forward_compatibility_envelope","tightening_constraints_without_not_valid_validate_or_equivalent_pattern","creating_production_indexes_without_concurrent_or_online_mechanism","running_backfill_as_one_unbounded_nonresumable_update"],"evidence_priority":"equal"}'
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"execute one ALTER TABLE migration mechanically (use database-migration)\",\"design a schema from scratch (use data-modeling)\",\"diagnose a slow query (use query-optimization)\"]"
@@ -95,34 +74,15 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that a schema change is a single migration — write the ALTER TABLE, deploy it, done. It is not, except for the small class of single-step-safe additive changes (add nullable column, add table, add index with CONCURRENTLY, change DEFAULT). Drop column, rename, type change, add NOT NULL without default, add FK, add UNIQUE constraint — each requires expand/migrate/contract spanning multiple deploys over days or weeks. Adjacent misconceptions: that "we'll know when we're ready to contract" is a sufficient criterion (it is not — the criteria are explicit: all deployed code reads exclusively new, backfill complete and verified, observability in place, migrate phase stable for a defined observation period); that rollback is always available (it is not — expand and migrate preserve rollback; contract is irreversible by definition, which is the price of cleaning up); that constraint-tightening can be done in one ALTER TABLE (it cannot for validation-locking constraints — use the NOT VALID + VALIDATE pattern to avoid blocking writes during validation; ADD FK NOT VALID then VALIDATE CONSTRAINT separately); that CREATE INDEX without CONCURRENTLY is fine on small tables (it locks writes — production size doesn't matter, the lock matters); that backfill can run in one statement (batched-and-resumable is the production discipline — a single UPDATE on a large table locks the table, fills WAL, and times out; the migration must chunk into tractable batches that can resume after failure); and that the deploy ordering is "obvious" (migration-first vs code-first is a per-change decision; expand/contract makes the ordering explicit and survivable at every intermediate point, and getting it wrong is how deploys break — the schema change ships before the code that needs it, or the code that needs the new shape ships before the schema is migrated).
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"Schema evolution is the discipline of changing a database schema over time in a way that keeps deployed application code working. The unit of work is a *change to the schema* (add a column, rename a column, change a type, add a constraint, drop a column) that must be applied to a database serving an application that does not stop running. The central technique is expand/contract (Ambler & Sadalage 2006; also called parallel change): introduce the new shape *additively* without removing the old shape (expand), migrate the application to use the new shape, then remove the old shape (contract). The discipline is the *ordering* across migrations and deploys, the backwards-and-forwards-compatibility envelope each intermediate state must satisfy, and the rollback discipline that keeps the system recoverable when any step fails. The mechanical execution of any single migration is the concern of database-migration; the *sequence* of migrations and their relationship to application deploys is this skill's concern.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/schema-evolution/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
-  #
-  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
-  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
-  # truth_verdict: truth sources vs declared hashes (gates 3-6).
-  # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
-  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
-  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
-  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
-  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
-  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  skill_graph_canonical_skill: skills/code-engineering/schema-evolution/SKILL.md
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
 ---
 
 # Schema Evolution
