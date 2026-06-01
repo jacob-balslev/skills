@@ -1,0 +1,104 @@
+{
+  "skill_name": "eval-driven-development",
+  "subject": "Eval-driven development",
+  "adjacent_concepts": [
+    "LLM evaluation",
+    "eval dataset",
+    "evaluation function",
+    "aggregation",
+    "regression budget",
+    "model-graded eval",
+    "human calibration",
+    "Goodhart's Law",
+    "public benchmark",
+    "production telemetry"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define eval-driven development for LLM-integrated systems in 2-3 sentences. Include why it is statistical rather than binary.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Evaluations are written before or alongside the LLM system",
+        "Eval results gate prompt, model, retrieval, scaffolding, or tooling changes",
+        "LLM behavior is stochastic",
+        "Pass-rate over a sampled population is the unit of judgment",
+        "It is not the same as deterministic unit testing"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the five primitives of eval-driven development and how they work together.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Names eval dataset",
+        "Names evaluation function",
+        "Names aggregation or pass-rate summary",
+        "Names iteration loop",
+        "Names regression budget",
+        "Explains that the suite stays stable while the system changes"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish eval-driven-development from agent-eval-design, testing-strategy, evaluation, and error-tracking. Give a mechanism-level reason for each boundary.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "agent-eval-design owns construction of task sets, rubrics, graders, and hard negatives",
+        "testing-strategy owns deterministic binary software tests",
+        "evaluation owns general scoring frameworks and result interpretation",
+        "error-tracking owns production incidents or runtime failures",
+        "eval-driven-development owns the iterative change-gating discipline"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A teammate says, 'The model passed the prompt unit test once, so we can ship.' Explain the misconception using eval-driven-development.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Rejects one-run pass/fail as sufficient for an LLM system",
+        "Explains stochastic outputs require sampled pass-rate",
+        "Mentions representative dataset or production-like examples",
+        "Mentions aggregation with sample size or confidence/minimum-detectable-change",
+        "Mentions regression budget or gate before shipping"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A summarization assistant improves from 82% to 88% on the development eval but drops on a held-out set and human reviewers prefer the old output. Apply eval-driven-development and recommend what to do next.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Identifies possible Goodharting or overfitting to the development eval",
+        "Does not treat the 88% headline score as sufficient",
+        "Uses held-out set and human calibration as stronger counter-evidence",
+        "Recommends diagnosing failures before merging",
+        "Mentions refreshing or revising the eval suite or grader"
+      ]
+    }
+  ]
+}
