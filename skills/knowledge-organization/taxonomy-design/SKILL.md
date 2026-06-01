@@ -8,9 +8,7 @@ allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.1.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -22,33 +20,29 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: PRD-style free-text statement of what the skill teaches and what it does not.
+  # Not an enum (deployment targeting belongs to `deployment_target`).
+  scope: "Teaches controlled classification systems for categories, facets, browse taxonomies, SKOS broader/narrower links, assignment rules, synonym control, and duplicate-category cleanup. Excludes formal ontology axioms, representation-paradigm choice, single-edge relation typing, and UI-copy/navigation-label writing."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: foundations/classification
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-16"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-16\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -76,11 +70,9 @@ metadata:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -100,9 +92,6 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that *taxonomy = hierarchy* — that classification means choosing a tree and assigning items to it. It does not. Adjacent misconceptions: that *deeper hierarchies are better organized* (they are not — shallow trees with facets often outperform deep trees because the navigator scans fewer levels; Ranganathan's faceted classification is the alternative to strict hierarchies); that *mixing organizing principles is fine* (it is not — sibling categories must share the same organizing principle, or the navigator cannot predict where items will be; "by domain, then by tool, then by lifecycle" mixed within one tree produces unpredictable placement); that *synonyms can be sibling categories* (they cannot — synonyms must be *aliases* via `skos:altLabel` pointing to one canonical `skos:prefLabel`; otherwise the same concept duplicates and items split across both); that *every semantic relation belongs in the hierarchy* (it does not — `related_to` and other associative relations are *not* hierarchy; only IS-A passes the substitution test for parent-child placement); that *catch-all "misc" buckets are acceptable* (they are not — they signal that the classification's primary organizing principle doesn't cover the items, and the right response is *either* adjusting the principle *or* identifying a new top-level category, never adding "misc" and moving on); and that *taxonomies are static* (they are not — they require governance: assignment-rule documentation, periodic audits for drift, alias maintenance as terminology evolves).
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"Taxonomy design is the discipline of constructing a controlled classification system — a category tree (possibly augmented by facets) that organizes a set of items so they can be browsed, found, and reasoned about. Drawing from Ranganathan's faceted classification, Aristotelian genus-species hierarchy, and the SKOS data model, it treats classification as a *retrieval contract* between the system that organizes and the readers who navigate, not as a private mental map of the author.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
@@ -115,19 +104,14 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
 ---
 
 # Taxonomy Design
