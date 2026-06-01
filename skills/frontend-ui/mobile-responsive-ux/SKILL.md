@@ -1,16 +1,22 @@
 ---
+# name: canonical skill slug used by routers, manifests, and audit tooling.
 name: mobile-responsive-ux
-description: "This skill provides mobile-specific UX patterns for SaaS dashboards: touch-friendly targets (44px minimum), thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, and pull-to-refresh. Load when designing for mobile users, implementing touch interactions, building responsive dashboard layouts, or optimizing for the Side Hustler persona who checks on mobile."
+# description: concise trigger contract for when agents should load this skill.
+description: "Use when designing mobile-specific UX for dashboards and operational web apps: touch-friendly targets, thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, bottom sheets, mobile inputs, and pull-to-refresh. Load when adapting a desktop dashboard to phone use, implementing touch interactions, or checking whether a mobile layout serves quick-glance tasks rather than compressed desktop analysis."
+# license: reuse terms for the exported skill artifact.
 license: MIT
+# compatibility: runtime surfaces where this Markdown skill can be consumed.
 compatibility:
   notes: "Markdown, Git, agent-skill runtimes"
+# allowed-tools: minimal tools needed when applying this skill.
 allowed-tools: Read Grep Bash
+# metadata: Skill Metadata Protocol fields for routing, audit, and export.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
+  version: "1.1.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -24,7 +30,7 @@ metadata:
   deployment_target: portable
   # scope: free-text PRD-style statement of what the skill teaches and where it deploys
   # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
-  scope: "Mobile-specific UX patterns for SaaS dashboards — touch-friendly targets (44px minimum), thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, and pull-to-refresh — for designing and optimizing dashboard layouts for mobile users. Portable across any mobile web product; principle-grounded, not repo-bound. Excludes desktop-first layout composition (layout-composition), component/token architecture (design-system-architecture), and accessibility-only compliance (a11y)."
+  scope: "Mobile-specific UX patterns for SaaS dashboards and operational web apps: touch-friendly targets, thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, bottom sheets, mobile inputs, and pull-to-refresh. Portable across mobile web products; principle-grounded, not repo-bound. Excludes desktop-first layout composition (layout-composition), component/token architecture (design-system-architecture), and accessibility compliance breadth such as ARIA, keyboard, screen reader, and audit rules (a11y)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
@@ -32,16 +38,20 @@ metadata:
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
   owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-03-29"
+  freshness: "2026-06-01"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-03-29\"}"
+  drift_check: "{\"last_verified\":\"2026-06-01\"}"
+
+  # comprehension_state: marker that this skill has populated v6+ Understanding fields
+  # and a body-level "Concept of the skill" section.
+  comprehension_state: present
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
+  eval_artifacts: present
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
@@ -56,7 +66,13 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"mobile-responsive-ux\",\"mobile\",\"responsive\"]"
+  keywords: "[\"mobile dashboard UX\",\"responsive dashboard\",\"touch targets\",\"thumb zone\",\"bottom navigation\",\"bottom sheet\",\"mobile data cards\",\"pull to refresh\",\"mobile KPI cards\",\"touch gestures\"]"
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
+  examples: "[\"make this dashboard usable on phones\",\"turn this desktop order table into a mobile card flow\",\"check whether these mobile controls are thumb friendly\",\"design a bottom sheet filter pattern for mobile\",\"add pull to refresh and touch gestures to this operational view\"]"
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.boundary to indicate the confusable territory's owner.
+  anti_examples: "[\"audit ARIA labels and keyboard focus order\",\"choose global page breakpoints and responsive grid tracks\",\"design reusable design tokens for mobile components\",\"create the product information architecture\"]"
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"mobile-responsive-ux-skill\",\"mobile-ux-skill\",\"touch-target-skill\",\"thumb-zone-skill\",\"mobile-dashboard-skill\"]"
@@ -68,7 +84,20 @@ metadata:
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"boundary\":[\"a11y\"]}"
+  relations: "{\"related\":[\"layout-composition\",\"interaction-patterns\",\"a11y\"],\"boundary\":[{\"skill\":\"a11y\",\"reason\":\"a11y owns accessibility compliance breadth: ARIA, keyboard behavior, focus order, screen reader output, contrast, and WCAG audit mechanics. mobile-responsive-ux owns touch ergonomics, mobile dashboard task shape, and small-screen interaction layout.\"},{\"skill\":\"layout-composition\",\"reason\":\"layout-composition owns page and screen structure across breakpoints. mobile-responsive-ux owns phone-specific dashboard behavior after the layout must become thumb-operated, glance-first, and progressively disclosed.\"}],\"verify_with\":[\"a11y\",\"layout-composition\"]}"
+
+  # === Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
+  mental_model: "Mobile dashboard UX treats the phone as a quick control surface, not a shrunken analytics workstation. The primitives are reach, target size, glanceable hierarchy, progressive disclosure, touch gestures with visible alternatives, mobile-appropriate inputs, and recovery from cramped or interrupted use."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
+  purpose: "This skill prevents agents from compressing desktop tables, sidebars, modals, and hover interactions into a phone viewport. It preserves the mobile user's likely job: check status, spot a problem, perform one short action, and leave."
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # neighboring skill that owns the other side.
+  boundary: "This skill does not own general responsive structure across all breakpoints; that belongs to layout-composition. It does not own accessibility compliance, ARIA, keyboard order, screen reader behavior, or audit mechanics; that belongs to a11y. It does not own component token architecture or visual style systems."
+  # analogy: one-sentence metaphor preserving the core mechanism.
+  analogy: "Mobile dashboard UX is a pocket control panel: it exposes the few controls and readings that matter while the full cockpit remains on desktop."
+  # misconception: the wrong mental model people bring; corrected explicitly.
+  misconception: "The common mistake is believing responsive means the same desktop screen made narrower. Correct mobile UX changes the task shape, density, navigation, and interaction model for touch and interruption."
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -96,28 +125,45 @@ metadata:
   truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
+  comprehension_verdict: PROVISIONAL
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
+  application_verdict: PROVISIONAL
+  last_audited: 2026-06-01
+  last_changed: 2026-06-01
   lint_verdict: PASS
 ---
 # Mobile Responsive UX Skill
 
+## Concept of the skill
+
+**What it is:** Mobile responsive UX is the practice of redesigning dashboard and operational workflows for small screens, coarse touch input, one-handed reach, and quick-glance tasks instead of merely shrinking the desktop interface.
+
+**Mental model:** Treat the phone as a pocket control surface. Put the few readings and actions that matter most within reach, keep targets large enough to tap, reveal detail progressively, and make every gesture recoverable through a visible control.
+
+**Why it exists:** Desktop dashboards optimize for comparison, filtering, exports, and multi-column analysis. Phone use usually means checking health, responding to one alert, searching one item, or confirming a small action under interruption.
+
+**What it is NOT:** It is not general CSS breakpoint implementation, not a full accessibility compliance audit, not desktop data-table design, and not design-system token architecture.
+
+**Adjacent concepts:** Use `layout-composition` for responsive page structure, `a11y` for accessibility compliance, `interaction-patterns` for broader interaction choices, and `design-system-architecture` for reusable component and token contracts.
+
+**One-line analogy:** Mobile dashboard UX is a pocket control panel: it shows the few controls and readings needed in motion while the full cockpit stays on desktop.
+
+**Common misconception:** Responsive mobile UX does not mean "same screen, narrower." It means the task, density, navigation, input, and recovery paths change for touch and interruption.
+
 ## Domain Context
 
-**What is this skill?** This skill provides mobile-specific UX patterns for SaaS dashboards: touch-friendly targets (44px minimum), thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, and pull-to-refresh. Load when designing for mobile users, implementing touch interactions, building responsive dashboard layouts, or optimizing for the Side Hustler persona who checks on mobile.
+**What is this skill?** This skill provides mobile-specific UX patterns for dashboards and operational web apps: touch-friendly targets, thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, bottom sheets, mobile inputs, and pull-to-refresh. Load when designing for mobile users, implementing touch interactions, building responsive dashboard layouts, or optimizing quick-glance workflows for users checking status between tasks.
 > If a button works with a mouse but not with a thumb on a moving bus, it is not usable.
 
 ## Coverage
 
-This skill covers touch target sizing (44px minimum per Apple HIG and WCAG 2.2), thumb-zone optimization (reachable areas on one-handed use), swipe gesture patterns (navigation, actions, dismissal), condensed data display for small screens (priority content, progressive disclosure), bottom navigation and bottom sheet patterns, pull-to-refresh implementation, mobile-specific input patterns (date pickers, number keyboards, autocomplete), and the SaaS dashboard mobile paradigm (quick-glance KPIs, not full desktop experience).
+This skill covers touch target sizing (44 x 44 CSS px ergonomic floor for mobile product work, while separately respecting WCAG 2.2 AA's 24 x 24 CSS px target-size minimum and exceptions), thumb-zone optimization (reachable areas on one-handed use), swipe gesture patterns (navigation, actions, dismissal), condensed data display for small screens (priority content, progressive disclosure), bottom navigation and bottom sheet patterns, pull-to-refresh implementation, mobile-specific input patterns (date pickers, number keyboards, autocomplete), and the SaaS dashboard mobile paradigm (quick-glance KPIs, not full desktop experience).
 
-## Philosophy
+## Philosophy of the skill
 
-Mobile is not a smaller desktop. Agents consistently make the mistake of "responsive" meaning "the same layout but narrower." A SaaS dashboard on mobile serves a fundamentally different purpose than on desktop. The desktop user is doing analytical work: filtering, comparing, exporting. The mobile user is doing a quick health check: "Am I making money today? Any problems?" These are different tasks requiring different interfaces. The 375px screen cannot show the same data table with 8 columns — and it should not try. This skill enforces the discipline of designing for the mobile use case, not just reflowing the desktop layout into a narrower viewport.
+Mobile is not a smaller desktop. Agents consistently make the mistake of "responsive" meaning "the same layout but narrower." A SaaS dashboard on mobile serves a fundamentally different purpose than on desktop. The desktop user is doing analytical work: filtering, comparing, exporting. The mobile user is doing a quick health check: "Are the important numbers healthy? Any problems?" These are different tasks requiring different interfaces. The 375px screen cannot show the same data table with 8 columns — and it should not try. This skill enforces the discipline of designing for the mobile use case, not just reflowing the desktop layout into a narrower viewport.
 
 ## Architecture
 
@@ -135,11 +181,12 @@ Mobile is not a smaller desktop. Agents consistently make the mistake of "respon
 
 | Standard | Minimum Size | Recommended Size | Spacing |
 |----------|-------------|-----------------|---------|
-| **Apple HIG** | 44 x 44 pt | 44 x 44 pt | 8pt between targets |
+| **Apple HIG** | 44 x 44 pt hit region | 44 x 44 pt or larger | Do not crowd adjacent controls |
 | **Material Design** | 48 x 48 dp | 48 x 48 dp | 8dp between targets |
-| **WCAG 2.2 (Level AA)** | 24 x 24 CSS px | 44 x 44 CSS px | Adjacent targets must not overlap |
+| **WCAG 2.2 SC 2.5.8 (Level AA)** | 24 x 24 CSS px | Larger targets reduce errors | Includes spacing, equivalent-target, inline, user-agent, and essential exceptions |
+| **WCAG SC 2.5.5 Enhanced (Level AAA)** | 44 x 44 CSS px | 44 x 44 CSS px | Includes equivalent, inline, user-agent, and essential exceptions |
 
-**Rule:** All interactive elements on mobile must be at least 44 x 44 CSS pixels. This includes buttons, links, checkboxes, filter chips, table row actions, and dropdown triggers. If the visual element is smaller (e.g., a 16px icon), the tap target must extend beyond the visible element using padding.
+**Rule:** All recurring interactive controls in mobile dashboard UI should provide at least a 44 x 44 CSS px hit area unless a density exception is explicitly justified and still passes accessibility review. WCAG 2.2 AA itself requires at least 24 x 24 CSS px targets or a qualifying exception; 44 x 44 CSS px is this skill's mobile ergonomics floor and aligns with stronger platform guidance. This includes buttons, links, checkboxes, filter chips, table row actions, and dropdown triggers. If the visual element is smaller (e.g., a 16px icon), the tap target must extend beyond the visible element using padding.
 
 ```css
 /* Touch target pattern — visual is 24px, tap target is 44px */
@@ -181,7 +228,7 @@ On one-handed phone use, the thumb has three zones of reachability:
 
 ### 1. Bottom Navigation
 
-Replace the sidebar with bottom navigation on mobile. Maximum 5 items:
+Replace the sidebar with bottom navigation on mobile when the product has a small set of stable top-level destinations. Use 3-5 items; if there are more than 5, move lower-priority destinations behind `More`, search, or a secondary navigation surface.
 
 ```
 +----------------------------+
@@ -195,7 +242,7 @@ Replace the sidebar with bottom navigation on mobile. Maximum 5 items:
 ```
 
 **Rules:**
-- Maximum 5 items in bottom navigation (Apple HIG)
+- 3-5 top-level destinations; never force every desktop sidebar item into the bar
 - Each item: icon + label (icon-only is ambiguous)
 - Active state: filled icon + color change + label
 - Badge for notification count on relevant tab
@@ -378,3 +425,4 @@ After applying this skill, verify:
 ---
 
 *Version 1.0.0 -- 2026-03-29. Initial creation.*
+*Version 1.1.0 -- 2026-06-01. Added comprehension model, eval artifact, portable scope cleanup, and corrected WCAG touch-target wording.*

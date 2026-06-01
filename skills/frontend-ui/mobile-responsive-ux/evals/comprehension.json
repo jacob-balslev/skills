@@ -1,0 +1,125 @@
+{
+  "skill_name": "mobile-responsive-ux",
+  "subject": "Mobile Responsive UX",
+  "adjacent_concepts": [
+    "layout composition",
+    "accessibility",
+    "interaction patterns",
+    "design-system architecture",
+    "information architecture"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define mobile responsive UX for dashboards in 2-3 sentences. Explain why it is more than shrinking the desktop dashboard.",
+      "expected_output": "A correct answer defines mobile responsive UX as redesigning dashboard workflows for small screens, coarse touch, reach, glanceability, and interrupted use. It says mobile is a different task shape, not the same desktop table or sidebar compressed into a narrow viewport.",
+      "expectations": [
+        "Mentions small screens, touch input, reach, and quick-glance task shape",
+        "Distinguishes mobile UX from desktop layout compression",
+        "Does NOT define the skill as CSS breakpoints alone"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Name the primitives in the mental model for this skill and explain how they fit together in a mobile dashboard.",
+      "expected_output": "The primitives include reach, target size, glanceable hierarchy, progressive disclosure, visible alternatives for gestures, mobile-appropriate inputs, and recovery from cramped or interrupted use. Together they turn a desktop analytics surface into a phone control surface for checking status and taking one short action.",
+      "expectations": [
+        "Names at least five relevant primitives",
+        "Connects the primitives to mobile dashboard behavior",
+        "Does NOT treat mobile as a visual scale-down only"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill exist for dashboard and operational web-app work?",
+      "expected_output": "It prevents agents from squeezing desktop sidebars, wide tables, modals, hover behavior, and dense analysis into phones. Its purpose is to preserve mobile jobs such as checking health, spotting an alert, finding one item, or confirming a small action.",
+      "expectations": [
+        "Explains the failure mode the skill prevents",
+        "Connects the purpose to quick status checks and short actions",
+        "Does NOT claim mobile users need the full desktop workflow first"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Explain the boundary between mobile-responsive-ux, layout-composition, a11y, interaction-patterns, and design-system-architecture.",
+      "expected_output": "mobile-responsive-ux owns phone-specific dashboard task shape, touch ergonomics, mobile navigation, condensed data, and mobile interaction layout. layout-composition owns responsive page structure across breakpoints; a11y owns compliance, ARIA, keyboard, screen reader, contrast, and audit mechanics; interaction-patterns owns general interaction choice beyond mobile dashboards; design-system-architecture owns reusable components and tokens.",
+      "expectations": [
+        "Routes each adjacent concept to the right skill",
+        "Keeps mobile-responsive-ux focused on mobile dashboard UX",
+        "Does NOT let mobile-responsive-ux over-own WCAG auditing or token architecture"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify these mobile dashboard choices by ownership: bottom navigation, WCAG target-size audit, desktop-to-mobile section order, swipe-to-delete fallback, and component token naming.",
+      "expected_output": "Bottom navigation belongs to mobile-responsive-ux. WCAG target-size audit belongs to a11y, with mobile-responsive-ux applying an ergonomic target floor. Desktop-to-mobile section order belongs primarily to layout-composition, verified by mobile-responsive-ux for phone use. Swipe-to-delete fallback belongs to mobile-responsive-ux and interaction-patterns. Component token naming belongs to design-system-architecture.",
+      "expectations": [
+        "Classifies all five choices",
+        "Recognizes shared verification where appropriate",
+        "Does NOT route all mobile-sounding work to this skill"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use the pocket-control-panel analogy for this skill and map it to concrete mobile dashboard decisions.",
+      "expected_output": "A correct answer says the phone surface is a compact control panel showing the few readings and controls needed in motion, while the full desktop cockpit remains available elsewhere. It maps the analogy to top KPIs, reachable primary actions, card summaries instead of wide tables, bottom navigation for stable destinations, and detail views or bottom sheets for deeper work.",
+      "expectations": [
+        "Preserves the control-surface structure of the analogy",
+        "Maps at least four concrete UX decisions",
+        "Does NOT imply the mobile surface should expose every desktop control"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: a desktop dashboard has a sidebar, an 8-column orders table, hover-only row actions, a complex filter modal, and four KPI cards. Apply this skill to propose the mobile redesign and list verification checks.",
+      "expected_output": "A strong answer replaces the sidebar with 3-5 bottom navigation destinations or a More pattern, transforms the table into order cards with 3-4 priority fields, adds visible tap alternatives for row actions, moves filtering into a bottom sheet, keeps KPIs glanceable in a stable mobile grid, uses mobile-appropriate input types, and verifies target size, thumb reach, no hover-only actions, no horizontal table scroll, and real-device behavior.",
+      "expectations": [
+        "Transforms each desktop pattern into a mobile-appropriate pattern",
+        "Includes concrete verification checks",
+        "Does NOT keep the 8-column table with horizontal scroll as the primary mobile experience"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}
