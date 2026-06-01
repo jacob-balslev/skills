@@ -9,7 +9,7 @@
   "eval_artifacts": "planned",
   "eval_state": "unverified",
   "routing_eval": "absent",
-  "last_audited": "2026-05-28",
+  "last_audited": "2026-06-01",
   "structural_verdict": "PASS",
   "truth_verdict": "PASS",
   "comprehension_verdict": "UNVERIFIED",
