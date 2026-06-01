@@ -1,14 +1,17 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: mental-models
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when reasoning about how a system, user, or designer's internal model of behavior may diverge from reality — applies across UX, distributed systems, type systems, API design, and team collaboration. Covers the three-model frame (designer / system image / user), the two gulfs (execution and evaluation), analogy and metaphor as model-seeding, the five failure modes (transfer, overgeneralization, underspecification, drift, invariant blindness), the surface/operational/architectural/domain layering, and the discipline of validating a model against the system it claims to represent. Do NOT use for the visual representation of a model (use knowledge-modeling), for the formal-domain entities-attributes-relationships of conceptual modeling (use conceptual-modeling), for cognitive biases in decision-making (out of scope), or for empirically eliciting user models via research methods (use user-research)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -20,33 +23,29 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Mental-models reasoning for diagnosing how users, designers, developers, teams, and agents represent a system differently from how it actually behaves. Portable across UX, distributed systems, type systems, API design, and collaboration contexts. Covers the three-model frame, the two gulfs, analogy/metaphor as model-seeding, model failure modes, model depth layers, and validation against system behavior. Excludes formal entity/schema modeling (conceptual-modeling), representation-paradigm choice (knowledge-modeling), empirical research-method design (user-research), cognitive-bias analysis, and tactical implementation choices."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: foundations/mental-models
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-16"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-16\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -63,15 +62,16 @@ metadata:
   examples: "[\"users keep trying to drag a row to reorder but the table doesn't support drag — diagnose the model mismatch\",\"explain why race conditions across parallel tool calls are hard for developers to anticipate\",\"decide on the right metaphor for a feature that combines folders and tags\",\"the team disagrees on what 'workspace' means in the product — surface the divergent mental models\"]"
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
-  anti_examples: "[\"draw the boxes-and-arrows diagram of the system (use knowledge-modeling)\",\"name the React hook for managing form state (tactical implementation choice)\",\"write user-research interview questions (use user-research)\",\"teach a junior engineer about distributed-systems consistency models (use teaching-patterns)\"]"
+  anti_examples: "[\"draw the boxes-and-arrows diagram of the system (use knowledge-modeling)\",\"name the React hook for managing form state (tactical implementation choice)\",\"write user-research interview questions (use user-research)\",\"teach a junior engineer about distributed-systems consistency models\"]"
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
   relations: "{\"related\":[\"conceptual-modeling\",\"knowledge-modeling\",\"user-research\",\"semantics\"],\"boundary\":[{\"skill\":\"conceptual-modeling\",\"reason\":\"conceptual-modeling owns the FORMAL representation of a domain (entities, attributes, relationships) for downstream use by schemas and APIs; this skill owns the COGNITIVE construct (how a mind represents the system), which is upstream of any formalism.\"},{\"skill\":\"knowledge-modeling\",\"reason\":\"knowledge-modeling owns the choice of representation paradigm (graphs, frames, rules, networks); this skill owns the discipline of reasoning about model-system fit before any paradigm is chosen.\"},{\"skill\":\"user-research\",\"reason\":\"user-research owns the methods for eliciting and validating user mental models empirically; this skill owns the framing of what a mental model is and how to reason about its accuracy.\"}],\"verify_with\":[\"user-research\"]}"
 
   # === Understanding fields (when comprehension_state: present) ===
@@ -90,34 +90,26 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that the user's mental model is the user's fault — that confusion comes from inattention or lack of training, and the response is "train harder" or "add a tooltip." The user's model came from somewhere: usually the interface itself, prior experience with similar systems, the analogy the documentation used. The discipline is to ask which signals seeded the wrong model and how the system image can be made to convey the system's actual model honestly. "The user is holding it wrong" is almost never the right diagnosis; "the interface is teaching the wrong model" almost always is, and the right intervention sits at the interface, not at the user.
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"A mental model is the internal representation a person carries of how a system, domain, or set of relationships behaves — used to predict outcomes, plan actions, and interpret feedback. Mental models are constructed (from experience, instruction, analogy, and inference), private (each mind holds its own), and partial (no model captures the full complexity of its referent). They are the cognitive scaffolding that makes the world tractable; they are also the silent source of most surprise, frustration, and bug-shaped misunderstanding. The discipline of mental-models is the explicit study of how these representations are built, where they diverge from the systems they represent, and how to bring multiple models into alignment when collaborators, users, and systems are working from different ones.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/mental-models/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  skill_graph_canonical_skill: skills/meta-methods/mental-models/SKILL.md
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
 ---
 
 # Mental Models
@@ -216,7 +208,7 @@ After applying this skill, verify:
 | Building a formal representation (entities, attributes, schemas) | `conceptual-modeling` | conceptual-modeling owns formal-domain representation; mental-models owns the cognitive layer above any formalism |
 | Choosing between graphs, frames, rules as a knowledge representation paradigm | `knowledge-modeling` | knowledge-modeling owns paradigm selection; mental-models is upstream of paradigm choice |
 | Empirically eliciting user mental models through research methods | `user-research` | user-research owns the elicitation methods; this skill owns the conceptual frame the methods serve |
-| Transferring a known mental model to another person | `teaching-patterns` | teaching-patterns owns the transmission discipline; this skill owns the construction discipline |
+| Transferring a known mental model to another person | Out of scope | This skill owns diagnosing and aligning model-system fit, not instructional delivery or curriculum design |
 | Reasoning about specific cognitive biases (anchoring, framing, recency) | (no direct skill — out of scope) | The cognitive-bias literature is its own discipline; this skill focuses on system-model representation rather than decision-making bias |
 | Choosing the React hook for a state-management decision | `state-management` + library docs | Tactical implementation choice; this skill is the upstream framing |
 | The drawing or notation of a model | diagramming tools / `knowledge-modeling` | The artifact is not the model; this skill applies to the cognitive structure, not its visual representation |
