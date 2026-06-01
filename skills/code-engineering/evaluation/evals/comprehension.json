@@ -1,0 +1,102 @@
+{
+  "skill_name": "evaluation",
+  "subject": "Completion evaluation",
+  "adjacent_concepts": [
+    "agent-eval-design",
+    "code-review",
+    "testing-strategy",
+    "methodology",
+    "debugging",
+    "epistemic-grounding",
+    "eval-driven-development"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define completion evaluation in 2-3 sentences. Include what evidence it compares before work can be called done.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Evaluation is a gate applied to a concrete artifact or task result",
+        "Compares the original request or acceptance criteria with the produced artifact",
+        "Requires verification evidence rather than confidence",
+        "Names residual risks or missing evidence",
+        "Ends with accept, accept-with-risk, revise, or block"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain why evaluation is a gate rather than a compliment, and name the minimum evidence packet before scoring.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects praise or plausibility as the purpose of evaluation",
+        "Names the original request",
+        "Names the artifact or changed files",
+        "Names verification evidence",
+        "Names residual risks, unrun checks, or accepted tradeoffs"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish evaluation from agent-eval-design, code-review, testing-strategy, methodology, debugging, and eval-driven-development. Give a mechanism-level boundary for each.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "agent-eval-design owns eval-suite, grader, threshold, and hard-negative design",
+        "code-review owns line-by-line diff findings",
+        "testing-strategy owns choosing test levels and regression targets",
+        "methodology owns process and gates before implementation exists",
+        "debugging owns root-cause analysis of a known failure",
+        "eval-driven-development owns iterative LLM-system change gating with eval suites",
+        "evaluation owns whole-deliverable completion scoring"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A teammate says, 'Tests passed, so the work is complete.' Use the evaluation skill to explain the misconception and apply a score ceiling.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Tests passing is evidence, not full completion",
+        "The artifact must still match the original request and acceptance criteria",
+        "Docs, state, publication, or reporting gaps can cap the score",
+        "Residual risks and unrun checks must be visible",
+        "A required action remaining caps the score at 3"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "An agent says it completed a documentation-and-code task. Tests passed, but the requested documentation update is missing and no final residual-risk note was written. Score the deliverable and name the required action.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Does not accept the task as fully complete",
+        "Applies a maximum score of 3 because required documentation or reporting remains unresolved",
+        "Names the missing documentation update as a required action",
+        "Names the missing residual-risk note as a reporting gap",
+        "Requires focused re-verification and rescoring after revision"
+      ]
+    }
+  ]
+}

@@ -1,16 +1,20 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: evaluation
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when scoring a completed agent task, implementation, document, skill upgrade, or other deliverable against the original request, acceptance criteria, verification evidence, quality rubric, and residual risks before calling it done. Covers skeptical critic review, 1-5 scoring, score ceilings, evidence sufficiency, finding/action capture, and the evaluation-revision loop. Do NOT use for designing eval datasets or graders (use agent-eval-design), line-by-line diff review (use code-review), choosing test levels (use testing-strategy), or designing the overall process and gates before work starts (use methodology)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: portable-runtime notes for how this skill should be used outside the source repo.
 compatibility:
   notes: "Portable completion-evaluation discipline for AI agent work, documentation, skill upgrades, and software deliverables. It assumes the evaluator can inspect the request, artifact, changed files or report, and verification evidence; substitute local tools and acceptance criteria as needed."
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep Bash
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.1.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -22,33 +26,29 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Evidence-based evaluation of completed agent tasks, implementations, documents, skill upgrades, and other deliverables against the original request, acceptance criteria, verification evidence, quality rubric, and residual risks before calling the work done. Portable across software, documentation, and agent-output review when the evaluator can inspect the request, artifact, and evidence. Excludes designing eval datasets or graders (agent-eval-design), line-by-line diff review (code-review), choosing test levels (testing-strategy), designing the process before work starts (methodology), and root-cause investigation of known failures (debugging)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: engineering/evaluation
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-18\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -66,28 +66,27 @@ metadata:
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"design a new eval dataset, grader, and hard negatives for this router\",\"review this pull request line by line for bugs and security issues\",\"choose unit versus integration versus end-to-end tests for this feature\",\"design the whole implementation methodology and quality gate sequence before work starts\",\"debug why the existing run failed in production\",\"author a new SKILL.md from scratch\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"boundary\":[{\"skill\":\"agent-eval-design\",\"reason\":\"agent-eval-design creates eval suites, graders, thresholds, and hard negatives; evaluation applies a completion rubric to a concrete artifact or finished task.\"},{\"skill\":\"code-review\",\"reason\":\"code-review inspects a diff for correctness, security, maintainability, and review comments; evaluation scores the whole deliverable against request, evidence, risks, and done criteria.\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy decides what behavior deserves which test level; evaluation judges whether the delivered verification evidence is sufficient for the task risk.\"},{\"skill\":\"methodology\",\"reason\":\"methodology designs the process and gates before execution; evaluation is the gate applied to an artifact after work exists.\"},{\"skill\":\"skill-infrastructure\",\"reason\":\"skill-infrastructure runs deterministic health tooling across a skill library; evaluation is a human-readable scoring discipline for one deliverable.\"}],\"related\":[\"best-practice\",\"methodology\",\"agent-eval-design\",\"testing-strategy\",\"code-review\"],\"verify_with\":[\"code-review\",\"testing-strategy\",\"best-practice\"]}"
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
+  relations: "{\"boundary\":[{\"skill\":\"agent-eval-design\",\"reason\":\"evaluation owns scoring a concrete artifact against request, evidence, risks, and done criteria; agent-eval-design owns designing eval suites, graders, thresholds, and hard negatives.\"},{\"skill\":\"code-review\",\"reason\":\"evaluation owns whole-deliverable completion scoring; code-review owns line-by-line diff inspection for correctness, security, maintainability, and review comments.\"},{\"skill\":\"testing-strategy\",\"reason\":\"evaluation owns judging whether delivered verification evidence is sufficient for task risk; testing-strategy owns deciding what behavior deserves which test level.\"},{\"skill\":\"methodology\",\"reason\":\"evaluation owns the post-artifact gate; methodology owns designing the process and gates before execution.\"},{\"skill\":\"debugging\",\"reason\":\"evaluation owns scoring whether completed work is acceptable; debugging owns root-cause investigation of a known failure.\"},{\"skill\":\"eval-driven-development\",\"reason\":\"evaluation owns final completion scoring for one deliverable; eval-driven-development owns iterative LLM-system change gating with eval suites.\"}],\"related\":[\"best-practice\",\"methodology\",\"agent-eval-design\",\"testing-strategy\",\"code-review\",\"epistemic-grounding\",\"eval-driven-development\"],\"verify_with\":[\"code-review\",\"testing-strategy\",\"best-practice\",\"epistemic-grounding\"]}"
   # grounding: required when `deployment_target: project`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
-  grounding: "{\"subject_matter\":\"Evidence-based evaluation of agent outputs, deliverables, and completion claims\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://github.com/openai/evals\",\"https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents\",\"https://platform.claude.com/docs/en/test-and-evaluate/develop-tests\",\"https://adk.dev/evaluate/\",\"https://airc.nist.gov/\"],\"failure_modes\":[\"self_assessment_optimism_marks_incomplete_work_done\",\"tests_pass_treated_as_full_quality_evidence\",\"score_inflated_despite_missing_acceptance_criteria\",\"rubric_omits_negative_boundaries_or_residual_risks\",\"evaluation_confused_with_code_review_or_eval_dataset_design\",\"unverified_claims_enter_final_report\"],\"evidence_priority\":\"equal\"}"
+  grounding: "{\"subject_matter\":\"Evidence-based evaluation of agent outputs, deliverables, and completion claims\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://github.com/openai/evals\",\"https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents\",\"https://docs.anthropic.com/en/docs/test-and-evaluate/develop-tests\",\"https://adk.dev/evaluate/\",\"https://airc.nist.gov/\"],\"failure_modes\":[\"self_assessment_optimism_marks_incomplete_work_done\",\"tests_pass_treated_as_full_quality_evidence\",\"score_inflated_despite_missing_acceptance_criteria\",\"rubric_omits_negative_boundaries_or_residual_risks\",\"evaluation_confused_with_code_review_or_eval_dataset_design\",\"unverified_claims_enter_final_report\"],\"evidence_priority\":\"equal\"}"
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -101,34 +100,25 @@ metadata:
   analogy: "Evaluation is an inspection gate at the end of a production line: passing one measurement is not enough if the product misses the order, lacks traceability, or carries a known risk."
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "Tests passing, lint passing, or a plausible final answer is not the same as completion. Completion requires fit to request, sufficient evidence, handled risks, and honest reporting."
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"Evaluation is the disciplined scoring of a concrete output against explicit goals, evidence, rubric criteria, and residual risks so a team can decide whether to accept, revise, or block the work.\",\"mental_model\":\"Treat evaluation as a gate, not a compliment. The evaluator compares the requested outcome, the produced artifact, the evidence trail, and the failure modes that would matter if the artifact shipped unchanged.\",\"purpose\":\"It prevents optimistic done claims by forcing visible scores, score ceilings, missing-evidence callouts, required revisions, and a final accept or block decision.\",\"boundary\":\"It does not design eval datasets, review code line by line, choose test levels before implementation, debug failures, or design the whole process. It scores an artifact or task result after evidence exists.\",\"taxonomy\":\"Core evaluation surfaces are acceptance fit, evidence sufficiency, artifact quality, risk handling, regression protection, portability, and reporting completeness. Common graders are checklist, rubric, exact or code-based checks, trace inspection, human review, and LLM-as-judge with calibration.\",\"analogy\":\"Evaluation is like an inspection gate at the end of a production line: passing one measurement is not enough if the product misses the order, lacks traceability, or carries a known safety risk.\",\"misconception\":\"The common mistake is treating evaluation as praise, taste, or a post-hoc score. Good evaluation is adversarial in the useful sense: it looks for the first honest reason the work is not done yet.\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/code-engineering/evaluation/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
 ---
 
 # Evaluation
