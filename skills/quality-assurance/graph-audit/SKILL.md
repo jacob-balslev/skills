@@ -1,46 +1,20 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: graph-audit
-description: "Use when checking that every SKILL.md conforms to the schema, that manifest entries match authored frontmatter, or that relation targets point at real sibling skills. Covers schema conformance, manifest sync, relation integrity, eval-artifact coherence, grounding presence, and name-directory parity. Do NOT use for general code review, runtime agent debugging, or auditing non-skill files."
+# description: routing contract for when this skill should activate and when it should not.
+description: "Use when checking that SKILL.md files and audit-state.json sidecars conform to the live Skill Metadata Protocol schemas, that manifest entries match the joined source model, or that relation targets point at real sibling skills. Covers schema conformance, sidecar consistency, manifest sync, relation integrity, eval-artifact coherence, grounding presence, and name-directory parity. Do NOT use for general code review, runtime agent debugging, or auditing non-skill files."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: portable-runtime notes for how this skill should be used outside the source repo.
 compatibility:
   notes: "Markdown, JSON Schema, Node.js"
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep Bash
-grounding:
-  subject_matter: "Skill Metadata Protocol and Skill Graph manifest consistency"
-  grounding_mode: "repo_specific"
-  truth_sources:
-    - schemas/skill.schema.json
-    - schemas/manifest.schema.json
-    - docs/skill-metadata-protocol.md
-    - scripts/skill-lint.js
-    - scripts/lib/alias-contract.js
-    - scripts/check-protocol-consistency.js
-    - scripts/generate-manifest.js
-    - examples/evals/graph-audit.json
-  failure_modes:
-    - schema_drift
-    - manifest_sample_out_of_sync
-    - broken_relation_targets
-    - eval_artifacts_mismatch
-    - name_directory_mismatch
-  evidence_priority: "repo_code_first"
-drift_check:
-  last_verified: "2026-05-18"
-  truth_source_hashes:
-    "schemas/skill.schema.json": "f9fc4fc8f61999c18d5c1c534f9642101b0ee7173f261e28f9470aeb03b68e5b"
-    "schemas/manifest.schema.json": "94f2e990cc81b7a9aa26ea9855de1dbe1535a127feb5e5c74629c9e1dad2ee1a"
-    "docs/skill-metadata-protocol.md": "300bbdaf87754298ca19e581b587d2fac901ab57b8c4c75d33e11bebc24a5fe4"
-    "scripts/skill-lint.js": "e5de8a822b88172079263c8316b173e688b71498c9ed6a8a54dd0fba6aa9fd66"
-    "scripts/lib/alias-contract.js": "d2a9831fef1ab06d2ea37b9d41e000d8b3a9a327357b62063ad00102cd2763cf"
-    "scripts/check-protocol-consistency.js": "22f1f747b6b578e83ae371ac3f9af4b6906d94529f383d1785ed3303b4c5a008"
-    "scripts/generate-manifest.js": "ec4ad89e21e44c272676846377679f59a272c193f0b0d448a7b6d881b0b9effc"
-    "examples/evals/graph-audit.json": "4fc0fa157b363c9d5675112bfe860ed48a599d05c41720b387aa2d8798eab5a3"
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -52,30 +26,27 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: project
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Auditing Skill Graph skill-library consistency: SKILL.md schema conformance, audit-state.json sidecar consistency, manifest joins, relation-target integrity, eval-artifact coherence, project-grounding presence, and name-directory parity. Project-targeted to the Skill Graph protocol/tooling surface and its canonical sibling skill library. Excludes general code review, runtime agent debugging, prose rewriting, new-skill scaffolding, and maintaining the health-tooling implementation itself."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: quality/audit
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-04-18"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-13\",\"truth_source_hashes\":{\"schemas/skill.schema.json\":\"370a021a129cba5b54cd15daaaa934fbb172df306dc0095608ea4a5607fe2526\",\"schemas/manifest.schema.json\":\"b5181764e0b645d01a8b6918c78463e53a2f28669a6883365c3a1d132323c066\",\"docs/skill-metadata-protocol.md\":\"bce8933a4f4f6386e36e618f2de97f0f6feb864a4c1aaeec225291110e7f8a76\",\"scripts/skill-lint.js\":\"3a78f75f8921542b91dc619cd41bde29bf379de3c16bdcf3653c854ecbe9fa29\",\"scripts/lib/alias-contract.js\":\"ab7b4f15c13caf1ff1f3205e285415b086f7b6cbc3fcfaba982a590cc56b49cd\",\"scripts/check-protocol-consistency.js\":\"0ff39406d36e7a9e51c176f657f4f426d8bd5a3fe6411d28b9e9a93dc7d89f29\",\"scripts/generate-manifest.js\":\"9d7bbbdae440fdb1763d61ffa7bda10c9efae92359d1c2139d0e971582d59e0e\",\"examples/evals/graph-audit.json\":\"8edab7bc057c65c8fd43f6ca17863c7a12ea831f6eb2158f1b2fde2ba03ad4b2\"}}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: present
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: passing
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -83,68 +54,64 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"skill audit\",\"manifest audit\",\"schema validation\",\"skill consistency\",\"graph audit\",\"metadata check\",\"skill frontmatter check\",\"broken relation\",\"skill drift\",\"audit my skills\",\"dangling relation\",\"relations target missing\",\"library-wide audit\",\"skill metadata audit\"]"
+  keywords: "[\"skill audit\",\"manifest audit\",\"schema validation\",\"skill consistency\",\"graph audit\",\"metadata check\",\"broken relation\",\"sidecar audit\",\"library-wide audit\",\"skill metadata audit\"]"
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"graph-audit\"]"
   # paths: glob array of code surfaces this skill governs. Supports gitignore-style
   # negation. Each glob should map to ONE canonical skill. Omit if purely conceptual.
-  paths: "[\"skills/**/SKILL.md\",\"schemas/*.json\",\"examples/skills.manifest.sample.json\"]"
+  paths: "[\"../skills/skills/**/SKILL.md\",\"../skills/skills/**/audit-state.json\",\"schemas/*.json\",\"examples/skills.manifest.sample.json\",\"examples/evals/*.json\"]"
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
-  examples: "[\"audit all skills for schema conformance and broken relation targets\",\"the manifest sample drifted from the generator — find the mismatch\",\"check that every `scope: codebase` skill has a populated grounding block\",\"which skills declare a relations target that doesn't exist in the library?\"]"
+  examples: "[\"audit all skills for schema conformance and broken relation targets\",\"the manifest sample drifted from the generator — find the mismatch\",\"check that every project-targeted skill has a populated grounding block\",\"which skills declare a relations target that doesn't exist in the library?\"]"
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"diagnose why the @/components import cycle broke the build\",\"my agent is stuck in a loop — what's wrong?\",\"write a reference doc explaining what the lint-checker pipeline does\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"boundary\":[{\"skill\":\"refactor\",\"reason\":\"refactor changes skill body structure; graph-audit is read-only metadata verification\"},{\"skill\":\"debugging\",\"reason\":\"debugging chases a specific runtime failure; graph-audit is bulk static verification of every skill\"},{\"skill\":\"eval-driven-development\",\"reason\":\"eval-driven-development owns LLM eval iteration discipline and writing reference documentation; graph-audit is read-only static verification of skill metadata schemas — writing an explanatory doc about a pipeline is documentation work, not a schema audit\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns Next.js server/client component boundaries and import-graph architecture concerns; graph-audit owns static verification of skill metadata schemas — an import-cycle build break is a code-architecture concern, not a skill-metadata audit\"},{\"skill\":\"autonomous-loop-patterns\",\"reason\":\"autonomous-loop-patterns owns the runtime mechanics of agent loops (claim, retry, halt, stuck-loop diagnosis); graph-audit owns static verification of skill-library metadata — diagnosing a stuck agent is a runtime/agent-design concern, not a metadata schema check\"},{\"skill\":\"replication-patterns\",\"reason\":\"replication-patterns owns stateful replication design and explanatory documentation about pipelines; graph-audit owns static metadata verification — writing a reference doc explaining a pipeline is documentation work, not a schema audit\"}],\"verify_with\":[\"testing-strategy\"]}"
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
+  relations: "{\"related\":[\"skill-infrastructure\",\"skill-router\",\"schema-evolution\",\"testing-strategy\"],\"boundary\":[{\"skill\":\"refactor\",\"reason\":\"graph-audit owns checking skill metadata, sidecars, manifests, and relation targets; refactor owns changing skill body structure.\"},{\"skill\":\"debugging\",\"reason\":\"graph-audit owns static consistency checks across skill-library artifacts; debugging owns root-cause analysis of a specific runtime failure.\"},{\"skill\":\"skill-infrastructure\",\"reason\":\"graph-audit owns applying existing health checks to skill artifacts; skill-infrastructure owns designing or maintaining the health-tooling implementation.\"},{\"skill\":\"skill-router\",\"reason\":\"graph-audit owns verifying one skill's metadata and graph edges; skill-router owns choosing between skills at request time.\"},{\"skill\":\"eval-driven-development\",\"reason\":\"graph-audit owns static skill-library consistency; eval-driven-development owns iterative LLM-system change gating with eval suites.\"}],\"verify_with\":[\"skill-infrastructure\",\"testing-strategy\"]}"
   # grounding: required when `deployment_target: project`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
-  grounding: "{\"subject_matter\":\"Skill Metadata Protocol and Skill Graph manifest consistency\",\"grounding_mode\":\"repo_specific\",\"truth_sources\":[\"schemas/skill.schema.json\",\"schemas/manifest.schema.json\",\"docs/skill-metadata-protocol.md\",\"scripts/skill-lint.js\",\"scripts/lib/alias-contract.js\",\"scripts/check-protocol-consistency.js\",\"scripts/generate-manifest.js\",\"examples/evals/graph-audit.json\"],\"failure_modes\":[\"schema_drift\",\"manifest_sample_out_of_sync\",\"broken_relation_targets\",\"eval_artifacts_mismatch\",\"name_directory_mismatch\"],\"evidence_priority\":\"repo_code_first\"}"
+  grounding: "{\"subject_matter\":\"Skill Metadata Protocol and Skill Graph manifest consistency\",\"grounding_mode\":\"repo_specific\",\"truth_sources\":[\"schemas/SKILL_METADATA_PROTOCOL_schema.json\",\"schemas/skill-audit-state.schema.json\",\"schemas/manifest.schema.json\",\"skill-metadata-protocol/SKILL_METADATA_PROTOCOL.md\",\"scripts/skill-lint.js\",\"scripts/check-audit-manifest.js\",\"scripts/check-protocol-consistency.js\",\"scripts/generate-manifest.js\",\"examples/evals/graph-audit.json\"],\"failure_modes\":[\"schema_drift\",\"sidecar_state_drift\",\"manifest_sample_out_of_sync\",\"broken_relation_targets\",\"eval_artifacts_mismatch\",\"name_directory_mismatch\"],\"evidence_priority\":\"repo_code_first\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/graph-audit/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  skill_graph_canonical_skill: skills/quality-assurance/graph-audit/SKILL.md
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: DRIFT
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-last_audited: 2026-05-28
-lint_verdict: PASS
 ---
 
 # Graph Audit
 
 ## Coverage
 
-- Schema conformance: checking that every `skills/<name>/SKILL.md` validates against `schemas/skill.schema.json` without errors
-- Manifest sync: verifying that `examples/skills.manifest.sample.json` matches the output of `scripts/generate-manifest.js` run against the current skills
+- Schema conformance: checking that canonical `SKILL.md` files validate against `schemas/SKILL_METADATA_PROTOCOL_schema.json` without errors
+- Sidecar consistency: checking that `audit-state.json` files carry loop-owned audit/eval/provenance state and validate against `schemas/skill-audit-state.schema.json`
+- Manifest sync: verifying that `examples/skills.manifest.sample.json` and generated manifests match the joined `SKILL.md` + `audit-state.json` source model
 - Relation integrity: confirming that every target named under `relations.*` corresponds to a real sibling skill directory and uses the right predicate semantics (`related`/`broader`/`boundary`/`disjoint_with`/`verify_with`/`depends_on`)
-- Eval artifact coherence: ensuring that `eval_artifacts: present` is backed by a real eval artifact under `examples/evals/` that names the skill in its `skill_name` field
-- Grounding presence: confirming that every `scope: codebase` skill has a fully populated `grounding` block with `domain_object`, `grounding_mode`, `truth_sources`, `failure_modes`, and `evidence_priority`
+- Eval artifact coherence: ensuring that `eval_artifacts: present` and graded verdict claims are backed by real gradeable artifacts
+- Grounding presence: confirming that every `deployment_target: project` skill has a populated `grounding` declaration with `subject_matter`, `grounding_mode`, `truth_sources`, `failure_modes`, and `evidence_priority`
 - Name-directory parity: checking that a skill's `name` field matches the name of the parent directory (required for SKILL.md compatibility)
 
 ## Philosophy
@@ -155,17 +122,19 @@ Skill graphs fail silently. A broken relation or a drifted enum value does not c
 
 | File | Line range | Purpose |
 |---|---|---|
-| `schemas/skill.schema.json` | whole file | Enforces the frontmatter schema for every SKILL.md |
+| `schemas/SKILL_METADATA_PROTOCOL_schema.json` | whole file | Enforces the authored metadata schema for every SKILL.md |
+| `schemas/skill-audit-state.schema.json` | whole file | Enforces the sidecar Audit Status schema for loop-owned state |
 | `schemas/manifest.schema.json` | whole file | Enforces the compiled manifest shape |
-| `docs/skill-metadata-protocol.md` | §§ Archetype, Requiredness, Schema Versioning | Source of truth for field semantics and the archetype section map |
-| `scripts/skill-lint.js` | 91–114 (`AUTHORED_FIELDS_MUST_FLOW`), 149–202 (`checkSchemaParity`), 175–250 (`validateAgainstSchema`) | The canonical audit runner. Implements the six dimensions listed in Coverage plus five more: parent-directory-matches-name, cross-schema parity, sample-manifest conformance, generator parity, and routing-quality rules. See README § Validation for the full eleven-check list. |
-| `scripts/lib/alias-contract.js` | whole file | Shared v3.1 alias-parity guard used by lint and manifest generation so preferred/legacy fields cannot diverge silently |
-| `scripts/check-protocol-consistency.js` | C1–C7 checks | Cross-artifact protocol checker. Complementary to `skill-lint.js` — lint validates per-skill correctness; this validates that the protocol documents themselves remain consistent with the schemas. |
-| `examples/skills.manifest.sample.json` | whole file | Generator-produced sample; lint fails if this drifts from `generate-manifest.js` output |
+| `skill-metadata-protocol/SKILL_METADATA_PROTOCOL.md` | Schema contract and field sections | Source of truth for field semantics and authoring rules |
+| `scripts/skill-lint.js` | whole file | Canonical per-skill lint runner for schema, comments, relation targets, and related static checks |
+| `scripts/check-audit-manifest.js` | whole file | Checks that graded verdict claims have the gradeable artifacts they require |
+| `scripts/check-protocol-consistency.js` | whole file | Cross-artifact protocol checker; validates that protocol docs remain consistent with schemas |
+| `scripts/generate-manifest.js` | whole file | Builds the compiled manifest from `SKILL.md` plus `audit-state.json` |
+| `examples/skills.manifest.sample.json` | whole file | Generator-produced sample used as a stable manifest fixture |
 
 ## Evals
 
-This skill ships a comprehension-eval artifact at [`examples/evals/graph-audit.json`](https://github.com/jacob-balslev/skill-graph/blob/main/examples/evals/graph-audit.json) covering all six audit dimensions listed under Coverage. The `Verification` checklist below is the deterministic per-file audit gate; the eval file is how this skill's concept comprehension is graded by `scripts/skill-audit.js --graded`.
+This skill has a local comprehension artifact at `evals/comprehension.json` and a Skill Graph fixture at [`examples/evals/graph-audit.json`](https://github.com/jacob-balslev/skill-graph/blob/main/examples/evals/graph-audit.json). The local artifact exercises the portable concept; the Skill Graph fixture keeps repo-grounded prompts tied to current protocol files, sidecar state, manifest joins, relation targets, and gradeable-artifact evidence.
 
 ## Verification
 
@@ -181,25 +150,28 @@ For a single skill:
 node scripts/skill-lint.js skills/<name>
 ```
 
-For the full audit including the skill-metadata-template:
+For the full audit including the skill-metadata-template and audit-evidence consistency:
 
 ```bash
 node scripts/skill-lint.js --include-template
+node scripts/check-audit-manifest.js
 ```
 
 Exit code 0 means all checks passed. Exit code 1 means at least one check failed; each failure identifies the specific file and check.
 
 - [ ] All SKILL.md files pass schema validation
+- [ ] All `audit-state.json` sidecars validate and contain loop-owned state rather than duplicating those fields in SKILL.md
 - [ ] Manifest sample matches generator output
 - [ ] All relation targets exist as real sibling skill directories
-- [ ] All `eval_artifacts: present` skills have a matching eval artifact
-- [ ] All `scope: codebase` skills have a complete `grounding` block
+- [ ] All graded verdict claims have matching gradeable artifacts
+- [ ] All `deployment_target: project` skills have a complete `grounding` declaration
 - [ ] Every skill's `name` field matches its parent directory name (SKILL.md compatibility)
 
 ## Do NOT Use When
 
 | Use instead | When |
 |---|---|
-| `documentation` | The task is authoring or restructuring skill prose, not auditing metadata |
+| `writing-humanizer` | The task is making skill prose read more naturally, not auditing metadata |
 | `refactor` | The task is restructuring skill body sections while keeping the contract stable |
 | `debugging` | The task is chasing a runtime failure in an agent, not validating graph metadata |
+| `skill-infrastructure` | The task is designing or maintaining the health-check tooling itself |

@@ -1,0 +1,29 @@
+{
+  "schema_version": 8,
+  "version": "1.0.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-01",
+  "drift_check": {
+    "last_verified": "2026-06-01",
+    "truth_source_hashes": {
+      "schemas/SKILL_METADATA_PROTOCOL_schema.json": "db93d4a57acef4121b403dce8eac4f9dfcce3f3d7378782eaad06740c36f1fcf",
+      "schemas/skill-audit-state.schema.json": "399810c0b833c1d526c92a23d989fdba0f1ff8e1e70724b881c35212f1401465",
+      "schemas/manifest.schema.json": "fe8560f7cc3907f42b2afd2e6c8b5440f1b825c67f5d2f5619ad127fe35771c8",
+      "skill-metadata-protocol/SKILL_METADATA_PROTOCOL.md": "aa6778f7e775b4929e7dd84a3644efab0b8a3d8779d0bcbf22457027a48cb5fa",
+      "scripts/skill-lint.js": "6cb1e5f69112603b7dbd5a946326a9e2324efdc91771923a2d967314fdb9725c",
+      "scripts/check-audit-manifest.js": "6955945e360245cb955ac08862f280b8b3b957e9c42d34960c27bf04117fca2a",
+      "scripts/check-protocol-consistency.js": "6df8b2f6af8afe37ea83ef20ea4b67aa46aace366c816d8b81fd1c61f5bccf81",
+      "scripts/generate-manifest.js": "f6b3769b82dfd0ab362bbc9fc1afffdf31cf3c764cbb6f658d5db12ea173b60c",
+      "examples/evals/graph-audit.json": "2593a105611e3023b48207be32745d791255b80ddfa07f6efac6329e1efc01a0"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_audited": "2026-06-01",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS"
+}

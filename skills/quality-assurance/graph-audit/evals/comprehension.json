@@ -1,0 +1,99 @@
+{
+  "skill_name": "graph-audit",
+  "subject": "Skill Graph metadata and manifest consistency auditing",
+  "adjacent_concepts": [
+    "skill-infrastructure",
+    "skill-router",
+    "schema-evolution",
+    "testing-strategy",
+    "refactor",
+    "debugging"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define graph-audit in the Skill Graph context in 2-3 sentences. Include SKILL.md schema checks, audit-state sidecar checks, manifest joins, and relation-target integrity.",
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Checks SKILL.md against the live Skill Metadata Protocol schema",
+        "Checks audit-state.json sidecars for loop-owned state",
+        "Checks manifest output as a joined view of SKILL.md plus sidecar state",
+        "Checks relation targets point at real sibling skills",
+        "Treats metadata drift as a skill-library quality issue"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model for why graph-audit exists. Why is silent metadata drift worse than a loud failure?",
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Skill retrieval can be subtly wrong when metadata or relation edges drift",
+        "A broken relation or stale enum may not crash the agent",
+        "Graph-audit turns silent graph bugs into visible lint or audit findings",
+        "It protects routing, manifest consumers, and per-skill audit evidence"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish graph-audit from skill-infrastructure, skill-router, refactor, debugging, and testing-strategy. Give mechanism-level boundaries.",
+      "substance": "contradiction-check",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "skill-infrastructure owns designing or maintaining the health tooling",
+        "skill-router owns choosing between skills for an incoming request",
+        "refactor owns changing skill body structure",
+        "debugging owns root-cause analysis of runtime failures",
+        "testing-strategy owns choosing test levels and regression coverage",
+        "graph-audit owns applying consistency checks to skill artifacts"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A teammate says, 'The manifest generated, so relation integrity is fine.' Explain the misconception using graph-audit.",
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Manifest generation alone is not the whole audit",
+        "Relation targets must be checked against real sibling skill directories",
+        "Sidecar-owned audit state must not be duplicated or stale in SKILL.md",
+        "Eval/verdict claims require matching gradeable artifacts",
+        "Graph-audit needs multiple checks, not one successful generator run"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A project-targeted skill has deployment_target: project but no grounding truth_sources, and it also has a relations.verify_with target that does not exist. Apply graph-audit and name the findings and required fixes.",
+      "substance": "domain",
+      "calibration": "process",
+      "truth_mode": "process_correctness",
+      "skill_type": "workflow",
+      "criticality": "critical",
+      "expected_elements": [
+        "Flags missing or incomplete project grounding",
+        "Flags dangling relation target",
+        "Requires adding real truth_sources or changing deployment_target if project grounding is false",
+        "Requires replacing or removing the missing relation target",
+        "Requires re-running lint or the graph-audit verification checks"
+      ]
+    }
+  ]
+}
