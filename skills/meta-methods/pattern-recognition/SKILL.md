@@ -1,16 +1,20 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: pattern-recognition
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when auditing for recurring issues, clustering errors, detecting drift from conventions, or when an agent keeps fixing symptoms instead of root causes. Covers the Observe -> Cluster -> Name -> Codify -> Detect -> Prevent loop, grep-based audits, normalize-then-hash error clustering, board-health patterns, design-token and heading drift, domain-encoding patterns, eval-as-pattern-tests, 5 Whys, pattern lifecycle states, and drift traps. Do NOT use for one-off bug localization without recurrence, or for designing the classification system itself; this skill detects violations of conventions that already exist."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime or format notes for consumers that export or execute this skill.
 compatibility:
   notes: "Language- and stack-agnostic. The recognition loop, clustering method, eval pipeline, and 5-Whys ladder apply to any codebase; the grep patterns and example detection rules are illustrative — substitute the equivalents of your stack."
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.2.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -22,33 +26,13 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Portable pattern-recognition methodology for auditing recurring issues, clustering errors, detecting convention drift, naming root-cause patterns, and converting repeated observations into prevention through docs, evals, lint rules, hooks, or architecture changes. Covers the Observe -> Cluster -> Name -> Codify -> Detect -> Prevent loop, grep-based scans, normalize-then-hash error clustering, board-health patterns, design-token and heading drift, domain-encoding traps, eval-as-pattern-tests, 5 Whys, pattern lifecycle states, and drift traps. Excludes one-off bug localization (debugging/diagnosis), PR-scope code judgment (code-review), naming-rule definition (naming-conventions), lint-rule implementation machinery (lint-overlay), and designing the classification system itself (taxonomy-design)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: foundations/cognition
-  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
-  # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
-  # drift_check: truth-source verification record. Object with required `last_verified`
-  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
-  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-18\"}"
-
-  # === Evaluation Status: three orthogonal axes ===
-  # eval_artifacts: disk-truth — does an eval file exist on disk?
-  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: present
-  # eval_state: runtime-truth — has the eval been run and passed?
-  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
-  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
-  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
-  # comprehension_state: marker that this skill has populated v6+ Understanding fields
-  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -63,26 +47,17 @@ metadata:
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: "[\"review this code for semantic correctness\",\"find where the user-auth helper is defined\",\"design a MECE classification taxonomy for our error catalogue\",\"investigate why this single failing test is breaking\",\"trigger an alert when CPU exceeds 80% for 5 minutes\",\"rewrite this function to be cleaner\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
   relations: "{\"boundary\":[{\"skill\":\"debugging\",\"reason\":\"debugging fixes one specific bug; pattern-recognition identifies the recurring class behind many bugs and proposes a structural fix that prevents the whole class — same recurring-bug prompt routes to debugging for the immediate fix and to pattern-recognition for the systemic rule\"},{\"skill\":\"code-review\",\"reason\":\"code-review judges quality of a specific change at PR scope; pattern-recognition systematically detects recurring structural issues across the entire codebase — same 'recurring violation in PRs' prompt routes to code-review for blocking that PR and to pattern-recognition for adding a lint rule\"}],\"related\":[\"refactor\",\"naming-conventions\",\"lint-overlay\",\"diagnosis\"],\"verify_with\":[\"context-graph\",\"skill-infrastructure\",\"tool-call-strategy\"]}"
-  # portability: external-runtime export claims. Object with:
-  # readiness — declared (claim only) / scripted (export tooling exists) /
-  #             verified (proven with a receipt artifact).
-  # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
-  # lifecycle: maintenance policy for the drift sentinel.
-  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
-  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
-
-  # === Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
     Pattern recognition is the cognitive and methodological discipline of *identifying recurring structures across instances* — separating signal from noise, naming the structure once detected, and elevating it into durable, transmissible knowledge. Drawing from Gestalt perception (Wertheimer 1923), expert intuition research (Klein 1998 recognition-primed decision; Chase & Simon 1973 chess chunking — masters perceive board positions as small numbers of meaningful patterns), and the software-pattern tradition (Alexander 1977 *A Pattern Language*; Gamma et al. 1994 *Design Patterns*), it treats *pattern* as a class noun: a regularity worth naming because it explains many observations through one structure.
@@ -100,36 +75,27 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that *every recurring observation is a pattern* — that two similar bugs justify a framework, a lint rule, or a refactoring sweep. They do not. The *three-instance threshold* is load-bearing: one is a bug, two is a coincidence, three is a pattern. Premature codification creates false rules that block valid code and produces "pattern-inflation" (pareidolia — seeing patterns in noise) where the team responds to every coincidence with abstraction. Adjacent misconceptions: that *similar symptoms imply a shared root cause* (they do not — a cluster of "null reference" errors may have 3 different call sites with 3 different missing guards; verify each cluster member shares a root before proposing a unified fix); that *fixing at the symptom level eventually fixes the pattern* (it does not — the symptom loop is the most expensive form of pattern work; without the 5-Whys to the root level, every new instance generates a new fix; aim for level 4-5, not level 1-2); that *abstractions are always proportional to pattern recurrence* (they are not — building a framework or lint plugin for one pattern is over-abstraction; detection should be proportional to frequency: one pattern = grep rule; three patterns = lint plugin; complex wrapper harder to maintain than the duplication is its own anti-pattern); that *every match is a violation* (it is not — false-positive discipline matters: test fixtures are intentional, token files are exempt, inline `// @intentional:` comments document legitimate deviations; document exclusion rules in the grep pattern itself, not in memory); that *detection rules are evergreen* (they are not — patterns have *lifecycle states*: Active / Fixed / Stale / Migrated; a fixed pattern's detection rule should be archived; a migrated pattern requires dual detection of old AND new violations); and that *naming a pattern is enough* (it is not — pattern recognition completes the loop through Codify, Detect, Prevent, and ideally Eval; the eval step is non-optional because a skill section documents a pattern for humans, but an eval tests whether an agent applies the pattern reliably under new inputs).
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"Pattern recognition is the cognitive and methodological discipline of identifying recurring structures across instances — separating signal from noise, naming the structure once detected, and elevating it into durable, transmissible knowledge. Drawing from Gestalt perception (Wertheimer 1923), expert intuition research (Klein 1998, Chase & Simon 1973), and the software-pattern tradition (Alexander 1977, Gamma et al. 1994), it treats pattern as a class noun: a regularity worth naming because it explains many observations through one structure.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/pattern-recognition/SKILL.md
+  skill_graph_canonical_skill: skills/meta-methods/pattern-recognition/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1041"
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
 ---
 
 # Pattern Recognition

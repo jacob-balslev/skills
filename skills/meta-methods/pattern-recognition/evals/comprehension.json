@@ -1,0 +1,105 @@
+{
+  "skill_name": "pattern-recognition",
+  "subject": "Pattern recognition",
+  "adjacent_concepts": [
+    "recurring issue",
+    "root cause",
+    "convention drift",
+    "error clustering",
+    "three-instance threshold",
+    "false positive",
+    "lint rule",
+    "eval-as-pattern-test",
+    "debugging",
+    "code review"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define pattern recognition for agent/codebase work and explain why three instances change the response from one-off fixing to systemic prevention.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Defines pattern recognition as identifying recurring structures across instances",
+        "Distinguishes one bug, two coincidences, and three pattern candidates",
+        "Requires clustering and shared-root verification before codifying",
+        "Connects the pattern to durable prevention rather than repeated symptom fixes",
+        "Mentions codification through docs, evals, lint rules, hooks, or architecture changes"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the Observe -> Cluster -> Name -> Codify -> Detect -> Prevent loop and identify the failure mode each stage prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Names all six loop stages",
+        "Observe prevents premature pattern claims",
+        "Cluster prevents grouping similar symptoms without a shared root",
+        "Name creates a searchable, discussable pattern handle",
+        "Codify and Detect make the pattern reusable and testable",
+        "Prevent aims to make recurrence impossible when proportionate"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish pattern-recognition from debugging, code-review, diagnosis, naming-conventions, lint-overlay, and taxonomy-design.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "debugging owns one specific failing instance",
+        "code-review owns PR-scope judgment",
+        "diagnosis owns per-incident triage before the class is known",
+        "naming-conventions owns defining naming rules",
+        "lint-overlay owns lint-rule implementation machinery",
+        "taxonomy-design owns classification-system design rather than violation detection"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A teammate saw two similar errors and wants to create a new framework and CI lint rule. Diagnose the misconception and correct the response.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Says two similar observations are not enough to declare a pattern",
+        "Names the risk as premature codification or pattern inflation",
+        "Requires evidence of a shared root cause",
+        "Recommends fixing or observing the current instances without over-abstracting",
+        "Explains that detection/prevention should be proportionate to recurrence and cost"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A repo has twelve hardcoded color values outside token files, repeated stale import paths, and duplicated null guards. Design a pattern-recognition audit response.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Runs scans/counts before bulk editing",
+        "Samples matches to separate true positives from allowed exceptions",
+        "Clusters by shared root cause instead of filing duplicate findings",
+        "Names specific pattern classes such as design-token drift, stale pattern, or duplicated guard",
+        "Proposes prevention through lint/eval/docs/type constraints rather than only fixing instances"
+      ]
+    }
+  ]
+}
