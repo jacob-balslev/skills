@@ -1,16 +1,20 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: best-practice
-description: "Cross-cutting best practices enforcement across code, templates, skills, prompts, scripts, documentation, pages, and design. The enforcement layer that catches violations any specialist might miss. Do NOT use for deep code review methodology (use code-review), auth guard selection (use nextauth-patterns), SQL injection prevention (use security-scanning), PII masking (use gdpr-compliance), accessibility implementation depth (use a11y), or financial semantics (use code-logic)."
+# description: routing contract for when this skill should activate and when it should not.
+description: "Cross-cutting best practices enforcement across code, templates, skills, prompts, scripts, documentation, pages, and design. The enforcement layer that catches violations any specialist might miss. Do NOT use for deep code review methodology (use code-review), application security depth (use owasp-security), accessibility implementation depth (use a11y), or specialist design-system work (use design-system-architecture, color-system-design, or typography-system)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime or format notes for consumers that export or execute this skill.
 compatibility:
   notes: "Applies to any web application codebase using TypeScript, React, and Next.js App Router. The cross-domain enforcement priorities (security, a11y, performance, design system, testing, DevOps, AI/LLM) are framework-agnostic; the Next.js section is specific to the App Router pattern."
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep Bash
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.2.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -22,30 +26,27 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Portable final-pass quality enforcement across code, templates, skills, prompts, scripts, documentation, pages, and design. Use after or alongside specialist skills to catch boundary-spanning issues in security, accessibility, performance, testing, design-system use, documentation, DevOps, AI/LLM artifacts, and Next.js App Router patterns. Excludes deep specialist methodology owned by code-review, owasp-security, a11y, design-system-architecture, color-system-design, typography-system, testing-strategy, and agent-eval-design."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: quality/cross-domain
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-18\",\"truth_source_hashes\":{}}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: none
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -59,16 +60,17 @@ metadata:
   examples: "[\"reviewing a pull request for correctness, security, and style\",\"creating a new React component and checking it against quality standards\",\"auditing an existing feature for WCAG compliance and performance regressions\",\"writing tests and verifying coverage shape (unit / integration / e2e pyramid)\",\"authoring a new skill and checking it has structured scope, evals, and examples\",\"adding a new Next.js Server Action and verifying it has Zod validation and auth check\"]"
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
-  anti_examples: "[\"reviewing PR feedback phrasing and comment classification (use code-review)\",\"choosing between requireAuth, requireOrgAuth, and withOrgAuth (use nextauth-patterns)\",\"implementing SQL injection prevention or webhook HMAC verification (use security-scanning)\",\"designing the APCA contrast ratio for a new color palette (use color-science)\",\"implementing the font loading strategy and vertical rhythm (use typography)\",\"deciding what quality means per artifact type — code vs skill vs prompt (use craft-doctrine)\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  anti_examples: "[\"reviewing PR feedback phrasing and comment classification (use code-review)\",\"performing a deep OWASP threat review (use owasp-security)\",\"designing keyboard focus behavior or live-region placement (use a11y)\",\"designing the color system and contrast model (use color-system-design)\",\"implementing font loading and vertical rhythm (use typography-system)\",\"designing a skill's comprehension or application eval suite (use agent-eval-design)\"]"
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"adjacent\":[\"code-review\",\"security-scanning\",\"a11y\",\"design-guide\",\"composition-theory\",\"color-science\",\"visual-design\",\"typography\",\"copywriting\",\"semantics\",\"ui-ux\",\"next-best-practices\"],\"boundary\":[],\"verify_with\":[\"code-review\",\"security-scanning\"]}"
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
+  relations: "{\"boundary\":[{\"skill\":\"code-review\",\"reason\":\"best-practice owns the broad final quality gate across artifacts; code-review owns review process, finding classification, and feedback phrasing\"},{\"skill\":\"owasp-security\",\"reason\":\"best-practice owns breadth-level security checks in a cross-domain pass; owasp-security owns deep application-security review\"},{\"skill\":\"a11y\",\"reason\":\"best-practice owns broad accessibility reminders in a final quality pass; a11y owns detailed accessibility implementation and verification\"},{\"skill\":\"agent-eval-design\",\"reason\":\"best-practice owns the reminder that AI/LLM artifacts need eval coverage; agent-eval-design owns designing those eval suites\"}],\"related\":[\"code-review\",\"owasp-security\",\"a11y\",\"testing-strategy\",\"test-coverage-strategy\",\"performance-engineering\",\"performance-budgets\",\"design-system-architecture\",\"visual-design-foundations\",\"layout-composition\",\"color-system-design\",\"typography-system\",\"microcopy\",\"architecture-decision-records\",\"skill-scaffold\",\"agent-eval-design\",\"server-components-design\",\"server-actions-design\"],\"verify_with\":[\"code-review\",\"owasp-security\",\"a11y\",\"testing-strategy\",\"design-system-architecture\"]}"
   # grounding: required when `deployment_target: project`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
@@ -77,36 +79,29 @@ metadata:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"declared\",\"targets\":[\"skill-md\"]}"
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":180,\"review_cadence\":\"quarterly\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/best-practice/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
 ---
 
 # Best Practice — Cross-Cutting Quality Enforcement
@@ -123,22 +118,22 @@ Cross-cutting best practices enforcement across code, templates, skills, prompts
 
 Code quality (SOLID, strict TypeScript, DRY/KISS), documentation (ADRs, self-documenting names, TSDoc), security (OWASP Top 10:2025, secret management, input validation), accessibility (WCAG 2.2, semantic HTML, keyboard operability), performance (Core Web Vitals, code splitting, image optimization), design systems (token hierarchy, dark mode, composable APIs), testing (pyramid shape, behavior-not-implementation, coverage guardrails), DevOps (trunk-based development, progressive delivery, pipeline-as-code), AI/LLM skill design (RCCF structure, eval methodology, scope boundaries), Next.js App Router patterns (Server Components default, Server Action security, explicit caching), UX & UI composition (F-pattern for data surfaces, one L1 focal point per zone, density-first spacing), visual hierarchy (surface layering, card/banner depth, information density vs whitespace), typographic hierarchy (6-level heading contract, Minor Third scale, 4 canonical weights, h6 micro-labels), and color hierarchy (greyscale chrome, financial-only semantic color, triple encoding for colorblind safety).
 
-> **Authority:** Cross-domain quality gate. Does not override specialist skills — catches violations that fall between specialist boundaries. Defer to specialists for depth.
-> **Scope:** "Small focused changes" means scope discipline, NOT code reduction. See craft-doctrine for the enrichment principle.
+> **Authority:** Cross-domain quality gate. Does not override specialist skills — catches violations that fall between specialist boundaries. Use specialist skills for depth.
+> **Scope:** "Small focused changes" means scope discipline, NOT code reduction.
 
 ## Philosophy
 
-This skill exists because quality violations most often occur at the boundaries between specialist domains — a developer focuses on getting the TypeScript right but ships a `<div onClick>` instead of a `<button>`, or nails the component logic but hardcodes a hex color. No single specialist skill catches all of these; each covers its own depth. Without a cross-cutting enforcement layer, agents produce code that passes within any one domain but fails the "would a senior engineer approve this PR?" test. Observed failure modes that motivated this skill: SQL injection via string interpolation passing TypeScript strict mode, skipped test.skip entries accumulating into permanent dead tests, Server Actions treated as internal functions despite being public HTTP endpoints, and heading hierarchy violations slipping through because neither the a11y skill nor the design-guide skill owned the overlap zone. This skill is the net that catches what falls between specialist boundaries.
+This skill exists because quality violations most often occur at the boundaries between specialist domains — a developer focuses on getting the TypeScript right but ships a `<div onClick>` instead of a `<button>`, or nails the component logic but hardcodes a hex color. No single specialist skill catches all of these; each covers its own depth. Without a cross-cutting enforcement layer, agents produce code that passes within any one domain but fails the "would a senior engineer approve this PR?" test. Observed failure modes that motivated this skill: SQL injection via string interpolation passing TypeScript strict mode, skipped test.skip entries accumulating into permanent dead tests, Server Actions treated as internal functions despite being public HTTP endpoints, and heading hierarchy violations slipping through because neither the a11y skill nor the design-system skill owned the overlap zone. This skill is the net that catches what falls between specialist boundaries.
 
 ---
 
 ## Cross-Domain Synergy
 As the baseline enforcement layer, this skill connects:
-- **ui-ux & composition-theory**: Enforcing layout rules (one L1 focal point, F-pattern for data, density-first spacing).
-- **visual-design & design-guide**: Surface hierarchy, card depth, information density vs whitespace balance.
-- **typography & semantics**: Strict adherence to 6-level heading hierarchy, Minor Third scale, readable names.
-- **color-science**: Greyscale chrome enforcement, financial-only semantic color, triple encoding for colorblind safety.
-- **copywriting**: Validating copy inside PRs against the brand's calm-authority tone.
+- **layout-composition & frontend-architecture**: Enforcing one L1 focal point, scan-friendly layout, and density appropriate to the task.
+- **visual-design-foundations & design-system-architecture**: Surface hierarchy, component composition, token use, and information density.
+- **typography-system & semantics**: Heading hierarchy, readable names, and text structure that matches meaning.
+- **color-system-design**: Semantic color use, contrast, and redundant encoding when color carries meaning.
+- **microcopy**: Validating product copy inside PRs against the project voice and interaction state.
 
 ## 1. Code Quality
 
@@ -150,7 +145,7 @@ As the baseline enforcement layer, this skill connects:
 | Explicit return types | Every exported function declares its return type |
 | Small focused changes | PRs touch one logical concern, <400 changed lines (excl. generated) |
 
-> Anti-patterns and checklist: `references/code-quality-checklist.md`. See semantics for naming rules, craft-doctrine for quality dimensions.
+> Anti-patterns and checklist: `references/code-quality-checklist.md`. See naming-conventions and semantics for naming rules.
 
 ## 2. Documentation
 
@@ -162,7 +157,7 @@ As the baseline enforcement layer, this skill connects:
 | TSDoc on public APIs | `@param`, `@returns`, `@throws` on exported functions |
 | No stale TODOs | Every `// TODO` must reference a tracker ticket |
 
-> See adr for ADR creation methodology. See doc-updater for the documentation update protocol.
+> See architecture-decision-records for ADR creation methodology.
 
 ## 3. Security (OWASP Top 10:2025)
 
@@ -174,7 +169,7 @@ As the baseline enforcement layer, this skill connects:
 | A10 | Exception Handling | No stack traces to clients; all errors caught server-side |
 | — | Secret management | No secrets in source; `.env*` in `.gitignore` |
 
-> Deep reference: `references/security-checklist.md`. See security-scanning for SQL injection prevention, CSRF, and webhook security details. See gdpr-compliance for PII masking, per-provider erasure handlers, and retention enforcement.
+> Deep reference: `references/security-checklist.md`. See owasp-security for application-security depth, webhook-integration for webhook verification, and prompt-injection-defense for LLM input threats.
 
 ## 4. Accessibility (WCAG 2.2)
 
@@ -183,10 +178,10 @@ As the baseline enforcement layer, this skill connects:
 | Semantic HTML first | WCAG 4.1.2 | `<button>` not `<div onClick>`, native `<dialog>`, `<nav>` |
 | Keyboard operable | WCAG 2.1.1 | All functionality via Tab/Enter/Space/Arrows; no traps |
 | Color contrast | WCAG 1.4.3 | 4.5:1 text, 3:1 UI components |
-| Target size | WCAG 2.5.8 | 24px WCAG minimum; **Sales Hub enforces 44x44px** |
+| Target size | WCAG 2.5.8 | 24px WCAG minimum; follow the project standard when stricter |
 | Heading hierarchy | WCAG 1.3.1 | Sequential h1>h2>h3, no skipping, one h1 per page |
 
-> Deep reference: `references/accessibility-checklist.md`. See a11y for Sales Hub 44px targets, Axe-Core Playwright tests, focus-ring system, reduced-motion strategy, and live-region placement.
+> Deep reference: `references/accessibility-checklist.md`. See a11y for Axe-Core Playwright tests, focus-ring systems, reduced-motion strategy, and live-region placement.
 
 ## 5. Performance
 
@@ -210,7 +205,7 @@ As the baseline enforcement layer, this skill connects:
 | Composable component APIs | Variant props from tokens, not arbitrary style overrides |
 | No `!important` | Fix specificity, don't override it |
 
-> See design-guide for Sales Hub heading tokens, surface hierarchy, and financial display rules. See design-token-architecture for W3C DTCG format, naming conventions, and CVA patterns.
+> See design-system-architecture for system structure, color-system-design for contrast and semantic color, typography-system for type hierarchy, and visual-design-foundations for composition polish.
 
 ## 7. Testing
 
@@ -222,7 +217,7 @@ As the baseline enforcement layer, this skill connects:
 | No dead tests | No `test.skip` / `xit` without linked ticket |
 | Co-located test files | `.test.ts` next to source `.ts` |
 
-> Deep reference: `references/testing-patterns.md`. See craft-doctrine for quality dimensions that define what "tested" means per artifact type.
+> Deep reference: `references/testing-patterns.md`. See testing-strategy and test-coverage-strategy for depth.
 
 ## 8. DevOps & CI/CD
 
@@ -241,10 +236,10 @@ As the baseline enforcement layer, this skill connects:
 | RCCF structure | Role, Context, Constraints, Format in every prompt |
 | Structured outputs | JSON schemas or Zod validation; never free-text parsing |
 | Few-shot examples | 2-3 examples for non-trivial tasks |
-| Eval coverage | Every skill has evals.json with 7+ scenarios |
+| Eval coverage | Skills declare honest eval state; use `evals/comprehension.json` and `evals/application.json` when certification is claimed |
 | Explicit scope boundaries | Define what skill does AND does not do |
 
-> See skill-scaffold for skill creation methodology. See craft-doctrine for skill content quality dimensions.
+> See skill-scaffold for skill creation methodology and agent-eval-design for eval-suite design.
 
 ## 10. Next.js App Router
 
@@ -256,7 +251,7 @@ As the baseline enforcement layer, this skill connects:
 | Loading states | `loading.tsx` or Suspense boundaries for async routes |
 | No Pages Router patterns | No `getServerSideProps`, `getStaticProps`, `_app.tsx` |
 
-> Deep reference: `references/nextjs-patterns.md`. See nextauth-patterns for auth guard choice (requireAuth vs requireOrgAuth vs withOrgAuth) and 13 critical anti-patterns. See middleware-architecture for the request pipeline (CSRF, CSP, onboarding redirect).
+> Deep reference: `references/nextjs-patterns.md`. See server-components-design for component placement, server-actions-design for action security, and http-semantics for HTTP contract details.
 
 ---
 
@@ -295,14 +290,13 @@ These rules appear across 3+ domains — **highest enforcement weight**:
 | Instead of this skill | Use | Why |
 |---|---|---|
 | Deep code review methodology (feedback phrasing, review structure) | `code-review` | code-review owns the review process and feedback format |
-| Auth guard function selection (requireAuth vs requireOrgAuth) | `nextauth-patterns` | nextauth-patterns owns the auth boundary decision tree |
-| SQL injection prevention, CSRF, webhook signature verification | `security-scanning` | security-scanning owns automated security scanning depth |
-| PII masking, per-provider erasure handlers, retention enforcement | `gdpr-compliance` | gdpr-compliance owns GDPR-specific implementation |
+| Application security threat modeling and OWASP-depth review | `owasp-security` | owasp-security owns security depth beyond broad reminders |
+| Webhook signature verification and retry semantics | `webhook-integration` | webhook-integration owns inbound webhook contracts |
 | 44px touch targets, focus-ring system, reduced-motion strategy | `a11y` | a11y owns Sales Hub accessibility implementation depth |
-| Financial calculation correctness (rounding, decimal precision) | `code-logic` | code-logic owns financial semantics and calculation rules |
-| Heading tokens, surface hierarchy, financial display rules | `design-guide` | design-guide is the authoritative design system contract |
-| L1 focal point rules, F-pattern layout, zone-based composition | `composition-theory` | composition-theory owns layout composition rules |
-| Font loading, OpenType features, vertical rhythm | `typography` | typography owns deep typographic engineering |
-| Token sync contract, APCA contrast math | `color-science` | color-science owns the color system rules |
+| Deep type correctness, narrowing, and unsafe casts | `type-safety` | type-safety owns TypeScript soundness patterns |
+| Design tokens, component APIs, and theme architecture | `design-system-architecture` | design-system-architecture owns the design-system contract |
+| L1 focal point rules, F-pattern layout, zone-based composition | `layout-composition` | layout-composition owns layout composition rules |
+| Font loading, OpenType features, vertical rhythm | `typography-system` | typography-system owns deep typographic engineering |
+| Token sync contract and contrast math | `color-system-design` | color-system-design owns the color system rules |
 | SCSS architecture, BEM naming, design token integration | `scss-expert` | scss-expert owns CSS architecture patterns |
-| What "better" means per artifact type | `craft-doctrine` | craft-doctrine defines quality dimensions and the enrichment principle |
+| Eval-case design for skills and agents | `agent-eval-design` | agent-eval-design owns comprehension and application eval design |
