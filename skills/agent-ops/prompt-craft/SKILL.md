@@ -1,16 +1,20 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: prompt-craft
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when writing, tightening, evaluating, or repairing an LLM prompt or reusable prompt template for completion, agent dispatch, grading, structured extraction, tool use, or prompt-engineered workflows. Covers instruction hierarchy, message roles, context placement, few-shot examples, structured output, positive constraints, reasoning guidance, prompt-injection resistance, provider differences, and eval-driven iteration. Do NOT use for whole context-system design (use context-engineering), eval dataset or grader design (use agent-eval-design), reviewing generated code (use code-review), authoring SKILL.md files (use skill-scaffold), choosing which skill or agent should activate (use skill-router), or root-causing a deployed failure after outputs already exist (use debugging)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime or format notes for consumers that export or execute this skill.
 compatibility:
   notes: "Provider-agnostic prompt-design discipline for OpenAI, Anthropic, Google Gemini, open-weight models, and agent runtimes; provider-specific APIs, role names, structured-output features, and reasoning controls must be checked before implementation."
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep Bash Edit
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.1.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -29,29 +33,6 @@ metadata:
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: agent/prompts
-  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
-  # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
-  # drift_check: truth-source verification record. Object with required `last_verified`
-  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
-  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: '{"last_verified":"2026-05-18"}'
-
-  # === Evaluation Status: three orthogonal axes ===
-  # eval_artifacts: disk-truth — does an eval file exist on disk?
-  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
-  # eval_state: runtime-truth — has the eval been run and passed?
-  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
-  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
-  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
-  # comprehension_state: marker that this skill has populated v6+ Understanding fields
-  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -59,7 +40,7 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: '["prompt","prompt engineering","prompt craft","write a prompt","improve this prompt","iterate on prompt","prompt template","system prompt","developer prompt","user prompt","few shot","few-shot examples","role prompt","instruction hierarchy","message roles","output format","structured output","reasoning prompt","prompt injection","adversarial input","llm prompt","agent prompt"]'
+  keywords: '["prompt engineering","prompt template","system prompt","developer prompt","structured output","few-shot examples","instruction hierarchy","message roles","prompt injection","eval-driven iteration"]'
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: '["prompt-craft-skill","prompt-engineering-skill","prompt-template-skill"]'
@@ -69,30 +50,21 @@ metadata:
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: '["review this AI-generated PR for correctness","scaffold a new skill that teaches prompt engineering","which skill should the router pick for this query?","design an eval suite and grader thresholds for this agent","debug why the deployed prompt failed last night","write a doc explaining our prompt conventions for humans only"]'
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
   relations: '{"boundary":[{"skill":"context-engineering","reason":"context-engineering designs the whole information environment, retrieval payload, memory, compaction, and context budget; prompt-craft shapes the instructions and prompt template that consume that context."},{"skill":"agent-eval-design","reason":"agent-eval-design creates eval datasets, graders, thresholds, hard negatives, and harnesses; prompt-craft uses eval evidence to revise prompt wording and structure."},{"skill":"code-review","reason":"code-review evaluates generated or human-written code; prompt-craft writes or improves the prompt that may produce or grade code."},{"skill":"skill-scaffold","reason":"skill-scaffold owns SKILL.md authoring and metadata structure; prompt-craft owns prompts used by agents or tools."},{"skill":"skill-router","reason":"skill-router decides which skill or agent activates for a user request; prompt-craft writes the selected prompt or dispatch instruction after that routing decision."},{"skill":"debugging","reason":"debugging investigates a known deployed failure and root cause; prompt-craft provides prompt-level remediation once evidence shows prompt wording or structure is the failing surface."}],"related":["context-engineering","agent-eval-design","evaluation","guardrails","debugging","code-review"],"verify_with":["agent-eval-design","evaluation","guardrails"]}'
   # grounding: required when `deployment_target: project`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
   grounding: '{"subject_matter":"Portable LLM prompt design, instruction hierarchy, structured-output prompting, adversarial-input boundaries, and eval-driven prompt iteration","grounding_mode":"universal","truth_sources":["https://developers.openai.com/api/docs/guides/prompt-engineering","https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview","https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices","https://ai.google.dev/gemini-api/docs/prompting-strategies","https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html"],"failure_modes":["prompt_shipped_after_one_plausible_output_without_eval","role_or_instruction_authority_confused_with_user_input","examples_teach_surface_patterns_instead_of_decision_boundaries","structured_output_assumed_without_validation_or_schema_support","negative_instruction_increases_salience_without_positive_target","hidden_chain_of_thought_requested_or_exposed_unnecessarily","prompt_injection_treated_as_wording_problem_instead_of_data_instruction_separation","prompt_changes_claimed_success_without_rerunning_linked_eval"],"evidence_priority":"equal"}'
-  # portability: external-runtime export claims. Object with:
-  # readiness — declared (claim only) / scripted (export tooling exists) /
-  #             verified (proven with a receipt artifact).
-  # targets — array; currently only `skill-md` is in the enum.
-  portability: '{"readiness":"scripted","targets":["skill-md"]}'
-  # lifecycle: maintenance policy for the drift sentinel.
-  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
-  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: '{"stale_after_days":90,"review_cadence":"quarterly"}'
-
-  # === Understanding fields (when comprehension_state: present) ===
+  # === Understanding fields ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: "A prompt is an executable instruction contract: stable rules and examples define the function, variable user content supplies arguments, and evals decide whether revisions improved behavior."
   # purpose: the problem this concept solves and why the field exists. One paragraph.
@@ -104,34 +76,25 @@ metadata:
   analogy: "Prompt craft is like writing a contract for a skilled but unfamiliar collaborator: specify the job, available evidence, allowed moves, examples, and acceptance format before judging the result."
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is believing a clever prompt can replace context quality, tool permissions, evals, validation, or security controls. Good prompts make those surfaces explicit; they do not substitute for them."
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: '{"definition":"Prompt craft is the disciplined design and revision of LLM instructions, examples, context boundaries, and output constraints so a model can perform a target task reliably under measured conditions.","mental_model":"Treat the prompt as an executable contract. Stable instructions and examples define the function, variable user content supplies arguments, and eval results decide whether the contract works.","purpose":"It turns vague intent into inspectable instructions with clear task framing, input boundaries, output shape, safety constraints, and revision evidence.","boundary":"It does not design the full context stack, create eval harnesses, review generated code, author SKILL.md files, select routing, or debug deployed failures without prompt-specific evidence.","taxonomy":"Core surfaces are instruction authority, role and tone, task statement, context and retrieval payload, constraints, examples, variable input delimitation, output format, tool-use instructions, safety boundaries, provider controls, and eval-linked revision.","analogy":"It is like writing a contract for a skilled but unfamiliar collaborator: the contract names the job, evidence, allowed moves, examples, acceptance format, and escalation path.","misconception":"A longer or more forceful prompt is not automatically better. Prompt quality is measured by reliable task performance, format compliance, safety behavior, and maintainability under realistic inputs."}'
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/agent-ops/prompt-craft/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
 ---
 
 # Prompt Craft
