@@ -8,9 +8,7 @@ allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.2.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -22,33 +20,29 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: PRD-style free-text statement of what the skill teaches and what it does not.
+  # Not an enum (deployment targeting belongs to `deployment_target`).
+  scope: "Teaches choosing and maintaining the representation paradigm for domain knowledge: graphs, frames, semantic networks, production rules, concept maps, procedural ontologies, GraphRAG, or hybrids. Excludes stakeholder-readable conceptual modeling, database schema design, pure taxonomy hierarchy, formal ontology axioms, exact semantic edge labeling, and live skill-library tooling."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: foundations/knowledge
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-18\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -80,11 +74,9 @@ metadata:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -104,9 +96,6 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that *any structured format is a knowledge model* — JSON files, Markdown docs, database tables are all "knowledge" in a loose sense. They are not, in the technical sense this skill cares about. *Knowledge is not data*: data records facts ("order #1247 has status `refunded`"); knowledge encodes the judgment and context needed to act on those facts ("refunds after 30 days require manager approval"; "the upstream fulfilment pipeline has a known 48-hour delay"). The agent with only the data hallucinates the policy; the agent with the knowledge applies it. Adjacent misconceptions: that *one paradigm fits all* (it does not — most real systems are hybrid: graph for entities and relationships, rules for decision logic, frames for stable domain objects, PKO when decision-trace replay matters); that *more formal is more capable* (it is not — OWL-DL admits fewer fast queries than property graphs; for most product teams Markdown with conventions is better than RDF triples); that *GraphRAG always beats plain RAG* (it does not — GraphRAG only wins when the underlying graph is well modelled; a sparse, mislabelled, or synonym-inconsistent graph retrieves *worse* than plain vector search because the structure becomes noise); and that *knowledge once captured is durable* (it is not — knowledge has a *lifecycle*: Create → Validate → Publish → Use → Monitor → Update → Retire; periodic currency checks are scheduled, not aspirational, because domain knowledge drifts faster than code).
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"Knowledge modeling is the discipline of choosing a representation paradigm — knowledge graph, frames, production rules, semantic network, concept map, procedural ontology, or a hybrid — that fits how knowledge will be queried, reasoned over, validated, and maintained.\",\"mental_model\":\"Choose by the dominant query pattern and operating constraint. Graphs answer relationship questions, rules answer decision questions, frames answer object-property questions, concept maps communicate to humans, procedural ontologies preserve why/how traces, and hybrids handle real systems when one paradigm is insufficient.\",\"purpose\":\"It prevents teams from treating all structured text as equivalent. The goal is to make agent and product knowledge explicit enough to retrieve, reason over, validate, update, and retire without over-formalizing beyond the system's real needs.\",\"boundary\":\"It is representation strategy, not human-readable domain analysis, database/data modeling, pure taxonomy design, formal ontology axiom authoring, exact semantic edge labeling, or live skill-library operations.\",\"taxonomy\":\"Core paradigms include knowledge graphs, frames, semantic networks, production rules, concept maps, procedural knowledge ontologies, and hybrids. Core lifecycle stages include create, validate, publish, use, monitor, update, and retire.\",\"analogy\":\"Knowledge modeling is like choosing between a blueprint, schematic, flowchart, and storyboard for the same device: each representation makes different questions easy and different mistakes visible.\",\"misconception\":\"The common mistake is believing more structure or more formalism is automatically better. A sparse graph, vague edge labels, or OWL-level formality without query demand can make the system harder to validate and worse for retrieval than plain text with conventions.\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
@@ -119,19 +108,14 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
 ---
 
 # Knowledge Modeling
