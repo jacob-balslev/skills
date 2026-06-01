@@ -1,0 +1,101 @@
+{
+  "skill_name": "information-architecture",
+  "subject": "Information architecture",
+  "adjacent_concepts": [
+    "taxonomy-design",
+    "layout-composition",
+    "design-system-architecture",
+    "microcopy",
+    "a11y",
+    "task-analysis"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define information architecture in 2-3 sentences. Include navigation, hierarchy, labeling, wayfinding, and findability.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Structures information so users can find and understand it",
+        "Includes navigation or page hierarchy",
+        "Includes labeling systems",
+        "Includes wayfinding or cross-links",
+        "Optimizes for user tasks and findability"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model for information architecture: why should top tasks drive structure before implementation categories?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Starts from user goals or top tasks",
+        "Inventories content or screens",
+        "Groups by user goal before implementation detail",
+        "Avoids promoting every important thing to top-level navigation",
+        "Uses structure to make paths obvious"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish information-architecture from taxonomy-design, layout-composition, design-system-architecture, microcopy, and a11y. Give mechanism-level boundaries.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "taxonomy-design owns classification governance and assignment rules",
+        "layout-composition owns structure inside a page or screen",
+        "design-system-architecture owns component and token systems",
+        "microcopy owns sentence-level wording",
+        "a11y owns accessibility compliance and assistive technology behavior",
+        "information-architecture owns navigation, hierarchy, grouping, and wayfinding"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A teammate says, 'This feature is important, so it must be a top-level navigation item.' Use information architecture to correct the misconception.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Importance alone does not determine top-level navigation",
+        "Frequency, task entry points, and findability matter",
+        "A tab, section, filter, or cross-link may be better",
+        "Labels should use recognizable user language",
+        "Structure should be tested against task scenarios"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A documentation site has setup, troubleshooting, billing, and admin-role pages scattered across product-feature categories. Users cannot find setup instructions. Apply information architecture and recommend the first changes.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "workflow",
+      "criticality": "critical",
+      "expected_elements": [
+        "Names setup as a top task or primary entry point",
+        "Inventories current content",
+        "Groups content by user goal rather than product internals",
+        "Creates a clearer navigation/page hierarchy or setup hub",
+        "Adds cross-links or wayfinding from related pages",
+        "Tests the structure against no-prior-knowledge task prompts"
+      ]
+    }
+  ]
+}
