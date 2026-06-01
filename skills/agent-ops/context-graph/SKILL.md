@@ -6,13 +6,6 @@ compatibility:
   notes: "Architecture-level skill. Applies to any agent-coding workspace that has more than one skill / doc-routing / memory artifact and any way to traverse them — Claude Code, OpenCode, Cursor, Aider, Continue, Copilot Workspace, or a custom harness. The four-graph model and the orphan / connectivity metrics are independent of the specific runtime."
 allowed-tools: Read Grep
 metadata:
-  # schema_version: protocol contract version this skill conforms to.
-  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
-  # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.1.0"
-
-
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
@@ -22,36 +15,13 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
-  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
-  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
-  scope: "Designing and auditing the multi-graph context architecture of an AI-coding workspace — skill graph, document-routing graph, memory index, script registry, and the cross-graph edges between them. Covers edge typing, orphan detection, connectivity health, deterministic graph-synthesis signals, change-propagation checks, and drift / hub-and-spoke anti-patterns. Portable across any multi-graph agent workspace; principle-grounded, not repo-bound. Excludes authoring one SKILL.md (skill-scaffold), validating one skill (skill-infrastructure), live routing decisions (skill-router), context-window budgeting (context-window), and session load/drop choices (context-management)."
+  # scope: PRD-style free-text statement of what the skill teaches and what it does not.
+  # Not an enum (deployment targeting belongs to `deployment_target`).
+  scope: "Designing and auditing the multi-graph context architecture of an AI-coding workspace: skill graph, document routing graph, memory index, script registry, and the cross-graph edges between them. Covers edge typing, orphan detection, connectivity health, deterministic graph-synthesis signals, change-propagation checks, and drift or hub-and-spoke anti-patterns. Excludes authoring one SKILL.md, validating one skill, live routing decisions, context-window budgeting, and session load/drop choices."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: agent/context
-  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
-  # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
-  # drift_check: truth-source verification record. Object with required `last_verified`
-  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
-  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-18\"}"
-
-  # === Evaluation Status: three orthogonal axes ===
-  # eval_artifacts: disk-truth — does an eval file exist on disk?
-  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
-  # eval_state: runtime-truth — has the eval been run and passed?
-  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
-  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
-  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
-  # comprehension_state: marker that this skill has populated v6+ Understanding fields
-  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -79,15 +49,6 @@ metadata:
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
   grounding: "{\"subject_matter\":\"Agent workspace context topology and discovery model\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"https://github.com/jacob-balslev/skill-graph/blob/main/SKILL_GRAPH.md\",\"https://github.com/jacob-balslev/skill-graph/blob/main/docs/PRIMER.md\",\"https://github.com/jacob-balslev/skill-graph/blob/main/docs/concept-map.md\",\"https://github.com/jacob-balslev/skill-graph/blob/main/docs/diagrams/starter-graph.mmd\",\"https://github.com/jacob-balslev/skill-graph/blob/main/scripts/generate-manifest.js\",\"https://github.com/jacob-balslev/skill-graph/blob/main/scripts/skill-overlap.js\"],\"failure_modes\":[\"inferred_edges_replace_authored_relations\",\"orphan_skills_remain_unreachable\",\"relation_caps_turn_into_hub_and_spoke_graph\",\"change_propagation_ignores_cross_graph_edges\"],\"evidence_priority\":\"repo_code_first\"}"
-  # portability: external-runtime export claims. Object with:
-  # readiness — declared (claim only) / scripted (export tooling exists) /
-  #             verified (proven with a receipt artifact).
-  # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
-  # lifecycle: maintenance policy for the drift sentinel.
-  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
-  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -101,9 +62,6 @@ metadata:
   analogy: "A context graph is a transit map for an agent workspace: individual stations can be excellent, but the system only works when routes connect them, transfer points are intentional, and isolated stops are visible enough to fix."
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is treating graph metadata as decoration: add a few \"related\" links, trust search to fill gaps, and assume more edges always means better discovery. That produces noisy hubs, one-way references, and isolated specialist skills. A useful graph is not the densest graph; it is the graph whose typed edges preserve routing meaning, keep important nodes reachable, and make change propagation auditable."
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"A context graph is the explicit topology that connects an agent workspace's skills, docs, memory records, scripts, and commands so agents can discover relevant context by traversal rather than exact-name recall.\",\"mental_model\":\"Agents start from a task as the traversal root, then follow typed edges to reachable nodes. Node quality and graph reachability are separate properties: a beautifully written skill that no route reaches behaves like absent knowledge. Healthy graph work therefore watches edge meaning, orphan rate, degree distribution, cluster boundaries, and cross-graph propagation paths together.\",\"purpose\":\"It solves the flat-library failure mode where useful knowledge exists but agents cannot find it unless the user names it directly. The replacement is explicit topology: authored relations, deterministic synthesis signals, health metrics, and propagation checks that make relevance discoverable and drift visible.\",\"boundary\":\"It is not per-query skill routing, context-window budgeting, or single-file metadata linting. Routing consumes the graph, budgeting trims selected context, and single-skill audit checks one node; context-graph work asks whether the whole workspace is navigable and whether changes propagate through the right edges.\",\"taxonomy\":\"Main graph families are skill knowledge graphs, document routing graphs, memory indexes, and script or command registries. Main edge concerns are typed meaning, reachability, reciprocity, degree caps, cross-graph propagation, and deterministic rebuild signals.\",\"analogy\":\"A context graph is a transit map for an agent workspace: individual stations can be excellent, but the system only works when routes connect them, transfer points are intentional, and isolated stops are visible enough to fix.\",\"misconception\":\"The trap is believing more links always improve discovery. Over-linking creates noisy hubs, under-linking creates orphans, and untyped links destroy routing meaning. The useful graph is the one whose edges preserve intent and make important context reachable.\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
@@ -113,24 +71,6 @@ metadata:
   skill_graph_canonical_skill: skills/context-graph/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1597"
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
-  #
-  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
-  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
-  # truth_verdict: truth sources vs declared hashes (gates 3-6).
-  # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
-  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
-  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
-  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
-  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
-  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
 ---
 
 # Context Graph
