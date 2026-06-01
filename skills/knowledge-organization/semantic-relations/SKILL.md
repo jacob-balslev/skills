@@ -8,9 +8,7 @@ allowed-tools: Read Grep
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.2.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -22,33 +20,29 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: PRD-style free-text statement of what the skill teaches and what it does not.
+  # Not an enum (deployment targeting belongs to `deployment_target`).
+  scope: "Teaches pre-formal relation typing for concept edges in graphs, maps, taxonomies, ontologies-in-sketch, and skill-boundary analysis: IS-A, PART-OF, synonymy/polysemy, thematic roles, and relation properties. Excludes formal ontology axioms, full conceptual/domain modeling, representation-paradigm choice, taxonomy governance, database relationships, and operational ID mapping."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: foundations/semantics
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-19"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: '{"last_verified":"2026-05-19"}'
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -80,11 +74,9 @@ metadata:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: '{"readiness":"scripted","targets":["skill-md"]}'
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: '{"stale_after_days":365,"review_cadence":"quarterly"}'
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -106,9 +98,6 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that relation typing is academic overhead and that related-to plus context is sufficient. It is not. Adjacent misconceptions: that PART-OF and IS-A are interchangeable; that synonymy means duplicate concepts; that polysemy is the same as homonymy; that all PART-OF relations are transitive; that thematic roles are just labels; and that relation properties can be omitted until implementation. Each shortcut changes the inferences readers and tools make.
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: '{"definition":"Semantic relations are typed connections between concepts in a meaning structure: IS-A, PART-OF, synonymy, antonymy, polysemy, homonymy, metonymy, causal relations, thematic roles, and relation properties such as symmetry and transitivity.","mental_model":"Treat every edge as a claim with a named kind and testable behavior. A typed edge says how traversal, inheritance, substitution, role assignment, or inference should work; a vague edge only says two things are nearby.","purpose":"The purpose is to replace generic association with relation vocabulary that supports reasoning, retrieval, naming disambiguation, hierarchy validation, and clean boundaries between neighboring skills or concepts.","boundary":"It does not build the full conceptual model, choose the knowledge-representation paradigm, design a taxonomy, formalize an ontology, implement database relationships, or solve linguistic form and register questions.","taxonomy":"Relation families include taxonomic relations such as hypernymy and hyponymy; mereological relations such as holonymy and meronymy; associative lexical relations such as synonymy, antonymy, polysemy, homonymy, and metonymy; thematic roles such as agent, patient, instrument, source, goal, cause, and result; and formal properties such as symmetry, asymmetry, transitivity, reflexivity, and irreflexivity.","analogy":"Semantic relations are road types on a map: motorway, bridge, one-way street, and roundabout each permit different movement. Labelling every road as connector loses the rules that make navigation possible.","misconception":"The common mistake is believing relation labels are optional decoration. In practice, confusing IS-A with PART-OF, synonymy with polysemy, or actor with instrument changes what readers and tools infer."}'
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
@@ -121,19 +110,14 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
 ---
 
 

@@ -1,0 +1,29 @@
+{
+  "schema_version": 8,
+  "version": "1.2.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-05-19",
+  "drift_check": {
+    "last_verified": "2026-05-19"
+  },
+  "eval_artifacts": "planned",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-05-28",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  }
+}
