@@ -1,41 +1,20 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: keywords
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when doing keyword research, mapping search intent, building topical clusters, choosing terms for product or marketplace listings, detecting cannibalization, or translating query demand into page/listing targets. Covers seed expansion, intent classification, clustering, platform field translation for Etsy, Amazon, Shopify, SaaS/content sites, long-tail marketplace strategy, cannibalization resolution, and rank-tracking cadence. Do NOT use for building SEO pages or schema strategy (use `seo-strategy`), writing the finished prose (use `writing-humanizer`), or designing navigation/page hierarchy (use `information-architecture`)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: portable-runtime notes for how this skill should be used outside the source repo.
 compatibility:
   notes: "Portable keyword research and marketplace keyword-mapping guidance. Platform limits and field names can drift; verify against current marketplace docs before high-stakes listing work."
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep Bash
-grounding:
-  subject_matter: "Keyword research, intent mapping, topical clustering, and marketplace/search field translation for public e-commerce, marketplace, SaaS, and content surfaces"
-  grounding_mode: "universal"
-  truth_sources:
-    - https://help.etsy.com/hc/en-gb/articles/360000336307-How-to-Use-Tags-to-Get-Found-in-Search
-    - https://help.etsy.com/hc/en-us/articles/115015628707-How-to-Create-a-Listing
-    - https://sellercentral.amazon.com/seller-forums/discussions/t/923d53dc-a182-4475-a164-6b2500dbaf2d
-    - https://sellercentral.amazon.com/seller-forums/discussions/t/b2b15728-0d43-453e-974f-59eb63f73059/
-    - https://developers.google.com/search/docs/appearance/title-link
-    - https://developers.google.com/search/docs/appearance/snippet
-    - https://help.shopify.com/en/manual/promoting-marketing/seo/adding-keywords
-    - https://help.shopify.com/en/manual/promoting-marketing/seo/seo-overview
-  failure_modes:
-    - keyword_stuffing_mistaken_for_strategy
-    - platform_field_limits_drift_silently
-    - marketplace_tags_padded_with_irrelevant_terms
-    - amazon_search_terms_repeat_title_or_brand_fields
-    - shopify_keyword_guidance_ignores_readability
-    - intent_mapping_skipped_before_page_or_listing_targeting
-    - cannibalization_collapses_distinct_search_intents
-    - rank_tracking_claims_made_without_baseline_or_cadence
-    - keyword_skill_overowns_seo_implementation_finished_prose_or_information_architecture
-  evidence_priority: "equal"
-drift_check:
-  last_verified: "2026-05-19"
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.2.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -47,33 +26,29 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Keyword research, search-intent mapping, topical clustering, product/listing target assignment, marketplace field translation, cannibalization detection, and rank-tracking cadence for public ecommerce, marketplace, SaaS, and content surfaces. Portable across projects, but external platform constraints drift and must be verified against current official docs before high-stakes listing or SEO work. Excludes SEO implementation and schema strategy (seo-strategy), final prose writing (writing-humanizer), and navigation/page hierarchy (information-architecture)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: product/search
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-19"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: '{"last_verified":"2026-05-19"}'
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -81,7 +56,7 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: '["keyword research","keyword strategy","search intent mapping","keyword clustering","topical cluster","topic cluster","seed keyword expansion","long-tail keyword","marketplace keyword optimization","etsy tags","amazon search terms","amazon backend keywords","shopify keywords","google title link","meta description keywords","keyword cannibalization","rank tracking cadence","SERP overlap","commercial investigation query","transactional query","informational query","navigational query","listing keyword field mapping"]'
+  keywords: '["keyword research","keyword strategy","search intent mapping","keyword clustering","topical cluster","seed keyword expansion","long-tail keyword","marketplace keyword optimization","keyword cannibalization","rank tracking cadence"]'
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: '["keyword-skill","keyword-research-skill"]'
@@ -91,28 +66,27 @@ metadata:
   # anti_examples: near-miss prompts that should route ELSEWHERE.
   # Pair with relations.boundary to indicate the confusable territory's owner.
   anti_examples: '["build the SEO landing page, JSON-LD schema, and internal-linking plan from these keywords","rewrite the product description so it sounds more human and on-brand","design the site navigation and decide which categories become top-level menu items","audit Core Web Vitals or crawlability problems","prove that this exact marketplace listing will rank first after the keyword update"]'
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
   relations: '{"boundary":[{"skill":"seo-strategy","reason":"seo-strategy owns page construction, schema markup, programmatic SEO, internal linking, and implementation strategy after keywords are selected; keywords owns research, clustering, intent mapping, and field translation before construction."},{"skill":"writing-humanizer","reason":"writing-humanizer owns the finished prose quality and AI-tell removal; keywords can supply target terms and intent but must not stuff or write the final copy."},{"skill":"information-architecture","reason":"information-architecture owns navigation, sitemap shape, page hierarchy, and content grouping; keywords may reveal demand but does not decide the IA alone."}],"related":["seo-strategy","writing-humanizer","information-architecture"],"verify_with":["seo-strategy","writing-humanizer"]}'
   # grounding: required when `deployment_target: project`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
-  grounding: '{"subject_matter":"Keyword research, intent mapping, topical clustering, and marketplace/search field translation for public e-commerce, marketplace, SaaS, and content surfaces","grounding_mode":"universal","truth_sources":["https://help.etsy.com/hc/en-gb/articles/360000336307-How-to-Use-Tags-to-Get-Found-in-Search","https://help.etsy.com/hc/en-us/articles/115015628707-How-to-Create-a-Listing","https://sellercentral.amazon.com/seller-forums/discussions/t/923d53dc-a182-4475-a164-6b2500dbaf2d","https://sellercentral.amazon.com/seller-forums/discussions/t/b2b15728-0d43-453e-974f-59eb63f73059/","https://developers.google.com/search/docs/appearance/title-link","https://developers.google.com/search/docs/appearance/snippet","https://help.shopify.com/en/manual/promoting-marketing/seo/adding-keywords","https://help.shopify.com/en/manual/promoting-marketing/seo/seo-overview"],"failure_modes":["keyword_stuffing_mistaken_for_strategy","platform_field_limits_drift_silently","marketplace_tags_padded_with_irrelevant_terms","amazon_search_terms_repeat_title_or_brand_fields","shopify_keyword_guidance_ignores_readability","intent_mapping_skipped_before_page_or_listing_targeting","cannibalization_collapses_distinct_search_intents","rank_tracking_claims_made_without_baseline_or_cadence","keyword_skill_overowns_seo_implementation_finished_prose_or_information_architecture"],"evidence_priority":"equal"}'
+  grounding: '{"subject_matter":"Keyword research, intent mapping, topical clustering, and marketplace/search field translation for public e-commerce, marketplace, SaaS, and content surfaces","grounding_mode":"universal","truth_sources":["https://help.etsy.com/hc/en-us/articles/360000336307-How-to-Use-Tags-to-Get-Found-in-Search","https://help.etsy.com/hc/en-us/articles/115015628707-How-to-Create-a-Listing","https://sellercentral.amazon.com/seller-forums/discussions/t/53388506-a05d-4b8c-9097-cad20f9e1b88","https://sellercentral.amazon.com/seller-forums/discussions/t/62ec93fbb444d7778947b087b3056cc5","https://developers.google.com/search/docs/appearance/title-link","https://developers.google.com/search/docs/appearance/snippet","https://help.shopify.com/en/manual/promoting-marketing/seo/adding-keywords","https://help.shopify.com/en/manual/promoting-marketing/seo/seo-overview"],"failure_modes":["keyword_stuffing_mistaken_for_strategy","platform_field_limits_drift_silently","marketplace_tags_padded_with_irrelevant_terms","amazon_search_terms_repeat_title_or_brand_fields","shopify_keyword_guidance_ignores_readability","intent_mapping_skipped_before_page_or_listing_targeting","cannibalization_collapses_distinct_search_intents","rank_tracking_claims_made_without_baseline_or_cadence","keyword_skill_overowns_seo_implementation_finished_prose_or_information_architecture"],"evidence_priority":"equal"}'
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: '{"readiness":"scripted","targets":["skill-md"]}'
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: '{"stale_after_days":90,"review_cadence":"quarterly"}'
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -126,34 +100,26 @@ metadata:
   analogy: "Keyword research is like translating customer demand into a shelf map: each phrase tells you where a shopper is looking, but the shelf still needs good products, labels, layout, and measurement."
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is treating keywords as magic words to repeat. Search systems reward relevance, clarity, and satisfaction signals; repeated or irrelevant terms can waste fields, confuse readers, and make pages compete with each other."
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: '{"definition":"Keyword research is the practice of discovering search language, classifying the intent behind it, grouping related terms, assigning each group to the right page or listing surface, and tracking visibility after changes.","mental_model":"Treat keywords as demand signals, not incantations. A query suggests intent, vocabulary, competition, and platform field constraints; the work is to translate that signal into one clear target per page or listing.","purpose":"It helps agents and teams choose what to target before building pages or writing copy, avoid cannibalization, respect marketplace limits, and measure whether keyword changes improved discovery.","boundary":"It does not implement SEO page architecture, write final copy, design information architecture, audit technical SEO, or promise ranking outcomes.","taxonomy":"Core moves include seed expansion, query-source capture, volume/difficulty/context review, intent classification, SERP or marketplace result inspection, semantic clustering, page/listing assignment, platform field translation, cannibalization checks, and rank tracking.","analogy":"It is a shelf map for demand: it shows which aisle shoppers search in and what label they expect, but it does not manufacture the product or guarantee the sale.","misconception":"More keywords is not better. Better means the right query language mapped to the right surface with readable, policy-safe, non-duplicative usage."}'
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/product-domain/keywords/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
 ---
 
 # Keywords
@@ -218,7 +184,7 @@ Platform fields are not interchangeable. Translate the same keyword cluster diff
 | Platform | Primary fields | Current public constraints to verify | Practical rule |
 |---|---|---|---|
 | Etsy | Listing title, category, attributes, tags | Etsy listing titles can be up to 140 characters; Etsy supports up to 13 tags per listing, and each tag can contain up to 20 characters. | Use accurate multi-word tags when they fit; do not pad irrelevant tags just to fill space. |
-| Amazon | Product title, bullets, product description, generic search terms/search terms | Amazon announced 2025 title requirements where most categories may not exceed 200 characters including spaces; Amazon search terms are limited to 250 bytes in the public Seller Central forum guidance. | Keep titles readable and product-specific; use search terms for generic synonyms not already captured in title, brand, or other fields. |
+| Amazon | Product title, bullets, product description, generic search terms/search terms | Amazon announced 2025 title requirements where most categories may not exceed 200 characters including spaces. Public Seller Central guidance describes search terms as length-limited; verify the current field because marketplace/account surfaces may enforce characters or bytes differently. | Keep titles readable and product-specific; use search terms for generic synonyms not already captured in title, brand, or other fields. |
 | Shopify | Product/collection titles, title tags, meta descriptions, URLs, image alt text, product and collection copy | Shopify recommends adding keywords in readable, natural phrases and lets merchants edit title tags, meta descriptions, URLs, and alt text. Google has no fixed title/meta-description character limit but truncates snippets as needed. | Prefer collection pages for broad commercial terms and product pages for specific long-tail terms; keep titles and descriptions human-readable. |
 | SaaS/content site | Page title, H1, headings, URL slug, body copy, internal links, meta description | Google recommends descriptive, concise title text, unique descriptions, no keyword stuffing, and page-specific summaries. | One primary intent per page; supporting terms belong naturally in headings, examples, and related sections. |
 
@@ -235,7 +201,7 @@ Platform fields are not interchangeable. Translate the same keyword cluster diff
 - Keep the product title specific to the product and within current category policy.
 - Treat the 200-character title ceiling as a maximum for most categories, not as a writing target.
 - Use backend/search terms for discoverability words that are generic, relevant, and not already captured elsewhere.
-- Stay within the 250-byte search-term constraint; bytes are not the same as characters for all languages.
+- Stay within the current search-term field limit shown in Seller Central; do not assume characters and bytes behave the same across languages or marketplaces.
 - Separate search-term words with spaces; punctuation and stop words usually waste budget.
 - Do not repeat title words, brand terms, or other redundant information in search terms.
 
@@ -351,7 +317,7 @@ Track only terms tied to a decision. If a term does not affect a page/listing as
 Verify high-stakes platform work against current docs before applying. As of the 2026-05-19 audit:
 
 - Etsy Help: tags support up to 13 tags per listing and 20 characters per tag; listing titles can be up to 140 characters.
-- Amazon Seller Central public guidance: search terms are limited to 250 bytes; 2025 title guidance says most categories may not exceed 200 characters including spaces.
+- Amazon Seller Central public guidance: 2025 title guidance says most categories may not exceed 200 characters including spaces; search-term limits should be verified in the current Seller Central field before publication because public guidance and field enforcement can vary by marketplace/account surface.
 - Google Search Central: title links and snippets are generated automatically; use descriptive, concise titles, unique descriptions, and avoid keyword stuffing.
 - Shopify Help: add keywords in readable, natural phrases; Shopify lets merchants edit title tags, meta descriptions, URLs, and alt text.
 
@@ -362,7 +328,7 @@ These are grounding points, not permanent invariants. Re-check them when platfor
 - [ ] Every keyword cluster has one primary intent and one owner page/listing.
 - [ ] Supporting terms are distinct synonyms or modifiers, not repeated filler.
 - [ ] Etsy tags are accurate phrases, each within current character limits, and irrelevant padding was avoided.
-- [ ] Amazon search terms stay within current byte limits and do not repeat title, brand, or other captured fields.
+- [ ] Amazon search terms stay within current Seller Central field limits and do not repeat title, brand, or other captured fields.
 - [ ] Shopify and Google web guidance uses readable phrases, unique titles/descriptions, and no keyword stuffing.
 - [ ] Cannibalization check was run before creating a new page/listing for a synonym cluster.
 - [ ] Rank/impression/listing baseline was captured before edits and a re-check date was set.
