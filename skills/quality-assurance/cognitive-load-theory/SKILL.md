@@ -1,16 +1,20 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: cognitive-load-theory
+# description: routing contract for when this skill should activate and when it should not.
 description: "Sweller's Cognitive Load Theory (CLT) for agents writing skill content, designing prompts, building UI/dashboards, and authoring documentation. Working memory holds roughly 4 chunks at a time; CLT classifies load into three types — intrinsic (irreducible task difficulty), extraneous (unnecessary load from poor presentation, ELIMINATE), and germane (load that builds schemas, PROMOTE). Use when writing a SKILL.md body (does this section add extraneous load?), designing prompts (am I asking the model to hold too much at once?), building dashboards (what is the per-screen cognitive budget?), or authoring docs (is intrinsic load minimized via segmentation?). Do NOT use for retrieval and context-loading design (use context-management), prompt engineering tactics (use prompt-craft), or instructional design beyond what grounds the theory."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime or format notes for consumers that export or execute this skill.
 compatibility:
   notes: "Markdown, Git, any agent-skill runtime"
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
 
 
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
@@ -22,30 +26,27 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Portable cognitive-load review for skill bodies, prompts, documentation, dashboards, and agent outputs. Teaches Sweller's intrinsic/extraneous/germane load taxonomy, working-memory chunk limits, segmentation, chunking, worked examples, and structure-over-prose checks. Excludes retrieval/session working-set design (context-management), prompt tactic authoring (prompt-craft), token budget math (context-window), and general compression mechanics (compression)."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: quality/cognition
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-19"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-19\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: present
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -57,40 +58,48 @@ metadata:
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
   triggers: "[\"cognitive-load-skill\",\"working-memory-skill\",\"clt-skill\"]"
-  # relations: typed graph edges to sibling skills. Six edge types:
+  # relations: typed graph edges to sibling skills. Current fields:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
-  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"adjacent\":[\"teaching-patterns\",\"context-window\",\"compression\",\"editorial-standards\",\"prompt-craft\"],\"boundary\":[{\"skill\":\"context-management\",\"reason\":\"context-management owns retrieval and session working-set design; CLT owns the cognitive-load taxonomy applied to authored content\"},{\"skill\":\"memory-gardener\",\"reason\":\"memory-gardener owns memory pruning and consolidation; CLT owns the cognitive-load framing for what to keep vs cut\"}],\"verify_with\":[\"context-management\",\"teaching-patterns\",\"best-practice\"]}"
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
+  relations: "{\"boundary\":[{\"skill\":\"context-management\",\"reason\":\"cognitive-load-theory owns cognitive-load diagnosis in authored content; context-management owns retrieval and active session working-set design\"},{\"skill\":\"prompt-craft\",\"reason\":\"cognitive-load-theory owns load taxonomy and segmentation rationale; prompt-craft owns prompt tactic selection and wording\"},{\"skill\":\"context-window\",\"reason\":\"cognitive-load-theory owns human/model working-memory analogies; context-window owns token budget allocation\"},{\"skill\":\"compression\",\"reason\":\"cognitive-load-theory owns extraneous-load diagnosis; compression owns token-efficient representation mechanics\"}],\"related\":[\"context-management\",\"context-window\",\"compression\",\"prompt-craft\",\"information-architecture\",\"layout-composition\",\"visual-hierarchy\",\"microcopy\",\"writing-humanizer\",\"summarization\",\"best-practice\"],\"verify_with\":[\"best-practice\",\"information-architecture\",\"prompt-craft\"]}"
+  # === Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
+  mental_model: "Working memory is a small workspace with roughly four independent chunks available at once. Cognitive Load Theory separates total load into intrinsic load from the task itself, extraneous load from poor presentation, and germane effort that builds reusable schemas. Good design manages intrinsic load through sequencing, removes extraneous load, and preserves or promotes germane load."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
+  purpose: "This skill prevents agents from treating 'simplify' as 'make shorter.' It gives a precise review lens for skill bodies, prompts, docs, dashboards, and agent outputs: identify which load type a section adds, remove only unnecessary presentation burden, and keep worked examples or structure when they build understanding."
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
+  boundary: "This skill diagnoses cognitive load in authored or presented material. It is not retrieval selection, session-state pruning, token-budget math, prompt phrasing craft, plain-language editing, or general pedagogy beyond the cognitive-load mechanisms named here."
+  # analogy: one-sentence metaphor preserving the core mechanism.
+  analogy: "Cognitive Load Theory is like RAM management for comprehension: intrinsic load is the program that must run, extraneous load is unnecessary background work, and germane load is useful caching that makes the next run easier."
+  # misconception: the wrong mental model people bring; corrected explicitly.
+  misconception: "The common mistake is thinking reduced cognitive load always means shorter output. Cutting context, examples, or schema-building structure can increase intrinsic load and destroy germane load; the correct target is extraneous load."
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/cognitive-load-theory/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
+  # === Audit Status (written by the audit loop to audit-state.json, not hand-authored here) ===
+  # See SKILL_AUDIT_LOOP.md § Audit Status. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
 ---
 
 ## Concept Card
@@ -126,11 +135,11 @@ Every agent output — a SKILL.md body, a prompt, a dashboard widget, a Linear c
 ## Cross-Domain Synergy
 
 CLT is the theoretical foundation that neighboring skills draw on implicitly:
-- **`teaching-patterns`**: Uses CLT when choosing progressive disclosure (segmentation), worked examples (germane load promotion), and scaffolding removal.
+- **`information-architecture`**: Uses CLT when deciding what structure helps readers orient without forcing cross-reference.
 - **`context-management`**: The discipline of controlling what enters a session is CLT applied to the agent's own working memory, not just the human reader's.
 - **`context-window`**: Token budget management mirrors the working-memory budget — both measure available capacity against load.
 - **`compression`**: Token-efficient compression is an application of extraneous-load elimination.
-- **`editorial-standards`**: Structure-over-prose editorial rules are CLT operationalized for written output.
+- **`writing-humanizer` and `microcopy`**: Structure-over-prose editorial rules are CLT operationalized for written output.
 
 ---
 
@@ -149,7 +158,7 @@ Use this skill when answering any of these questions:
 
 **Do NOT invoke this skill for:**
 - Deciding *what* retrieval files to load in a session (use `context-management`)
-- Writing the actual copy / prose (use `editorial-standards`)
+- Writing the actual copy / prose (use `writing-humanizer` or `microcopy`)
 - Choosing prompt phrasing strategies (use `prompt-craft`)
 
 ---
@@ -358,7 +367,7 @@ I think these should be fixed but the skill is otherwise in reasonable shape.
 |---------|----------|-----|
 | description missing use_when / not_for pattern | BLOCKING | Add "Use when: ... Do NOT use for: ..." |
 | relations.verify_with is empty | ADVISORY | Add at least one verify_with skill |
-| evals/evals.json has 1 eval (min: 2) | BLOCKING | Add a second eval case |
+| evals/comprehension.json has fewer than 5 cases | BLOCKING | Add realistic boundary and application cases |
 
 Overall: 2 BLOCKING. Fix before marking PASS.
 ```
@@ -398,20 +407,9 @@ Rate any output (skill body, prompt, doc section, dashboard widget) against CLT:
 
 ---
 
-## Health Block
+## Audit Status
 
-| Field | Value |
-|-------|-------|
-| structural_verdict | UNVERIFIED |
-| truth_verdict | UNVERIFIED |
-| comprehension_verdict | UNVERIFIED |
-| application_verdict | UNVERIFIED |
-| last_audited | 2026-05-19 |
-| eval_failed_ids | [] |
-| drift_status | UNKNOWN |
-| freshness | 2026-05-19 |
-
-The four-verdict shape is per [ADR 0011](https://github.com/jacob-balslev/skill-graph/blob/main/docs/adr/0011-split-audit-verdict-into-four-verdicts.md). All four verdicts default to `UNVERIFIED` on a fresh port; gates 1–8 and the application-eval pilot populate them in subsequent audits.
+Audit/eval/provenance state lives in the sibling `audit-state.json` sidecar, not in the skill body. Run the Skill Audit Loop to update verdicts, freshness, and eval state; the teaching surface should not duplicate those values.
 
 ---
 
@@ -421,7 +419,7 @@ The four-verdict shape is per [ADR 0011](https://github.com/jacob-balslev/skill-
 |---|---|---|
 | `cognitive-load-theory` | `context-management` | `context-management` owns retrieval and session working-set design |
 | `cognitive-load-theory` | `prompt-craft` | `prompt-craft` owns the full prompt engineering tactic set |
-| `cognitive-load-theory` | `teaching-patterns` | `teaching-patterns` owns explanation and pedagogy methods |
+| `cognitive-load-theory` | `information-architecture` | `information-architecture` owns navigation and information structure beyond CLT diagnosis |
 | `cognitive-load-theory` | `compression` | `compression` owns token-efficiency strategies for context windows |
 
 ---

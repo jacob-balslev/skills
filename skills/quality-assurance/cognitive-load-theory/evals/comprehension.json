@@ -1,0 +1,102 @@
+{
+  "skill_name": "cognitive-load-theory",
+  "subject": "Cognitive Load Theory",
+  "adjacent_concepts": [
+    "working memory",
+    "intrinsic load",
+    "extraneous load",
+    "germane load",
+    "chunking",
+    "segmentation",
+    "schema formation",
+    "prompt craft",
+    "information architecture"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define Cognitive Load Theory in 2-3 sentences. Include intrinsic, extraneous, and germane load.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names working memory as limited",
+        "Defines intrinsic load as task difficulty or element interactivity",
+        "Defines extraneous load as presentation-caused unnecessary burden",
+        "Defines germane effort as schema-building work",
+        "Says the goal is not to remove all complexity"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Cognitive Load Theory using the RAM analogy. Name what intrinsic, extraneous, and germane load map to.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Working memory is a small workspace",
+        "Intrinsic load is the program or task that must run",
+        "Extraneous load is unnecessary background work",
+        "Germane effort is useful caching or schema formation",
+        "Capacity failure harms comprehension or learning"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish Cognitive Load Theory from context-management, prompt-craft, context-window, and compression. Give a mechanism-level reason for each boundary.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "context-management owns retrieval and session working-set design",
+        "prompt-craft owns prompt tactic selection and wording",
+        "context-window owns token budget allocation",
+        "compression owns token-efficient representation mechanics",
+        "Cognitive Load Theory owns load diagnosis in authored or presented material"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A reviewer says, 'This skill is too long; remove the worked example.' Use Cognitive Load Theory to decide whether that is correct.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Rejects length as the only criterion",
+        "Classifies a useful worked example as germane or schema-building",
+        "Says to cut surrounding redundant prose first",
+        "Mentions that removing examples can increase intrinsic load",
+        "Targets extraneous load, not all load"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A dashboard widget shows 10 equally weighted metrics in one flat grid with no grouping. Apply Cognitive Load Theory and propose a fix.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Identifies the flat 10-metric grid as exceeding working-memory capacity",
+        "References roughly four independent chunks or chunk limit",
+        "Recommends grouping metrics into semantic clusters",
+        "Names chunking, segmentation, or schema-building",
+        "Does not simply delete metrics as the primary fix"
+      ]
+    }
+  ]
+}
