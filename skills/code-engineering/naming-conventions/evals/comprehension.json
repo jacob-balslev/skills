@@ -1,0 +1,84 @@
+{
+  "skill_name": "naming-conventions",
+  "subject": "Naming Conventions",
+  "adjacent_concepts": [
+    "semantics",
+    "linguistics",
+    "refactor",
+    "code-review",
+    "debugging",
+    "version-control"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define naming conventions as this skill teaches them. Your answer must mention artifact kind, casing, identifier morphology, and truthfulness.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model behind choosing a name for a function that calls a remote API and may fail. Why is `getOrder()` weaker than a name with `fetch` in that case?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill say a bad name is often better fixed with a rename than with a comment explaining the real meaning?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks you to split a 200-line function and rename the extracted helpers. Which part belongs to `refactor`, which part belongs to `naming-conventions`, and why?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify the casing conventions for these artifacts: TypeScript function, React component, URL path segment, SQL column, and environment variable. Include one example for each.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use the circuit-breaker analogy from the skill to explain why short names are only useful when they remain truthful.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "low"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: a function named `validateDiscountCode` normalizes input, writes an audit event, and returns a parsed object. Apply this skill to propose a more truthful name or split, and explain the naming evidence you used.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}

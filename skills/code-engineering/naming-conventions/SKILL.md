@@ -1,18 +1,17 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: naming-conventions
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when naming a new file, function, variable, type, route, database column, environment variable, or any other code or system artifact. Covers identifier morphology (verb-noun choice, plural vs singular, prefix/suffix conventions), kebab-case vs camelCase vs snake_case vs PascalCase per artifact kind, abbreviation rules, name-vs-path semantics, the rename-coordination workflow, and detection of names that lie. Do NOT use for content writing (use `documentation`), for restructuring already-named code (use `refactor`), or for human-language copy in product UI (separate skill, not in this library)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime and portability notes for this skill.
 compatibility:
   notes: "Language-agnostic"
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep Bash Edit
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
-  # schema_version: protocol contract version this skill conforms to.
-  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
-  # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
-
-
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
@@ -22,26 +21,12 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
-  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
-  # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-04"
-  # drift_check: truth-source verification record. Object with required `last_verified`
-  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
-  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-04\"}"
-
-  # === Evaluation Status: three orthogonal axes ===
-  # eval_artifacts: disk-truth — does an eval file exist on disk?
-  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
-  # eval_state: runtime-truth — has the eval been run and passed?
-  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
-  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
-  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Portable naming-decision guidance for files, functions, variables, types, routes, database columns, environment variables, and related code/system artifacts. Teaches truthful identifier morphology, artifact-specific casing, abbreviation discipline, name-vs-path semantics, rename coordination, and detection of names that lie. Excludes prose documentation writing, structural refactoring where naming is incidental, whole-diff code review, debugging a misnamed behavior after failure, and end-user UI copy."
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. Remove when the flat `subject` is sufficient.
+  taxonomy_domain: engineering/naming
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -65,41 +50,41 @@ metadata:
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
   relations: "{\"boundary\":[{\"skill\":\"refactor\",\"reason\":\"refactor reshapes existing code structure; naming-conventions decides what an artifact should be CALLED, before or independently of restructuring\"},{\"skill\":\"code-review\",\"reason\":\"code-review evaluates a diff holistically; naming-conventions is the focused naming-decision skill invoked during authoring\"},{\"skill\":\"debugging\",\"reason\":\"debugging chases observed wrong behaviour; naming-conventions catches names that LIE about their meaning before the bug ships\"}],\"related\":[\"refactor\"],\"verify_with\":[\"code-review\"]}"
-  # portability: external-runtime export claims. Object with:
-  # readiness — declared (claim only) / scripted (export tooling exists) /
-  #             verified (proven with a receipt artifact).
-  # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
-  # lifecycle: maintenance policy for the drift sentinel.
-  # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
-  # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":365,\"review_cadence\":\"quarterly\"}"
+  # === Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
+  mental_model: "A name is a compact contract. It binds an artifact kind, a casing convention, a grammatical shape, and a behavior promise. Good naming starts by identifying the artifact type, choosing the casing that readers expect for that artifact, selecting words whose verbs and nouns match actual behavior, and then coordinating the rename so every reference carries the same meaning."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
+  purpose: "Prevents code and system artifacts from lying to future readers. Accurate names reduce debugging time, make APIs and data models easier to scan, and keep refactors honest because the name travels with every call site while comments explaining a bad name usually rot."
+  # boundary: what this concept is not; distinguish by mechanism, not just label.
+  boundary: "This skill decides what an artifact should be called. It does not restructure code, review a whole diff, write prose documentation about a convention, debug a runtime failure, or choose end-user UI copy. If the work changes structure, use refactor; if the work evaluates all PR risks, use code-review; if the behavior is already broken, use debugging."
+  # analogy: one-sentence metaphor preserving the core mechanism.
+  analogy: "Naming is like labeling circuit breakers: a short label is only useful if it truthfully names the circuit it controls."
+  # misconception: the wrong mental model people bring; corrected explicitly.
+  misconception: "The wrong mental model is that naming is cosmetic. A misleading name is a behavioral bug in the reader's model: `getOrder()` that returns `undefined`, `validate()` that mutates input, or `created` that stores a ship date will eventually cause wrong assumptions."
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/naming-conventions/SKILL.md
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
-  #
-  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
-  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
-  # truth_verdict: truth sources vs declared hashes (gates 3-6).
-  # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
-  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
-  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
-  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
-  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
-  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+  skill_graph_canonical_skill: skills/code-engineering/naming-conventions/SKILL.md
 ---
+
+## Concept of the skill
+
+**What it is:** Naming conventions are the rules that make artifact names truthful, predictable, and searchable across code, routes, data, configuration, and documentation-adjacent developer surfaces.
+
+**Mental model:** A name is a compact contract: artifact kind decides casing, grammar decides the role of each word, and verbs/nouns promise behavior. A good name lets the reader infer what the artifact does before opening the implementation.
+
+**Why it exists:** Names are read far more often than they are written. Choosing them deliberately prevents hidden cost: stale domain words, false verb promises, casing inconsistency, and missed references during renames.
+
+**What it is NOT:** It is not whole-code refactoring, whole-diff code review, prose style guidance, product microcopy, or debugging a failed behavior after the name has already misled someone.
+
+**Adjacent concepts:** Semantics, linguistics, refactor, code-review, debugging, version-control, and information architecture.
+
+**One-line analogy:** Naming is like labeling circuit breakers: a short label is useful only when it truthfully names the circuit it controls.
+
+**Common misconception:** Naming is not cosmetic. A misleading identifier creates a wrong model in every caller and reader, even when the code compiles.
 
 # Naming Conventions
 
