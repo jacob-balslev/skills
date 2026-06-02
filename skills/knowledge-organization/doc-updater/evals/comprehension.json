@@ -1,0 +1,77 @@
+{
+  "skill_name": "doc-updater",
+  "subject": "Documentation Sync Discipline",
+  "adjacent_concepts": ["documentation as code", "single source of truth", "Diátaxis doc types", "documentation drift", "double-entry bookkeeping"],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define the documentation-sync discipline and explain why the doc update must ship in the SAME commit as the code change rather than a follow-up commit.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the 'document by ownership, not convenience' principle. When a change adds a new behavior, why is routing the doc update to the canonical owning doc better than appending a note to the nearest index file or a session summary?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "What is documentation drift, why is it invisible at the moment you write the code but expensive when someone later reads the doc, and how does binding the doc update to the code change (in time and in ownership) close the window in which drift forms?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish doc-updater from (a) a documentation-authoring skill that teaches how to write good prose, and (b) `naming-conventions`. An agent has just renamed a function that is referenced in three docs and wants to know what to do — which skill owns that, and what is the mechanism?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Novel scenario: your diff touches a migration file (adds a column), a new API route that reads the column, and a README. Apply the 5-step workflow. What does Step 1 produce, how do you route each of the three files in Step 2, what does the Step 4 verification look like, and what must NOT be skipped before you call the task done?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "dimension": "misconception",
+      "prompt": "An agent says: 'I finished the feature and committed it; I'll update the docs in a quick follow-up commit afterward.' Why is this a misconception about when documentation work happens, and what is the correct framing of done?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "dimension": "analogy",
+      "prompt": "Explain why double-entry bookkeeping is an apt analogy for the documentation-sync discipline, and what 'the books stop balancing' corresponds to in a codebase.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}
