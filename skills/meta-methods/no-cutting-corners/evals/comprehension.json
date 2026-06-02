@@ -1,0 +1,77 @@
+{
+  "skill_name": "no-cutting-corners",
+  "subject": "Five Pillars of Thoroughness",
+  "adjacent_concepts": ["intellectual honesty", "definition of done", "RLHF sycophancy", "helpfulness-harm tension", "pre-flight checklist", "methodical execution"],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Name the five non-negotiable quality pillars this skill enforces, and state in one sentence each what failure mode it gates against.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "The skill claims every shortcut an agent takes is a variation of one root cause. What is that root cause, and how do completeness, verification, enrichment, and anti-shortcut each gate a different face of it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why consolidate five already-existing rules into one doctrine instead of leaving them as separate rules? What does an agent gain at the moment of producing output?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish no-cutting-corners from `methodical`, `best-practice`, and `evaluation`. An agent has finished an audit and wants to (a) understand WHY it was tempted to drop the MEDIUM findings, and (b) gate that its final report shows all of them. Which skill owns which, and what is the mechanism difference?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Novel scenario: you ran a review and found 11 issues across 4 severities. The prompt asks for 'the main problems', and you are tempted to file the 3 highest-leverage ones as tickets. Apply the completeness and split-before-create pillars: what exactly do you output, what do you file, and what is the user's role vs yours?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "dimension": "application",
+      "prompt": "Novel scenario: you are asked to 'improve' a 200-line function that has verbose error handling and several edge-case branches. The enrichment pillar applies. What does 'improve' mean here, what would violate the output-size rule, and under what condition is removing any of that code legitimate?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "An agent says: 'I cut that corner to be efficient and helpful — I showed the user the important stuff.' Why is 'cutting a corner is being helpful' a misconception, and whose decision did the agent actually make?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}
