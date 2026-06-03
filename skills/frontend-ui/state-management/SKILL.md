@@ -1,16 +1,14 @@
 ---
+# name: stable kebab-case skill identifier; must match the parent directory.
 name: state-management
+# description: routing contract for when this skill should activate and when it should not.
 description: "Use when deciding where state lives, how it propagates, and how it composes: local component state vs lifted/shared state vs application state, server state vs client state, URL as state, persistent state, derived state, and the cross-cutting decision of who owns which piece. Covers state colocation, lifting up, derivation vs duplication, single source of truth, optimistic updates, server-state cache invalidation (React Query/SWR model), URL state for deep-linking, and anti-patterns like prop-drilling, state sprawl, and global-state-by-default. Do NOT use for specific state library choice (Redux vs Zustand — tactical), data fetching mechanics (use api-design or rendering-models), client/server boundary (use client-server-boundary), distributed system state (use replication-patterns), or finite state machines (use state-machine-modeling)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
-  # schema_version: protocol contract version this skill conforms to.
-  # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
-  # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
-
-
   # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
   # subject: primary browse shelf — what the skill teaches. One of nine closed values:
   # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
@@ -20,33 +18,13 @@ metadata:
   # portable (any project, repo-agnostic) /
   # project (one or more specific projects; requires populated `grounding` and `project[]`).
   deployment_target: portable
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Portable frontend state-placement discipline for deciding where each piece of application data lives, who owns it, how it propagates, and how it stays consistent across changes. Teaches the four-kinds classification (server state, client UI state, URL state, persistent state), the colocation-and-lifting decision path, single source of truth, server-state cache invalidation, URL state for deep-linking, and anti-pattern detection for prop drilling, duplicated state, state sprawl, and global-state-by-default. Excludes tactical library choice, API surface design, client/server execution-boundary decisions, distributed-system replication, and finite-state workflow modeling."
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: engineering/frontend
-  # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
-  # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-16"
-  # drift_check: truth-source verification record. Object with required `last_verified`
-  # (ISO date) and optional `truth_source_hashes`. Record hashes with:
-  # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-16\"}"
-
-  # === Evaluation Status: three orthogonal axes ===
-  # eval_artifacts: disk-truth — does an eval file exist on disk?
-  # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
-  # eval_state: runtime-truth — has the eval been run and passed?
-  # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
-  # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
-  # routing_eval: routing-coverage — is the skill's activation verified by the harness?
-  # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
-  # comprehension_state: marker that this skill has populated v6+ Understanding fields
-  # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -68,11 +46,11 @@ metadata:
   # related (adjacency for browse / co-routing expansion) /
   # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
   #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  #           see ADR-0018 for rename rationale) /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"related\":[\"rendering-models\",\"client-server-boundary\",\"frontend-architecture\",\"api-design\",\"state-machine-modeling\"],\"boundary\":[{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the line between code-that-runs-where (server components, client components, the serialization boundary); this skill owns the orthogonal question of which side owns which piece of state. They compose: the boundary skill says what code runs where; this skill says what state lives where.\"},{\"skill\":\"state-machine-modeling\",\"reason\":\"state-machine-modeling owns finite-state representation of workflows (states, transitions, guards); this skill owns the decision of where state of any kind lives. The two compose when a workflow has a finite state space whose value still has to live somewhere — the machine names the values, this skill names the location.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the external request/response shape; this skill owns where the response data lives once it arrives, and how it's invalidated. Server state cache management (React Query / SWR doctrine) is in scope of this skill; the API surface itself is not.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the question of when content is generated (SSR, RSC, CSR, ISR); this skill owns the question of where data backing that content lives. The two intersect in 'server state' — data fetched on the server that the client needs.\"}],\"verify_with\":[\"rendering-models\",\"api-design\"]}"
+  relations: "{\"related\":[\"rendering-models\",\"client-server-boundary\",\"frontend-architecture\",\"api-design\",\"state-machine-modeling\"],\"boundary\":[{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns the line between code-that-runs-where (server components, client components, the serialization boundary); this skill owns the orthogonal question of which side owns which piece of state. They compose: the boundary skill says what code runs where; this skill says what state lives where.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns the question of when content is generated (SSR, RSC, CSR, ISR); this skill owns the question of where data backing that content lives. The two intersect in server state: data fetched on the server that the client may still need to cache, invalidate, or localize.\"}],\"verify_with\":[\"rendering-models\",\"api-design\",\"state-machine-modeling\"]}"
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -90,37 +68,32 @@ metadata:
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: |
     The wrong mental model is that state is one thing and the question is "which library should hold it?" It is not. State is at minimum FOUR kinds with different lifetimes and invalidation rules. Picking a library before classifying produces the same library used wrongly for all four kinds — Redux for server data (you reinvent React Query badly), Zustand for URL-worthy filter state (you break the back-button), Context for everything (you re-render the world on every change). The discipline is to classify first (server / client UI / URL / persistent), then pick the right tool per kind, then ask "do I even need a library, or is colocation enough?" Most state should live locally with the component that uses it; a global store is the exception, not the default.
-  # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
-  # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"State management is the architectural discipline of deciding, for each distinct piece of data that an application reads or writes, where that data lives, who owns it, how it propagates to the components that need it, and how it stays consistent across changes. The discipline is upstream of any specific state library: it asks 'should this be local, lifted, global, server-cached, URL-encoded, or persisted' before asking 'which library do I use to hold it.' State is not a single thing; it is a category with at least four distinct kinds (server state, client UI state, URL state, persistent state), each with different lifetimes, invalidation rules, and consistency requirements. The discipline is the recognition that treating all state the same — putting all of it in one global store, or scattering it across every component — produces the recurring frontend problems of prop drilling, stale data, broken back-buttons, and tests that pass while users are confused.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
+  skill_graph_protocol: Skill Metadata Protocol v8
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/state-management/SKILL.md
+  skill_graph_canonical_skill: skills/frontend-ui/state-management/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1122"
-  # === Health Block (written by the audit loop, not hand-authored) ===
-  # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
-  #
-  # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
-  # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
-  # truth_verdict: truth sources vs declared hashes (gates 3-6).
-  # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
-  # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
-  # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
-  # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
-  # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
-  # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
 ---
+
+## Concept of the skill
+
+**What it is:** State management is the frontend architecture discipline of deciding where each changing value lives, who owns it, how it propagates to consumers, and how it stays consistent over time.
+
+**Mental model:** State is at least four kinds with different owners and lifetimes: server state, client UI state, URL state, and persistent state. Classify the value first, then choose the narrowest owner and tool that fits its lifetime and invalidation needs.
+
+**Why it exists:** Most recurring frontend state bugs come from putting the right value in the wrong place: server data in a general-purpose store, URL-worthy state in component state, duplicated values in two owners, or global stores used before local state has proven insufficient.
+
+**What it is NOT:** It is not tactical state-library selection, API schema design, finite-state workflow modeling, distributed replication, or the client/server execution-boundary decision. Those skills can compose with this one after the state kind and owner are clear.
+
+**Adjacent concepts:** Rendering models, client-server boundary, frontend architecture, API design, state-machine modeling, server-state caching, and URL state.
+
+**One-line analogy:** State management is like addressing mail: each item needs the right destination for its kind, and one mailbox for everything creates predictable delivery failures.
+
+**Common misconception:** The wrong starting question is "which state library should hold this?" The right first question is "what kind of state is this, who owns it, and how long should it live?"
 
 # State Management
 
@@ -128,7 +101,7 @@ metadata:
 
 The architectural discipline of deciding, for each distinct piece of data an application reads or writes, where it lives, who owns it, how it propagates, and how it stays consistent. Covers the four kinds of state (server, client UI, URL, persistent), the colocation default and the lifting move, the single-source-of-truth principle, the React Query / SWR doctrine for server state, the URL as a state container, the architectural anti-patterns of premature globalization and state sprawl, optimistic-update trade-offs, and the framing of state ownership as a design contract distinct from state-library selection.
 
-## Philosophy
+## Philosophy of the skill
 
 State management is a series of location and ownership decisions, each of which has a correct default. The defaults are: colocate locally; lift only when needed; put server state in a server-state library; put URL-worthy state in the URL; put session-survival state in persistent storage; never have two sources of truth for one value. Most recurring frontend bugs (broken back-button, stale data, prop drilling, "why is this re-rendering," changes that don't reflect everywhere) are violations of these defaults. The discipline is not the library; it is the application of the defaults.
 
