@@ -6,6 +6,7 @@
     "intrinsic load",
     "extraneous load",
     "germane load",
+    "germane load reconceptualization (Sweller 2010 / 2019)",
     "chunking",
     "segmentation",
     "schema formation",
@@ -97,6 +98,25 @@
         "Names chunking, segmentation, or schema-building",
         "Does not simply delete metrics as the primary fix"
       ]
+    },
+    {
+      "id": 6,
+      "dimension": "misconception",
+      "prompt": "A teammate proposes: 'First we cut extraneous load, then we ADD germane load by inserting three extra self-explanation exercises — germane is the third load bucket, so turning it up directly should improve learning.' Using Cognitive Load Theory's modern (post-2010) reconceptualization of germane load, is that framing correct? Explain what is wrong and state the correct causal model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects germane load as an independent, separately-addable third bucket or knob",
+        "States the post-2010 reconceptualization (Sweller 2010; Sweller, van Merriënboer & Paas 2019): germane load is the working-memory resources ALLOCATED to processing the intrinsic load, not a separate source of load",
+        "Gives the honest accounting: total load = intrinsic + extraneous; germane is how much of the capacity left after extraneous removal is devoted to the intrinsic material",
+        "Says you cannot 'add' germane load directly — you FREE capacity (cut extraneous) and DIRECT it onto schema construction by presenting intrinsic material worth building a schema from (worked examples, contrasts, varied cases)",
+        "Flags that unrelated added exercises not tied to the intrinsic material can themselves become extraneous load, not germane gain",
+        "May note the additive three-bucket picture is retained as a teaching device while the allocation picture is used to reason"
+      ],
+      "negative_expectation": "Must NOT endorse treating germane load as an independently addable third bucket/source with its own dial; must NOT say 'add germane load' as a standalone lever divorced from the intrinsic material; must NOT present the 1998 three-additive-sources model (intrinsic + extraneous + germane) as the current accounting without correcting it to the post-2010 resource-allocation model; must NOT claim that inserting more exercises is germane gain regardless of whether they build schemas from the task's own intrinsic content."
     }
   ]
 }
