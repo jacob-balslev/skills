@@ -1,7 +1,7 @@
 # Cognitive Load Theory — Source References
 
 > Foundational papers and resources for the `cognitive-load-theory` skill.
-> Last updated: 2026-05-19
+> Last updated: 2026-06-03
 
 ---
 
@@ -72,6 +72,8 @@
 | Expertise reversal effect: methods that help novices can hinder experts | Segment and scaffold for the expected reader; avoid assuming prior schema |
 | Segmentation principle: complex procedures learned better in sequential segments | Break multi-step prompts and docs into explicit phases |
 | Modality effect: mixed text+visuals use more capacity than text+audio | For agents: mixed modalities in a single prompt context increase load |
+| Germane load is resource *allocation*, not a third additive tank (Sweller 2011; Sweller, van Merriënboer & Paas 2019; Paas & van Merriënboer 2020) | Do not "add germane load"; remove extraneous + sequence intrinsic, and germane processing is what the freed capacity is spent on |
+| LLMs exhibit a measurable performance ceiling when task demands exceed effective working-memory capacity (Shang et al. 2025, arXiv:2506.06843) | CLT transfers to agents: lost-in-the-middle and instruction-overload are cognitive-load limits, not training bugs; budget per-context load |
 
 ---
 
@@ -80,5 +82,10 @@
 - [Sweller (1988) — Cognitive load during problem solving](https://doi.org/10.1207/s15516709cog1202_4)
 - [Paas & van Merriënboer (2020) — Methods to manage working memory load](https://journals.sagepub.com/doi/10.1177/0963721420922183)
 - [Sweller, van Merriënboer & Paas (1998) — Cognitive architecture and instructional design](https://doi.org/10.1023/A:1022193728205)
+- [Sweller, van Merriënboer & Paas (2019) — Cognitive architecture and instructional design: 20 years later](https://doi.org/10.1007/s10648-019-09465-5)
 - [InstructionalDesign.org — Cognitive Load Theory overview](https://www.instructionaldesign.org/theories/cognitive-load/)
 - [Cowan (2001) — The magical number 4 in short-term memory](https://doi.org/10.1017/S0140525X01003922)
+- [Shang et al. (2025) — LLM bounded working memory / cognitive-load capacity (arXiv:2506.06843)](https://arxiv.org/abs/2506.06843)
+- [Cognitive Load Limits in Large Language Models: Benchmarking (2025, arXiv:2509.19517)](https://arxiv.org/abs/2509.19517)
+
+> Added 2026-06-03 (two-frontier enrich pilot, SH-6688): the 2019 "20 years later" reaffirmation of the germane-load reconceptualization and the 2025 LLM-CLT benchmarks. These ground the SKILL.md §2.4 (allocation, not a third tank) and §7 (does CLT transfer to LLMs) additions.
