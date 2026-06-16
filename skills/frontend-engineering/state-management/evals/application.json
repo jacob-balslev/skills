@@ -1,0 +1,465 @@
+{
+  "skill_name": "state-management",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (The Four Kinds Of State, The Colocation Rule, The Server-State Distinction, URL State Decision Rule, Anti-Patterns And Their Fixes, Verification, Do NOT Use When) and current frontend practice (Kent C. Dodds colocation, React Query/SWR server-state model, URL-as-state, single source of truth).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "server-state-misplacement",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team holds all fetched API data (users, orders, products) in a single Redux store, and has written custom middleware for refetch-on-focus, request deduplication, cache expiry, and post-mutation invalidation. Each piece has subtle bugs.",
+      "context": "React SPA. The team is debugging stale-data and double-fetch issues.",
+      "question": "How should the agent reclassify and restructure this state?",
+      "expected_flags": [
+        "The fetched API data is server state, which a general-purpose store does not handle by default",
+        "Server state has four properties (remote canonical source, dedup, staleness, mutation-triggered invalidation) the custom middleware is badly reimplementing",
+        "Migrate server data to a server-state library (React Query / SWR / RTK Query / Apollo); keep the general store for genuinely client UI state only",
+        "The custom refetch/dedup/expiry/invalidation middleware is reinventing React Query, badly"
+      ],
+      "expected_fix_hints": [
+        "Move users/orders/products into useQuery hooks keyed by query key",
+        "Use mutate-then-invalidate-by-key instead of manual cache expiry middleware"
+      ],
+      "absent_signals": [
+        "Do not keep server data in the general-purpose store",
+        "Do not keep hand-building refetch/dedup/invalidation"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The fetched API data is server state, which a general-purpose store does not handle by default."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Server state has four properties (remote canonical source, dedup, staleness, mutation-triggered invalidation) the custom middleware is badly reimplementing."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Migrate server data to a server-state library (React Query / SWR / RTK Query / Apollo); keep the general store for genuinely client UI state only."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The custom refetch/dedup/expiry/invalidation middleware is reinventing React Query, badly."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move users/orders/products into useQuery hooks keyed by query key."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use mutate-then-invalidate-by-key instead of manual cache expiry middleware."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep server data in the general-purpose store."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep hand-building refetch/dedup/invalidation."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "url-state-omission",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A product listing keeps the active category filter, sort order, and page number in component useState. Users report that the back-button doesn't restore their view, refreshing loses their filters, and they can't share a link to a filtered view.",
+      "context": "Next.js App Router page with a responsive listing grid.",
+      "question": "Where should this state live and why?",
+      "expected_flags": [
+        "Filter, sort, and page are URL-worthy: 'should two people opening this URL see the same view?' is yes",
+        "Move them to URL state (useSearchParams / route params), not component state",
+        "URL state fixes the back-button, survives refresh, and makes the view shareable",
+        "Consider a type-safe URL-state library (nuqs) for serialization/parsing"
+      ],
+      "expected_fix_hints": [
+        "Read/write filter+sort+page via useSearchParams",
+        "Adopt nuqs for type-safe URL state"
+      ],
+      "absent_signals": [
+        "Do not keep filter/sort/page in component useState",
+        "Do not put this in a global store either — the URL is the owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Filter, sort, and page are URL-worthy: 'should two people opening this URL see the same view?' is yes."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Move them to URL state (useSearchParams / route params), not component state."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: URL state fixes the back-button, survives refresh, and makes the view shareable."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Consider a type-safe URL-state library (nuqs) for serialization/parsing."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Read/write filter+sort+page via useSearchParams."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Adopt nuqs for type-safe URL state."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep filter/sort/page in component useState."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not put this in a global store either — the URL is the owner."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "premature-globalization",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A new feature needs a small toggle state used by exactly one component. A developer adds it to the app-wide Zustand store 'to be consistent with how we do state here.' The store has grown to 80 keys, many unread for months.",
+      "context": "React app where global-store-by-default is the established (but unexamined) habit.",
+      "question": "How should the agent advise placing this state?",
+      "expected_flags": [
+        "Start local: a toggle used by one component belongs in that component's useState, not the global store",
+        "Premature globalization causes state sprawl — the store grows and nobody knows what's in it",
+        "Only lift on observed need (a second consumer); only reach for a store when many components depend on many slices of a frequently-changing value",
+        "Recommend auditing the store for entries unread in N months"
+      ],
+      "expected_fix_hints": [
+        "Use local useState for the single-component toggle",
+        "Lift only when a second consumer genuinely appears"
+      ],
+      "absent_signals": [
+        "Do not add single-component state to the global store",
+        "Do not justify placement by 'consistency with existing habit'"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Start local: a toggle used by one component belongs in that component's useState, not the global store."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Premature globalization causes state sprawl — the store grows and nobody knows what's in it."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Only lift on observed need (a second consumer); only reach for a store when many components depend on many slices of a frequently-changing value."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommend auditing the store for entries unread in N months."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use local useState for the single-component toggle."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Lift only when a second consumer genuinely appears."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add single-component state to the global store."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not justify placement by 'consistency with existing habit'."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "duplicated-state",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "The selected item id is stored both in a parent component's useState and copied into a child's local useState on mount. Updates in the parent don't reflect in the child, producing 'I changed it but it still shows the old value' bugs.",
+      "context": "React component tree with a parent list and a child detail panel.",
+      "question": "How should the agent fix the state ownership?",
+      "expected_flags": [
+        "This is duplicated state — the same value held in two independent locations, violating single source of truth",
+        "Identify the canonical owner (the parent) and have the child read from it (props/context) rather than copying",
+        "Derive in the other location or sync explicitly with a recorded reason if a copy is truly needed",
+        "Updates fail to propagate precisely because there are two sources of truth"
+      ],
+      "expected_fix_hints": [
+        "Pass selectedId down as a prop; remove the child's copied useState",
+        "If a copy is unavoidable, add an explicit sync mechanism and document why"
+      ],
+      "absent_signals": [
+        "Do not keep two independent copies of the same value",
+        "Do not 'fix' it by adding more sync code without naming the canonical owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is duplicated state — the same value held in two independent locations, violating single source of truth."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identify the canonical owner (the parent) and have the child read from it (props/context) rather than copying."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Derive in the other location or sync explicitly with a recorded reason if a copy is truly needed."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Updates fail to propagate precisely because there are two sources of truth."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pass selectedId down as a prop; remove the child's copied useState."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: If a copy is unavoidable, add an explicit sync mechanism and document why."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep two independent copies of the same value."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not 'fix' it by adding more sync code without naming the canonical owner."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "derived-state-and-optimistic",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A cart component stores the cart items AND a separate stored `totalPrice` field that it manually keeps in sync; it also applies optimistic updates to a 'redeem promo code' mutation that frequently fails server-side validation, leaving users confused.",
+      "context": "E-commerce React app.",
+      "question": "How should the agent review the derived-state and optimistic-update choices?",
+      "expected_flags": [
+        "totalPrice is derived state that is being stored — compute it at read time instead, so it can't go stale",
+        "Only store derived values with measured performance evidence (and then memoize, e.g. useMemo)",
+        "Optimistic updates are for high-confidence mutations only; the frequently-failing promo redemption should be pessimistic (loading → success/error)",
+        "Where optimistic updates are used, a rollback path must exist"
+      ],
+      "expected_fix_hints": [
+        "Replace stored totalPrice with a read-time computation",
+        "Switch the low-confidence promo mutation to pessimistic UI"
+      ],
+      "absent_signals": [
+        "Do not keep a manually-synced stored total",
+        "Do not apply optimistic UI to a high-failure mutation"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: totalPrice is derived state that is being stored — compute it at read time instead, so it can't go stale."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Only store derived values with measured performance evidence (and then memoize, e.g. useMemo)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Optimistic updates are for high-confidence mutations only; the frequently-failing promo redemption should be pessimistic (loading → success/error)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Where optimistic updates are used, a rollback path must exist."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace stored totalPrice with a read-time computation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Switch the low-confidence promo mutation to pessimistic UI."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep a manually-synced stored total."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not apply optimistic UI to a high-failure mutation."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A teammate asks the state-management owner to (a) pick between Redux Toolkit and Zustand for the project, and (b) design the JSON response shape for the new /orders API endpoint.",
+      "context": "The team treats 'state' as covering both library choice and API design.",
+      "question": "How should the agent scope these requests?",
+      "expected_flags": [
+        "Choosing between Redux Toolkit and Zustand is a tactical, library-specific decision below this skill — defer to library docs + framework conventions",
+        "Designing the JSON shape of the /orders endpoint is api-design's territory (the external request/response surface)",
+        "This skill owns where the response data lives once it arrives and how it is invalidated, not the endpoint shape or the store library",
+        "Correctly redirects rather than answering the library-choice or API-shape question out of lane"
+      ],
+      "expected_fix_hints": [
+        "Route the library choice to library docs / team conventions",
+        "Route the API response shape to api-design"
+      ],
+      "absent_signals": [
+        "Do not pick the state library here",
+        "Do not design the API response shape here"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Choosing between Redux Toolkit and Zustand is a tactical, library-specific decision below this skill — defer to library docs + framework conventions."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Designing the JSON shape of the /orders endpoint is api-design's territory (the external request/response surface)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This skill owns where the response data lives once it arrives and how it is invalidated, not the endpoint shape or the store library."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering the library-choice or API-shape question out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the library choice to library docs / team conventions."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the API response shape to api-design."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the state library here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the API response shape here."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "persistent-vs-server",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A team puts all user preferences (including a 'compact mode' that must be reflected in the first server-rendered paint, and cross-device) into localStorage. On first SSR render the server doesn't know the preference, causing a flash and no cross-device sync.",
+      "context": "Next.js App Router app with SSR and authenticated users.",
+      "question": "How should the agent reclassify these preferences?",
+      "expected_flags": [
+        "Preferences that affect SSR or must sync across devices are not local-only — localStorage is the wrong owner",
+        "Server-side store (or cookie the server can read) for prefs that affect SSR, so the first paint is correct",
+        "URL state for session-scoped prefs; localStorage only when local-only is genuinely correct",
+        "Match the persistent-state choice to what the data actually needs (localStorage / IndexedDB / cookies / server-stored)"
+      ],
+      "expected_fix_hints": [
+        "Move SSR-affecting + cross-device prefs to a server-stored profile (or readable cookie)",
+        "Keep only genuinely local-only prefs in localStorage"
+      ],
+      "absent_signals": [
+        "Do not keep SSR-affecting preferences in localStorage only",
+        "Do not assume localStorage gives cross-device sync"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Preferences that affect SSR or must sync across devices are not local-only — localStorage is the wrong owner."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Server-side store (or cookie the server can read) for prefs that affect SSR, so the first paint is correct."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: URL state for session-scoped prefs; localStorage only when local-only is genuinely correct."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Match the persistent-state choice to what the data actually needs (localStorage / IndexedDB / cookies / server-stored)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move SSR-affecting + cross-device prefs to a server-stored profile (or readable cookie)."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep only genuinely local-only prefs in localStorage."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep SSR-affecting preferences in localStorage only."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume localStorage gives cross-device sync."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

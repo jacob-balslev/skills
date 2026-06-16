@@ -1,0 +1,441 @@
+{
+  "skill_name": "research-synthesis",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Verification, Do NOT Use When) and established qualitative-synthesis practice (Kawakita's KJ affinity method, IDEO field guide, Stanford d.school, empathy maps, jobs-to-be-done).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "affinity-clustering",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A researcher has 14 interview transcripts and proposes to 'read through them, get a feel for the patterns, and write up the top takeaways' by tomorrow.",
+      "context": "The team wants insight statements to take into an ideation workshop. No structured synthesis has happened yet.",
+      "question": "How should the agent guide the synthesis?",
+      "expected_flags": [
+        "Download research first: extract atomic observations onto a shared surface, one per card, in the participant's words",
+        "Cluster bottom-up by proximity (affinity mapping); do not impose pre-existing categories",
+        "Name themes only after clusters form, not from an initial impression",
+        "Warns that impression-based 'top takeaways' reproduce the researcher's priors"
+      ],
+      "expected_fix_hints": [
+        "Move observations onto a wall/board as attributable cards before clustering",
+        "Produce 3-7 insight statements in observation + interpretation + implication form"
+      ],
+      "absent_signals": [
+        "Do not skip the downloading/clustering step",
+        "Do not name themes from a first-read impression"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Download research first: extract atomic observations onto a shared surface, one per card, in the participant's words."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cluster bottom-up by proximity (affinity mapping); do not impose pre-existing categories."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Name themes only after clusters form, not from an initial impression."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Warns that impression-based 'top takeaways' reproduce the researcher's priors."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move observations onto a wall/board as attributable cards before clustering."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Produce 3-7 insight statements in observation + interpretation + implication form."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip the downloading/clustering step."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not name themes from a first-read impression."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "premature-naming",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "Early in synthesis, a teammate labels a cluster 'users want simplicity' and starts moving any card that mentions confusion, friction, or too many steps into it.",
+      "context": "The wall is filling up but the 'simplicity' cluster is becoming the biggest by far.",
+      "question": "How should the agent respond?",
+      "expected_flags": [
+        "Flags premature abstraction — a theme named too early becomes a magnet pulling unrelated cards in",
+        "Recommends delaying naming; cluster by proximity first, name only when the cluster's shape is undeniable",
+        "Suggests breaking the over-broad cluster back into distinct, evidence-grounded sub-clusters",
+        "Notes 'simplicity' is too charitable/comfortable and may hide real distinct problems"
+      ],
+      "expected_fix_hints": [
+        "Re-cluster the 'simplicity' cards by what actually drove the confusion",
+        "Hold off on labels until cluster boundaries stabilize"
+      ],
+      "absent_signals": [
+        "Do not keep absorbing unrelated cards under one comfortable label"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags premature abstraction — a theme named too early becomes a magnet pulling unrelated cards in."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends delaying naming; cluster by proximity first, name only when the cluster's shape is undeniable."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Suggests breaking the over-broad cluster back into distinct, evidence-grounded sub-clusters."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes 'simplicity' is too charitable/comfortable and may hide real distinct problems."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-cluster the 'simplicity' cards by what actually drove the confusion."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hold off on labels until cluster boundaries stabilize."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep absorbing unrelated cards under one comfortable label."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "untraceable-themes",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A draft synthesis presents six bold themes, but several themes cannot be tied back to specific observations — they read like the team's pre-existing beliefs restated.",
+      "context": "Stakeholders are about to make roadmap decisions from these themes.",
+      "question": "What should the agent require before the themes are used?",
+      "expected_flags": [
+        "Every theme must trace back to at least two specific cards, each attributable to a session/participant",
+        "Untraceable themes are impression-based and not defensible",
+        "Checks whether any insight contradicts a prior belief — if all are comfortable, synthesis was too charitable",
+        "Distinguishes observations / interpretations / implications rather than collapsing them"
+      ],
+      "expected_fix_hints": [
+        "Attach supporting cards to each theme or drop the theme",
+        "Surface at least one belief-contradicting insight"
+      ],
+      "absent_signals": [
+        "Do not ship themes with no evidentiary backing",
+        "Do not present prior assumptions as findings"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Every theme must trace back to at least two specific cards, each attributable to a session/participant."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Untraceable themes are impression-based and not defensible."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Checks whether any insight contradicts a prior belief — if all are comfortable, synthesis was too charitable."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes observations / interpretations / implications rather than collapsing them."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Attach supporting cards to each theme or drop the theme."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Surface at least one belief-contradicting insight."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ship themes with no evidentiary backing."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present prior assumptions as findings."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "premature-persona",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "After two interviews, a designer wants to lock in three personas to 'design against' immediately.",
+      "context": "Patterns across the small sample are not yet stable.",
+      "question": "How should the agent respond to building personas now?",
+      "expected_flags": [
+        "Persona drafting belongs only when patterns are stable enough to warrant archetypes",
+        "A persona built before patterns stabilize fossilizes a guess",
+        "Teams then optimize for a fictional user instead of real ones",
+        "Recommend more clustering/evidence before committing to personas"
+      ],
+      "expected_fix_hints": [
+        "Continue synthesis until clusters stabilize before drafting personas",
+        "Treat early personas as provisional hypotheses, not fixed targets"
+      ],
+      "absent_signals": [
+        "Do not lock personas from two interviews"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Persona drafting belongs only when patterns are stable enough to warrant archetypes."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A persona built before patterns stabilize fossilizes a guess."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Teams then optimize for a fictional user instead of real ones."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommend more clustering/evidence before committing to personas."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Continue synthesis until clusters stabilize before drafting personas."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Treat early personas as provisional hypotheses, not fixed targets."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not lock personas from two interviews."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "insight-statement-form",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team's synthesis output is a flat bullet list mixing 'users were confused', 'we should simplify onboarding', and 'people use it on Fridays' as if they were the same kind of statement.",
+      "context": "The output is meant to feed problem framing and ideation.",
+      "question": "How should the agent restructure the output?",
+      "expected_flags": [
+        "Distinguish descriptive themes (what we heard) from interpretive insights (what it means) from point-of-view statements (what we will act on)",
+        "Each layer requires the previous one as evidence",
+        "Recast insights as observation + interpretation + implication",
+        "Output should be small and actionable (typically 3-7 themes)"
+      ],
+      "expected_fix_hints": [
+        "Rewrite each insight in observation + interpretation + implication form",
+        "Separate the three layers rather than mixing them in one list"
+      ],
+      "absent_signals": [
+        "Do not collapse observations, interpretations, and implications into one undifferentiated list"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguish descriptive themes (what we heard) from interpretive insights (what it means) from point-of-view statements (what we will act on)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Each layer requires the previous one as evidence."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recast insights as observation + interpretation + implication."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Output should be small and actionable (typically 3-7 themes)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rewrite each insight in observation + interpretation + implication form."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Separate the three layers rather than mixing them in one list."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not collapse observations, interpretations, and implications into one undifferentiated list."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the research-synthesis owner to 'synthesize' a single competitor PDF report and, while they're at it, schedule five more user interviews.",
+      "context": "The PM conflates 'synthesis' with both document summarization and data collection.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Summarizing one PDF is out of scope — synthesis operates on a corpus for cross-session pattern extraction, not single-document summary",
+        "Running new interviews is out of scope — that is user-research (collecting primary data)",
+        "Offers the in-scope part: synthesize an existing corpus of qualitative evidence into themes",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand document summarization to a summarization task; hand new interviews to user-research",
+        "Run user-research first, then research-synthesis on the resulting corpus"
+      ],
+      "absent_signals": [
+        "Do not treat single-document summarization as synthesis",
+        "Do not run new interviews under the synthesis banner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Summarizing one PDF is out of scope — synthesis operates on a corpus for cross-session pattern extraction, not single-document summary."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Running new interviews is out of scope — that is user-research (collecting primary data)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offers the in-scope part: synthesize an existing corpus of qualitative evidence into themes."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand document summarization to a summarization task; hand new interviews to user-research."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run user-research first, then research-synthesis on the resulting corpus."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat single-document summarization as synthesis."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run new interviews under the synthesis banner."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "quantitative-misroute",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A stakeholder asks the team to 'synthesize' the survey by computing response rates, average satisfaction scores, and a trend line over three quarters.",
+      "context": "The request uses the word 'synthesize' but is entirely about numbers.",
+      "question": "Is this research-synthesis work, and how should the agent respond?",
+      "expected_flags": [
+        "Not research-synthesis — quantitative questions (counts, percentages, trends over time) need statistical analysis, not affinity methods",
+        "Research-synthesis operates on qualitative evidence (transcripts, notes, observations)",
+        "Redirects the numeric work to statistical/quantitative analysis",
+        "Offers in-scope help only if qualitative free-text responses exist to cluster"
+      ],
+      "expected_fix_hints": [
+        "Route the metrics to statistical analysis",
+        "Apply synthesis only to any open-ended qualitative responses"
+      ],
+      "absent_signals": [
+        "Do not apply affinity mapping to compute rates or trends"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Not research-synthesis — quantitative questions (counts, percentages, trends over time) need statistical analysis, not affinity methods."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Research-synthesis operates on qualitative evidence (transcripts, notes, observations)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirects the numeric work to statistical/quantitative analysis."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offers in-scope help only if qualitative free-text responses exist to cluster."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the metrics to statistical analysis."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Apply synthesis only to any open-ended qualitative responses."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not apply affinity mapping to compute rates or trends."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

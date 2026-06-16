@@ -1,0 +1,20 @@
+{
+  "schema_version": 8,
+  "version": "1.1.0",
+  "owner": "claude",
+  "freshness": "2026-05-18",
+  "drift_check": {
+    "last_verified": "2026-05-18",
+    "truth_source_hashes": {}
+  },
+  "eval_artifacts": "present",
+  "eval_state": "passing",
+  "routing_eval": "present",
+  "last_audited": "2026-05-28",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "comprehension_state": "present"
+}

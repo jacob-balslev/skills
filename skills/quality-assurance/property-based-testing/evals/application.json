@@ -1,0 +1,561 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "property-based-testing",
+  "subject": "Use when reasoning about tests that specify universal properties of code rather than specific input-output pairs: the…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "test-driven-development",
+    "testing-strategy",
+    "type-safety",
+    "mutation-testing"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"design property-based tests for a sorting function that exercise the universal contract\"",
+      "context": "The agent has access to the property-based-testing skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is property-based-testing the right skill to apply?",
+      "expected_flags": [
+        "Recognizes property-based-testing as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against test-driven-development, testing-strategy, type-safety",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the property-based-testing workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore property-based-testing",
+        "Does not route to test-driven-development, testing-strategy, type-safety when the property-based-testing scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes property-based-testing as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore property-based-testing"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"decide which functions in a parser deserve property tests vs example tests\"",
+      "context": "The agent has access to the property-based-testing skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is property-based-testing the right skill to apply?",
+      "expected_flags": [
+        "Recognizes property-based-testing as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against test-driven-development, testing-strategy, type-safety",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the property-based-testing workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore property-based-testing",
+        "Does not route to test-driven-development, testing-strategy, type-safety when the property-based-testing scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes property-based-testing as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore property-based-testing"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"diagnose a property test that finds a real bug but the shrunk input is large — likely a poorly-shrinkable generator\"",
+      "context": "The agent has access to the property-based-testing skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is property-based-testing the right skill to apply?",
+      "expected_flags": [
+        "Recognizes property-based-testing as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against test-driven-development, testing-strategy, type-safety",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the property-based-testing workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore property-based-testing",
+        "Does not route to test-driven-development, testing-strategy, type-safety when the property-based-testing scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes property-based-testing as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore property-based-testing"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"explain the round-trip property for an encode/decode pair\"",
+      "context": "The agent has access to the property-based-testing skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is property-based-testing the right skill to apply?",
+      "expected_flags": [
+        "Recognizes property-based-testing as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against test-driven-development, testing-strategy, type-safety",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the property-based-testing workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore property-based-testing",
+        "Does not route to test-driven-development, testing-strategy, type-safety when the property-based-testing scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes property-based-testing as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore property-based-testing"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"design property-based tests for a sorting function that exercise the universal contract\"",
+      "context": "The agent has access to the property-based-testing skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is property-based-testing the right skill to apply?",
+      "expected_flags": [
+        "Recognizes property-based-testing as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against test-driven-development, testing-strategy, type-safety",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the property-based-testing workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore property-based-testing",
+        "Does not route to test-driven-development, testing-strategy, type-safety when the property-based-testing scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes property-based-testing as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore property-based-testing"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"decide which functions in a parser deserve property tests vs example tests\"",
+      "context": "The agent has access to the property-based-testing skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is property-based-testing the right skill to apply?",
+      "expected_flags": [
+        "Recognizes property-based-testing as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against test-driven-development, testing-strategy, type-safety",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the property-based-testing workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore property-based-testing",
+        "Does not route to test-driven-development, testing-strategy, type-safety when the property-based-testing scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes property-based-testing as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore property-based-testing"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"specify one concrete input-output case (use example-based tests; see testing-strategy)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should property-based-testing be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside property-based-testing's ownership",
+        "Routes the work to test-driven-development or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying property-based-testing terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply property-based-testing as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if property-based-testing has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim property-based-testing should own the request",
+        "Does not use property-based-testing's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside property-based-testing's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim property-based-testing should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use property-based-testing's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"fuzz for crashes and memory safety (use fuzz-testing)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should property-based-testing be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside property-based-testing's ownership",
+        "Routes the work to test-driven-development or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying property-based-testing terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply property-based-testing as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if property-based-testing has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim property-based-testing should own the request",
+        "Does not use property-based-testing's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside property-based-testing's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim property-based-testing should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use property-based-testing's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"measure whether tests would catch a defect (use mutation-testing)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should property-based-testing be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside property-based-testing's ownership",
+        "Routes the work to test-driven-development or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying property-based-testing terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply property-based-testing as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if property-based-testing has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim property-based-testing should own the request",
+        "Does not use property-based-testing's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside property-based-testing's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim property-based-testing should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use property-based-testing's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"specify one concrete input-output case (use example-based tests; see testing-strategy)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should property-based-testing be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside property-based-testing's ownership",
+        "Routes the work to test-driven-development or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying property-based-testing terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply property-based-testing as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if property-based-testing has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim property-based-testing should own the request",
+        "Does not use property-based-testing's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside property-based-testing's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim property-based-testing should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use property-based-testing's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}

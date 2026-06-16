@@ -1,0 +1,141 @@
+{
+  "skill_name": "usability-testing",
+  "subject": "design",
+  "adjacent_concepts": [
+    "prototyping",
+    "user-research",
+    "research-synthesis",
+    "testing-strategy",
+    "a11y"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define usability testing in 2-3 sentences. Name its core method and what it produces.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Watching real people attempt realistic tasks on a prototype or product to surface obstacles",
+        "It is empirical observation, not expert opinion or prediction",
+        "Core method is the think-aloud protocol (Ericsson & Simon); organized around task scenarios and a neutral moderator",
+        "Produces severity-rated usability findings the team can triage"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why is direct observation necessary — why can't designers and engineers just predict where users will struggle?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The mental models that make a design feel obvious to its creators are exactly the models a fresh user lacks",
+        "Only direct observation closes that gap",
+        "The discipline replaces 'I think users will understand' with 'we watched users; here is what happened'",
+        "A session that confirms the design entirely is suspect (tasks too easy or moderator helping)"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Contrast moderated and unmoderated usability testing. What does each gain and give up?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Moderated: richer data, ability to follow up on surprises; higher cost, requires scheduling",
+        "Unmoderated: lower cost, scales to dozens of sessions; sacrifices follow-up on surprises",
+        "Choice depends on whether probing unexpected behavior or volume/cost matters more"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A PM asks how many participants are needed to test an onboarding prototype. What do you tell them, and what caveats apply?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "~5 users (Nielsen/Landauer 5-user rule) surfaces ~85% of major problems with diminishing returns after",
+        "Applies per homogeneous user segment and per discrete task scope",
+        "Applies to formative (diagnostic, iterative) testing only",
+        "Summative/benchmark claims need much larger samples — do not apply the 5-user rule to them"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "How should task scenarios be written for a usability test, and how should findings be organized afterward?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Write tasks as goals, not step-by-step instructions ('find out how much you owe' not 'click the Tax tab')",
+        "A participant could complete the task without being shown the design first",
+        "Organize findings by Nielsen's 0-4 severity scale (cosmetic / minor / major / catastrophic)",
+        "Optionally complement with quantitative measures (task success rate, time on task, SUS)"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "An engineer asks you to 'set up usability testing' meaning unit and integration tests in CI. Is that this skill? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "No — that is testing-strategy (automated verification of code correctness)",
+        "Usability testing is empirical observation of real humans attempting tasks",
+        "The shared word 'test' hides two unrelated activities",
+        "Correctly redirects engineering verification to testing-strategy"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder argues '5 users is enough to prove our redesign improved success rate by 12%.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The 5-user rule is for formative diagnostic testing, not summative/statistical claims",
+        "A success-rate comparison is a summative/benchmark claim needing a much larger sample",
+        "5 users surfaces ~85% of major problems per segment/task — it does not establish statistical significance",
+        "Conflating formative and summative purposes is a classic, invalidating error"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a usability test was run well and its findings are trustworthy?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Tasks are goals, not instructions; a participant could complete them without seeing the design first",
+        "Moderator script has no leading prompts or defensive explanations; most common utterances are 'what are you thinking?' and silence",
+        "Findings are severity-rated, not just listed flat",
+        "Sample size matches the claim type (5 for formative; justified separately for summative)",
+        "At least one finding contradicts a designer/PM expectation; recordings/notes preserve specific behavior"
+      ]
+    }
+  ]
+}

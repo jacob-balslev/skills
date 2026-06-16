@@ -1,0 +1,98 @@
+{
+  "skill_name": "security-fundamentals",
+  "subject": "Application security fundamentals",
+  "adjacent_concepts": [
+    "owasp-security",
+    "prompt-injection-defense",
+    "type-safety",
+    "api-design",
+    "webhook-integration"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define security fundamentals for application design in 2-3 sentences. Include threat modeling, trust boundaries, and why this is broader than one OWASP category.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not define security as a checklist of tools, scanners, or mitigations without a boundary model."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "A new route accepts JSON from the public internet and writes to a tenant-scoped database. Explain the primitives you would inspect before approving the design.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not treat a valid session or a TypeScript type as sufficient proof of authorization or input validity."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a team use security fundamentals before writing code rather than adding security checks after the feature works?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks for an OWASP Top 10 code audit with concrete vulnerability categories. Should security-fundamentals own the work? Explain the boundary.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must route category-specific deep review to owasp-security, while preserving security-fundamentals as the upstream design lens."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place authentication, authorization, input validation, secrets handling, and defense in depth in a simple security-fundamentals taxonomy.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why secure-by-default and least-privilege decisions need to be part of the design, not bolted on later.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "A backend endpoint checks that a user is logged in, accepts an `orgId` field from the request body, and updates that org's billing email. Apply the skill: what security questions and fixes should come first?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not stop at authentication; must require authorization against the target org and server-side validation of untrusted input."
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'We use TypeScript and have a SAST scanner, so the endpoint is secure enough.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not accept compile-time types or scanner output as a substitute for threat modeling, boundary validation, and authorization."
+    }
+  ]
+}

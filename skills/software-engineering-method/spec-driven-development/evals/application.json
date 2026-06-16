@@ -1,0 +1,562 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "spec-driven-development",
+  "subject": "Use when starting a non-trivial feature, refactor, or agent implementation that needs a written spec, plan, task…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "evaluation",
+    "testing-strategy",
+    "code-review",
+    "prioritization",
+    "interaction-patterns"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Use when starting a non-trivial feature, refactor, or agent implementation that needs a written spec, plan, task breakdown, and verification path before code changes. Covers Spec Kit-style SDD phases, requirements-vs-plan separation, task traceability,…\"",
+      "context": "The agent has access to the spec-driven-development skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is spec-driven-development the right skill to apply?",
+      "expected_flags": [
+        "Recognizes spec-driven-development as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against evaluation, testing-strategy, code-review",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the spec-driven-development workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore spec-driven-development",
+        "Does not route to evaluation, testing-strategy, code-review when the spec-driven-development scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes spec-driven-development as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore spec-driven-development"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Use when starting a non-trivial feature, refactor, or agent implementation that needs a written spec, plan, task breakdown, and verification path before code changes. Covers Spec Kit-style SDD phases, requirements-vs-plan separation, task traceability,…\"",
+      "context": "The agent has access to the spec-driven-development skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is spec-driven-development the right skill to apply?",
+      "expected_flags": [
+        "Recognizes spec-driven-development as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against evaluation, testing-strategy, code-review",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the spec-driven-development workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore spec-driven-development",
+        "Does not route to evaluation, testing-strategy, code-review when the spec-driven-development scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes spec-driven-development as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore spec-driven-development"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Use when starting a non-trivial feature, refactor, or agent implementation that needs a written spec, plan, task breakdown, and verification path before code changes. Covers Spec Kit-style SDD phases, requirements-vs-plan separation, task traceability,…\"",
+      "context": "The agent has access to the spec-driven-development skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is spec-driven-development the right skill to apply?",
+      "expected_flags": [
+        "Recognizes spec-driven-development as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against evaluation, testing-strategy, code-review",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the spec-driven-development workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore spec-driven-development",
+        "Does not route to evaluation, testing-strategy, code-review when the spec-driven-development scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes spec-driven-development as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore spec-driven-development"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"Use when starting a non-trivial feature, refactor, or agent implementation that needs a written spec, plan, task breakdown, and verification path before code changes. Covers Spec Kit-style SDD phases, requirements-vs-plan separation, task traceability,…\"",
+      "context": "The agent has access to the spec-driven-development skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is spec-driven-development the right skill to apply?",
+      "expected_flags": [
+        "Recognizes spec-driven-development as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against evaluation, testing-strategy, code-review",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the spec-driven-development workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore spec-driven-development",
+        "Does not route to evaluation, testing-strategy, code-review when the spec-driven-development scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes spec-driven-development as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore spec-driven-development"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"Use when starting a non-trivial feature, refactor, or agent implementation that needs a written spec, plan, task breakdown, and verification path before code changes. Covers Spec Kit-style SDD phases, requirements-vs-plan separation, task traceability,…\"",
+      "context": "The agent has access to the spec-driven-development skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is spec-driven-development the right skill to apply?",
+      "expected_flags": [
+        "Recognizes spec-driven-development as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against evaluation, testing-strategy, code-review",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the spec-driven-development workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore spec-driven-development",
+        "Does not route to evaluation, testing-strategy, code-review when the spec-driven-development scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes spec-driven-development as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore spec-driven-development"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"Use when starting a non-trivial feature, refactor, or agent implementation that needs a written spec, plan, task breakdown, and verification path before code changes. Covers Spec Kit-style SDD phases, requirements-vs-plan separation, task traceability,…\"",
+      "context": "The agent has access to the spec-driven-development skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is spec-driven-development the right skill to apply?",
+      "expected_flags": [
+        "Recognizes spec-driven-development as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against evaluation, testing-strategy, code-review",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the spec-driven-development workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore spec-driven-development",
+        "Does not route to evaluation, testing-strategy, code-review when the spec-driven-development scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes spec-driven-development as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore spec-driven-development"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks for work that is near spec-driven-development but is explicitly outside its declared scope.",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should spec-driven-development be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside spec-driven-development's ownership",
+        "Routes the work to evaluation or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying spec-driven-development terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply spec-driven-development as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if spec-driven-development has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim spec-driven-development should own the request",
+        "Does not use spec-driven-development's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside spec-driven-development's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim spec-driven-development should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use spec-driven-development's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks for work that is near spec-driven-development but is explicitly outside its declared scope.",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should spec-driven-development be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside spec-driven-development's ownership",
+        "Routes the work to evaluation or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying spec-driven-development terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply spec-driven-development as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if spec-driven-development has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim spec-driven-development should own the request",
+        "Does not use spec-driven-development's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside spec-driven-development's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim spec-driven-development should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use spec-driven-development's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks for work that is near spec-driven-development but is explicitly outside its declared scope.",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should spec-driven-development be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside spec-driven-development's ownership",
+        "Routes the work to evaluation or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying spec-driven-development terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply spec-driven-development as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if spec-driven-development has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim spec-driven-development should own the request",
+        "Does not use spec-driven-development's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside spec-driven-development's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim spec-driven-development should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use spec-driven-development's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks for work that is near spec-driven-development but is explicitly outside its declared scope.",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should spec-driven-development be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside spec-driven-development's ownership",
+        "Routes the work to evaluation or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying spec-driven-development terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply spec-driven-development as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if spec-driven-development has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim spec-driven-development should own the request",
+        "Does not use spec-driven-development's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside spec-driven-development's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim spec-driven-development should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use spec-driven-development's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}

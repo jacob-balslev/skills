@@ -1,0 +1,137 @@
+{
+  "skill_name": "principled-negotiation",
+  "subject": "Principled Negotiation and BATNA",
+  "adjacent_concepts": [
+    "BATNA",
+    "reservation value",
+    "ZOPA",
+    "interest-based bargaining",
+    "objective criteria",
+    "mutual gain",
+    "expected value",
+    "Playing to Win",
+    "positioning",
+    "Radical Candor"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define principled negotiation in 2-3 sentences. Include the four core elements and explain where BATNA fits.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names principled negotiation or negotiation on the merits",
+        "Includes separating people from the problem",
+        "Includes interests rather than positions",
+        "Includes options for mutual gain",
+        "Includes objective criteria",
+        "Explains that BATNA is the walkaway comparison"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of principled negotiation. Name at least 7 primitives and describe how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "At least 7 of: parties, issues, people/process concerns, positions, interests, options, objective criteria, BATNA, reservation value, ZOPA",
+        "Separates relationship/process from substance",
+        "Explains expanding value before deciding",
+        "Explains comparing offers to BATNA or reservation value"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents hardball-only negotiation advice",
+        "Prevents accommodation or compromise without standards",
+        "Prevents treating positions as interests",
+        "Prevents accepting agreements worse than BATNA",
+        "Prevents fake win-win language without option packages"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish principled negotiation from expected-value, Playing to Win, positioning, Radical Candor, and legal advice. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Expected value compares one-party actions under quantified uncertainty",
+        "Playing to Win formulates integrated strategy choices",
+        "Positioning chooses product-market context and differentiated value framing",
+        "Radical Candor owns management feedback conversations",
+        "Legal advice evaluates rights, enforceability, or compliance",
+        "Principled negotiation structures deal-table bargaining with interests, options, criteria, and BATNA"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place principled negotiation among decision and strategy methods. What upstream inputs can feed it, and what downstream outputs can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies it as negotiation / conflict-resolution / agreement-design methodology",
+        "Names upstream inputs such as strategy, positioning, factual research, market standards, or expected-value analysis",
+        "Names downstream outputs such as negotiation brief, option packages, offer terms, walkaway rule, or next conversation plan",
+        "Keeps it distinct from broad strategy and one-party decision scoring"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for principled negotiation that preserves joint problem solving plus BATNA discipline. Then name one bad analogy and explain what it gets wrong.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving bridge-building, joint problem solving, or map/exit logic",
+        "Maps interests/options/criteria to shared construction or navigation",
+        "Maps BATNA to an exit route or fallback",
+        "Rejects a bad analogy that treats negotiation as battle, manipulation, or automatic compromise"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A vendor renewal team says, 'They asked for a 25% increase, so let's counter at 0% and meet at 12.5%.' Apply principled negotiation by diagnosing what is missing and proposing the next analysis step.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects midpoint compromise as insufficient",
+        "Asks for interests behind both price positions",
+        "Requires objective criteria such as market rates, service levels, or cost drivers",
+        "Requires user's BATNA and reservation value",
+        "Generates option packages or issue trades",
+        "Labels assumptions rather than inventing certainty"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "skill_name": "kano-model",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A B2B admin tool has three candidate features: SSO, faster search, and celebratory animations after task completion. Users complained about missing SSO, rated faster search highly, and split on animations. Apply the Kano model to prioritize the roadmap.",
+      "expected_output": "The agent should treat SSO as a likely must-be or basic requirement for the relevant B2B segment, faster search as likely performance or one-dimensional quality, and animations as segment-dependent, potentially attractive, indifferent, or reverse. It should recommend validating with paired functional/dysfunctional questions, fixing must-be gaps first, then weighing performance improvements by evidence and cost, and not relying on animations to compensate for missing basics.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Classifies SSO as likely must-be/basic for the B2B admin segment",
+        "Classifies faster search as likely performance/one-dimensional quality",
+        "Treats animations as segment-dependent, not automatically a delighter",
+        "Requires paired Kano evidence before final classification",
+        "Prioritizes unmet basics before delighters",
+        "Does NOT use a generic score-only prioritization answer"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A product manager says, 'Customers did not mention password reset in interviews, so it must not matter. Let's build AI recommendations instead.' Apply Kano reasoning.",
+      "expected_output": "The agent should flag that customers often do not mention must-be basics until they fail. It should treat password reset as a likely must-be for many digital products, recommend verifying with support data and functional/dysfunctional questions, and warn that a delighter such as recommendations cannot offset failure on a basic access requirement.",
+      "type": "must-be-blind-spot",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Explains that unspoken basics may still be must-be requirements",
+        "Treats password reset as likely basic access functionality",
+        "Requires evidence rather than interview silence",
+        "Warns that delighters cannot compensate for missing basics",
+        "Does NOT equate mentioned requests with all requirements"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A team has survey data showing that if feature X exists, customers are delighted; if it is absent, customers are neutral. Feature Y's presence increases satisfaction and absence decreases satisfaction. Feature Z's absence creates strong dissatisfaction but presence is merely expected. Classify them.",
+      "expected_output": "Feature X is attractive quality or a delighter. Feature Y is performance or one-dimensional quality. Feature Z is must-be or basic quality. The agent should explain the different satisfaction curves and how each category affects prioritization.",
+      "type": "classification",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Classifies X as attractive/delighter",
+        "Classifies Y as performance/one-dimensional",
+        "Classifies Z as must-be/basic",
+        "Explains presence/absence satisfaction pattern",
+        "Connects category to prioritization behavior"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A mobile app team finds that power users love dense keyboard shortcuts but novice users dislike them and feel intimidated. How should Kano analysis handle this?",
+      "expected_output": "The agent should avoid one global classification. It should segment the responses: keyboard shortcuts may be attractive or performance quality for power users and reverse or indifferent quality for novices. It should recommend separate analysis by segment, optionality or progressive disclosure, and a roadmap decision that does not average away the reverse-quality signal.",
+      "type": "segmentation",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Segments the Kano analysis by user group",
+        "Identifies positive category for power users",
+        "Identifies reverse or indifferent quality for novices",
+        "Recommends optionality or progressive disclosure",
+        "Does NOT average conflicting segments into a single category"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "prompt": "A team wants to classify features using a simple question: 'Do you want this feature, yes or no?' Is that enough for a Kano survey?",
+      "expected_output": "No. A Kano survey needs paired functional and dysfunctional questions that ask how the respondent feels if the feature is present and how they feel if it is absent. The response pattern is what classifies the feature. A simple yes/no preference question loses the asymmetry between must-be, performance, attractive, indifferent, reverse, and questionable quality.",
+      "type": "survey-design",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects simple yes/no as sufficient",
+        "Requires paired functional and dysfunctional questions",
+        "Explains classification depends on response pattern",
+        "Names asymmetric categories",
+        "Does NOT overclaim that survey results alone decide the roadmap"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A mature market used to see mobile check deposit as a delighter, but now customers complain if a bank app lacks it. What Kano concept explains this, and what should the roadmap do?",
+      "expected_output": "The agent should explain category migration over time: attractive features can become performance expectations and eventually must-be basics. The roadmap should reclassify the feature for the current market and segment, treat the missing capability as a basic gap if evidence supports it, and keep searching for new differentiators rather than assuming an old delighter still delights.",
+      "type": "category-migration",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Explains delighters can become expectations over time",
+        "Reclassifies based on current market evidence",
+        "Treats missing expected capability as potential must-be gap",
+        "Separates old differentiation from current category",
+        "Does NOT rely on outdated category labels"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "A founder asks whether Kano should replace RICE scoring for next quarter's roadmap. Answer with the boundary between Kano and prioritization.",
+      "expected_output": "The agent should say Kano should not replace scoring by itself. Kano classifies satisfaction response patterns and can identify basics, performance drivers, delighters, indifferent items, and reverse-quality risks. RICE or another prioritization method can then combine that classification with reach, impact, confidence, effort, cost, risk, and strategy. Kano supplies a customer-response input, not the whole prioritization decision.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Keeps Kano distinct from RICE or general prioritization",
+        "Explains Kano classifies satisfaction response patterns",
+        "Explains prioritization combines multiple decision factors",
+        "Uses Kano as an input to roadmap scoring",
+        "Does NOT claim delighters always outrank must-be basics"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}

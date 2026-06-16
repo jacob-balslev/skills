@@ -1,0 +1,88 @@
+{
+  "skill_name": "context-graph",
+  "subject": "Designing and auditing the multi-graph context architecture of an AI-coding workspace: skill graph, document routing…",
+  "adjacent_concepts": [
+    "skill-router",
+    "skill-infrastructure",
+    "skill-scaffold",
+    "knowledge-modeling",
+    "refactor",
+    "context-management",
+    "context-window",
+    "project-knowledge-extraction"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define context-graph in 2-3 sentences. Include the work it owns and the kind of user request that should activate it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Explain why an agent would need the context-graph skill instead of relying on generic reasoning. Name the failure it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "mental_model",
+      "prompt": "Describe the mental model or main primitives behind context-graph. Keep it operational rather than just naming the topic.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks: \"scaffold a new SKILL.md from a template\". Should context-graph activate? Explain the boundary and name the better owner when possible.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not force context-graph onto a request it explicitly excludes or that belongs to skill-router, skill-infrastructure, skill-scaffold, knowledge-modeling, refactor, context-management, context-window, project-knowledge-extraction."
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A user asks: \"we have ~300 skills but the agent never finds half of them — what's the diagnostic frame?\". Show the first concrete steps an agent should take when applying context-graph.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Place context-graph among its adjacent skills (skill-router, skill-infrastructure, skill-scaffold, knowledge-modeling, refactor, context-management, context-window, project-knowledge-extraction). What does it own, and what does it verify with or defer to?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "medium",
+      "negative_expectation": "Must not collapse related skills into interchangeable names; ownership must be mechanism-level."
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Name one plausible misconception about context-graph and correct it with a mechanism-level explanation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

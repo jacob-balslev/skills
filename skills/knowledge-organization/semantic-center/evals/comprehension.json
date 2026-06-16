@@ -1,0 +1,88 @@
+{
+  "skill_name": "semantic-center",
+  "subject": "Use when you need to explain how parts of a system, feature, concept, page, workflow, or problem connect; identify the…",
+  "adjacent_concepts": [
+    "intent-recognition",
+    "diagnosis",
+    "knowledge-modeling",
+    "semantic-relations",
+    "semantics",
+    "task-analysis",
+    "conceptual-modeling",
+    "pattern-recognition"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define semantic-center in 2-3 sentences. Include the work it owns and the kind of user request that should activate it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Explain why an agent would need the semantic-center skill instead of relying on generic reasoning. Name the failure it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "mental_model",
+      "prompt": "Describe the mental model or main primitives behind semantic-center. Keep it operational rather than just naming the topic.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks: \"implement the new chart component for the reports page\". Should semantic-center activate? Explain the boundary and name the better owner when possible.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not force semantic-center onto a request it explicitly excludes or that belongs to intent-recognition, diagnosis, knowledge-modeling, semantic-relations, semantics, task-analysis, conceptual-modeling, pattern-recognition."
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A user asks: \"what is the most important part of this dashboard, and how do the surrounding widgets relate to it?\". Show the first concrete steps an agent should take when applying semantic-center.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Place semantic-center among its adjacent skills (intent-recognition, diagnosis, knowledge-modeling, semantic-relations, semantics, task-analysis, conceptual-modeling, pattern-recognition). What does it own, and what does it verify with or defer to?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "medium",
+      "negative_expectation": "Must not collapse related skills into interchangeable names; ownership must be mechanism-level."
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Name one plausible misconception about semantic-center and correct it with a mechanism-level explanation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

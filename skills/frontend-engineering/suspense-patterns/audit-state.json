@@ -1,0 +1,22 @@
+{
+  "schema_version": 8,
+  "version": "1.0.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-08",
+  "drift_check": {
+    "last_verified": "2026-06-08"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-08",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "PROVISIONAL",
+  "lint_verdict": "PASS",
+  "drift_status": "UNKNOWN",
+  "eval_score": 4.48,
+  "eval_failed_ids": []
+}

@@ -1,0 +1,141 @@
+{
+  "skill_name": "ideation",
+  "subject": "design",
+  "adjacent_concepts": [
+    "problem-framing",
+    "prototyping",
+    "design-thinking",
+    "event-storming",
+    "conceptual-modeling"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define ideation in 2-3 sentences. Name its two halves and the core claim that organizes the practice.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as producing many concept variants then converging on a worthwhile subset",
+        "Names the two halves: a divergent (generation) mode and a convergent (selection) mode",
+        "States the core claim that quantity precedes quality / generation and judgment must be separated",
+        "Operates on a well-framed problem"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why must generation (divergent) and judgment (convergent) be kept as strictly separate modes rather than allowed to run together?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Judging an idea costs cognitive effort and judgment running in parallel with generation suppresses generation",
+        "Teams that judge as they ideate produce fewer ideas",
+        "Mixed-mode ideas skew toward the safe middle of the distribution",
+        "Splitting the modes widens the divergent field so convergent pruning is meaningful"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "What is the role of forced quantity and a worst-possible-idea round, and what do they trade off against?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "The first ~three ideas are the obvious ones any competitor has also had",
+        "Interesting ideas live in the second half of a forced-quantity round, past the obvious",
+        "Worst-possible-idea disinhibits and exposes which norms were holding the design back",
+        "The trade is polish/comfort for range — quantity is prioritized over early refinement"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "Name concrete divergent techniques and convergent techniques an agent could run, and what each is for.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Divergent: Crazy 8s, brainwriting, SCAMPER, worst-possible-idea, headlines-from-the-future, analogous inspiration",
+        "Convergent: dot voting, NUF test (New/Useful/Feasible), impact/effort 2x2, weighted decision matrices, assumption-testing prioritization",
+        "Divergent techniques flood the field; convergent techniques prune against criteria",
+        "Brainwriting bypasses dominant voices; Crazy 8s time-boxes eight sketches in eight minutes"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A team is about to run a convergent selection round. What must happen with the selection criteria, and when?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Selection criteria must be named in writing BEFORE voting begins",
+        "Criteria-first makes the choice defensible rather than political",
+        "Criteria must not be retrofitted to justify the popular choice",
+        "Convergent methods (dot voting, NUF, weighted matrix) apply the explicit criteria"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the ideation skill to model the bounded contexts and domain events for the order-fulfillment system. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — that is event-storming (collaborative engineering domain discovery)",
+        "Ideation generates a variety of solution concepts, it does not model domain events/aggregates",
+        "Correctly distinguishes generating concept variety from seeking one correct domain model",
+        "Redirects to event-storming (or conceptual-modeling for a single correct model)"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'ideation is just brainstorming — throw out ideas until something sticks.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "An undisciplined free-for-all that judges as it generates produces fewer and safer ideas",
+        "The value comes from strictly separating generation from judgment",
+        "Forced quantity is needed to get past the obvious first ideas",
+        "The discipline (silent time-boxed divergent rounds, then criteria-first convergent selection) is what widens then sharpens the field"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify an ideation session was run well?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "A divergent round produced a large set (e.g. 20+ variants, or 8 per participant in Crazy 8s) before any convergence",
+        "Selection criteria were written before voting, not retrofitted",
+        "Selected concepts are materially different from each other, not variations on one idea",
+        "At least one selected concept is uncomfortable/unfamiliar; time-boxes were enforced and modes did not re-merge"
+      ]
+    }
+  ]
+}

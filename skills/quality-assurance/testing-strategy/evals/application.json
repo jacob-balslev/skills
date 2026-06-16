@@ -5,7 +5,8 @@
   "schema_version": 1,
   "source_evidence": [
     "skills/skills/quality-assurance/testing-strategy/SKILL.md",
-    "skill-graph/examples/evals/testing-strategy.json"
+    "skills/skills/quality-assurance/testing-strategy/evals/comprehension.json",
+    "skills/skills/quality-assurance/testing-strategy/evals/application.json"
   ],
   "cases": [
     {
@@ -29,6 +30,48 @@
       "absent_signals": [
         "Do not default to e2e because checkout is user-visible.",
         "Do not recommend tests with no explicit behavior target."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Unit test is the right primary level for pure deterministic logic."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The test target should be behavior and edge cases, not coverage percentage."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Integration coverage is not needed solely because the formatter is used by checkout."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add table-driven unit cases for currency, rounding, and invalid input boundaries."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Leave checkout integration coverage to the existing smoke path unless wiring changed."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: State what regression the test would catch."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not default to e2e because checkout is user-visible."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not recommend tests with no explicit behavior target."
+        }
       ]
     },
     {
@@ -52,6 +95,48 @@
       "absent_signals": [
         "Do not settle for a mocked unit test that cannot observe duplicate side effects.",
         "Do not add broad e2e coverage for every webhook path."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Regression test should run at the level where the bug escaped."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Duplicate delivery through the handler boundary is the behavior to pin."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The test should fail before the idempotency fix and pass after it."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use an integration or contract-style handler test with two deliveries of the same event id."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Assert one invoice side effect, not just one function call."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep a cheap unit test only for pure idempotency helpers if extracted."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not settle for a mocked unit test that cannot observe duplicate side effects."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add broad e2e coverage for every webhook path."
+        }
       ]
     },
     {
@@ -74,7 +159,175 @@
       "absent_signals": [
         "Do not start by redesigning the whole test suite.",
         "Do not ignore the existing failing evidence."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The correct owner is debugging."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: testing-strategy plans what to test before or after a change, not root-cause analysis of a current failure."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The response should preserve the failing test as evidence for debugging."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to debugging."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: After the cause is fixed, return to testing-strategy only if the regression target is unclear."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not start by redesigning the whole test suite."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore the existing failing evidence."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "contract-boundary",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A public REST endpoint changes the enum values returned in a response field. Internal unit tests cover the serializer, but a partner integration depends on the old response contract.",
+      "context": "The implementation detail is small, but the risk is compatibility at the service boundary. The user asks what test level should gate the change.",
+      "question": "Choose the right test strategy and name the evidence it should produce.",
+      "expected_flags": [
+        "Identifies the API contract boundary as the primary risk.",
+        "Recommends a contract test or integration-level schema/fixture check, not only a unit test.",
+        "Connects the test level to partner-facing compatibility evidence."
+      ],
+      "expected_fix_hints": [
+        "Add a contract test that asserts the response shape and enum values consumed by partners.",
+        "Keep serializer unit tests for local edge cases, but do not treat them as boundary evidence.",
+        "Use versioned fixtures or schema snapshots when the external contract is stable."
+      ],
+      "absent_signals": [
+        "Do not rely on coverage percentage as proof of compatibility.",
+        "Do not promote this to full browser e2e unless a user workflow boundary also changed."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies the API contract boundary as the primary risk."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends a contract test or integration-level schema/fixture check, not only a unit test."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Connects the test level to partner-facing compatibility evidence."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a contract test that asserts the response shape and enum values consumed by partners."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep serializer unit tests for local edge cases, but do not treat them as boundary evidence."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use versioned fixtures or schema snapshots when the external contract is stable."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on coverage percentage as proof of compatibility."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not promote this to full browser e2e unless a user workflow boundary also changed."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "risk-scope-tradeoff",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A UI copy change renames a button label without changing the click handler, route, or data flow. The current suite has component tests for the button behavior and one e2e smoke test for the page.",
+      "context": "The user asks whether every affected copy change needs a new e2e test.",
+      "question": "What test coverage should be added, if any, and why?",
+      "expected_flags": [
+        "Ties additional testing to behavioral risk rather than file-change count.",
+        "Recognizes that existing behavior tests may already cover the interaction.",
+        "Suggests updating snapshots or accessibility/name assertions only if the label is a user-facing contract."
+      ],
+      "expected_fix_hints": [
+        "Update the narrow component assertion if it intentionally checks accessible name or visible text.",
+        "Do not add a new e2e test solely for a copy-only change when the page smoke path already exists.",
+        "Mention that regulated, localization, or analytics labels may raise the evidence requirement."
+      ],
+      "absent_signals": [
+        "Do not default to no tests without checking whether the label is part of the accessibility or product contract.",
+        "Do not add broad e2e coverage just to make the change feel safer."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ties additional testing to behavioral risk rather than file-change count."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes that existing behavior tests may already cover the interaction."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Suggests updating snapshots or accessibility/name assertions only if the label is a user-facing contract."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Update the narrow component assertion if it intentionally checks accessible name or visible text."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Do not add a new e2e test solely for a copy-only change when the page smoke path already exists."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Mention that regulated, localization, or analytics labels may raise the evidence requirement."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not default to no tests without checking whether the label is part of the accessibility or product contract."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add broad e2e coverage just to make the change feel safer."
+        }
       ]
     }
-  ]
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
 }

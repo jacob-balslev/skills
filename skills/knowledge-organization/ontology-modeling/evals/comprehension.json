@@ -1,0 +1,85 @@
+{
+  "skill_name": "ontology-modeling",
+  "subject": "Teaches when and how to formalize domain meaning as classes, properties, constraints, axioms, validation shapes, and…",
+  "adjacent_concepts": [
+    "data-modeling",
+    "semantic-relations",
+    "taxonomy-design",
+    "knowledge-modeling",
+    "conceptual-modeling"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define ontology-modeling in 2-3 sentences. Include the work it owns and the kind of user request that should activate it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Explain why an agent would need the ontology-modeling skill instead of relying on generic reasoning. Name the failure it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "mental_model",
+      "prompt": "Describe the mental model or main primitives behind ontology-modeling. Keep it operational rather than just naming the topic.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks: \"make a simple browse category tree for skills\". Should ontology-modeling activate? Explain the boundary and name the better owner when possible.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not force ontology-modeling onto a request it explicitly excludes or that belongs to data-modeling, semantic-relations, taxonomy-design, knowledge-modeling, conceptual-modeling."
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A user asks: \"we need class and property definitions that another system can reason over, not just a human-readable diagram\". Show the first concrete steps an agent should take when applying ontology-modeling.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Place ontology-modeling among its adjacent skills (data-modeling, semantic-relations, taxonomy-design, knowledge-modeling, conceptual-modeling). What does it own, and what does it verify with or defer to?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "medium",
+      "negative_expectation": "Must not collapse related skills into interchangeable names; ownership must be mechanism-level."
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Name one plausible misconception about ontology-modeling and correct it with a mechanism-level explanation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

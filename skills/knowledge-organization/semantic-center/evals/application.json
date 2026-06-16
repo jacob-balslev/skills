@@ -1,0 +1,565 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "semantic-center",
+  "subject": "Use when you need to explain how parts of a system, feature, concept, page, workflow, or problem connect; identify the…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "intent-recognition",
+    "diagnosis",
+    "knowledge-modeling",
+    "semantic-relations",
+    "semantics",
+    "task-analysis",
+    "conceptual-modeling",
+    "pattern-recognition"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"what is the most important part of this dashboard, and how do the surrounding widgets relate to it?\"",
+      "context": "The agent has access to the semantic-center skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is semantic-center the right skill to apply?",
+      "expected_flags": [
+        "Recognizes semantic-center as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against intent-recognition, diagnosis, knowledge-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the semantic-center workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore semantic-center",
+        "Does not route to intent-recognition, diagnosis, knowledge-modeling when the semantic-center scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes semantic-center as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore semantic-center"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"explain how the order, fulfillment, and payment systems relate -- what is the semantic center of that flow?\"",
+      "context": "The agent has access to the semantic-center skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is semantic-center the right skill to apply?",
+      "expected_flags": [
+        "Recognizes semantic-center as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against intent-recognition, diagnosis, knowledge-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the semantic-center workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore semantic-center",
+        "Does not route to intent-recognition, diagnosis, knowledge-modeling when the semantic-center scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes semantic-center as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore semantic-center"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"break down the access-control layer; what is the governing policy and how do the other parts depend on it?\"",
+      "context": "The agent has access to the semantic-center skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is semantic-center the right skill to apply?",
+      "expected_flags": [
+        "Recognizes semantic-center as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against intent-recognition, diagnosis, knowledge-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the semantic-center workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore semantic-center",
+        "Does not route to intent-recognition, diagnosis, knowledge-modeling when the semantic-center scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes semantic-center as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore semantic-center"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"we need to understand the onboarding flow, not implement it -- what is the primary part and how do the steps relate around it?\"",
+      "context": "The agent has access to the semantic-center skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is semantic-center the right skill to apply?",
+      "expected_flags": [
+        "Recognizes semantic-center as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against intent-recognition, diagnosis, knowledge-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the semantic-center workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore semantic-center",
+        "Does not route to intent-recognition, diagnosis, knowledge-modeling when the semantic-center scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes semantic-center as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore semantic-center"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"a skill system has frontmatter, body, and references -- which part is the semantic center, and what roles do the others play?\"",
+      "context": "The agent has access to the semantic-center skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is semantic-center the right skill to apply?",
+      "expected_flags": [
+        "Recognizes semantic-center as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against intent-recognition, diagnosis, knowledge-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the semantic-center workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore semantic-center",
+        "Does not route to intent-recognition, diagnosis, knowledge-modeling when the semantic-center scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes semantic-center as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore semantic-center"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"untangle these dense module dependencies into one core plus typed relations\"",
+      "context": "The agent has access to the semantic-center skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is semantic-center the right skill to apply?",
+      "expected_flags": [
+        "Recognizes semantic-center as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against intent-recognition, diagnosis, knowledge-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the semantic-center workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore semantic-center",
+        "Does not route to intent-recognition, diagnosis, knowledge-modeling when the semantic-center scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes semantic-center as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore semantic-center"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"implement the new chart component for the reports page\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should semantic-center be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside semantic-center's ownership",
+        "Routes the work to intent-recognition or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying semantic-center terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply semantic-center as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if semantic-center has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim semantic-center should own the request",
+        "Does not use semantic-center's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside semantic-center's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim semantic-center should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use semantic-center's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"which task should I work on next from the board?\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should semantic-center be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside semantic-center's ownership",
+        "Routes the work to intent-recognition or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying semantic-center terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply semantic-center as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if semantic-center has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim semantic-center should own the request",
+        "Does not use semantic-center's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside semantic-center's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim semantic-center should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use semantic-center's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"design bounded contexts and aggregate ownership for the domain\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should semantic-center be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside semantic-center's ownership",
+        "Routes the work to intent-recognition or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying semantic-center terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply semantic-center as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if semantic-center has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim semantic-center should own the request",
+        "Does not use semantic-center's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside semantic-center's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim semantic-center should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use semantic-center's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"review this PR for code quality and missing tests\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should semantic-center be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside semantic-center's ownership",
+        "Routes the work to intent-recognition or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying semantic-center terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply semantic-center as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if semantic-center has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim semantic-center should own the request",
+        "Does not use semantic-center's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside semantic-center's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim semantic-center should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use semantic-center's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}

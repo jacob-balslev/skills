@@ -1,0 +1,141 @@
+{
+  "skill_name": "rendering-models",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "frontend-architecture",
+    "client-server-boundary",
+    "http-semantics",
+    "performance-engineering",
+    "vercel-composition-patterns"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a rendering model in 2-3 sentences. Name the two axes that distinguish models and give two example named models that land in different cells.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as the strategy by which a web UI is produced and delivered",
+        "Names the two axes: WHEN the work happens (build / request / stream / interaction) and WHERE it executes (server / edge / client)",
+        "Notes the named models are cells or paths through that grid (e.g. SSG at build/server, SSR at request/server, CSR at interaction/client)",
+        "States the choice determines first-paint, time-to-interactive, server cost, cache behavior, and crawlability"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why is the rendering-model choice described as per-route rather than per-application?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Different routes have different content profiles (static / dynamic / personalized)",
+        "A single model picked for the whole app is wrong for most routes",
+        "Each route should land at the grid position matching its content profile and performance constraints",
+        "Gives a contrast (e.g. a marketing page wants SSG, a search-results page wants SSR/streaming SSR)"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Compare how SSG, SSR, and CSR differ across first-paint (FCP/LCP), time-to-interactive (TTI), and server cost. Why does no single model dominate?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "SSG: best first-paint (CDN-cached HTML), lowest request-time server cost; still pays hydration cost for TTI",
+        "SSR: good first-paint (HTML served), highest server cost (render per request), hydration cost for TTI",
+        "CSR: worst first-paint (empty shell, client fetch + JS execute) but lowest server cost",
+        "Each performance number responds differently to each model, so the right model depends on the route's content profile"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A product-detail page shows a mostly static layout plus a per-user 'recommended for you' block and live inventory. Which model(s) fit and why?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "PPR fits: static shell at build time + streamed dynamic holes (recommendations, inventory) at request time",
+        "ISR is a reasonable alternative for the catalog portion if updates are periodic",
+        "SSR is the fallback if the dynamic portion dominates or catalog changes very frequently",
+        "Reasons from the content profile (mostly static with small personalized regions), not from a framework default"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Why might a page that is correctly server-rendered (fast FCP) still feel slow to the user, and what reduces that cost?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Hydration cost: the HTML is produced fast but the page is not interactive until client JS loads, parses, executes",
+        "Hydration is visible in TTI and INP and is independent of HTML production speed",
+        "Reduction strategies: RSC (server components excluded from the client bundle), islands architecture, progressive hydration, resumability",
+        "A large client bundle (e.g. 2MB) hydrates slowly regardless of how the HTML was produced"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the rendering-models skill to decide the folder structure and module layering of the frontend codebase. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — codebase organization (folder structure, routing convention, build config) is frontend-architecture",
+        "rendering-models owns WHERE and WHEN the UI is produced, an orthogonal decision",
+        "A route's architecture and its rendering model are independent decisions",
+        "Correctly redirects to frontend-architecture rather than answering out of lane"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder frames every rendering decision as 'SSR vs CSR.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "SSR-vs-CSR is not the complete dichotomy; the space is 6-8 named models on a time × place grid",
+        "The meaningful comparisons are model-vs-model per route profile (e.g. SSG vs ISR vs SSR for a catalog, streaming SSR vs RSC for a slow dashboard, PPR vs SSR for static + personalization)",
+        "Collapsing to a binary makes the real trade-off invisible — a team 'doing SSR' might actually want SSG, RSC, or streaming SSR",
+        "The wrong choice is invisible until measured"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a site's rendering-model strategy is implemented correctly?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "The model for each route is documented per-route (not per-app) and matches the route's content profile",
+        "FCP, LCP, INP are measured in real-user conditions, not lab-only Lighthouse",
+        "Hydration cost is acknowledged separately from rendering cost (a fast-SSR page with a large bundle is not actually fast)",
+        "SSG/ISR caches invalidate correctly on content updates; edge routes confirm their data access path works at the edge (HTTP-accessible, not direct DB)"
+      ]
+    }
+  ]
+}

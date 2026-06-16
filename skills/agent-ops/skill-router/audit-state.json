@@ -2,22 +2,22 @@
   "schema_version": 8,
   "version": "1.0.1",
   "owner": "skill-graph-maintainer",
-  "freshness": "2026-06-01",
+  "freshness": "2026-06-07",
   "drift_check": {
-    "last_verified": "2026-05-18",
+    "last_verified": "2026-06-12",
     "truth_source_hashes": {
-      "scripts/skill-graph-route.js": "7c29b1bc2420887f32809b8f52f5bd448c1234542672e669a68247942dd77df4",
-      "scripts/skill-graph-routing-eval.js": "fffac2858863662bde6bc54c56bb77a219ae93f626e0c8d5886566f998181deb",
-      "examples/evals/skill-router.json": "fccabcbc5f9d8057536f397fb0fc71a567371f75fb9a21afda343b197af30293",
-      "examples/evals/skill-router.routing.json": "c4dc88db1e746bea78a7cf96b50c6c84532a07eda42da2e35d790c8928d4da8c"
+      "scripts/skill-graph-route.js": "8799a2a1c24056bddfc14e93782113b9bf38e5b5cc6fb59b458f46ca7e4f9643",
+      "scripts/skill-graph-routing-eval.js": "3259ca11d362be856929cf07cd9b05c5f114c46402ed6dd1396f422973923679"
     }
   },
   "eval_artifacts": "present",
   "eval_state": "passing",
   "routing_eval": "present",
-  "last_audited": "2026-06-01",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-07",
+  "last_changed": "2026-06-07",
   "structural_verdict": "PASS",
-  "truth_verdict": "DRIFT",
+  "truth_verdict": "PASS",
   "comprehension_verdict": "UNVERIFIED",
   "application_verdict": "UNVERIFIED",
   "lint_verdict": "PASS",
@@ -26,5 +26,6 @@
     "targets": [
       "skill-md"
     ]
-  }
+  },
+  "drift_status": "OK"
 }

@@ -1,0 +1,150 @@
+{
+  "skill_name": "bcg-matrix",
+  "subject": "BCG Growth-Share Matrix portfolio allocation",
+  "adjacent_concepts": [
+    "growth-share matrix",
+    "Boston Matrix",
+    "product portfolio matrix",
+    "relative market share",
+    "market growth",
+    "stars",
+    "cash cows",
+    "question marks",
+    "dogs/pets",
+    "Ansoff Matrix",
+    "Expected Value"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define the BCG Growth-Share Matrix in 2-3 sentences. Include the two axes and four quadrant labels.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines the BCG Matrix as a portfolio allocation or portfolio management framework",
+        "Names market growth",
+        "Names relative market share",
+        "Names stars",
+        "Names cash cows",
+        "Names question marks",
+        "Names dogs or pets",
+        "Does not treat quadrant labels as final recommendations"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of the BCG Matrix. Name the primitives and how they connect from portfolio units to allocation hypotheses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names a portfolio owner or unit of analysis",
+        "Names portfolio units",
+        "Names a market boundary",
+        "Explains market growth",
+        "Explains relative market share",
+        "Maps growth/share combinations to the four quadrants",
+        "Explains cash generation, cash need, investment posture, or evidence gaps"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a BCG Matrix skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents undifferentiated product or business-unit portfolio talk",
+        "Forces market boundary clarity",
+        "Forces market-growth and relative-share evidence",
+        "Prevents quadrant labels being used as automatic commands",
+        "Forces cash-flow or investment logic",
+        "Forces downstream valuation, strategy, or competitive analysis when needed"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish the BCG Matrix from Ansoff Matrix, SWOT/TOWS, PESTEL, Porter's Five Forces, Seven Powers, Playing to Win, and Expected Value. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Ansoff classifies product-market growth paths by existing/new products and markets",
+        "SWOT/TOWS inventories internal/external factors and crosses them into options",
+        "PESTEL scans macro-environment forces",
+        "Five Forces analyzes industry profit-pressure structure",
+        "Seven Powers classifies durable advantage sources",
+        "Playing to Win integrates choices into a strategy cascade",
+        "Expected Value compares options by probability and value",
+        "BCG classifies portfolio units by market growth and relative market share"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place the BCG Matrix among strategy methods. What inputs feed it, what outputs should it produce, and which methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies BCG as a portfolio allocation or portfolio strategy framework",
+        "Names inputs such as portfolio units, market boundaries, market growth, relative market share, or cash-flow evidence",
+        "Names outputs such as quadrant classification, cash-generation hypothesis, investment posture, evidence gaps, or next analysis",
+        "Explains it can feed valuation, Five Forces, Expected Value, Playing to Win, or Ansoff work",
+        "Does not classify it as a product-market growth matrix"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for the BCG Matrix that preserves the portfolio allocation mechanism. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving funding allocation, a garden, a portfolio map, or cash-generating and cash-consuming units",
+        "Maps high/low growth and high/low relative share to different resource postures",
+        "Explains that the analogy does not decide valuation or strategic fit",
+        "Rejects an analogy that treats the matrix as a final recommendation engine",
+        "Rejects an analogy that confuses BCG with Ansoff product-market newness"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A software company has four products. Product A has high relative share in a slow-growing legacy market and strong cash generation. Product B has high relative share in a fast-growing category but needs continued investment. Product C is in a fast-growing category but has low relative share. Product D has low relative share in a slow-growing category and drains support resources. Apply BCG Matrix reasoning and state evidence needed.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Classifies Product A as a cash cow",
+        "Classifies Product B as a star",
+        "Classifies Product C as a question mark",
+        "Classifies Product D as a dog or pet",
+        "States market-boundary and relative-share assumptions",
+        "Names evidence needs for growth, share, cash generation, or support burden",
+        "Discusses allocation hypotheses",
+        "Does not recommend final actions solely from quadrant labels"
+      ]
+    }
+  ]
+}

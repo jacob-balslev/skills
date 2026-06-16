@@ -1,0 +1,87 @@
+{
+  "skill_name": "skill-scaffold",
+  "subject": "Creating a new SKILL.md from scratch, restructuring a draft before it becomes a stable skill, or teaching the…",
+  "adjacent_concepts": [
+    "naming-conventions",
+    "refactor",
+    "best-practice",
+    "methodical",
+    "no-cutting-corners",
+    "skill-router",
+    "skill-infrastructure"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define skill-scaffold in 2-3 sentences. Include the work it owns and the kind of user request that should activate it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Explain why an agent would need the skill-scaffold skill instead of relying on generic reasoning. Name the failure it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "mental_model",
+      "prompt": "Describe the mental model or main primitives behind skill-scaffold. Keep it operational rather than just naming the topic.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks: \"refactor my existing skill to be more concise\". Should skill-scaffold activate? Explain the boundary and name the better owner when possible.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not force skill-scaffold onto a request it explicitly excludes or that belongs to naming-conventions, refactor, best-practice, methodical, no-cutting-corners, skill-router, skill-infrastructure."
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A user asks: \"I'm writing a new skill from scratch — where do I start?\". Show the first concrete steps an agent should take when applying skill-scaffold.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Place skill-scaffold among its adjacent skills (naming-conventions, refactor, best-practice, methodical, no-cutting-corners, skill-router, skill-infrastructure). What does it own, and what does it verify with or defer to?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "medium",
+      "negative_expectation": "Must not collapse related skills into interchangeable names; ownership must be mechanism-level."
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Name one plausible misconception about skill-scaffold and correct it with a mechanism-level explanation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

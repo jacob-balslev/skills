@@ -1,0 +1,381 @@
+---
+# name: stable kebab-case skill identifier; must match the parent directory.
+name: real-time-updates
+# description: routing contract for when this skill should activate and when it should not.
+description: "Use when designing browser-facing freshness for live dashboards, notifications, progress views, feeds, and data that can change after initial render. Covers freshness contracts, transport choice among adaptive polling, Server-Sent Events, and bidirectional sockets, webhook-to-UI propagation, client cache invalidation, stale-data indicators, reconnect and catch-up behavior, centralized subscription ownership, and non-disruptive update UX. Do NOT use for low-level stream/backpressure protocol design (use `streaming-architecture`), async event envelope/topic contracts (use `event-contract-design`), recurring schedule design (use `cron-scheduling`), durable worker execution semantics (use `background-jobs`), generic UI action feedback (use `interaction-feedback`), or serialization/trust boundaries (use `client-server-boundary`)."
+# license: SPDX-compatible license identifier for the skill content.
+license: MIT
+# compatibility: runtime and portability notes for this portable skill.
+compatibility:
+  notes: "Portable browser freshness guidance for web applications. Transport limits vary by hosting platform, proxy, browser, and runtime; verify those limits before production rollout."
+# allowed-tools: optional runtime hint for tools the skill may use when loaded.
+allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
+metadata:
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
+  subject: backend-engineering
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
+  # scope: free-text PRD-style statement of what the skill teaches and where it deploys
+  # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
+  scope: "Designing browser-facing freshness for web application views whose data can change after initial render: freshness contracts, stale-state communication, adaptive polling, Server-Sent Events, bidirectional socket justification, webhook-to-UI propagation, reconnect/catch-up, client cache invalidation, optimistic update reconciliation, and centralized subscription ownership. Portable across dashboards, feeds, progress panels, notifications, and live status surfaces. Excludes low-level streaming/backpressure contracts (streaming-architecture), async event envelope/topic contracts (event-contract-design), recurring trigger design (cron-scheduling), durable worker execution semantics (background-jobs), generic UI action feedback states (interaction-feedback), and server/client serialization or trust boundaries (client-server-boundary)."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: engineering/realtime/browser-freshness
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
+  stability: stable
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
+  keywords: ["real-time updates","live dashboard","browser freshness","stale data indicator","Server-Sent Events","WebSocket","adaptive polling","reconnect catch-up","client cache invalidation","freshness timestamp"]
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
+  triggers: ["real-time-updates-skill","live-data-skill","browser-freshness-skill","dashboard-refresh-skill","stale-data-skill"]
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
+  examples: ["choose between polling, SSE, and WebSocket for a live dashboard","show stale data status and last-updated timestamp for a live dashboard without disrupting the user","design reconnect and catch-up behavior after an EventSource disconnect","add optimistic UI with rollback and server reconciliation for a live list update","centralize polling and subscription ownership so dashboard widgets share one freshness channel"]
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.suppresses to indicate the confusable territory's owner.
+  anti_examples: ["design the backpressure protocol for an HTTP stream","choose the cron expression for a daily refresh","move a slow export into a queue and define retry policy","debug a deployed stream outage"]
+  # relations: typed graph edges to sibling skills. Six edge types:
+  # related (adjacency for browse / co-routing expansion) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
+  # grounding: optional for portable skills with fast-moving browser/runtime sources.
+  # Declares sources and failure modes that keep the skill honest.
+  grounding: "{\"subject_matter\":\"Portable browser freshness and real-time UI update design for web applications\",\"grounding_mode\":\"universal\",\"truth_sources\":[\"https://html.spec.whatwg.org/multipage/server-sent-events.html\",\"https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events\",\"https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API\",\"https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API\",\"https://www.rfc-editor.org/rfc/rfc6455\",\"https://react.dev/reference/react/useOptimistic\",\"https://tanstack.com/query/latest/docs/framework/react/guides/polling\",\"../skills/skills/backend-engineering/real-time-updates/references/real-time-updates-2026-06-07.md\"],\"failure_modes\":[\"transport_chosen_before_freshness_contract\",\"bidirectional_socket_for_one_way_updates\",\"live_claim_without_timestamp_or_connection_state\",\"reconnect_without_catch_up\",\"eventsource_reconnect_treated_as_lossless_replay\",\"component_local_polling_duplication\",\"silent_auto_refresh_disrupts_active_user_work\",\"optimistic_update_without_rollback_or_authoritative_reconciliation\",\"push_payload_treated_as_authoritative_state_without_refetch\"],\"evidence_priority\":\"equal\"}"
+
+  # === Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
+  mental_model: "Browser freshness has four primitives: a source of change, a delivery channel, a browser cache or view state, and a freshness contract shown to the user. The delivery channel can be polling, Server-Sent Events, or a bidirectional socket, but the user contract is the same: communicate what changed, how fresh the view is, whether the connection is healthy, and how missed changes are recovered."
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
+  purpose: "Real-time update design prevents a rendered view from pretending old data is current. It replaces page-load-only fetching and disruptive blind auto-refresh with explicit freshness indicators, centralized subscriptions, reconnect catch-up, and transport choices matched to directionality and infrastructure constraints."
+  # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
+  # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
+  concept_boundary: "This skill is not low-level streaming protocol design, async event contract design, worker queue design, schedule design, generic interaction feedback, client/server serialization and trust analysis, or incident debugging. It starts when a browser-facing view needs to stay fresh and ends with the freshness contract, transport choice, subscription ownership, stale-state UX, reconnect recovery, cache invalidation, and optimistic-update reconciliation."
+  # analogy: one-sentence metaphor preserving the core mechanism.
+  analogy: "A real-time UI is a newsroom ticker: it needs a wire service, an editor that knows what changed, and a visible timestamp so readers know whether the headline is current."
+  # misconception: the wrong mental model people bring; corrected explicitly.
+  misconception: "The common mistake is treating real-time as a transport choice first. The actual design starts with the freshness promise: how current the view must be, what happens during disconnect, when updates are safe to apply automatically, and when the user needs control."
+  # === Export provenance (set by the export pipeline; do not hand-author) ===
+  # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
+  # See AGENTS.md § Version Labels Are Earned, Not Bumped.
+  skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
+  skill_graph_protocol: Skill Metadata Protocol v8
+  skill_graph_project: Skill Graph
+  skill_graph_canonical_skill: skills/backend-engineering/real-time-updates/SKILL.md
+# relations: typed graph edges to sibling skills.
+relations:
+  related: ["streaming-architecture","background-jobs","cron-scheduling","event-contract-design","interaction-feedback","client-server-boundary"]
+  suppresses: ["streaming-architecture","background-jobs","cron-scheduling"]
+  verify_with: ["event-contract-design","interaction-feedback","client-server-boundary","streaming-architecture"]
+---
+# Real-Time Updates
+
+## Concept of the skill
+
+Browser freshness has four primitives: a source of change, a delivery channel, a browser cache or view state, and a freshness contract shown to the user.
+
+## Coverage
+
+- Browser freshness decisions for dashboards, feeds, progress panels, notifications, and views that can become stale after initial render.
+- Transport selection among adaptive polling, Server-Sent Events, and bidirectional sockets.
+- Webhook-to-UI propagation at a pattern level: external change, server state, browser notification, and catch-up fetch.
+- Client cache invalidation and refetch orchestration after a live notification.
+- Optimistic update safety: when to apply immediately, when to wait, and how to roll back.
+- Stale-data communication: timestamps, stale badges, connection status, and non-disruptive refresh prompts.
+- Reconnect and missed-update recovery: last seen version, cursor, timestamp, or sequence number.
+- Subscription ownership: one shared subscription per resource instead of independent polling loops in every component.
+
+## Philosophy of the skill
+Stale data without a freshness signal is a false statement. A dashboard that fetched once and never says so teaches the user to trust numbers, statuses, or notifications that may already be outdated.
+
+Real-time design is not the same as choosing the flashiest transport. Polling can be the best design when data changes slowly or hosting cannot keep long connections open. Server-Sent Events are the default for one-way server-to-browser updates. Bidirectional sockets are justified only when the browser must also send frequent low-latency messages over the same channel. The transport is a consequence of the freshness contract, not the starting point.
+
+The strongest systems also keep control with the user. If an update would reorder a table, interrupt a form, clear a selection, or move the scroll position, the interface should announce that new data is available instead of silently replacing the view.
+
+A browser update message should usually be treated as a freshness signal, not as the entire source of truth. Push can tell the browser what changed; the browser still reconciles from durable server state or a cache that is invalidated and refetched.
+
+## Freshness Contract First
+
+Before choosing a transport, define the user-visible freshness contract.
+
+| Question | Design implication |
+|---|---|
+| How stale can the view be before it misleads? | Defines polling interval, staleness threshold, and warning copy. |
+| Can updates apply while the user is interacting? | If no, show a "new data available" prompt instead of auto-refreshing. |
+| Can the browser miss events during disconnect? | Requires catch-up by version, cursor, timestamp, or full refetch. |
+| Is every event important, or only latest state? | Event streams need replay; latest-state views can refetch on reconnect. |
+| Does the browser need to send frequent messages back? | If yes, consider bidirectional sockets; if no, prefer SSE or polling. |
+| Must the state survive page refresh? | Store durable state on the server and treat browser state as a cache. |
+
+## Transport Decision Matrix
+
+| Requirement | Adaptive polling | Server-Sent Events | Bidirectional socket |
+|---|---|---|---|
+| Server-to-browser updates | Yes, delayed by interval | Yes, near-real-time | Yes |
+| Browser-to-server messages | Separate HTTP request | Separate HTTP request | Same connection |
+| Reconnect behavior | Each request is independent | Built into `EventSource` | Must be implemented |
+| Hosting friendliness | Highest | Depends on connection duration limits | Requires a persistent socket-capable runtime |
+| Proxy and CDN compatibility | Highest | Good with streaming support | More fragile |
+| Binary payloads | No special support | Text events only | Supported |
+| Best fit | Low or moderate freshness needs | One-way dashboards, progress, feeds, notifications | Collaboration, presence, live cursors, games, control channels |
+
+### Decision Rule
+
+Use this order:
+
+1. If the browser only needs periodic latest state and seconds of delay are acceptable, use adaptive polling.
+2. If the server needs to push one-way updates and long connections are supported, use Server-Sent Events.
+3. If the browser must send frequent low-latency messages over the same live channel, use a bidirectional socket.
+4. If the selected transport cannot replay or recover missed updates, add a catch-up fetch after reconnect.
+
+Do not choose a bidirectional socket only because the feature is called "real-time." Directionality and recovery requirements decide.
+
+## Webhook-To-UI Propagation
+
+An external change does not automatically become a browser update. Treat it as a four-stage pipeline.
+
+```text
+External change
+  -> Server receives and validates the change
+  -> Durable state is updated
+  -> Browser freshness channel is notified or polled
+  -> Browser reconciles from authoritative state
+```
+
+The browser should usually reconcile from authoritative server state rather than trusting the push message as the full truth. A push message can be small: resource type, resource ID, version, and timestamp. The browser then decides whether to refetch a row, a page, or a summary.
+
+| Propagation pattern | Use when | Watch out for |
+|---|---|---|
+| Poll latest version | Low frequency, simple hosting, broad compatibility | Latency equals interval; many components can duplicate work |
+| Push invalidation | Browser can refetch changed state | Requires versioning or timestamps for missed updates |
+| Push full patch | Patch is small and ordering is reliable | More complex conflict handling and replay semantics |
+| Push progress state | Long work has durable progress fields | Background job state still needs its own reliable contract |
+
+## Adaptive Polling
+
+Polling is not a failure. Poor polling is the failure.
+
+Use adaptive polling when persistent connections are unnecessary or unavailable:
+
+- Poll faster while the tab is visible and the view is active.
+- Poll slower or pause when the tab is hidden.
+- Use conditional requests, versions, cursors, or updated-at filters when available.
+- Centralize polling per resource so multiple components share one result.
+- Surface stale state when polling fails or data ages beyond the threshold.
+
+```typescript
+type PollingState<T> = {
+  data: T | null;
+  lastFetchedAt: number | null;
+  isStale: boolean;
+  error: Error | null;
+};
+
+function choosePollInterval(isVisible: boolean, hasRecentActivity: boolean) {
+  if (!isVisible) return 60_000;
+  if (hasRecentActivity) return 5_000;
+  return 20_000;
+}
+```
+
+Avoid putting `document.hidden` directly in a React dependency array. Track visibility through a `visibilitychange` listener or a shared visibility hook, then derive the interval from that state.
+
+## Server-Sent Events
+
+Use SSE for one-way server-to-browser updates such as status feeds, progress, notification counts, or dashboard invalidation messages.
+
+Minimum SSE contract:
+
+- Event type: what kind of update this is.
+- Event ID or version: what the browser can use to resume or catch up.
+- Data payload: small enough to process quickly.
+- Heartbeat or keepalive: keeps intermediaries from closing quiet streams.
+- Abort cleanup: closes timers, subscriptions, and handles when the browser disconnects.
+
+```typescript
+export async function GET(request: Request) {
+  const encoder = new TextEncoder();
+
+  const stream = new ReadableStream({
+    start(controller) {
+      const heartbeat = setInterval(() => {
+        controller.enqueue(encoder.encode(': keepalive\n\n'));
+      }, 25_000);
+
+      request.signal.addEventListener('abort', () => {
+        clearInterval(heartbeat);
+        controller.close();
+      });
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-store',
+    },
+  });
+}
+```
+
+SSE has built-in reconnect, but that does not guarantee the browser received every update. Use `Last-Event-ID`, a version field, or a timestamp to fetch missed state after reconnect.
+
+On the browser side, keep the live stream small and treat it as an invalidation signal. Store the last event ID, show connection state, and reconcile from durable server state after reconnect.
+
+```typescript
+let lastEventId: string | null = null;
+
+function subscribeToOrderUpdates(refetchSince: (id: string | null) => Promise<void>) {
+  const events = new EventSource('/api/order-events');
+
+  events.onopen = async () => {
+    setConnectionState('live');
+    await refetchSince(lastEventId);
+  };
+
+  events.addEventListener('order.updated', async (event) => {
+    lastEventId = event.lastEventId || JSON.parse(event.data).version;
+    invalidateOrderCache(JSON.parse(event.data).orderId);
+  });
+
+  events.onerror = () => {
+    setConnectionState('reconnecting');
+  };
+
+  return () => events.close();
+}
+```
+
+If the server cannot replay from `Last-Event-ID`, use the remembered event ID, version, cursor, or timestamp as a catch-up query parameter on reconnect. If even that is unavailable, perform a full refetch before marking the view live again.
+
+## Bidirectional Sockets
+
+Use a bidirectional socket only when the browser must send frequent low-latency messages while also receiving server updates.
+
+Good fits:
+
+- Presence and live cursors.
+- Collaborative editing.
+- Multiplayer or live control surfaces.
+- Chat-like interactions where both sides can speak at any time.
+
+Poor fits:
+
+- Notification badges.
+- Dashboard invalidation.
+- Progress updates.
+- Occasional browser actions that can use ordinary HTTP requests.
+
+If a bidirectional socket is justified, verify heartbeat, reconnect, backoff, authorization, room cleanup, message envelope, and backpressure with `streaming-architecture` or a dedicated socket skill in the consuming environment.
+
+## Optimistic Updates
+
+Optimistic updates make the interface feel instant, but they are safe only when the action is reversible and the speculative state cannot mislead.
+
+| Scenario | Use optimistic UI? | Reason |
+|---|---|---|
+| Toggle a preference | Yes | Reversible and low risk. |
+| Mark an item read | Yes | Clear intent and easy rollback. |
+| Inline text edit | Sometimes | Use local draft state until save succeeds if conflicts are likely. |
+| Delete a record | Usually no | Removal is disruptive if rollback is needed. |
+| Financial, legal, or irreversible action | No | Speculative state can mislead or imply completion. |
+
+Every optimistic update needs:
+
+- Previous state for rollback.
+- Pending affordance so the user knows confirmation is not final yet.
+- Failure message with recovery.
+- Reconciliation with server state after success.
+
+## Stale Data Indicators
+
+Every live view should communicate freshness at the level of precision the user needs.
+
+| Pattern | Use when | Example |
+|---|---|---|
+| Relative timestamp | Data can age but remains useful | "Updated 2 minutes ago" |
+| Connection badge | Stream health matters | "Live", "Reconnecting", "Offline" |
+| Staleness warning | Data age can mislead decisions | "Data may be outdated" |
+| New-data banner | Auto-refresh would disrupt work | "New data available. Refresh" |
+| Disabled live claim | Freshness is unknown | Show timestamp, not "live" |
+
+Auto-refresh is safe for small, non-interactive counters. It is not safe for tables, forms, selected lists, or scroll-sensitive surfaces unless the update preserves the user's position and selection.
+
+## Reconnect And Catch-Up
+
+Persistent connections drop during deploys, network changes, sleep/wake cycles, and proxy timeouts. Reconnect is incomplete without catch-up.
+
+Use this recovery sequence:
+
+1. Detect disconnect and show a non-blocking connection status.
+2. Reconnect with exponential backoff and jitter.
+3. Send or remember the last seen event ID, version, cursor, or timestamp.
+4. Fetch missed state before declaring the view current.
+5. Deduplicate updates that arrive both through catch-up and the live channel.
+6. Clear the warning only after authoritative state has been reconciled.
+
+If the system cannot determine what was missed, perform a full refetch and say the view was refreshed, not replayed.
+
+## Subscription Ownership
+
+Do not let every component open its own connection or polling loop for the same resource.
+
+Better ownership patterns:
+
+- One route-level subscription that distributes state through context or a shared store.
+- One query-cache subscription that invalidates resource keys.
+- One server stream per browser view, multiplexing update types in the event payload.
+- One polling coordinator that batches interested components.
+
+Central ownership reduces duplicate requests, connection count, inconsistent stale indicators, and race conditions between components.
+
+## Verification
+
+After applying this skill, verify:
+
+- [ ] The freshness contract is explicit: acceptable age, user disruption rules, and recovery behavior are named.
+- [ ] The transport choice matches directionality, hosting limits, and recovery needs.
+- [ ] Server-to-browser-only flows do not default to bidirectional sockets without a specific bidirectional requirement.
+- [ ] Persistent connections have reconnect, backoff, visible status, cleanup on disconnect, and catch-up from last seen state.
+- [ ] Polling adapts to visibility or activity and is centralized per shared resource.
+- [ ] Every stale or live claim has a timestamp, status badge, or equivalent freshness indicator.
+- [ ] Optimistic updates include pending state, rollback, failure recovery, and server reconciliation.
+- [ ] Auto-refresh does not disrupt active typing, selection, scrolling, or filtering.
+- [ ] Missed updates are deduplicated after reconnect or full refetch.
+
+## Do NOT Use When
+
+| Use instead | When |
+|---|---|
+| `streaming-architecture` | You are designing low-level producer/consumer/backpressure/termination semantics, HTTP streaming internals, or stream error encoding. |
+| `background-jobs` | You are moving slow work into a durable worker, designing job states, retries, progress records, or cancellation. |
+| `cron-scheduling` | You are choosing when recurring work starts, preventing schedule overlap, or designing missed-run behavior. |
+| `event-contract-design` | You are defining async event envelopes, topic names, compatibility, replay, or producer/consumer ownership. |
+| `interaction-feedback` | You are designing generic loading, pending, error, retry, undo, or success feedback for an action without a browser freshness or missed-update problem. |
+| `client-server-boundary` | You are deciding what can cross between server and client runtimes, how it serializes, or which side can be trusted. |
+| `debugging` | A live update channel is already failing and you need reproduction, logs, and root-cause isolation. |
+
+## Anti-Patterns
+
+| Anti-pattern | Why it fails | Better pattern |
+|---|---|---|
+| Calling static data "live" | The user trusts freshness that the system cannot prove | Show timestamp or connection status |
+| Bidirectional socket for one-way updates | Adds operational complexity without product value | Use SSE or adaptive polling |
+| Fixed polling in every component | Wastes requests and creates inconsistent state | Centralize polling or use a shared cache |
+| Reconnect without catch-up | The connection resumes but missed updates vanish | Fetch by last seen ID, version, cursor, timestamp, or full refetch |
+| Silent auto-refresh of interactive views | Causes layout shifts and lost context | Show a new-data banner or preserve position and selection |
+| Optimistic UI for irreversible actions | Rollback is confusing or misleading | Wait for confirmation and show progress |
+| No visible stale state after failures | The user cannot distinguish old data from current data | Show stale warning, retry state, or last successful fetch time |

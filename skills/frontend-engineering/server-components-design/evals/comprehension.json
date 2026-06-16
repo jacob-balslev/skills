@@ -1,0 +1,158 @@
+{
+  "skill_name": "server-components-design",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "client-server-boundary",
+    "rendering-models",
+    "hooks-patterns",
+    "streaming-architecture",
+    "suspense-patterns",
+    "server-actions-design"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a React Server Component in 2-3 sentences. Name what it can do that a Client Component cannot, what it cannot do, and how its output reaches the browser.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Runs only on the server, never ships to the browser as JavaScript, can be async",
+        "Can directly access server-side resources (databases, file system, secrets, server-only env vars)",
+        "Cannot use state, effects, event handlers, or browser APIs (those are Client Component territory)",
+        "Output is serialized to the RSC payload and reconstituted into the client tree without a separate API layer"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the directionality rule between Server and Client Components, and how a Server Component can still appear 'inside' a Client Component.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "A Server Component can render/import a Client Component, but a Client Component cannot import a Server Component",
+        "Reason: the client bundler would have to bundle the Server Component, violating the no-ship rule",
+        "A Client Component CAN receive a Server Component as a children/slot prop (already-rendered content from the parent)",
+        "The children prop is content, not components-to-import"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Why is the disciplined boundary 'use client at the interactive leaves' rather than at the page level? What is the cost of marking the whole page 'use client'?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Marking the whole page 'use client' loses all RSC benefit",
+        "Ships the entire page as a client bundle and re-runs every component on hydration",
+        "Thinnest-client-boundary: 'use client' belongs at the smallest leaf that genuinely needs state/effects/handlers/browser APIs",
+        "The surrounding layout, data reads, and non-interactive structure stay on the server (zero bundle, no hydration)"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A Server Component does <Profile user={userRow} /> where userRow is a full database row but <Profile> only shows the name. What is wrong and how do you fix it? Name the guards.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Every prop crossing to a Client Component is serialized into the RSC payload and shipped to the browser — including fields never rendered",
+        "The full row (password hash, internal flags, every column) is now visible in browser devtools — a leak",
+        "Primary fix: filter to a minimal DTO before crossing (return only public fields the client needs)",
+        "Backstops: a server-only Data Access Layer (authorization + DTOs), the server-only package, and the React taint APIs"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "How should an interactive Client Component get slow data fetched on the server without using useEffect and without blocking the whole subtree? Describe the use() Promise-handoff pattern and its two safety rules.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Start the query in the Server Component, pass the unawaited Promise as a prop, unwrap it in the Client Component with use()",
+        "A Promise is a serializable prop in React 19+; use() suspends until it resolves under a Suspense boundary",
+        "Rule 1: create the Promise on the server, never freshly during the Client Component's render (a new Promise each render re-suspends forever)",
+        "Rule 2: the Suspense boundary catching the suspension must sit above the component calling use()"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the server-components-design skill to design the form-submission mutation flow with 'use server' functions and re-authorization inside the action. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — that is server-actions-design (the write path: mutations, 'use server' functions, re-authorization inside the action)",
+        "server-components-design owns the read path (components that fetch and render data)",
+        "They share the server/client boundary infrastructure but are disjoint design surfaces",
+        "Correctly redirects rather than answering the mutation-design question out of lane"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A developer says: 'I'll mark this file use client just to be safe, and I still need /api/data to fetch the rows.' Correct both mental models.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "'use client' to be safe is wrong — default is Server; a component is Client only because a forcing requirement (hook/handler/browser API) forced it",
+        "A same-app /api/data route is not needed for Server Component reads — query the database directly from the Server Component",
+        "An API route is only needed when something OUTSIDE the app reads the data (mobile app, third-party integration, server-to-server)",
+        "Calling fetch('/api/...') against your own app turns an in-process read into a wasteful HTTP round-trip and can fail at build"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a Server Components tree is designed correctly? Cover the boundary, data security, and freshness/streaming dimensions.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "'use client' is at the thinnest interactive leaf, not higher; import direction is valid (no Client Component imports a Server Component)",
+        "No Client Component prop carries more data than it renders — whole rows are filtered to DTOs; secret/DB modules guarded with server-only",
+        "Privileged reads authenticate AND authorize (resource ownership); raw request inputs (params/searchParams/cookies/headers) are not trusted as permission signals and are awaited, read low in the tree",
+        "Independent reads run in parallel (siblings/Promise.all), shared reads deduped with React.cache(); slow reads wrapped in co-located Suspense; each read has a named freshness strategy (uncached / React cache / framework 'use cache' / external)"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "application",
+      "prompt": "Why are params, searchParams, cookies(), and headers() async in the current App Router, and what two design rules follow from reading them?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "They are async so the framework can start streaming the shell before resolving request inputs (synchronous inputs would block streaming)",
+        "Rule 1: read them as low in the tree as possible — any component reading a request input is dynamic; reading high (root layout) taints the whole subtree as dynamic and loses prerendering/caching",
+        "Rule 2: none of the four is a trust signal — params/searchParams/headers are user-controlled and forgeable; re-verify the real session server-side",
+        "?isAdmin=true proves nothing; gate authorization on a verified session and resource ownership, not raw request input"
+      ]
+    }
+  ]
+}

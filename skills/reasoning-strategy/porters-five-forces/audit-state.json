@@ -1,0 +1,35 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-05-31",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/porters-five-forces/references/porters-five-forces-sources.md": "66c6fd769ae91f3815b7c34e4fe2c80809b12203bf4e2c5c05220517b4746511",
+      "skills/reasoning-strategy/porters-five-forces/references/upstream-displacement-2026-05-26.md": "eab1270c9ca85a16946d067291a2e74d4effa88ea1649a7f2c3de3914e515b8c"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-05-31",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "eval_score": 4.17,
+  "eval_failed_ids": [],
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  }
+}

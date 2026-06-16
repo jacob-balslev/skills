@@ -1,0 +1,172 @@
+{
+  "skill_name": "mckinsey-7s",
+  "subject": "McKinsey 7S organizational-alignment analysis",
+  "adjacent_concepts": [
+    "organizational effectiveness",
+    "operating model",
+    "strategy execution",
+    "change readiness",
+    "shared values",
+    "strategy",
+    "structure",
+    "systems",
+    "style",
+    "staff",
+    "skills",
+    "OKRs",
+    "Value Chain Analysis",
+    "VRIO",
+    "SWOT/TOWS"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define McKinsey 7S in 2-3 sentences. Include the seven elements and the organizational question it answers.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines McKinsey 7S as an organizational-alignment or organizational-effectiveness framework",
+        "Mentions shared values",
+        "Mentions strategy",
+        "Mentions structure",
+        "Mentions systems",
+        "Mentions style, staff, and skills",
+        "Explains that the framework tests fit or alignment among elements rather than treating them independently"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of McKinsey 7S. Name the primitives and show why element interdependence matters.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names an organization, unit, team, transformation, or operating-model change as the unit of analysis",
+        "Names current state and target state",
+        "Names the seven elements",
+        "Explains shared values as central or shaping the other elements",
+        "Explains fit, contradictions, or reinforcing relationships",
+        "States that changing one element affects others",
+        "Does not reduce the framework to structure or org chart alone"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a McKinsey 7S skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents single-lever recommendations such as reorg-only, OKR-only, training-only, or culture-only fixes",
+        "Prevents treating structure as the whole organization",
+        "Forces current-state and target-state mapping",
+        "Forces interaction analysis among elements",
+        "Prevents blaming people without testing systems, structure, style, staff, and skills",
+        "Connects diagnosis to change actions, owners, or monitoring signals"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish McKinsey 7S from Porter's Five Forces, Value Chain Analysis, VRIO, SWOT/TOWS, OKRs, and Playing to Win. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Porter's Five Forces analyzes external industry profit-pressure structure",
+        "Value Chain Analysis maps activity-level value, cost, margin, and linkages",
+        "VRIO tests resources and capabilities for value, rarity, imitation cost, and organization",
+        "SWOT/TOWS inventories internal/external factors and generates options",
+        "OKRs define objectives and measurable key results",
+        "Playing to Win makes integrated strategy choices",
+        "McKinsey 7S diagnoses internal organization alignment and change readiness across seven elements"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place McKinsey 7S among strategy and organization methods. What inputs feed it, what outputs should it produce, and which methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies it as internal organization-alignment, organization-effectiveness, operating-model, or change-readiness analysis",
+        "Names inputs such as strategy, transformation goal, org chart, systems, metrics, leadership behavior, staffing, or capability evidence",
+        "Names outputs such as alignment map, current-target gaps, contradictions, root causes, interventions, owners, or monitoring signals",
+        "Explains that OKRs, Playing to Win, Value Chain, VRIO, or SWOT/TOWS can feed or follow it",
+        "Does not classify it as macro-environment scanning, industry-structure analysis, or standalone valuation"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for McKinsey 7S that preserves interdependent organization elements. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving tuning, a system, a machine, an instrument, a team sport, or connected parts",
+        "Preserves seven distinct elements",
+        "Preserves interdependence or fit among elements",
+        "Explains that changing one element affects others",
+        "Rejects an analogy that treats 7S as seven independent boxes",
+        "Rejects an analogy that treats 7S as only an org chart"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A teammate says McKinsey 7S is just an org-chart redesign tool. Correct the misconception and show what must be added for a real 7S analysis.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "States that org chart or structure is only one of seven elements",
+        "Names the other elements",
+        "Explains current-state and target-state mapping",
+        "Explains interaction or fit analysis",
+        "Adds evidence about systems, style, staff, skills, and shared values",
+        "Explains that structure alone is not organization",
+        "Connects the diagnosis to interventions beyond moving boxes"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "Novel scenario: A company announces a customer-centric strategy, but teams still report through product silos, incentives reward feature output, leaders escalate every decision upward, customer-success staff are overloaded, and analytics skills are uneven. Apply McKinsey 7S. Identify element gaps, interactions, and prioritized interventions without switching to OKRs, Value Chain, or Five Forces.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Maps customer-centric strategy as the strategy element",
+        "Identifies product-silo reporting as a structure gap",
+        "Identifies feature-output incentives as a systems gap",
+        "Identifies upward escalation as a style or leadership behavior gap",
+        "Identifies overloaded customer-success staff as a staff or capacity gap",
+        "Identifies uneven analytics skills as a skills gap",
+        "Connects these gaps to shared values or stated customer-centric priorities",
+        "Prioritizes interventions across multiple elements rather than replacing the analysis with OKRs, Value Chain, or Five Forces"
+      ]
+    }
+  ]
+}

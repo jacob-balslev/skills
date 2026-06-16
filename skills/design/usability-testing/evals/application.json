@@ -1,0 +1,447 @@
+{
+  "skill_name": "usability-testing",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Verification, Do NOT Use When) and established usability practice (think-aloud protocol, Nielsen/Landauer 5-user rule, Nielsen 0-4 severity scale, formative vs summative testing, SUS).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "summative-misapplication",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A stakeholder wants to run a 5-user test and use the results to claim the redesign improved task success rate by a statistically significant margin over the old design.",
+      "context": "The claim will be presented to leadership as a benchmark comparison.",
+      "question": "How should the agent respond to this plan?",
+      "expected_flags": [
+        "The 5-user rule applies to formative diagnostic testing, not summative/benchmark claims",
+        "A statistical success-rate comparison needs a much larger sample",
+        "5 users surfaces ~85% of major problems per segment/task — it does not establish significance",
+        "Conflating formative and summative purposes invalidates the claim"
+      ],
+      "expected_fix_hints": [
+        "Use 5 users to find issues formatively; size a separate larger study for the benchmark claim",
+        "Reframe the leadership message as diagnostic findings, not a statistical win"
+      ],
+      "absent_signals": [
+        "Do not present 5-user results as statistical proof",
+        "Do not apply the 5-user rule to a summative comparison"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The 5-user rule applies to formative diagnostic testing, not summative/benchmark claims."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A statistical success-rate comparison needs a much larger sample."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: 5 users surfaces ~85% of major problems per segment/task — it does not establish significance."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Conflating formative and summative purposes invalidates the claim."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use 5 users to find issues formatively; size a separate larger study for the benchmark claim."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reframe the leadership message as diagnostic findings, not a statistical win."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present 5-user results as statistical proof."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not apply the 5-user rule to a summative comparison."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "leading-task-design",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A draft test script tells participants 'Click the Tax Summary tab, then click View Details to see what you owe this quarter.'",
+      "context": "The team wants to know whether users can find their quarterly tax owed.",
+      "question": "How should the agent revise the task?",
+      "expected_flags": [
+        "Tasks must be written as goals, not step-by-step instructions",
+        "Prescribing the steps tests obedience, not discoverability",
+        "Rewrite as a goal: 'find out how much you owe in taxes this quarter'",
+        "A participant should be able to attempt the task without being shown the path"
+      ],
+      "expected_fix_hints": [
+        "Convert each instruction-style task into a goal-framed scenario",
+        "Remove UI element names from the task wording"
+      ],
+      "absent_signals": [
+        "Do not name the tabs/buttons to click in the task",
+        "Do not lead the participant to the intended path"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Tasks must be written as goals, not step-by-step instructions."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prescribing the steps tests obedience, not discoverability."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Rewrite as a goal: 'find out how much you owe in taxes this quarter'."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A participant should be able to attempt the task without being shown the path."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Convert each instruction-style task into a goal-framed scenario."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Remove UI element names from the task wording."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not name the tabs/buttons to click in the task."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not lead the participant to the intended path."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "moderator-rescue",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "During a session, a participant gets stuck on a step and the moderator immediately explains how the feature 'is supposed to work' so the participant can continue.",
+      "context": "The moderator wants the participant to finish all tasks.",
+      "question": "What should the agent flag about the moderation?",
+      "expected_flags": [
+        "Explaining the design after a participant gets stuck destroys the evidence",
+        "The obstacle the participant hit is the finding and cannot be re-observed in that session",
+        "The moderator's job is to stay neutral, let silence/struggle sit, and not rescue or defend",
+        "Most common moderator utterances should be open questions ('what are you thinking?') and silence"
+      ],
+      "expected_fix_hints": [
+        "Coach the moderator to let the participant struggle and observe, not explain",
+        "Capture the obstacle as a finding rather than coaching past it"
+      ],
+      "absent_signals": [
+        "Do not have the moderator explain or defend the design mid-task",
+        "Do not prioritize task completion over preserving the obstacle"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explaining the design after a participant gets stuck destroys the evidence."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The obstacle the participant hit is the finding and cannot be re-observed in that session."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The moderator's job is to stay neutral, let silence/struggle sit, and not rescue or defend."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Most common moderator utterances should be open questions ('what are you thinking?') and silence."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Coach the moderator to let the participant struggle and observe, not explain."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Capture the obstacle as a finding rather than coaching past it."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not have the moderator explain or defend the design mid-task."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not prioritize task completion over preserving the obstacle."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "severity-triage",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A test produced 14 findings presented as an unranked flat list, treating a label typo and a checkout-blocking dead end as equally important.",
+      "context": "The team has limited time before the next release and must triage.",
+      "question": "How should the agent organize the findings?",
+      "expected_flags": [
+        "Rate findings by Nielsen's 0-4 severity scale (cosmetic / minor / major / catastrophic)",
+        "A catastrophic blocker must be distinguishable from a cosmetic issue",
+        "Severity enables triage under time pressure",
+        "Listing findings flat hides what actually must be fixed first"
+      ],
+      "expected_fix_hints": [
+        "Assign a 0-4 severity to each finding",
+        "Sort the catastrophic/major issues to the top of the fix list"
+      ],
+      "absent_signals": [
+        "Do not present findings as an unranked flat list"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Rate findings by Nielsen's 0-4 severity scale (cosmetic / minor / major / catastrophic)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A catastrophic blocker must be distinguishable from a cosmetic issue."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Severity enables triage under time pressure."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Listing findings flat hides what actually must be fixed first."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Assign a 0-4 severity to each finding."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Sort the catastrophic/major issues to the top of the fix list."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present findings as an unranked flat list."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "moderated-vs-unmoderated",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A team must choose between a moderated study with 6 scheduled sessions and an unmoderated tool that can run 40 sessions this week, for an early prototype with a novel interaction they don't fully understand yet.",
+      "context": "The interaction is new and the team expects surprising behavior they'd want to probe.",
+      "question": "Which approach should the agent recommend and why?",
+      "expected_flags": [
+        "Moderated gives richer data and the ability to follow up on surprises; costs more and needs scheduling",
+        "Unmoderated is cheaper and scales but sacrifices follow-up on surprises",
+        "Because the interaction is novel and surprises are expected, lean moderated to probe the unexpected",
+        "Matches method choice to whether probing surprises or volume matters more"
+      ],
+      "expected_fix_hints": [
+        "Prefer moderated for the novel interaction; consider unmoderated later for volume validation",
+        "Reserve follow-up probing for the riskiest unknowns"
+      ],
+      "absent_signals": [
+        "Do not pick unmoderated purely for volume when probing surprises is the point"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Moderated gives richer data and the ability to follow up on surprises; costs more and needs scheduling."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Unmoderated is cheaper and scales but sacrifices follow-up on surprises."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Because the interaction is novel and surprises are expected, lean moderated to probe the unexpected."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Matches method choice to whether probing surprises or volume matters more."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Prefer moderated for the novel interaction; consider unmoderated later for volume validation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve follow-up probing for the riskiest unknowns."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick unmoderated purely for volume when probing surprises is the point."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "all-confirming-results",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A test report says every participant completed every task smoothly and the design was confirmed entirely, with no obstacles found.",
+      "context": "The team is ready to declare the design validated.",
+      "question": "How should the agent interpret a fully-confirming result?",
+      "expected_flags": [
+        "A session that confirms the design entirely is suspect",
+        "Likely the tasks were too easy or the moderator was unintentionally helping",
+        "Recommends checking whether any finding contradicted a prior expectation",
+        "Suggests harder/goal-framed tasks and neutral moderation before declaring validation"
+      ],
+      "expected_fix_hints": [
+        "Audit the task difficulty and moderator neutrality",
+        "Re-run with harder, goal-framed tasks to surface real obstacles"
+      ],
+      "absent_signals": [
+        "Do not treat an all-confirming result as proof the design works"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A session that confirms the design entirely is suspect."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Likely the tasks were too easy or the moderator was unintentionally helping."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends checking whether any finding contradicted a prior expectation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Suggests harder/goal-framed tasks and neutral moderation before declaring validation."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Audit the task difficulty and moderator neutrality."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-run with harder, goal-framed tasks to surface real obstacles."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat an all-confirming result as proof the design works."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "An engineer asks the usability-testing owner to 'set up our usability tests in CI' meaning unit and integration tests, and a load test against the checkout API.",
+      "context": "The shared word 'test' has caused the team to route this to usability testing.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Automated unit/integration tests and load tests are out of scope — that is testing-strategy",
+        "Usability testing is empirical observation of real humans attempting tasks, not engineering verification",
+        "The shared word 'test' hides two unrelated activities",
+        "Correctly redirects to testing-strategy rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Route CI/unit/integration/load testing to testing-strategy",
+        "Offer in-scope help only if the team wants to observe real users on the checkout flow"
+      ],
+      "absent_signals": [
+        "Do not treat CI/automated tests as usability testing",
+        "Do not author unit or load tests under the usability banner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Automated unit/integration tests and load tests are out of scope — that is testing-strategy."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Usability testing is empirical observation of real humans attempting tasks, not engineering verification."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The shared word 'test' hides two unrelated activities."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects to testing-strategy rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route CI/unit/integration/load testing to testing-strategy."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Offer in-scope help only if the team wants to observe real users on the checkout flow."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat CI/automated tests as usability testing."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not author unit or load tests under the usability banner."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

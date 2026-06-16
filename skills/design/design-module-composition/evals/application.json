@@ -1,0 +1,465 @@
+{
+  "skill_name": "design-module-composition",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Verification, Do NOT Use When) and established component-API practice (compound components, slots, render props, headless primitives, asChild, configuration-vs-composition).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "prop-explosion",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A Card component has accumulated 14 boolean props (hasHeader, hasFooter, isCompact, showAction, isElevated, ...) and a new request needs yet another variant the props don't cover.",
+      "context": "The card is reused across many surfaces and the team keeps editing the shared component for each new variant.",
+      "question": "How should the agent redesign the Card API?",
+      "expected_flags": [
+        "Move to a composition API (Card with Card.Header / Card.Body / Card.Footer, or named slots)",
+        "Reduce boolean props to single digits; let consumers compose unanticipated variants",
+        "Distinguish module-identity variants (prop) from consumer-usage variants (slot)",
+        "Optionally keep a high-level convenience component over the composable primitives"
+      ],
+      "expected_fix_hints": [
+        "Expose slots/children so the new variant needs no edit to the shared component",
+        "Refactor the prop set into compound children sharing context"
+      ],
+      "absent_signals": [
+        "Do not add another boolean prop for the new variant",
+        "Do not keep editing the shared component for every consumer's case"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Move to a composition API (Card with Card.Header / Card.Body / Card.Footer, or named slots)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reduce boolean props to single digits; let consumers compose unanticipated variants."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguish module-identity variants (prop) from consumer-usage variants (slot)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Optionally keep a high-level convenience component over the composable primitives."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Expose slots/children so the new variant needs no edit to the shared component."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Refactor the prop set into compound children sharing context."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add another boolean prop for the new variant."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep editing the shared component for every consumer's case."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "addressable-parts",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A Dialog is implemented as a single component with title, body, and closeLabel string props; a consumer needs the close button to be a custom icon button and the title to contain a badge.",
+      "context": "The team wants consumers to control the trigger, content, and close affordance.",
+      "question": "What composition design should the agent recommend?",
+      "expected_flags": [
+        "Use a compound-component API: Dialog.Trigger, Dialog.Content, Dialog.Close as addressable parts sharing context",
+        "Children require the parent's context (render outside the parent only with an explicit error)",
+        "Use asChild so Dialog.Trigger/Close can wrap a custom element while inheriting behavior and ARIA",
+        "Keep accessibility wiring (focus return on close, aria attributes) the module's responsibility"
+      ],
+      "expected_fix_hints": [
+        "Expose Dialog.Trigger / Dialog.Content / Dialog.Close instead of string/prop config",
+        "Apply asChild to delegate markup while preserving behavior"
+      ],
+      "absent_signals": [
+        "Do not keep string props for the title/close affordance",
+        "Do not push focus/ARIA responsibility onto the consumer"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use a compound-component API: Dialog.Trigger, Dialog.Content, Dialog.Close as addressable parts sharing context."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Children require the parent's context (render outside the parent only with an explicit error)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use asChild so Dialog.Trigger/Close can wrap a custom element while inheriting behavior and ARIA."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep accessibility wiring (focus return on close, aria attributes) the module's responsibility."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Expose Dialog.Trigger / Dialog.Content / Dialog.Close instead of string/prop config."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Apply asChild to delegate markup while preserving behavior."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep string props for the title/close affordance."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not push focus/ARIA responsibility onto the consumer."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "headless-second-skin",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A Table component bakes in markup and styles, and the team now needs a second, visually different table reusing the same sorting/selection/pagination behavior.",
+      "context": "State, behavior, and presentation are currently conflated in one component.",
+      "question": "How should the agent restructure the module?",
+      "expected_flags": [
+        "Extract a headless primitive: expose state and behavior (sorting, selection, pagination) as hooks/unstyled components",
+        "Separate the three conflated concerns — state, behavior, presentation",
+        "Let each visual treatment be a consumer of the headless behavior, with its own markup/styles",
+        "Adding a second visual treatment becomes trivial once behavior is separated"
+      ],
+      "expected_fix_hints": [
+        "Provide a useTable / headless table primitive that returns state + handlers",
+        "Build both visual tables on top of the shared headless layer"
+      ],
+      "absent_signals": [
+        "Do not fork the whole component to make a second visual style",
+        "Do not duplicate the sorting/selection logic per visual variant"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Extract a headless primitive: expose state and behavior (sorting, selection, pagination) as hooks/unstyled components."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separate the three conflated concerns — state, behavior, presentation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Let each visual treatment be a consumer of the headless behavior, with its own markup/styles."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Adding a second visual treatment becomes trivial once behavior is separated."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide a useTable / headless table primitive that returns state + handlers."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Build both visual tables on top of the shared headless layer."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not fork the whole component to make a second visual style."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not duplicate the sorting/selection logic per visual variant."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "aschild-button-in-button",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A Tooltip.Trigger always renders its own <button>, so wrapping an existing <Button> produces a button nested inside a button and broken focus behavior.",
+      "context": "The consumer wants the existing Button to be the trigger without an extra wrapper element.",
+      "question": "How should the agent fix the trigger API?",
+      "expected_flags": [
+        "Use the asChild / polymorphic pattern so the trigger renders the consumer's element instead of its own",
+        "This collapses the two-level wrapper and avoids the button-inside-button accessibility error",
+        "The parent must clone or render-prop its single child carefully to merge props/behavior",
+        "All behavior and ARIA wiring must be preserved across the element swap"
+      ],
+      "expected_fix_hints": [
+        "Add asChild support to Tooltip.Trigger and merge behavior onto the passed child",
+        "Forward refs and ARIA attributes onto the consumer's element"
+      ],
+      "absent_signals": [
+        "Do not keep rendering an extra wrapper button",
+        "Do not drop ARIA/focus behavior when delegating the element"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use the asChild / polymorphic pattern so the trigger renders the consumer's element instead of its own."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This collapses the two-level wrapper and avoids the button-inside-button accessibility error."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The parent must clone or render-prop its single child carefully to merge props/behavior."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: All behavior and ARIA wiring must be preserved across the element swap."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add asChild support to Tooltip.Trigger and merge behavior onto the passed child."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Forward refs and ARIA attributes onto the consumer's element."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep rendering an extra wrapper button."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not drop ARIA/focus behavior when delegating the element."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "single-use-overengineering",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A developer wants to build a one-off settings panel that appears in exactly one screen as a full compound-component system with slots, context, and headless hooks.",
+      "context": "The panel is single-use within one feature and there is no plan to reuse it.",
+      "question": "How should the agent respond to the proposed design?",
+      "expected_flags": [
+        "Composition machinery is overkill for a single-use, never-reused component",
+        "Reach for the simpler prop-driven shape instead",
+        "Compound/headless patterns earn their cost through reuse and unanticipated variants, absent here",
+        "Recommend the simplest API that works for the one use"
+      ],
+      "expected_fix_hints": [
+        "Build a plain prop-driven panel; revisit composition only if reuse emerges",
+        "Avoid context/slots/headless hooks for a one-screen component"
+      ],
+      "absent_signals": [
+        "Do not build a full compound-component system for a single-use panel",
+        "Do not add headless hooks where there is no second consumer"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Composition machinery is overkill for a single-use, never-reused component."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reach for the simpler prop-driven shape instead."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Compound/headless patterns earn their cost through reuse and unanticipated variants, absent here."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommend the simplest API that works for the one use."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Build a plain prop-driven panel; revisit composition only if reuse emerges."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Avoid context/slots/headless hooks for a one-screen component."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not build a full compound-component system for a single-use panel."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add headless hooks where there is no second consumer."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the design-module-composition owner to pick the brand font for headings and decide the card border-radius value.",
+      "context": "The team conflates 'component design' with all visual-token decisions.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Font and border-radius are out of scope — those are visual styling / design tokens",
+        "Redirect to visual-design-foundations / layout-composition for visual decisions",
+        "This skill owns the module's composition API shape, not its visual values",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand visual-token choices to visual-design-foundations / layout-composition",
+        "Offer the in-scope part: how the component exposes styling hooks/slots to consumers"
+      ],
+      "absent_signals": [
+        "Do not pick the brand font",
+        "Do not choose the border-radius value"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Font and border-radius are out of scope — those are visual styling / design tokens."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirect to visual-design-foundations / layout-composition for visual decisions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This skill owns the module's composition API shape, not its visual values."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand visual-token choices to visual-design-foundations / layout-composition."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Offer the in-scope part: how the component exposes styling hooks/slots to consumers."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the brand font."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not choose the border-radius value."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "library-publishing-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks how to version, publish, and configure the shared component library package that hosts these modules.",
+      "context": "The question is about the library's packaging and release, not any single module's API.",
+      "question": "How should the agent scope this request?",
+      "expected_flags": [
+        "Publishing/versioning the shared library is out of scope — that is design-system-architecture",
+        "This skill owns the composition API of an individual module, not the library's packaging",
+        "Redirect the packaging/release concern to design-system-architecture",
+        "Correctly distinguishes module API shape from library lifecycle"
+      ],
+      "expected_fix_hints": [
+        "Hand library packaging/versioning to design-system-architecture",
+        "Stay on module-level composition API questions"
+      ],
+      "absent_signals": [
+        "Do not design the package release/versioning here",
+        "Do not conflate one module's API with the library's distribution"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Publishing/versioning the shared library is out of scope — that is design-system-architecture."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This skill owns the composition API of an individual module, not the library's packaging."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirect the packaging/release concern to design-system-architecture."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly distinguishes module API shape from library lifecycle."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand library packaging/versioning to design-system-architecture."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Stay on module-level composition API questions."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the package release/versioning here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not conflate one module's API with the library's distribution."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

@@ -1,28 +1,32 @@
 ---
 name: ontology-modeling
-description: "Use when formalizing domain meaning with classes, properties, constraints, RDF/OWL-style semantics, SHACL-like validation shapes, or reasoning-ready axioms. Do NOT use for simple category trees (use `taxonomy-design`), pre-implementation business entity sketches (use `conceptual-modeling`), database schemas (use `data-modeling`), or broad representation choice (use `knowledge-modeling`)."
+# description: routing-facing summary of when this skill activates and what it covers.
+description: "Use when formalizing domain meaning with classes, properties, constraints, RDF/OWL-style semantics, SHACL-like validation shapes, or reasoning-ready axioms. Do NOT use for simple category trees (use `taxonomy-design`), pre-implementation business entity sketches (use `conceptual-modeling`), database schemas (use `entity-relationship-modeling`), or broad representation choice (use `knowledge-modeling`)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime and portability notes for this skill.
 compatibility:
   notes: "Portable ontology modeling guidance; implementation can be Markdown, RDF, JSON-LD, OWL, SHACL, or an internal schema language."
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   # version: skill content version (semver). Bumped when the instructional content changes.
 
 
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: knowledge-organization
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # scope: PRD-style free-text statement of what the skill teaches and what it does not.
-  # Not an enum (deployment targeting belongs to `deployment_target`).
+  # Not an enum (publishability belongs to `public`; project anchoring belongs to `project[]`).
   scope: "Teaches when and how to formalize domain meaning as classes, properties, constraints, axioms, validation shapes, and RDF/OWL/JSON-LD/SHACL-style artifacts. Excludes informal taxonomy/category trees, stakeholder-readable domain sketches, persistence/database modeling, and broad knowledge-representation choice."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
@@ -50,22 +54,20 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"ontology modeling\",\"formal semantics\",\"RDF\",\"OWL\",\"JSON-LD\",\"SHACL\",\"class axioms\",\"property domains\",\"property ranges\",\"disjoint classes\"]"
+  keywords: ["ontology modeling","formal semantics","RDF","OWL","JSON-LD","SHACL","class axioms","property domains","property ranges","disjoint classes"]
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
-  examples: "[\"we need class and property definitions that another system can reason over, not just a human-readable diagram\",\"should Customer and Organization be disjoint classes in this ontology?\",\"define property domains and ranges for our skill graph export\",\"turn this conceptual model into a machine-checkable ontology without inventing database tables\"]"
+  examples: ["we need class and property definitions that another system can reason over, not just a human-readable diagram","should Customer and Organization be disjoint classes in this ontology?","define property domains and ranges for our skill graph export","turn this conceptual model into a machine-checkable ontology without inventing database tables"]
   # anti_examples: near-miss prompts that should route ELSEWHERE.
-  # Pair with relations.boundary to indicate the confusable territory's owner.
-  anti_examples: "[\"make a simple browse category tree for skills\",\"identify the business entities and relationships before implementation\",\"design the SQL tables, keys, and indexes\",\"choose whether this knowledge belongs in rules, frames, a graph, or a hybrid\"]"
+  # Pair with relations.suppresses to indicate the confusable territory's owner.
+  anti_examples: ["make a simple browse category tree for skills","identify the business entities and relationships before implementation","design the SQL tables, keys, and indexes","choose whether this knowledge belongs in rules, frames, a graph, or a hybrid"]
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"boundary\":[{\"skill\":\"taxonomy-design\",\"reason\":\"taxonomy-design owns informal classification and facets; ontology-modeling owns formal semantics\"},{\"skill\":\"conceptual-modeling\",\"reason\":\"conceptual-modeling is stakeholder-readable domain analysis; ontology-modeling is machine-checkable semantic formalization\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns persistence structure and constraints; ontology-modeling owns meaning constraints\"},{\"skill\":\"knowledge-modeling\",\"reason\":\"knowledge-modeling chooses the representation paradigm; ontology-modeling applies one formal paradigm\"}],\"related\":[\"semantic-relations\",\"taxonomy-design\",\"knowledge-modeling\"],\"depends_on\":[\"semantic-relations\"],\"verify_with\":[\"semantic-relations\",\"conceptual-modeling\"]}"
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
@@ -85,8 +87,8 @@ metadata:
     Replaces "informal taxonomy plus prose conventions" with formal axiomatization when *ambiguity, interoperability, validation, or reasoning matter*. Solves the problem that without formal semantics, two systems claiming to share a vocabulary may *disagree on what the vocabulary means* — the same class name carrying different membership criteria, the same property carrying different domain or range, the same hierarchy carrying different inheritance semantics. Most teams do not need OWL — they need clear conceptual models and controlled vocabularies. *Escalate to ontology when another consumer must compute over the semantics, validate instances against constraints, or align meaning across systems*. The ontology must *preserve business meaning while stating which inferences are allowed*. A vague ontology is worse than no ontology because it gives false confidence to downstream tools that compute over it; the resulting incorrect inferences are harder to diagnose than the absence of any formalism.
   # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
   # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
-  boundary: |
-    Distinct from taxonomy-design, which owns *informal classification and facets* — human-governed category trees, browse taxonomies, SKOS broader/narrower; this skill owns *formal semantics* with axioms and reasoning constraints. Distinct from conceptual-modeling, which is *stakeholder-readable domain analysis* (entities and relationships with humans, before any formalism) — this skill is *machine-checkable semantic formalization*. Distinct from data-modeling, which owns persistence structure and constraints (tables, FKs, indexes) — this skill owns *meaning constraints* (class/property axioms, validation shapes). Distinct from knowledge-modeling, which chooses the *representation paradigm* (graph/frames/rules/hybrid) — this skill *applies one formal paradigm* once chosen. Distinct from semantic-relations, which types individual relation edges — this skill is the formalization layer above.
+  concept_boundary: |
+    Distinct from taxonomy-design, which owns *informal classification and facets* — human-governed category trees, browse taxonomies, SKOS broader/narrower; this skill owns *formal semantics* with axioms and reasoning constraints. Distinct from conceptual-modeling, which is *stakeholder-readable domain analysis* (entities and relationships with humans, before any formalism) — this skill is *machine-checkable semantic formalization*. Distinct from entity-relationship-modeling, which owns persistence structure and constraints (tables, FKs, indexes) — this skill owns *meaning constraints* (class/property axioms, validation shapes). Distinct from knowledge-modeling, which chooses the *representation paradigm* (graph/frames/rules/hybrid) — this skill *applies one formal paradigm* once chosen. Distinct from semantic-relations, which types individual relation edges — this skill is the formalization layer above.
   # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "An ontology is to a domain model what an engineering tolerance specification is to a manufactured part — the part might fit at +/-0.5mm informally (taxonomy, conceptual model), but if another factory must mass-produce a counterpart that mates with it, both factories need a tolerance spec that says *exactly* what 'fits' means in microns. The spec is more expensive to write than the napkin sketch, but it is the artefact that lets two shops produce interlocking parts without ever talking to each other."
   # misconception: the wrong mental model people bring; corrected explicitly.
@@ -96,9 +98,8 @@ metadata:
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/ontology-modeling/SKILL.md
+  skill_graph_canonical_skill: skills/knowledge-organization/ontology-modeling/SKILL.md
   # === Health Block (written by the audit loop, not hand-authored) ===
   # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
   #
@@ -112,16 +113,27 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
+relations:
+  related: ["entity-relationship-modeling","semantic-relations","taxonomy-design","knowledge-modeling","conceptual-modeling"]
+  suppresses: ["taxonomy-design","knowledge-modeling"]
+  verify_with: ["semantic-relations","conceptual-modeling"]
+  depends_on: ["semantic-relations"]
 ---
-
 # Ontology Modeling
+
+## Concept of the skill
+
+Ontology modeling is the discipline of *formalizing the meaning of a domain* into classes, properties, and axioms whose semantics is precise enough for *automated reasoning, validation, or cross-system interoperability*. Drawing from Aristotle's categories, Gruber's information-systems definition ("a specification of a conceptualization"), and Guarino's formal-ontology tradition, it treats meaning as something that can be *specified* — a commitment to a conceptualization — and the specification as a *contract that downstream consumers can compute over*. Outputs: class hierarchies, object/data properties with domain/range, cardinality constraints, equivalence and disjointness axioms, identity criteria, controlled vocabularies, validation shapes (SHACL), interop-oriented JSON-LD/RDF projection.
+
+Replaces "informal taxonomy plus prose conventions" with formal axiomatization when *ambiguity, interoperability, validation, or reasoning matter*. Solves the problem that without formal semantics, two systems claiming to share a vocabulary may *disagree on what the vocabulary means* — the same class name carrying different membership criteria, the same property carrying different domain or range, the same hierarchy carrying different inheritance semantics. Most teams do not need OWL — they need clear conceptual models and controlled vocabularies. *Escalate to ontology when another consumer must compute over the semantics, validate instances against constraints, or align meaning across systems*. The ontology must *preserve business meaning while stating which inferences are allowed*. A vague ontology is worse than no ontology because it gives false confidence to downstream tools that compute over it; the resulting incorrect inferences are harder to diagnose than the absence of any formalism.
+
+Distinct from taxonomy-design, which owns *informal classification and facets* — human-governed category trees, browse taxonomies, SKOS broader/narrower; this skill owns *formal semantics* with axioms and reasoning constraints. Distinct from conceptual-modeling, which is *stakeholder-readable domain analysis* (entities and relationships with humans, before any formalism) — this skill is *machine-checkable semantic formalization*. Distinct from entity-relationship-modeling, which owns persistence structure and constraints (tables, FKs, indexes) — this skill owns *meaning constraints* (class/property axioms, validation shapes). Distinct from knowledge-modeling, which chooses the *representation paradigm* (graph/frames/rules/hybrid) — this skill *applies one formal paradigm* once chosen. Distinct from semantic-relations, which types individual relation edges — this skill is the formalization layer above. An ontology is to a domain model what an engineering tolerance specification is to a manufactured part — the part might fit at +/-0.5mm informally (taxonomy, conceptual model), but if another factory must mass-produce a counterpart that mates with it, both factories need a tolerance spec that says *exactly* what 'fits' means in microns. The spec is more expensive to write than the napkin sketch, but it is the artefact that lets two shops produce interlocking parts without ever talking to each other. The wrong mental model is that *every domain model should become an ontology* — that formalization is universally better. It is not. Ontology modeling is *only worth its cost when ambiguity, interoperability, validation, or reasoning matter*; most teams need clear conceptual models and controlled vocabularies, not OWL axioms. Adjacent misconceptions: that *more formal expressiveness is always better* (it is not — Baader et al.'s *Description Logic Handbook* documents the expressiveness-tractability trade-off rigorously: OWL DL is more expressive than OWL EL, but EL admits polynomial-time reasoning that DL does not; choose the profile that fits the reasoning task); that *disjointness claims are safe by default* (they are not — disjointness is a durable commitment; "Customer and Organization are disjoint" forbids legitimate cases where one entity is both, and the inference is *load-bearing for the consumer's reasoning*); that *synonyms are duplicate classes* (they are not — they should be *aliases* via `owl:sameAs` or `skos:altLabel`, not separate classes with overlapping membership); that *the open-world vs closed-world assumption is implicit* (it is not — RDF/OWL is open-world by default ["absence of a fact is not evidence of falsehood"]; many consumer applications assume closed-world ["if it's not in the database, it doesn't exist"]; the assumption *must be documented* or downstream reasoning produces wrong answers); and that *the ontology is the system* (it is not — the ontology is one artefact; the system also has data, code, and user-facing behaviour, and the ontology only governs the slice where formal semantics genuinely matter).
 
 ## Coverage
 
 Formalize domain meaning into classes, properties, constraints, and axioms. Covers class hierarchy, object/data properties, domain/range, cardinality constraints, equivalence, disjointness, identity, controlled vocabularies, validation shapes, and interop-oriented JSON-LD/RDF projection. The output may be an actual ontology file or a precise ontology sketch before implementation.
 
-## Philosophy
-
+## Philosophy of the skill
 Ontology modeling is only worth its cost when ambiguity, interoperability, validation, or reasoning matter. Most teams do not need OWL. They need clear conceptual models and controlled vocabularies. Escalate to ontology when another consumer must compute over the semantics, validate instances against constraints, or align meaning across systems.
 
 The ontology must preserve business meaning while stating which inferences are allowed. A vague ontology is worse than no ontology because it gives false confidence to downstream tools.
@@ -152,7 +164,7 @@ The ontology must preserve business meaning while stating which inferences are a
 |---|---|
 | `taxonomy-design` | You need a human-governed category tree or facets, not formal axioms. |
 | `conceptual-modeling` | You are still discovering business entities and relationships with stakeholders. |
-| `data-modeling` | You need persistence schema, keys, indexes, or denormalization decisions. |
+| `entity-relationship-modeling` | You need persistence schema, keys, indexes, or denormalization decisions. |
 | `semantic-relations` | You only need to choose the relation type between concepts. |
 
 ## Key Sources

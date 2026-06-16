@@ -1,0 +1,145 @@
+{
+  "skill_name": "okrs",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A product team writes: Objective: Make onboarding better. Key Results: launch a checklist, publish docs, run 5 interviews. Rewrite this as OKRs.",
+      "expected_output": "The agent should flag that the Key Results are activities, not outcome evidence. It should ask for or infer baselines, then rewrite toward measurable onboarding outcomes such as activation, time-to-value, checklist completion quality, support-ticket reduction, or first-week retention, with targets and evidence sources.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Flags task-shaped Key Results",
+        "Uses measurable onboarding outcomes",
+        "Includes baselines and targets or labels missing data",
+        "Includes evidence sources",
+        "Does NOT treat launches and interviews as sufficient Key Results"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A founder asks for OKRs but has not chosen where to play or how to win. What should the agent do first?",
+      "expected_output": "The agent should not invent OKRs as a substitute for strategy. It should request or infer the strategic source, ideally routing upstream to strategy formulation such as Playing to Win, then use OKRs only after the direction is clear.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Identifies missing strategy context",
+        "Keeps strategy choice upstream of OKRs",
+        "Suggests playing-to-win or equivalent strategy work",
+        "Labels inferred direction if proceeding",
+        "Does NOT present OKRs as the strategy itself"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A team proposes 9 Objectives and 41 Key Results for one quarter. Diagnose the OKR set.",
+      "expected_output": "The agent should identify diffusion of focus. It should recommend reducing Objectives and Key Results to the few outcomes that matter most, grouping or dropping lower-value goals, and preserving trade-offs rather than documenting every planned activity.",
+      "type": "focus",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Flags too many Objectives and Key Results",
+        "Explains focus and trade-off failure",
+        "Recommends a smaller set",
+        "Separates OKRs from work inventory",
+        "Does NOT accept the large set as comprehensive planning"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A manager says OKR scores will directly determine bonuses, so teams should set safe Key Results. How should the OKR skill respond?",
+      "expected_output": "The agent should warn that tying OKR scores directly to compensation encourages sandbagging and undermines stretch goals and learning. It should separate OKR learning from formal performance evaluation or explicitly choose committed goals with different expectations.",
+      "type": "integrity",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Flags compensation coupling risk",
+        "Names sandbagging or safety behavior",
+        "Separates OKR learning from employee evaluation",
+        "Distinguishes aspirational from committed OKRs",
+        "Does NOT optimize OKRs for bonus negotiation"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "prompt": "A COO asks for OKRs but really wants a dashboard of ongoing metrics like uptime, gross margin, churn, and support response time. Should OKRs own this?",
+      "expected_output": "The agent should distinguish OKRs from KPI monitoring. It can suggest selecting one or two change goals from the dashboard if improvement is needed, but ongoing operating metrics belong in a KPI dashboard or scorecard.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Keeps ongoing monitoring with KPIs or scorecards",
+        "Explains OKRs as change goals for a period",
+        "Can convert a priority KPI change into an OKR",
+        "Does NOT turn every KPI into an OKR"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A team writes: Key Result: Increase activation. No baseline, target, date, source, or owner is listed. What should the agent critique?",
+      "expected_output": "The agent should state that the Key Result is not yet measurable or gradeable. It should require a baseline, target, date, evidence source, and owner before the OKR can be reviewed.",
+      "type": "measurement",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Flags missing baseline",
+        "Flags missing target",
+        "Flags missing date",
+        "Flags missing evidence source",
+        "Flags missing owner or reporting accountability",
+        "Does NOT accept a direction-only metric as complete"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 7,
+      "prompt": "A product leader asks to cascade every company OKR into every team OKR. What should the agent recommend?",
+      "expected_output": "The agent should recommend alignment rather than mechanical copying. Team OKRs should connect to relevant company priorities, reveal dependencies, and avoid forcing every team to mirror every Objective.",
+      "type": "alignment",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Distinguishes alignment from mechanical cascading",
+        "Keeps team OKRs tied to relevant higher-level goals",
+        "Names dependencies and conflicts",
+        "Avoids forcing every team to copy every Objective",
+        "Preserves local focus"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

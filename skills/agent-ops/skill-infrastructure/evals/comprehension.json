@@ -1,0 +1,86 @@
+{
+  "skill_name": "skill-infrastructure",
+  "subject": "Designing deterministic health tooling for skill libraries, including source/schema inventory, protocol/projection…",
+  "adjacent_concepts": [
+    "lint-overlay",
+    "skill-scaffold",
+    "graph-audit",
+    "testing-strategy",
+    "project-knowledge-extraction",
+    "code-review"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define skill-infrastructure in 2-3 sentences. Include the work it owns and the kind of user request that should activate it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Explain why an agent would need the skill-infrastructure skill instead of relying on generic reasoning. Name the failure it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "mental_model",
+      "prompt": "Describe the mental model or main primitives behind skill-infrastructure. Keep it operational rather than just naming the topic.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks: \"scaffold a new SKILL.md for our team''s deploy procedure\". Should skill-infrastructure activate? Explain the boundary and name the better owner when possible.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not force skill-infrastructure onto a request it explicitly excludes or that belongs to lint-overlay, skill-scaffold, graph-audit, testing-strategy, project-knowledge-extraction, code-review."
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A user asks: \"our skill library is growing and we''re getting silent decay — eval counts dropping, conflicts emerging — what tooling should we add?\". Show the first concrete steps an agent should take when applying skill-infrastructure.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Place skill-infrastructure among its adjacent skills (lint-overlay, skill-scaffold, graph-audit, testing-strategy, project-knowledge-extraction, code-review). What does it own, and what does it verify with or defer to?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "medium",
+      "negative_expectation": "Must not collapse related skills into interchangeable names; ownership must be mechanism-level."
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Name one plausible misconception about skill-infrastructure and correct it with a mechanism-level explanation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

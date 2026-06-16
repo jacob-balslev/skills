@@ -1,0 +1,565 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "tool-call-strategy",
+  "subject": "Use when an agent is making too many tool calls, when context is filling from verbose tool outputs, when the same…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "context-engineering",
+    "refactor",
+    "debugging",
+    "prompt-craft",
+    "autonomous-loop-patterns",
+    "code-review",
+    "pattern-recognition",
+    "problem-locating-solving"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"the agent made 17 read_file calls when 3 greps would have done — what should it have done?\"",
+      "context": "The agent has access to the tool-call-strategy skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is tool-call-strategy the right skill to apply?",
+      "expected_flags": [
+        "Recognizes tool-call-strategy as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against context-engineering, refactor, debugging",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the tool-call-strategy workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore tool-call-strategy",
+        "Does not route to context-engineering, refactor, debugging when the tool-call-strategy scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes tool-call-strategy as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore tool-call-strategy"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"we're renaming a variable across 40 files — script or tool calls?\"",
+      "context": "The agent has access to the tool-call-strategy skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is tool-call-strategy the right skill to apply?",
+      "expected_flags": [
+        "Recognizes tool-call-strategy as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against context-engineering, refactor, debugging",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the tool-call-strategy workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore tool-call-strategy",
+        "Does not route to context-engineering, refactor, debugging when the tool-call-strategy scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes tool-call-strategy as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore tool-call-strategy"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"the agent re-reads the same file three times in one task — fix the policy\"",
+      "context": "The agent has access to the tool-call-strategy skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is tool-call-strategy the right skill to apply?",
+      "expected_flags": [
+        "Recognizes tool-call-strategy as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against context-engineering, refactor, debugging",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the tool-call-strategy workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore tool-call-strategy",
+        "Does not route to context-engineering, refactor, debugging when the tool-call-strategy scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes tool-call-strategy as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore tool-call-strategy"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"should I batch these reads into one message or wait for each result?\"",
+      "context": "The agent has access to the tool-call-strategy skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is tool-call-strategy the right skill to apply?",
+      "expected_flags": [
+        "Recognizes tool-call-strategy as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against context-engineering, refactor, debugging",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the tool-call-strategy workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore tool-call-strategy",
+        "Does not route to context-engineering, refactor, debugging when the tool-call-strategy scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes tool-call-strategy as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore tool-call-strategy"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"design a tool-use protocol for our new agent harness — what rules matter?\"",
+      "context": "The agent has access to the tool-call-strategy skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is tool-call-strategy the right skill to apply?",
+      "expected_flags": [
+        "Recognizes tool-call-strategy as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against context-engineering, refactor, debugging",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the tool-call-strategy workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore tool-call-strategy",
+        "Does not route to context-engineering, refactor, debugging when the tool-call-strategy scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes tool-call-strategy as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore tool-call-strategy"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"the context window is filling with verbose terminal output — how do I cut it?\"",
+      "context": "The agent has access to the tool-call-strategy skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is tool-call-strategy the right skill to apply?",
+      "expected_flags": [
+        "Recognizes tool-call-strategy as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against context-engineering, refactor, debugging",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the tool-call-strategy workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore tool-call-strategy",
+        "Does not route to context-engineering, refactor, debugging when the tool-call-strategy scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes tool-call-strategy as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore tool-call-strategy"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"improve this prompt's wording to get better outputs\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should tool-call-strategy be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside tool-call-strategy's ownership",
+        "Routes the work to context-engineering or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying tool-call-strategy terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply tool-call-strategy as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if tool-call-strategy has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim tool-call-strategy should own the request",
+        "Does not use tool-call-strategy's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside tool-call-strategy's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim tool-call-strategy should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use tool-call-strategy's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"design what skills get loaded for which prompts\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should tool-call-strategy be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside tool-call-strategy's ownership",
+        "Routes the work to context-engineering or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying tool-call-strategy terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply tool-call-strategy as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if tool-call-strategy has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim tool-call-strategy should own the request",
+        "Does not use tool-call-strategy's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside tool-call-strategy's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim tool-call-strategy should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use tool-call-strategy's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"the test suite is failing after my change — find the cause\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should tool-call-strategy be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside tool-call-strategy's ownership",
+        "Routes the work to context-engineering or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying tool-call-strategy terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply tool-call-strategy as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if tool-call-strategy has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim tool-call-strategy should own the request",
+        "Does not use tool-call-strategy's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside tool-call-strategy's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim tool-call-strategy should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use tool-call-strategy's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"extract this repeated string-concat into a helper function\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should tool-call-strategy be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside tool-call-strategy's ownership",
+        "Routes the work to context-engineering or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying tool-call-strategy terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply tool-call-strategy as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if tool-call-strategy has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim tool-call-strategy should own the request",
+        "Does not use tool-call-strategy's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside tool-call-strategy's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim tool-call-strategy should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use tool-call-strategy's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}

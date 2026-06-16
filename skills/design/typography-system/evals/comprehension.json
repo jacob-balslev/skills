@@ -1,0 +1,139 @@
+{
+  "skill_name": "typography-system",
+  "subject": "design",
+  "adjacent_concepts": [
+    "visual-hierarchy",
+    "visual-design-foundations",
+    "theme-system-design",
+    "layout-composition"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a typography system in 2-3 sentences. Name its core parts and how components consume it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as a rule-governed set of type decisions coherent across surfaces",
+        "Names typefaces (display/text/optional mono), a modular size scale, and rhythm rules (line-height, letter-spacing, measure)",
+        "Mentions a delivery layer (subset WOFF2, font-display, metrics-matched fallbacks)",
+        "States that components consume semantic tokens (display, heading, body, caption), not raw sizes/faces"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why are type scale steps derived from a single ratio applied to a base size rather than chosen individually?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A single ratio makes sizes reproducible and derivable rather than ad hoc",
+        "Produces consistent, perceptible distinction between adjacent levels",
+        "Names common ratios (e.g. 1.2, 1.25, 1.333, 1.5) and typical 5-9 steps",
+        "Notes too many steps dilute the distinction between adjacent levels"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "How are line-height and measure (characters per line) related, and what targets apply to body text?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Line-height and measure are coupled: longer measures need taller line-heights, shorter measures tighter",
+        "Body measure target ~45-75 characters per line",
+        "Body line-height ~1.4-1.6; display ~1.1-1.3",
+        "Letter-spacing tightens at display sizes and positive tracking helps uppercase legibility"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "What are the web font delivery best practices for minimizing layout shift and request cost?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Serve WOFF2 and subset to the glyphs/languages actually used",
+        "font-display: swap to render fallback immediately",
+        "Preload the most-used font files",
+        "Metrics-matched fallback @font-face (size-adjust, ascent/descent/line-gap-override) to minimize CLS",
+        "Target CLS from font loading below 0.1"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "When and why would you use a variable font, and how is it accessed in CSS?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "A single file delivers multiple weights/widths/optical sizes via continuous axes (wght, wdth, opsz)",
+        "Reduces HTTP requests and makes weight a continuous design decision",
+        "Accessed via font-variation-settings or numeric font-weight, not separate files per weight"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the typography-system skill to decide how the H1 should visually dominate the hero section over the subhead and CTA. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — that is visual-hierarchy (deploying type as an ordering signal on a surface)",
+        "Typography-system defines the scale and faces that get deployed, not where/how they rank on a given screen",
+        "Correctly distinguishes owning the scale/faces/rhythm from owning their per-surface deployment"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'a typography system is just picking nice fonts.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Face selection is a small, justified part — not the system",
+        "The system (ratio-derived scale, line-height/measure coupling, baseline rhythm, token-mediated delivery) carries hierarchy, brand, and performance",
+        "Adding a typeface or hand-picking a size is a cost (bandwidth, hierarchy clarity, cross-OS rendering), not a free aesthetic win"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a typography system is implemented correctly?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "At most three typefaces, each justified by a use the others cannot serve",
+        "Scale steps derived from one ratio, not hand-picked",
+        "Body measure 45-75 chars verified on rendered lines, not assumed",
+        "WOFF2 + subsetting + font-display: swap + metrics-matched fallback; CLS < 0.1",
+        "Headings and body share a vertical rhythm snapped to a baseline grid"
+      ]
+    }
+  ]
+}

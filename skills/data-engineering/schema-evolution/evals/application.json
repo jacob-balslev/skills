@@ -1,0 +1,562 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "schema-evolution",
+  "subject": "Evolving a database schema over time without breaking deployed application code — the expand/contract pattern,…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "transaction-isolation",
+    "entity-relationship-modeling",
+    "database-migration",
+    "indexing-strategy",
+    "query-optimization"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"design the expand-contract sequence to rename a column from `name` to `full_name` across a deployed system\"",
+      "context": "The agent has access to the schema-evolution skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is schema-evolution the right skill to apply?",
+      "expected_flags": [
+        "Recognizes schema-evolution as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against transaction-isolation, entity-relationship-modeling, database-migration",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the schema-evolution workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore schema-evolution",
+        "Does not route to transaction-isolation, entity-relationship-modeling, database-migration when the schema-evolution scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes schema-evolution as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore schema-evolution"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"decide whether to add a NOT NULL column with a default or with a separate backfill phase\"",
+      "context": "The agent has access to the schema-evolution skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is schema-evolution the right skill to apply?",
+      "expected_flags": [
+        "Recognizes schema-evolution as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against transaction-isolation, entity-relationship-modeling, database-migration",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the schema-evolution workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore schema-evolution",
+        "Does not route to transaction-isolation, entity-relationship-modeling, database-migration when the schema-evolution scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes schema-evolution as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore schema-evolution"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"diagnose a deploy that broke because the schema change shipped before the code change\"",
+      "context": "The agent has access to the schema-evolution skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is schema-evolution the right skill to apply?",
+      "expected_flags": [
+        "Recognizes schema-evolution as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against transaction-isolation, entity-relationship-modeling, database-migration",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the schema-evolution workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore schema-evolution",
+        "Does not route to transaction-isolation, entity-relationship-modeling, database-migration when the schema-evolution scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes schema-evolution as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore schema-evolution"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"explain why drop-column is the third phase of expand-contract, not the first\"",
+      "context": "The agent has access to the schema-evolution skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is schema-evolution the right skill to apply?",
+      "expected_flags": [
+        "Recognizes schema-evolution as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against transaction-isolation, entity-relationship-modeling, database-migration",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the schema-evolution workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore schema-evolution",
+        "Does not route to transaction-isolation, entity-relationship-modeling, database-migration when the schema-evolution scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes schema-evolution as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore schema-evolution"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"why did a one-line ALTER TABLE freeze the whole app even though it didn't rewrite the table\"",
+      "context": "The agent has access to the schema-evolution skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is schema-evolution the right skill to apply?",
+      "expected_flags": [
+        "Recognizes schema-evolution as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against transaction-isolation, entity-relationship-modeling, database-migration",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the schema-evolution workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore schema-evolution",
+        "Does not route to transaction-isolation, entity-relationship-modeling, database-migration when the schema-evolution scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes schema-evolution as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore schema-evolution"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"plan a MySQL online schema change where INSTANT DDL exists but app versions still overlap\"",
+      "context": "The agent has access to the schema-evolution skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is schema-evolution the right skill to apply?",
+      "expected_flags": [
+        "Recognizes schema-evolution as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against transaction-isolation, entity-relationship-modeling, database-migration",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the schema-evolution workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore schema-evolution",
+        "Does not route to transaction-isolation, entity-relationship-modeling, database-migration when the schema-evolution scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes schema-evolution as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore schema-evolution"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"execute one ALTER TABLE migration mechanically (use database-migration)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should schema-evolution be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside schema-evolution's ownership",
+        "Routes the work to transaction-isolation or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying schema-evolution terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply schema-evolution as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if schema-evolution has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim schema-evolution should own the request",
+        "Does not use schema-evolution's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside schema-evolution's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim schema-evolution should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use schema-evolution's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"design a schema from scratch (use entity-relationship-modeling)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should schema-evolution be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside schema-evolution's ownership",
+        "Routes the work to transaction-isolation or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying schema-evolution terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply schema-evolution as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if schema-evolution has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim schema-evolution should own the request",
+        "Does not use schema-evolution's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside schema-evolution's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim schema-evolution should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use schema-evolution's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"diagnose a slow query (use query-optimization)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should schema-evolution be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside schema-evolution's ownership",
+        "Routes the work to transaction-isolation or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying schema-evolution terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply schema-evolution as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if schema-evolution has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim schema-evolution should own the request",
+        "Does not use schema-evolution's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside schema-evolution's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim schema-evolution should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use schema-evolution's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"choose shard keys or repartition data across nodes (use sharding-strategy)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should schema-evolution be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside schema-evolution's ownership",
+        "Routes the work to transaction-isolation or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying schema-evolution terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply schema-evolution as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if schema-evolution has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim schema-evolution should own the request",
+        "Does not use schema-evolution's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside schema-evolution's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim schema-evolution should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use schema-evolution's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}

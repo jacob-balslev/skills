@@ -1,0 +1,143 @@
+{
+  "skill_name": "suspense-patterns",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "server-components-design",
+    "hooks-patterns",
+    "rendering-models",
+    "streaming-architecture",
+    "error-boundary",
+    "react-transitions",
+    "nextjs-loading-ui"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a Suspense boundary as this skill teaches it. Name what triggers it, who owns the fallback, and the fact that it only responds to Suspense-enabled sources.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "spec_grounded",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "A Suspense boundary shows fallback UI when a Suspense-enabled descendant suspends during render",
+        "The boundary owns the placeholder for the whole subtree below it; the component just declares it needs data",
+        "It only activates for Suspense-enabled sources (lazy import, use(promise), Suspense-enabled framework/library, async server render) — not arbitrary async work",
+        "Defines a reveal grouping: the nearest boundary decides what waits together vs reveals independently"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental-model shift from local `isLoading` flags to Suspense boundaries. Use the terms subtree, nearest boundary, fallback, reveal grouping, and Suspense-enabled data source.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "spec_grounded",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classic pattern was local/imperative: each component owns an isLoading flag and decides how/where to show a spinner",
+        "Suspense inverts responsibility: the boundary owns the fallback; the component reads from a Suspense-enabled data source as if data were ready",
+        "React shows the nearest boundary fallback for the whole subtree while a descendant is unresolved",
+        "The design discipline becomes boundary placement (reveal grouping), not loading-state plumbing"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Classify page-level, feature/section-level, and leaf-level Suspense boundary placement. For each, give one appropriate use case and one cost.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "spec_grounded",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Page-level: one boundary near root; use when the page is only meaningful when complete; cost is the slowest part determines perceived load time",
+        "Feature/section-level: one boundary per independent section; use when sections stream in independently; cost is more visible pop-in / layout activity",
+        "Leaf-level: a boundary per loading-aware component; use for many parallel slow operations whose ordering doesn't matter; cost is many small skeletons / layout thrash",
+        "Right granularity matches the page's actual visual hierarchy; the common error is too coarse"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A dashboard has a fast header, a slow chart, a slow recommendations panel, and a search bar using `useSearchParams()` in a Client Component on a static route. Apply the skill to place boundaries and prevent a full client-rendering bailout.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "spec_grounded",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Keep the fast header outside the slow widgets' boundaries so it renders/flushes immediately",
+        "Give the slow chart and recommendations panel separate boundaries so they stream in independently",
+        "Wrap the smallest Client subtree calling useSearchParams() in Suspense to avoid bailing the whole static route into client rendering",
+        "Match skeleton dimensions to the real content to avoid layout shift; pair boundaries with error boundaries where a failure should swap the same subtree"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A tab switch shows the Suspense fallback (a flicker) on every interaction. Explain how `useTransition`/`startTransition` change boundary behavior, and when NOT to use them.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "spec_grounded",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "By default a boundary unmounts children and shows the fallback when a descendant suspends on an urgent update — causing spinner flicker on every interaction",
+        "useTransition/startTransition mark the update non-urgent so React keeps the previous render visible while the new one loads, with isPending in flight",
+        "Wrap user-initiated updates that may trigger Suspense in startTransition to avoid flickering fallbacks",
+        "Do NOT wrap the initial-load update — there is no previous content to preserve, so the fallback correctly shows"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A user asks whether Suspense should decide which components are Server Components and whether fetches in `useEffect` will show a Suspense fallback. Route each concern to the right skill or mechanism and explain the boundary.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "spec_grounded",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Server vs Client Component placement belongs to server-components-design — suspense-patterns is orthogonal (boundaries can live in either kind of component)",
+        "A fetch inside useEffect does NOT suspend during render, so the boundary never activates; keep local loading state or use a Suspense-enabled source",
+        "Suspense only responds to Suspense-enabled sources (lazy, use(promise), Suspense-enabled framework/library, async server render)",
+        "Correctly preserves the distinction between server/client split, hook-level data fetching, and boundary placement"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Correct this misconception: 'Suspense is just a cleaner `isLoading` flag and it automatically catches any async fetch.' Include what actually activates Suspense and what to do for Effect/event-handler fetches.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "spec_grounded",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Suspense is NOT a state machine the component checks; it is a render-time suspension boundary for Suspense-enabled sources",
+        "It does not automatically catch any async fetch — only render-time suspension from supported sources triggers it",
+        "Data fetched in an Effect or event handler does not suspend; use a Suspense-enabled framework/library, lazy, or use(promise) — otherwise keep local loading state",
+        "Combining Suspense with useState/useEffect loading flags just replicates the old plumbing and is an anti-pattern"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify Suspense boundaries are placed and paired correctly in a streaming React/Next.js app?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "spec_grounded",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Every slow data dependency is wrapped in a boundary co-located near the data, not at a far ancestor; siblings that stream independently have their own boundaries",
+        "Each boundary has a matching error boundary, with nesting order matching the desired failure-mode UI",
+        "User-initiated updates that may suspend are wrapped in startTransition to prevent flicker; skeletons match real-content dimensions",
+        "No isLoading flag duplicates Suspense work; parallel fetches start as siblings (not parent/child) to avoid waterfalls; the Next.js segment loading file or explicit boundary sits where the slow data lives"
+      ]
+    }
+  ]
+}

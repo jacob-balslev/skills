@@ -1,0 +1,528 @@
+{
+  "skill_name": "component-architecture",
+  "subject": "Reusable UI component-library architecture",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/design/component-architecture/SKILL.md",
+    "skills/design/component-architecture/references/component-architecture-2026-06-07.md"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "module-composition-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A product designer asks how a dashboard page should arrange analytics, alerts, filters, and recent activity modules into named regions.",
+      "context": "The components already exist; the question is about a single product's page composition.",
+      "question": "Should component-architecture own this request?",
+      "expected_flags": [
+        "This is design-module-composition, not component-library architecture.",
+        "The task is within-product module wiring and layout regions.",
+        "Component architecture may matter only if existing components cannot support the assembly."
+      ],
+      "expected_fix_hints": [
+        "Route to design-module-composition.",
+        "Escalate back only if reusable component APIs need redesign."
+      ],
+      "absent_signals": [
+        "Do not redesign the component library when the issue is page/module arrangement.",
+        "Do not treat one product page layout as a reusable component layer."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is design-module-composition, not component-library architecture."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The task is within-product module wiring and layout regions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Component architecture may matter only if existing components cannot support the assembly."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to design-module-composition."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Escalate back only if reusable component APIs need redesign."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not redesign the component library when the issue is page/module arrangement."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat one product page layout as a reusable component layer."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "dialog-api-surface",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team needs a Dialog component that works in three products: one uses brand-heavy marketing styling, one uses dense admin UI, and one uses mobile-first interaction. The current Dialog has 26 style and behavior props.",
+      "context": "The component must keep focus management and keyboard behavior stable while allowing product-specific visual treatment.",
+      "question": "How should the agent redesign the component architecture?",
+      "expected_flags": [
+        "Classifies Dialog behavior as primitive/headless responsibility.",
+        "Separates headless behavior from styled wrappers or token-bound presentation.",
+        "Uses compound parts such as Root, Trigger, Content, Title, Description, and Close when structure varies.",
+        "Avoids prop explosion for open-ended visual and structural variation.",
+        "Documents API contract, accessibility requirements, and migration/deprecation path.",
+        "Keeps product-specific assemblies outside the primitive."
+      ],
+      "expected_fix_hints": [
+        "Use slots or compound components for structure.",
+        "Expose controlled/uncontrolled open state if both consumer types exist.",
+        "Bind styled layer to tokens rather than hardcoded brand values."
+      ],
+      "absent_signals": [
+        "Do not add another set of product-specific props to the primitive.",
+        "Do not let a product assembly import back into the primitive.",
+        "Do not split out styling by losing keyboard/focus accessibility behavior."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Classifies Dialog behavior as primitive/headless responsibility."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates headless behavior from styled wrappers or token-bound presentation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses compound parts such as Root, Trigger, Content, Title, Description, and Close when structure varies."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Avoids prop explosion for open-ended visual and structural variation."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Documents API contract, accessibility requirements, and migration/deprecation path."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps product-specific assemblies outside the primitive."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use slots or compound components for structure."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Expose controlled/uncontrolled open state if both consumer types exist."
+        },
+        {
+          "id": "c9",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Bind styled layer to tokens rather than hardcoded brand values."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add another set of product-specific props to the primitive."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let a product assembly import back into the primitive."
+        },
+        {
+          "id": "c12",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not split out styling by losing keyboard/focus accessibility behavior."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "state-contract",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A reusable Select component keeps value internally, but one product needs URL-synchronized state, another needs form-library control, and a third wants a simple default value.",
+      "context": "The team asks whether to make three Select variants.",
+      "question": "What state contract should the component expose?",
+      "expected_flags": [
+        "Identifies state contract as component architecture, not app-wide state management.",
+        "Recommends a hybrid controlled/uncontrolled API when both consumer kinds are real.",
+        "Uses `value`/`onChange` for controlled consumers and `defaultValue` for uncontrolled consumers.",
+        "Keeps event semantics stable and documented.",
+        "Avoids separate variants that duplicate primitive behavior."
+      ],
+      "expected_fix_hints": [
+        "Document controlled and uncontrolled examples.",
+        "Ensure form and URL consumers can own state without forking the component.",
+        "Preserve accessibility and keyboard behavior in the primitive layer."
+      ],
+      "absent_signals": [
+        "Do not force all consumers into internal component state.",
+        "Do not route this to state-management unless the question is app-level ownership.",
+        "Do not hide value changes behind imperative-only refs."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies state contract as component architecture, not app-wide state management."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends a hybrid controlled/uncontrolled API when both consumer kinds are real."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses `value`/`onChange` for controlled consumers and `defaultValue` for uncontrolled consumers."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps event semantics stable and documented."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Avoids separate variants that duplicate primitive behavior."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Document controlled and uncontrolled examples."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Ensure form and URL consumers can own state without forking the component."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Preserve accessibility and keyboard behavior in the primitive layer."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not force all consumers into internal component state."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route this to state-management unless the question is app-level ownership."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hide value changes behind imperative-only refs."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "headless-styled-layering",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A component library hardcodes colors, spacing, and icons inside behavior primitives. A second product wants the same interactions with a different brand language.",
+      "context": "The first product works, but reuse is failing.",
+      "question": "How should the agent repair the layer structure?",
+      "expected_flags": [
+        "Flags visual language hardcoded into reusable behavior.",
+        "Separates headless behavior from styled/token-bound wrappers.",
+        "Keeps accessibility, focus, keyboard behavior, and ARIA in the primitive layer.",
+        "Moves brand treatment to styled components, tokens, or product assemblies.",
+        "Explains dependency direction and prevents primitives from importing product-specific assets."
+      ],
+      "expected_fix_hints": [
+        "Introduce primitive/headless parts if interaction behavior is reusable.",
+        "Create styled wrappers per product or theme.",
+        "Verify with at least two real consumers or themes."
+      ],
+      "absent_signals": [
+        "Do not duplicate the entire behavior implementation for each brand.",
+        "Do not make token selection itself the component-architecture task.",
+        "Do not remove accessibility behavior while extracting styles."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags visual language hardcoded into reusable behavior."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates headless behavior from styled/token-bound wrappers."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps accessibility, focus, keyboard behavior, and ARIA in the primitive layer."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Moves brand treatment to styled components, tokens, or product assemblies."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains dependency direction and prevents primitives from importing product-specific assets."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Introduce primitive/headless parts if interaction behavior is reusable."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Create styled wrappers per product or theme."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify with at least two real consumers or themes."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not duplicate the entire behavior implementation for each brand."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make token selection itself the component-architecture task."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not remove accessibility behavior while extracting styles."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "prop-explosion-refactor",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A Card component has independent props for header variants, footer actions, media layouts, badge placement, loading state, and product-specific CTA logic.",
+      "context": "New variants keep multiplying and consumers cannot predict combinations.",
+      "question": "How should the agent choose between configuration and composition?",
+      "expected_flags": [
+        "Recognizes independent prop multiplication as a configuration-explosion smell.",
+        "Keeps small closed enum variations as props only when combinations are limited.",
+        "Uses children, named slots, or compound components for open structural variation.",
+        "Moves product-specific CTA logic into product assemblies or callbacks.",
+        "Documents the public API and migration path."
+      ],
+      "expected_fix_hints": [
+        "Split primitive visual frame from composed sections.",
+        "Use Card.Root, Card.Header, Card.Media, Card.Body, Card.Footer, or equivalent slots.",
+        "Preserve backwards compatibility through deprecation where needed."
+      ],
+      "absent_signals": [
+        "Do not add more boolean props for every new layout.",
+        "Do not make the component know every product CTA.",
+        "Do not collapse all variation into an untyped `config` object."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes independent prop multiplication as a configuration-explosion smell."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps small closed enum variations as props only when combinations are limited."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses children, named slots, or compound components for open structural variation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Moves product-specific CTA logic into product assemblies or callbacks."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Documents the public API and migration path."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Split primitive visual frame from composed sections."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use Card.Root, Card.Header, Card.Media, Card.Body, Card.Footer, or equivalent slots."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Preserve backwards compatibility through deprecation where needed."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add more boolean props for every new layout."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make the component know every product CTA."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not collapse all variation into an untyped `config` object."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "color-system-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A design team asks for semantic color roles, contrast ramps, theme palettes, and token names for a new component library.",
+      "context": "They are not asking how components consume the tokens.",
+      "question": "Should component-architecture own this request?",
+      "expected_flags": [
+        "This is color-system-design or visual-design-foundations.",
+        "Component architecture consumes tokens but does not choose the palette or contrast strategy.",
+        "The boundary is visual language versus structural component API."
+      ],
+      "expected_fix_hints": [
+        "Route palette and token semantics to color-system-design.",
+        "Return to component architecture when binding tokens to reusable component layers."
+      ],
+      "absent_signals": [
+        "Do not decide the color system inside the component API task.",
+        "Do not hardcode selected colors into reusable behavior primitives."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is color-system-design or visual-design-foundations."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Component architecture consumes tokens but does not choose the palette or contrast strategy."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The boundary is visual language versus structural component API."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route palette and token semantics to color-system-design."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Return to component architecture when binding tokens to reusable component layers."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not decide the color system inside the component API task."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hardcode selected colors into reusable behavior primitives."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "form-ux-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks how checkout validation errors should appear, when to validate fields, how to group fields, and how the submit flow should recover from server errors.",
+      "context": "The question is about form behavior and user experience, not the reusable API of Input or FormField primitives.",
+      "question": "Should component-architecture own this request?",
+      "expected_flags": [
+        "This is form-ux-architecture.",
+        "Component architecture owns reusable FormField/Input contracts, not form-specific validation and submission flow.",
+        "The component skill can verify that components support the form UX without owning the form strategy."
+      ],
+      "expected_fix_hints": [
+        "Route form validation and submit UX to form-ux-architecture.",
+        "Use component architecture only for reusable field primitives and state contracts."
+      ],
+      "absent_signals": [
+        "Do not solve form validation strategy by adding ad hoc props to Input.",
+        "Do not confuse component state contract with full form state architecture."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is form-ux-architecture."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Component architecture owns reusable FormField/Input contracts, not form-specific validation and submission flow."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The component skill can verify that components support the form UX without owning the form strategy."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route form validation and submit UX to form-ux-architecture."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use component architecture only for reusable field primitives and state contracts."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not solve form validation strategy by adding ad hoc props to Input."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not confuse component state contract with full form state architecture."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

@@ -1,0 +1,522 @@
+{
+  "skill_name": "snapshot-testing",
+  "subject": "Snapshot testing and reviewed baseline comparison",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/quality-assurance/snapshot-testing/SKILL.md",
+    "skills/quality-assurance/snapshot-testing/references/snapshot-testing-2026-06-07.md"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "component-snapshot-fit",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A design-system component renders a complex DOM tree with many ARIA attributes, conditional wrappers, and generated class names. The team wants to catch unexpected structural drift but still assert behavior separately.",
+      "context": "They ask whether a snapshot test is appropriate.",
+      "question": "How should the agent decide and design the snapshot test?",
+      "expected_flags": [
+        "Allows a focused snapshot if the output is complex and reviewers can inspect diffs.",
+        "Keeps explicit behavioral assertions for behavior that should be specified directly.",
+        "Controls unstable IDs, timestamps, class churn, order, locale, and serializer behavior.",
+        "Keeps snapshot output small and readable.",
+        "Requires snapshot files to be committed and reviewed in code review."
+      ],
+      "expected_fix_hints": [
+        "Snapshot the smallest stable surface that catches meaningful structural drift.",
+        "Use property matchers, serializers, mocks, or deterministic inputs for unstable fields.",
+        "Split large snapshots or use targeted assertions when the diff is unreadable."
+      ],
+      "absent_signals": [
+        "Do not make the suite snapshot-only.",
+        "Do not accept large unreadable snapshots as useful coverage.",
+        "Do not update baselines without reviewing the diff."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Allows a focused snapshot if the output is complex and reviewers can inspect diffs."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps explicit behavioral assertions for behavior that should be specified directly."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Controls unstable IDs, timestamps, class churn, order, locale, and serializer behavior."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps snapshot output small and readable."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires snapshot files to be committed and reviewed in code review."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Snapshot the smallest stable surface that catches meaningful structural drift."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use property matchers, serializers, mocks, or deterministic inputs for unstable fields."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Split large snapshots or use targeted assertions when the diff is unreadable."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make the suite snapshot-only."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept large unreadable snapshots as useful coverage."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not update baselines without reviewing the diff."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "snapshot-churn",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "Every pull request changes snapshot files because the output includes current timestamps, random UUIDs, unordered map iteration, and a serializer that changed after a dependency upgrade.",
+      "context": "Developers are starting to ignore snapshot failures.",
+      "question": "How should the agent repair the practice?",
+      "expected_flags": [
+        "Diagnoses nondeterministic output and serializer churn.",
+        "Freezes time, seeds or mocks ID generation, sorts unordered collections, and pins or reviews serializer changes.",
+        "Removes unstable or irrelevant fields with matchers or serializers where appropriate.",
+        "Shrinks or splits snapshots so reviewers can read diffs.",
+        "Stops automatic update-snapshot as the default response."
+      ],
+      "expected_fix_hints": [
+        "Treat recurring churn as a test design defect.",
+        "Review dependency serializer changes as baseline changes.",
+        "Replace noisy snapshots with explicit assertions when stability cannot be achieved."
+      ],
+      "absent_signals": [
+        "Do not normalize by ignoring the whole output.",
+        "Do not tell developers to accept all snapshot updates.",
+        "Do not treat churn as harmless maintenance."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Diagnoses nondeterministic output and serializer churn."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Freezes time, seeds or mocks ID generation, sorts unordered collections, and pins or reviews serializer changes."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Removes unstable or irrelevant fields with matchers or serializers where appropriate."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Shrinks or splits snapshots so reviewers can read diffs."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Stops automatic update-snapshot as the default response."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Treat recurring churn as a test design defect."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Review dependency serializer changes as baseline changes."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace noisy snapshots with explicit assertions when stability cannot be achieved."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not normalize by ignoring the whole output."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not tell developers to accept all snapshot updates."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat churn as harmless maintenance."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "visual-regression",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A UI team wants automated visual regression coverage for Storybook stories and a few Playwright journeys. Browser rendering differs locally and in CI.",
+      "context": "They ask how snapshot testing should guide the visual baseline workflow.",
+      "question": "What should the agent recommend?",
+      "expected_flags": [
+        "Uses visual snapshots/screenshots with baseline review for visual regression.",
+        "Requires stable browser, OS, font, viewport, theme, data, animation, and network conditions.",
+        "Uses perceptual/pixel threshold controls rather than assuming bit-for-bit equality across environments.",
+        "Requires visual diff review and intentional baseline acceptance.",
+        "Distinguishes Storybook/component visual snapshots from e2e journey design."
+      ],
+      "expected_fix_hints": [
+        "Use a centralized service or pinned CI environment when local rendering differs.",
+        "Mask or stabilize dynamic regions.",
+        "Commit or synchronize approved baselines according to the tool's workflow."
+      ],
+      "absent_signals": [
+        "Do not approve screenshots generated in an unmatched environment.",
+        "Do not use visual snapshots to decide whether an intended design is good.",
+        "Do not skip reviewing changed pixels."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses visual snapshots/screenshots with baseline review for visual regression."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires stable browser, OS, font, viewport, theme, data, animation, and network conditions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses perceptual/pixel threshold controls rather than assuming bit-for-bit equality across environments."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires visual diff review and intentional baseline acceptance."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes Storybook/component visual snapshots from e2e journey design."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a centralized service or pinned CI environment when local rendering differs."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Mask or stabilize dynamic regions."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Commit or synchronize approved baselines according to the tool's workflow."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not approve screenshots generated in an unmatched environment."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use visual snapshots to decide whether an intended design is good."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip reviewing changed pixels."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "legacy-characterization",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A legacy formatter emits long text output. The team needs a safety net before refactoring but does not fully understand every formatting rule yet.",
+      "context": "They ask whether snapshot testing helps.",
+      "question": "How should the agent apply snapshot testing?",
+      "expected_flags": [
+        "Uses snapshot or approval tests as characterization tests for current behavior.",
+        "States that the snapshot captures existing behavior, not necessarily desired behavior.",
+        "Controls nondeterministic output before capture.",
+        "Uses readable file/text snapshots or golden files.",
+        "Replaces or supplements snapshots with explicit assertions as behavior becomes understood."
+      ],
+      "expected_fix_hints": [
+        "Capture representative cases before refactoring.",
+        "Review diffs after each change to determine intended versus unintended drift.",
+        "Do not over-certify legacy output as correct merely because it is captured."
+      ],
+      "absent_signals": [
+        "Do not treat characterization snapshots as a product specification.",
+        "Do not refactor without a stable baseline.",
+        "Do not let giant unreadable files become the only safety net."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses snapshot or approval tests as characterization tests for current behavior."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: States that the snapshot captures existing behavior, not necessarily desired behavior."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Controls nondeterministic output before capture."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses readable file/text snapshots or golden files."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replaces or supplements snapshots with explicit assertions as behavior becomes understood."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Capture representative cases before refactoring."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Review diffs after each change to determine intended versus unintended drift."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Do not over-certify legacy output as correct merely because it is captured."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat characterization snapshots as a product specification."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not refactor without a stable baseline."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let giant unreadable files become the only safety net."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "property-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A sorting function must be correct for arbitrary arrays. The user wants generated inputs proving the result is ordered and preserves every original item.",
+      "context": "The request is universal across many inputs.",
+      "question": "Should snapshot-testing own this request?",
+      "expected_flags": [
+        "This is property-based-testing.",
+        "Snapshot testing compares one concrete output to a baseline.",
+        "Universal properties across generated inputs are out of scope."
+      ],
+      "expected_fix_hints": [
+        "Route generated-input correctness to property-based-testing.",
+        "Use snapshots only for complex representative output where baseline review is valuable."
+      ],
+      "absent_signals": [
+        "Do not snapshot a few arrays and claim universal sort correctness.",
+        "Do not replace property invariants with golden files."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is property-based-testing."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Snapshot testing compares one concrete output to a baseline."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Universal properties across generated inputs are out of scope."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route generated-input correctness to property-based-testing."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use snapshots only for complex representative output where baseline review is valuable."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not snapshot a few arrays and claim universal sort correctness."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not replace property invariants with golden files."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "test-double-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A payment integration test needs a fake provider, response fixtures, and rules for when to use mocks versus fakes.",
+      "context": "No captured output baseline is being requested.",
+      "question": "Should snapshot-testing own this request?",
+      "expected_flags": [
+        "This is test-doubles-design.",
+        "Fakes, stubs, mocks, and fixtures are collaborator stand-ins, not snapshot baselines.",
+        "Snapshot testing might later capture output produced with a fake, but does not design the fake."
+      ],
+      "expected_fix_hints": [
+        "Route fake provider design to test-doubles-design.",
+        "Use snapshots only if a stable output artifact needs reviewed baseline comparison."
+      ],
+      "absent_signals": [
+        "Do not call every stored fixture a snapshot test.",
+        "Do not design mocks under this skill."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is test-doubles-design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Fakes, stubs, mocks, and fixtures are collaborator stand-ins, not snapshot baselines."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Snapshot testing might later capture output produced with a fake, but does not design the fake."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route fake provider design to test-doubles-design."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use snapshots only if a stable output artifact needs reviewed baseline comparison."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not call every stored fixture a snapshot test."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design mocks under this skill."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "e2e-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A checkout flow needs an end-to-end journey from cart to payment confirmation, including setup data, assertions, and cleanup.",
+      "context": "The task is user-journey coverage for a running system.",
+      "question": "Should snapshot-testing own this request?",
+      "expected_flags": [
+        "This is e2e-test-design.",
+        "Snapshot testing can provide screenshot or DOM regression checks inside a journey but does not design the journey.",
+        "The primary ownership is user-level behavior and system integration."
+      ],
+      "expected_fix_hints": [
+        "Route journey design to e2e-test-design.",
+        "Use visual or DOM snapshots only as supplemental regression evidence."
+      ],
+      "absent_signals": [
+        "Do not replace journey assertions with a page screenshot alone.",
+        "Do not treat snapshot baseline approval as proof that the checkout behavior works."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is e2e-test-design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Snapshot testing can provide screenshot or DOM regression checks inside a journey but does not design the journey."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The primary ownership is user-level behavior and system integration."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route journey design to e2e-test-design."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use visual or DOM snapshots only as supplemental regression evidence."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not replace journey assertions with a page screenshot alone."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat snapshot baseline approval as proof that the checkout behavior works."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

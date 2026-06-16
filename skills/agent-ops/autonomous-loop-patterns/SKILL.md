@@ -1,23 +1,25 @@
 ---
 name: autonomous-loop-patterns
+# description: routing-facing summary of when this skill activates and what it covers.
 description: "Use when designing, reviewing, or debugging an autonomous AI agent loop: repeated agent execution, completion signals, checkpoints, supervisor respawn, stall detection, safety caps, and human handoff rules. Covers the core loop patterns from simple bounded runs through sentinel-based continuation, checkpoint-resume, and external supervisor loops. Do NOT use for choosing a specific agent product command (use agent-engineering or the product's docs), writing ordinary task instructions (use prompt-craft), or optimizing individual tool calls (use tool-call-strategy)."
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 7
 
 
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: agent-ops
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
+  # scope: required free-text statement of what this skill teaches and what it does not.
+  scope: "Teaches the control design of autonomous agent loops: trigger ownership, worker boundaries, progress evidence, stop conditions, durable state, restart policy, stall detection, safety caps, and human handoff. Portable across agent runtimes; principle-grounded, not product-command-specific. Excludes individual worker prompt wording, per-tool efficiency, and broad multi-agent architecture outside the loop-control surface."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.3.0"
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
@@ -26,28 +28,22 @@ metadata:
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: present
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
-  triggers: "[\"autonomous-loop-skill\",\"loop-patterns-skill\",\"agent-loop-design\"]"
+  triggers: ["autonomous-loop-skill","loop-patterns-skill","agent-loop-design"]
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"autonomous agent loop\",\"agent loop pattern\",\"completion signal\",\"checkpoint resume loop\",\"supervisor respawn\",\"stall detection\",\"safety cap\",\"agent watchdog\",\"human handoff\"]"
+  keywords: ["autonomous agent loop","agent loop pattern","completion signal","checkpoint resume loop","supervisor respawn","stall detection","safety cap","agent watchdog","human handoff"]
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-21"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-21\"}"
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -55,7 +51,6 @@ metadata:
   stability: experimental
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
 
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
@@ -64,41 +59,39 @@ metadata:
   purpose: "Autonomous loop patterns replace improvised keep-going instructions with explicit control design. They solve the failure mode where an agent keeps retrying without a stop rule, loses progress after a restart, or appears active while making no useful progress."
   # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
   # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
-  boundary: "This skill owns loop control shape, not the work performed inside each iteration. Use prompt-craft for the wording of a single worker prompt, tool-call-strategy for per-tool efficiency, agent-engineering for broader multi-agent system architecture, context-management for what context to load, and observability-modeling for telemetry schema design."
+  concept_boundary: "This skill owns loop control shape, not the work performed inside each iteration. Use prompt-craft for the wording of a single worker prompt, tool-call-strategy for per-tool efficiency, agent-engineering for broader multi-agent system architecture, context-management for what context to load, and observability-modeling for telemetry schema design."
   # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "An autonomous loop is an autopilot mode: it can keep flying, but only because it has instruments, altitude limits, a route, and a clear handoff back to a pilot."
   # misconception: the wrong mental model people bring; corrected explicitly.
   misconception: "The common mistake is treating autonomy as permission to run forever. A safe loop is defined by when it stops, what state it writes, what evidence proves progress, and what cap forces human review."
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"related\":[\"agent-engineering\",\"prompt-craft\",\"tool-call-strategy\",\"context-management\",\"observability-modeling\"],\"boundary\":[{\"skill\":\"prompt-craft\",\"reason\":\"Prompt-craft owns the wording of one worker instruction; this skill owns the loop control shape around repeated worker execution.\"},{\"skill\":\"tool-call-strategy\",\"reason\":\"Tool-call-strategy owns per-call efficiency inside an agent; this skill owns whether and how the agent repeats across iterations.\"},{\"skill\":\"agent-engineering\",\"reason\":\"Agent-engineering owns full production agent-system architecture; this skill owns the narrower loop-pattern decision and safety checklist.\"}],\"verify_with\":[\"agent-engineering\",\"observability-modeling\"]}"
   # === Health Block (written by the audit loop, not hand-authored) ===
   # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+relations:
+  related: ["prompt-craft","tool-call-strategy","context-management","agent-engineering","observability-modeling"]
+  verify_with: ["observability-modeling","agent-engineering"]
 ---
-
 # Autonomous Loop Patterns
+
+## Concept of the skill
+
+An autonomous loop has six primitives: a trigger, a worker agent, a progress signal, a stop condition, durable state, and a safety cap.
 
 ## Coverage
 
@@ -110,8 +103,7 @@ metadata:
 - Checkpoint and handoff contracts: what state must persist between runs and what state must never live only in agent memory.
 - Anti-patterns that make autonomous loops unsafe: unbounded retry, prompt-only reliability, hidden mutable state, and silent respawn storms.
 
-## Philosophy
-
+## Philosophy of the skill
 An autonomous agent loop is not just an agent being told to continue. It is a control system. The agent is one component; the loop decides when to run it again, what evidence proves progress, what state survives a crash, and when a human must take over.
 
 The smallest safe loop is usually better than the most powerful loop. A one-off task with a clear finish condition does not need a queue supervisor. A multi-session backlog should not rely on a single completion word. A long-running unattended process must not depend on the worker agent remembering its own state.

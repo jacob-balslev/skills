@@ -1,0 +1,55 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-03-28",
+  "drift_check": {
+    "last_verified": "2026-03-28"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-05-28",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 90,
+    "review_cadence": "quarterly"
+  },
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-13",
+    "last_run": {
+      "at": "2026-06-13T11:18:19.166Z",
+      "operation": "panel",
+      "phase": "propose",
+      "agent": "opus",
+      "status": "failed",
+      "duration_ms": 1916,
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "source": "unavailable"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 1,
+      "total_duration_ms": 1916,
+      "total_tokens": 0,
+      "tokens_observed_count": 1
+    }
+  }
+}

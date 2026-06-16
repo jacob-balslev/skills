@@ -1,0 +1,24 @@
+{
+  "schema_version": 8,
+  "version": "1.0.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-07",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/seven-powers/references/seven-powers-sources.md": "87f3bea3f2c3191b47168d36b8bcdfbad768da2f490fcb4ceefccdff097c4c71",
+      "skills/reasoning-strategy/seven-powers/references/upstream-displacement-2026-05-26.md": "c0790ff7d3ec7fa29ebda3c60d5fa0a5c7d5fac4ddb52a0153f1455c31259d60"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-07",
+  "last_changed": "2026-06-07",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS"
+}

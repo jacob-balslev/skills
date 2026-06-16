@@ -1,0 +1,447 @@
+{
+  "skill_name": "user-research",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Verification, Do NOT Use When) and established generative-research practice (Portigal, Sharon, Beyer & Holtzblatt, Flanagan critical-incident technique, experience sampling).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "interview-guide-review",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A PM hands the agent a draft interview script. Sample questions: 'Wouldn't it be great if the app reminded you to reorder?', 'Would you pay $10/month for that?', 'You find the current process frustrating, right?'",
+      "context": "The team wants to validate a reorder-reminder feature with five upcoming interviews.",
+      "question": "How should the agent review this script?",
+      "expected_flags": [
+        "All three questions are leading and/or hypothetical/solution-prompting — they manufacture the expected answer",
+        "Replace with episodic questions: 'tell me about the last time you ran out of X' / 'walk me through how you reordered most recently'",
+        "Pricing/willingness-to-pay questions yield unreliable self-prediction, not evidence",
+        "Warn that a validating script will only confirm the team's prior belief"
+      ],
+      "expected_fix_hints": [
+        "Rewrite each question to be answerable by describing a concrete real past event",
+        "Use silence and 'say more about that' follow-ups instead of confirmation seeking"
+      ],
+      "absent_signals": [
+        "Do not keep the leading/hypothetical phrasing",
+        "Do not treat 'would you pay' answers as a demand signal"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: All three questions are leading and/or hypothetical/solution-prompting — they manufacture the expected answer."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replace with episodic questions: 'tell me about the last time you ran out of X' / 'walk me through how you reordered most recently'."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Pricing/willingness-to-pay questions yield unreliable self-prediction, not evidence."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Warn that a validating script will only confirm the team's prior belief."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rewrite each question to be answerable by describing a concrete real past event."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use silence and 'say more about that' follow-ups instead of confirmation seeking."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the leading/hypothetical phrasing."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'would you pay' answers as a demand signal."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "method-selection",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team wants to understand how ICU nurses actually use a new medication-charting tool during a shift, including the interruptions and workarounds they don't report.",
+      "context": "Nurses cannot stop work to be interviewed at length; behavior in the real environment matters.",
+      "question": "What research approach should the agent recommend?",
+      "expected_flags": [
+        "Recommend a contextual/observational method (contextual inquiry or fly-on-the-wall observation) in the real environment",
+        "Observation outranks interview here because what people do and say they do differ — especially for unreported workarounds",
+        "Note the naturalism-vs-depth trade-off and choose minimal intrusion for a high-stakes workflow",
+        "Pair brief in-context clarifying questions (master-apprentice) rather than a long sit-down interview"
+      ],
+      "expected_fix_hints": [
+        "Shadow or observe on-shift with light contextual-inquiry questioning",
+        "Capture interruptions and workarounds as primary data, recorded with consent"
+      ],
+      "absent_signals": [
+        "Do not default to a conference-room interview removed from the real environment",
+        "Do not rely on nurses' after-the-fact recall of their own workarounds"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommend a contextual/observational method (contextual inquiry or fly-on-the-wall observation) in the real environment."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Observation outranks interview here because what people do and say they do differ — especially for unreported workarounds."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Note the naturalism-vs-depth trade-off and choose minimal intrusion for a high-stakes workflow."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Pair brief in-context clarifying questions (master-apprentice) rather than a long sit-down interview."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Shadow or observe on-shift with light contextual-inquiry questioning."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Capture interruptions and workarounds as primary data, recorded with consent."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not default to a conference-room interview removed from the real environment."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on nurses' after-the-fact recall of their own workarounds."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "longitudinal-fit",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team wants to learn how commuters' app usage shifts across a week — morning rush vs evening vs weekend — and a single interview keeps producing vague 'it depends' answers.",
+      "context": "The behavior varies day to day and is hard to recall accurately in one sitting.",
+      "question": "What should the agent propose?",
+      "expected_flags": [
+        "Propose a diary study / experience sampling because the behavior unfolds over days and varies",
+        "In-the-moment capture (daily prompts, photo diary) reduces recall bias the single interview suffers from",
+        "Define a study window (e.g. one to two weeks) and prompt cadence",
+        "Synthesize the captured moments rather than relying on summarized memory"
+      ],
+      "expected_fix_hints": [
+        "Set up daily prompts capturing context at the moment of use",
+        "Recruit for variety across the relevant commuting patterns"
+      ],
+      "absent_signals": [
+        "Do not push for a longer single interview to fix the 'it depends' problem"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Propose a diary study / experience sampling because the behavior unfolds over days and varies."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: In-the-moment capture (daily prompts, photo diary) reduces recall bias the single interview suffers from."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define a study window (e.g. one to two weeks) and prompt cadence."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Synthesize the captured moments rather than relying on summarized memory."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Set up daily prompts capturing context at the moment of use."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Recruit for variety across the relevant commuting patterns."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not push for a longer single interview to fix the 'it depends' problem."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "premise-not-framed",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A founder asks the agent to 'go interview users and find out what we should build,' but the team has not agreed on which problem or which users they are studying.",
+      "context": "There is no shared problem statement; different stakeholders mean different user segments.",
+      "question": "How should the agent respond before designing the research?",
+      "expected_flags": [
+        "Flag that the problem is not yet framed — research without a framed problem produces unfocused data",
+        "Route to problem-framing first, then design research to investigate the framed problem",
+        "Identify which users/segment the study targets and the recruitment criteria",
+        "Do not promise that interviews will hand over 'what to build' directly"
+      ],
+      "expected_fix_hints": [
+        "Run problem-framing to agree the question and the user segment",
+        "Then write an episodic interview guide scoped to that framed problem"
+      ],
+      "absent_signals": [
+        "Do not jump straight into interviews with an undefined target and goal"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flag that the problem is not yet framed — research without a framed problem produces unfocused data."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Route to problem-framing first, then design research to investigate the framed problem."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identify which users/segment the study targets and the recruitment criteria."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Do not promise that interviews will hand over 'what to build' directly."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run problem-framing to agree the question and the user segment."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Then write an episodic interview guide scoped to that framed problem."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not jump straight into interviews with an undefined target and goal."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "sample-and-rigor",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team recruited five power users who all loved the concept, and reports 'research validated the feature — everyone wants it.'",
+      "context": "All participants were existing enthusiasts recruited from the beta forum.",
+      "question": "How should the agent assess the rigor of this research?",
+      "expected_flags": [
+        "Sample is biased — only enthusiasts; document who was excluded and why and recruit to match real criteria",
+        "If every finding confirms the prior belief, the questions were probably leading or the sample was self-selecting",
+        "A sound study should surface at least one finding that contradicts the team's going-in hypothesis",
+        "'Everyone wants it' from five hand-picked fans is not validation"
+      ],
+      "expected_fix_hints": [
+        "Recruit a sample that matches the target criteria, including non-enthusiasts",
+        "Audit the guide for leading questions and re-run with neutral, episodic prompts"
+      ],
+      "absent_signals": [
+        "Do not accept enthusiast consensus as feature validation",
+        "Do not skip documenting sample composition and exclusions"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Sample is biased — only enthusiasts; document who was excluded and why and recruit to match real criteria."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: If every finding confirms the prior belief, the questions were probably leading or the sample was self-selecting."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A sound study should surface at least one finding that contradicts the team's going-in hypothesis."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: 'Everyone wants it' from five hand-picked fans is not validation."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Recruit a sample that matches the target criteria, including non-enthusiasts."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Audit the guide for leading questions and re-run with neutral, episodic prompts."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept enthusiast consensus as feature validation."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip documenting sample composition and exclusions."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A growth lead asks the user-research owner to interpret last quarter's NPS survey results, classify which inbound agent requests are high-risk, and set up an A/B test of two onboarding flows.",
+      "context": "The team conflates 'research' with all data and measurement work.",
+      "question": "How should the agent scope these requests?",
+      "expected_flags": [
+        "NPS/survey interpretation is quantitative analytics — out of scope for generative qualitative research",
+        "Classifying agent requests by risk is agent-side intent classification — out of scope; not human research at all",
+        "A/B test of onboarding flows is experimental evaluation with a control group — out of scope (use experimental methods)",
+        "Offer the in-scope adjacent value: generative interviews/observation to learn why users behave as the metrics suggest"
+      ],
+      "expected_fix_hints": [
+        "Redirect each request to its proper practice (analytics, intent classification, experimentation)",
+        "Propose qualitative research only where the question is 'why/what do users do and need'"
+      ],
+      "absent_signals": [
+        "Do not interpret survey statistics as a user-research deliverable",
+        "Do not design an A/B test or risk classifier under the user-research banner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: NPS/survey interpretation is quantitative analytics — out of scope for generative qualitative research."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Classifying agent requests by risk is agent-side intent classification — out of scope; not human research at all."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A/B test of onboarding flows is experimental evaluation with a control group — out of scope (use experimental methods)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope adjacent value: generative interviews/observation to learn why users behave as the metrics suggest."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Redirect each request to its proper practice (analytics, intent classification, experimentation)."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Propose qualitative research only where the question is 'why/what do users do and need'."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not interpret survey statistics as a user-research deliverable."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design an A/B test or risk classifier under the user-research banner."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "interview-execution",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "Watching a recording, the agent sees the interviewer finishing the participant's sentences, jumping in with 'so basically you mean X?', and filling every pause.",
+      "context": "The team wants feedback on interviewing technique before the next sessions.",
+      "question": "What technique corrections should the agent give?",
+      "expected_flags": [
+        "Stop finishing sentences and paraphrasing — it imposes the interviewer's framing on the participant's account",
+        "Leave silence intact; use it as a tool to let the participant continue",
+        "Replace 'so you mean X?' with neutral 'say more about that' / 'tell me what happened next'",
+        "Treat surprising answers as signal of new information rather than something to reconcile to a hypothesis"
+      ],
+      "expected_fix_hints": [
+        "Practice tolerating pauses and using open follow-ups",
+        "Record and review to catch confirmation-seeking and interruption habits"
+      ],
+      "absent_signals": [
+        "Do not coach the interviewer to confirm their own hypothesis faster"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Stop finishing sentences and paraphrasing — it imposes the interviewer's framing on the participant's account."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Leave silence intact; use it as a tool to let the participant continue."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replace 'so you mean X?' with neutral 'say more about that' / 'tell me what happened next'."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treat surprising answers as signal of new information rather than something to reconcile to a hypothesis."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Practice tolerating pauses and using open follow-ups."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Record and review to catch confirmation-seeking and interruption habits."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not coach the interviewer to confirm their own hypothesis faster."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

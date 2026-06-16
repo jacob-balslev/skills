@@ -1,54 +1,50 @@
 ---
 name: ai-native-development
+# description: routing-facing summary of when this skill activates and what it covers.
 description: "Use when reasoning about agent autonomy levels, designing auto-improve loops, evaluating AI-generated code quality, or measuring agent productivity in an LLM-assisted codebase. Covers Karpathy's three eras of software (1.0 explicit / 2.0 learned / 3.0 natural-language), the vibe-coding-vs-agentic-engineering distinction, the 0–5 autonomy slider with task-type recommendations, the one-asset / one-metric / one-time-box AutoResearch loop, Software 3.0 productivity metrics, and the documented quality regressions of ungated AI-generated code (the 'vibe hangover'). Do NOT use for choosing a specific autonomy-loop topology (use `agent-engineering`), for the per-prompt authoring discipline (use `prompt-craft`), or for reviewing the AI-generated code that comes out of a Software 3.0 workflow (use `code-review`)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime and portability notes for this skill.
 compatibility:
   notes: "Provider- and runtime-agnostic. The autonomy-slider levels and quality-gate sequence apply to any LLM-coding harness (Claude Code, OpenCode, Cursor, Aider, Copilot Workspace, Continue) that supports a deterministic verify step between agent output and merge."
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.1.0"
 
 
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: agent-ops
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # scope: free-text PRD-style statement of what the skill teaches and where it deploys
   # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
   scope: "Reasoning about agent autonomy levels, auto-improve loops, AI-generated code quality, and productivity in LLM-assisted codebases — Karpathy's three eras (1.0 explicit / 2.0 learned / 3.0 natural-language), the vibe-coding-vs-agentic-engineering distinction, the 0–5 autonomy slider with task-type recommendations, the one-asset/one-metric/one-time-box AutoResearch loop, Software 3.0 productivity metrics, and the documented regressions of ungated AI-generated code (the 'vibe hangover'). Portable across any LLM-assisted codebase; principle-grounded, not repo-bound. Excludes choosing a specific autonomy-loop topology (agent-engineering), per-prompt authoring discipline (prompt-craft), and reviewing the AI-generated code itself (code-review)."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: agent/concepts
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-18"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-18\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -56,23 +52,21 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"software 3.0 concepts\",\"vibe coding\",\"agentic engineering doctrine\",\"autonomy slider\",\"prompt as code\",\"karpathy three eras\",\"autoresearch loop\",\"ai-generated code quality\",\"vibe hangover\",\"llm-native development\"]"
+  keywords: ["software 3.0 concepts","vibe coding","agentic engineering doctrine","autonomy slider","prompt as code","karpathy three eras","autoresearch loop","ai-generated code quality","vibe hangover","llm-native development"]
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
-  examples: "[\"we keep accepting agent-generated code on first try and shipping bugs — what discipline replaces this?\",\"what autonomy level should I run for a security-sensitive change?\",\"does measuring lines-of-code per session make sense when an agent generates the code?\",\"the team is treating prompts and skill files like throwaway notes — what's the alternative framing?\",\"we want an auto-improve loop for our skill content — how do we constrain it so it doesn't regress?\",\"what's the conceptual difference between a vibe coding session and an agentic engineering session?\",\"AI-generated code is shipping with vulnerabilities — what gates should sit between agent output and production?\",\"how do I match autonomy level to the risk profile of the task?\"]"
+  examples: ["we keep accepting agent-generated code on first try and shipping bugs — what discipline replaces this?","what autonomy level should I run for a security-sensitive change?","does measuring lines-of-code per session make sense when an agent generates the code?","the team is treating prompts and skill files like throwaway notes — what's the alternative framing?","we want an auto-improve loop for our skill content — how do we constrain it so it doesn't regress?","what's the conceptual difference between a vibe coding session and an agentic engineering session?","AI-generated code is shipping with vulnerabilities — what gates should sit between agent output and production?","how do I match autonomy level to the risk profile of the task?"]
   # anti_examples: near-miss prompts that should route ELSEWHERE.
-  # Pair with relations.boundary to indicate the confusable territory's owner.
-  anti_examples: "[\"improve this specific prompt for the grader\",\"review this AI-generated PR for correctness\",\"design the checkpoint state machine for our loop\",\"scaffold a new skill that codifies our coding doctrine\",\"the autonomous loop is stalling — debug it\"]"
+  # Pair with relations.suppresses to indicate the confusable territory's owner.
+  anti_examples: ["improve this specific prompt for the grader","review this AI-generated PR for correctness","design the checkpoint state machine for our loop","scaffold a new skill that codifies our coding doctrine","the autonomous loop is stalling — debug it"]
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"boundary\":[{\"skill\":\"prompt-craft\",\"reason\":\"prompt-craft is the per-prompt authoring discipline; ai-native-development is the meta-frame that explains why prompts are source code\"},{\"skill\":\"agent-engineering\",\"reason\":\"agent-engineering owns the production reliability discipline (orchestration, error budgets, observability); ai-native-development owns the conceptual model that motivates those concerns\"},{\"skill\":\"code-review\",\"reason\":\"code-review evaluates the AI-generated output; ai-native-development frames why that output exists and how to size the gates around it\"},{\"skill\":\"tool-call-strategy\",\"reason\":\"tool-call-strategy is the tactical layer for an agent's tool dispatch; ai-native-development is the conceptual layer above it\"}],\"related\":[\"prompt-craft\",\"agent-engineering\",\"code-review\",\"skill-router\"],\"verify_with\":[\"code-review\",\"testing-strategy\"]}"
-  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # grounding: required when non-empty `project[]`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
   grounding: "{\"subject_matter\":\"AI-native software development discipline for prompt-as-code workflows, agent autonomy calibration, metric-gated auto-improvement loops, and quality gates for AI-generated code\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"https://www.youtube.com/watch?v=LCEmiRjPEtQ\",\"https://github.com/karpathy/autoresearch\",\"https://arxiv.org/abs/2211.03622\",\"https://arxiv.org/abs/2504.20814\",\"https://snyk.io/lp/secure-adoption-in-the-genai-era/\",\"https://owasp.org/www-project-top-10-for-large-language-model-applications/\"],\"failure_modes\":[\"unintentional_high_autonomy_for_high_risk_work\",\"accepting_ai_generated_code_without_review_or_tests\",\"treating_prompts_and_skills_as_throwaway_notes\",\"optimizing_agent_loops_against_multiple_moving_metrics\",\"citing_stale_ai_code_security_statistics_as_fixed_truth\",\"shipping_agentic_systems_without_prompt_injection_or_excessive_agency_controls\"],\"evidence_priority\":\"equal\"}"
@@ -80,16 +74,13 @@ metadata:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":180,\"review_cadence\":\"quarterly\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/agent-ops/ai-native-development/SKILL.md
   # === Health Block (written by the audit loop, not hand-authored) ===
@@ -97,29 +88,28 @@ metadata:
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: UNVERIFIED
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+relations:
+  related: ["prompt-craft","skill-router","tool-call-strategy","agent-engineering","code-review"]
+  verify_with: ["code-review","testing-strategy"]
 ---
-
 # AI-Native Development
+
+## Concept of the skill
+
+Reasoning about agent autonomy levels, auto-improve loops, AI-generated code quality, and productivity in LLM-assisted codebases — Karpathy's three eras (1.0 explicit / 2.0 learned / 3.0 natural-language), the vibe-coding-vs-agentic-engineering distinction, the 0–5 autonomy slider with task-type recommendations, the one-asset/one-metric/one-time-box AutoResearch loop, Software 3.0 productivity metrics, and the documented regressions of ungated AI-generated code (the 'vibe hangover').
 
 ## Coverage
 
 The conceptual model for software development when an LLM participates in code creation. Specifically: Andrej Karpathy's three eras of software (1.0 explicit code / 2.0 learned weights / 3.0 natural-language programs); the vibe-coding-vs-agentic-engineering distinction and when each is appropriate; the 0–5 autonomy slider mapping task type and risk to the right level of agent independence; the AutoResearch improvement loop with its three constraints (one editable asset, one scalar metric, one time box); Software 3.0 productivity metrics that replace lines-of-code and commit-count for an LLM-assisted team; the documented security and quality regressions of ungated AI-generated code (the "vibe hangover") and the quality-gate sequence that compensates for them; and the operating principle that prompts, skill files, and agent-runtime configuration are _source code_ — versioned, reviewed, tested.
 
-## Philosophy
-
+## Philosophy of the skill
 A prompt is a program. A skill file is a library. An agent session is a runtime. This is not a metaphor; it is the literal operational model of an LLM-assisted codebase. The mistake teams make is treating these artifacts as ad-hoc notes — the same mistake early industry made with shell scripts before treating them as version-controlled software. AI-native development is the discipline of putting the same engineering rigor around prompts and skills that any team puts around production code: source control, code review, tests, contracts, observability.
 
 The largest single failure mode at the team level is unintentional autonomy. Without an explicit framing, every agent session defaults to the _highest_ autonomy the harness allows, regardless of the task's risk. Vibe coding is not wrong — for a throwaway prototype it is correct. It is wrong as the _default_ for production code. The autonomy slider is the framing tool that lets a team decide _intentionally_ where on the slider any given task should run, and what gates compensate when autonomy goes up.

@@ -1,0 +1,352 @@
+---
+name: mobile-responsive-ux
+# description: routing-facing summary of when this skill activates and what it covers.
+description: "Use when designing mobile-specific UX for dashboards and operational web apps: touch-friendly targets, thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, bottom sheets, mobile inputs, and pull-to-refresh. Load when adapting a desktop dashboard to phone use, implementing touch interactions, or checking whether a mobile layout serves quick-glance tasks rather than compressed desktop analysis. Do NOT use for general responsive layout structure across all breakpoints (layout-composition), accessibility compliance breadth such as ARIA, keyboard, and screen reader audits (a11y), or component/token architecture (design-system-architecture)."
+# license: SPDX-compatible license identifier for the skill content.
+license: MIT
+allowed-tools: Read Grep Bash
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
+metadata:
+
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0017 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
+  subject: frontend-engineering
+  # public: publishability/private-data gate. Boolean.
+  # true = publishable/shareable; false = private and excluded from public export.
+  # Project anchoring is carried separately by non-empty `project[]` plus `grounding`.
+  public: true
+  # scope: free-text PRD-style statement of what the skill teaches and what it excludes.
+  # (v8 required; not an enum). Mirrors Coverage + Do NOT Use When at frontmatter level.
+  scope: "Mobile-specific UX patterns for SaaS dashboards and operational web apps: touch-friendly targets, thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, bottom sheets, mobile inputs, and pull-to-refresh. Portable across mobile web products; principle-grounded, not repo-bound. Excludes desktop-first layout composition (layout-composition), component/token architecture (design-system-architecture), and accessibility compliance breadth such as ARIA, keyboard, screen reader, and audit rules (a11y)."
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: design/display
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
+  stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
+  keywords: ["mobile dashboard UX","responsive dashboard","touch targets","thumb zone","bottom navigation","bottom sheet","mobile data cards","pull to refresh","mobile KPI cards","touch gestures"]
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
+  triggers: ["mobile-responsive-ux-skill","mobile-ux-skill","touch-target-skill","thumb-zone-skill","mobile-dashboard-skill"]
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
+  examples: ["make this dashboard usable on phones","turn this desktop order table into a mobile card flow","check whether these mobile controls are thumb friendly","design a bottom sheet filter pattern for mobile","add pull to refresh and touch gestures to this operational view"]
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.suppresses (or legacy boundary alias) to name the confusable territory's owner.
+  anti_examples: ["audit ARIA labels and keyboard focus order","choose global page breakpoints and responsive grid tracks","design reusable design tokens for mobile components","create the product information architecture"]
+  # relations: typed graph edges to sibling skills. Current fields:
+  # related (adjacency for browse / co-routing expansion) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins; write reason
+  #             as "I own this exclusively over X", not "use X instead") /
+  # boundary (DEPRECATED alias of suppresses, retained for unmigrated skills) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
+  relations: "{\"related\":[\"layout-composition\",\"interaction-patterns\",\"a11y\"],\"verify_with\":[\"a11y\",\"layout-composition\"]}"
+
+  # === Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
+  mental_model: |
+    Mobile dashboard UX treats the phone as a quick control surface, not a shrunken analytics workstation. The primitives are reach (one-handed thumb zones), target size (large, forgiving hit areas), glanceable hierarchy (the few readings that matter, large and on top), progressive disclosure (headline first, detail on tap), touch gestures paired with visible alternatives (never gesture-only), mobile-appropriate inputs (correct keyboards and native pickers), and recovery from cramped or interrupted use (status check, one short action, leave). Each primitive resolves into a concrete pattern — bottom navigation, bottom sheets, card-based data display, 2-up KPIs, pull-to-refresh — so the same data that fills a desktop cockpit collapses into a pocket panel without losing the user's actual job.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
+  purpose: |
+    Without this discipline, agents compress desktop tables, sidebars, modals, and hover interactions into a phone viewport and call it "responsive." The result is horizontal-scroll data tables nobody discovers, unreachable top-of-screen CTAs, mis-tapped tiny targets, and hover menus that do not exist on touch. This skill exists to preserve the mobile user's likely job — check status, spot a problem, perform one short action, and leave — by reshaping the task, density, navigation, and interaction model for touch and interruption rather than merely reflowing the desktop layout narrower.
+  # concept_boundary: what this concept is NOT. Distinguishes from adjacent skills by naming
+  # the MECHANISM that differs, not just the label. Canonical replacement for top-level `boundary`.
+  concept_boundary: |
+    This is NOT general responsive structure across all breakpoints (that is layout-composition, which owns page reflow and grid tracks). It is NOT accessibility compliance — ARIA, keyboard order, screen reader behavior, contrast, or the WCAG audit mechanics (that is a11y; this skill applies an ergonomic target-size floor, not the compliance audit). It is NOT component-token architecture or visual style systems (design-system-architecture). It is NOT desktop data-table component design (data-table-ux) — it owns how a table transforms into cards on a phone, not the table itself. It owns the mobile task shape, touch ergonomics, mobile navigation, condensed display, and mobile interaction layout; it does not own the cross-breakpoint structure those sit inside.
+  # analogy: one-sentence metaphor preserving the core mechanism.
+  analogy: "Mobile dashboard UX is a pocket control panel: it exposes the few controls and readings that matter while in motion, while the full cockpit of comparison, filtering, and export stays on desktop."
+  # misconception: the wrong mental model people bring; corrected explicitly.
+  misconception: |
+    The wrong mental model is that "responsive" means the same desktop screen made narrower — the same eight-column table, the same sidebar, the same hover menus, just compressed. The corrected model: mobile changes the task shape, density, navigation, input, and recovery paths. A 375px screen cannot show an eight-column table and should not try; it shows the headline KPIs, a card summary, and a path to detail. Adding a horizontal scrollbar to a wide table or moving a CTA to the top of the screen is not a layout detail — it is a misread of what the mobile user is doing.
+---
+# Mobile Responsive UX Skill
+
+## Concept of the skill
+
+Mobile responsive UX is the practice of redesigning dashboard and operational workflows for small screens, coarse touch input, one-handed reach, and quick-glance tasks — not merely shrinking the desktop interface into a narrower viewport. It treats the phone as a pocket control surface: it puts the few readings and actions that matter most within thumb reach, keeps targets large enough to tap reliably, reveals detail progressively, and makes every gesture recoverable through a visible control. The discipline rests on seven primitives — reach, target size, glanceable hierarchy, progressive disclosure, touch gestures with visible alternatives, mobile-appropriate inputs, and recovery from cramped or interrupted use — each of which resolves into a concrete pattern (bottom navigation, bottom sheets, card-based data display, 2-up KPIs, pull-to-refresh). Desktop dashboards optimize for comparison, filtering, exports, and multi-column analysis; phone use usually means checking health, responding to one alert, searching one item, or confirming a small action under interruption. The skill enforces designing for that mobile use case, not reflowing the desktop layout. It is not general CSS breakpoint implementation, not a full accessibility compliance audit, not desktop data-table design, and not design-system token architecture — for those, use `layout-composition`, `a11y`, `data-table-ux`, and `design-system-architecture` respectively.
+
+## Domain Context
+
+**What is this skill?** This skill provides mobile-specific UX patterns for dashboards and operational web apps: touch-friendly targets, thumb-zone optimization, swipe gestures, condensed data display, bottom navigation, bottom sheets, mobile inputs, and pull-to-refresh. Load when designing for mobile users, implementing touch interactions, building responsive dashboard layouts, or optimizing quick-glance workflows for users checking status between tasks.
+> If a button works with a mouse but not with a thumb on a moving bus, it is not usable.
+
+## Coverage
+
+This skill covers touch target sizing (44 x 44 CSS px ergonomic floor for mobile product work, while separately respecting WCAG 2.2 AA's 24 x 24 CSS px target-size minimum and exceptions), thumb-zone optimization (reachable areas on one-handed use), swipe gesture patterns (navigation, actions, dismissal), condensed data display for small screens (priority content, progressive disclosure), bottom navigation and bottom sheet patterns, pull-to-refresh implementation, mobile-specific input patterns (date pickers, number keyboards, autocomplete), and the SaaS dashboard mobile paradigm (quick-glance KPIs, not full desktop experience).
+
+## Philosophy of the skill
+
+Mobile is not a smaller desktop. Agents consistently make the mistake of "responsive" meaning "the same layout but narrower." A SaaS dashboard on mobile serves a fundamentally different purpose than on desktop. The desktop user is doing analytical work: filtering, comparing, exporting. The mobile user is doing a quick health check: "Are the important numbers healthy? Any problems?" These are different tasks requiring different interfaces. The 375px screen cannot show the same data table with 8 columns — and it should not try. This skill enforces the discipline of designing for the mobile use case, not just reflowing the desktop layout into a narrower viewport.
+
+## Architecture
+
+### Mobile Use Case Hierarchy
+
+| Priority | What Mobile Users Need | Design Implication |
+|----------|----------------------|-------------------|
+| 1 | Today's headline KPIs (revenue, margin, orders) | Large, glanceable numbers at the top |
+| 2 | Alert/notification status | Badge or indicator without scrolling |
+| 3 | Quick drill-down into a specific order | Search or recent orders list |
+| 4 | Period comparison (today vs yesterday) | Simple toggle, not a date range picker |
+| 5 | Full data exploration | Defer to desktop; show "View on desktop" prompt |
+
+### Touch Target Specifications
+
+| Standard | Minimum Size | Recommended Size | Spacing |
+|----------|-------------|-----------------|---------|
+| **Apple HIG** | 44 x 44 pt hit region | 44 x 44 pt or larger | Do not crowd adjacent controls |
+| **Material Design** | 48 x 48 dp | 48 x 48 dp | 8dp between targets |
+| **WCAG 2.2 SC 2.5.8 (Level AA)** | 24 x 24 CSS px | Larger targets reduce errors | Includes spacing, equivalent-target, inline, user-agent, and essential exceptions |
+| **WCAG SC 2.5.5 Enhanced (Level AAA)** | 44 x 44 CSS px | 44 x 44 CSS px | Includes equivalent, inline, user-agent, and essential exceptions |
+
+**Rule:** All recurring interactive controls in mobile dashboard UI should provide at least a 44 x 44 CSS px hit area unless a density exception is explicitly justified and still passes accessibility review. WCAG 2.2 AA itself requires at least 24 x 24 CSS px targets or a qualifying exception; 44 x 44 CSS px is this skill's mobile ergonomics floor and aligns with stronger platform guidance. This includes buttons, links, checkboxes, filter chips, table row actions, and dropdown triggers. If the visual element is smaller (e.g., a 16px icon), the tap target must extend beyond the visible element using padding.
+
+```css
+/* Touch target pattern — visual is 24px, tap target is 44px */
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 10px;           /* Extends tap area to 44px */
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+```
+
+### Thumb Zone Map
+
+On one-handed phone use, the thumb has three zones of reachability:
+
+```
++----------------------------+
+|     HARD TO REACH          |  <- Top 20%: avoid primary actions
+|                            |
+|     STRETCH ZONE           |  <- Middle 30%: secondary actions OK
+|                            |
+|     NATURAL ZONE           |  <- Bottom 50%: primary actions here
++----------------------------+
+     [  Home / Nav Bar  ]
+```
+
+**Design rules based on thumb zone:**
+- **Primary actions** (confirm, save, navigate): bottom 50% of screen
+- **Secondary actions** (filter, sort, settings): middle 30%
+- **Rarely used actions** (help, account, advanced settings): top 20% or behind a menu
+- **Bottom navigation** for main sections: always in the natural zone
+- **Floating action buttons** (FAB): bottom-right corner for right-handed users
+
+## Implementation Patterns
+
+### 1. Bottom Navigation
+
+Replace the sidebar with bottom navigation on mobile when the product has a small set of stable top-level destinations. Use 3-5 items; if there are more than 5, move lower-priority destinations behind `More`, search, or a secondary navigation surface.
+
+```
++----------------------------+
+|                            |
+|     Page Content           |
+|                            |
++----------------------------+
+| Dashboard | Orders | More  |
+|    [icon] | [icon] | [icon]|
++----------------------------+
+```
+
+**Rules:**
+- 3-5 top-level destinations; never force every desktop sidebar item into the bar
+- Each item: icon + label (icon-only is ambiguous)
+- Active state: filled icon + color change + label
+- Badge for notification count on relevant tab
+- Bottom nav is always visible — never hidden by scroll
+
+### 2. Bottom Sheet for Complex Actions
+
+When the user needs to filter, sort, or perform multi-step actions on mobile, use a bottom sheet instead of a modal or dropdown:
+
+```
++----------------------------+
+|     Page Content           |
+|     (dimmed background)    |
++----------------------------+
+|  --- drag handle ---       |
+|  Filter Orders             |
+|                            |
+|  Status:  [All] [Pending]  |
+|  Channel: [All] [Shopify]  |
+|                            |
+|  [Apply Filters]           |
++----------------------------+
+```
+
+**Bottom sheet heights:**
+- **Peek:** 25% of viewport — shows summary or first action
+- **Half:** 50% — shows a form or short list
+- **Full:** 90% — shows a long list or complex form (always include close/back)
+
+### 3. Condensed Data Display
+
+Desktop data tables do not work on mobile. Replace with card-based layouts:
+
+**Desktop table row:**
+```
+| Order #1234 | Shopify | $45.99 | $12.50 | 27.2% | Shipped |
+```
+
+**Mobile card:**
+```
++----------------------------+
+| #1234          Shipped [>] |
+| Shopify                    |
+| Revenue: $45.99            |
+| Margin:  27.2%  ($12.50)   |
++----------------------------+
+```
+
+**Rules for mobile data display:**
+- Show 3-4 data points per card, not 8+ columns
+- Most important data (order number, status) at the top
+- Secondary data (channel, margin) below
+- Tap to expand or navigate to detail view
+- Never horizontal scroll a data table on mobile
+
+### 4. Swipe Gestures
+
+| Gesture | Action | Use Case |
+|---------|--------|----------|
+| Swipe left on list item | Reveal action buttons (delete, archive) | Order list, notification list |
+| Swipe right on list item | Quick action (mark as read, flag) | Notification list |
+| Swipe down from top | Pull-to-refresh | Any data list |
+| Swipe between tabs | Navigate tab content | Dashboard sections |
+
+**Rules:**
+- Swipe actions must have a visual counterpart (button accessible without swiping)
+- Swipe-to-delete requires confirmation (do not delete on swipe alone)
+- Swipe velocity and distance thresholds must feel natural (> 30% of item width to trigger)
+- Never use swipe as the only way to access an action — always provide a tap alternative
+
+### 5. Pull-to-Refresh
+
+```typescript
+// Implementation pattern
+function PullToRefresh({ onRefresh, children }: Props) {
+  const [pulling, setPulling] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const startY = useRef(0);
+
+  // Pull indicator appears after 60px downward drag
+  // Trigger refresh after 100px drag distance
+  // Show spinner during refresh, snap back on complete
+
+  return (
+    <div onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+      {refreshing && <RefreshSpinner />}
+      {children}
+    </div>
+  );
+}
+```
+
+**Rules:**
+- Only trigger when scrolled to the top of the content
+- Show a visual indicator during the pull (spinner or progress)
+- Haptic feedback on trigger threshold (where supported)
+- Disable during active data loading to prevent double-fetch
+
+### 6. Mobile Input Optimization
+
+| Input Type | Mobile Optimization | HTML Attribute |
+|-----------|--------------------|-|
+| Phone number | Numeric keyboard | `type="tel"` |
+| Email | Email keyboard (@ visible) | `type="email"` |
+| Currency amount | Decimal keyboard | `type="text" inputmode="decimal"` |
+| Date | Native date picker | `type="date"` (or custom bottom sheet picker) |
+| Search | Search keyboard (enter = search) | `type="search"` |
+| Quantity | Stepper control (+/-) instead of free text | Custom component |
+
+### 7. Mobile-Specific KPI Display
+
+On mobile, KPI cards should be 2-up (2 per row) instead of the 4-up desktop layout:
+
+```
++---------------------------+
+| Revenue      | Orders     |
+| $4,523       | 47         |
+| +12% vs yday | -3% vs yday|
++---------------------------+
+| Margin       | Avg Order  |
+| 28.4%        | $96.23     |
+| +2.1pp       | +$4.50     |
++---------------------------+
+```
+
+**Rules:**
+- 2-up layout at < 640px (never 1-up for KPIs — wastes vertical space)
+- Large primary number (24-28px font)
+- Smaller comparison below (12-14px)
+- Tap KPI card to drill down to detail view
+- No chart within KPI card on mobile — charts belong in their own section below
+
+## Anti-Patterns
+
+1. **Horizontal scrolling data tables.** Shrinking a 8-column desktop table and letting the user scroll horizontally. On mobile, horizontal scroll is disorienting and most users do not discover scrollable content. Use card layouts instead.
+
+2. **Desktop modals on mobile.** A centered modal with small close button works on desktop but obscures content and has poor touch targets on mobile. Use bottom sheets instead of modals.
+
+3. **Tiny tap targets.** A 24px icon button without extended padding. Fingers are 44-57px wide; anything smaller causes mis-taps and frustration.
+
+4. **Top-of-screen primary actions.** Putting the main CTA ("Save", "Submit", "Next") at the top of the screen where the thumb cannot reach during one-handed use. Primary actions go at the bottom.
+
+5. **Hover-dependent interactions.** Tooltips, hover menus, and hover-triggered dropdowns do not exist on touch devices. Every hover interaction must have a touch equivalent (tap, long-press, or inline display).
+
+6. **Same density on mobile and desktop.** Showing the same amount of data in the same density on a 375px screen. Mobile needs progressive disclosure: show the headline, tap to see details.
+
+7. **Full date range picker on mobile.** A dual-calendar date range selector from a desktop library. On mobile, use preset ranges ("Today", "This Week", "This Month") with a custom option that opens a bottom sheet.
+
+## Key Files
+
+When working in a project with mobile responsive UX:
+
+- CSS breakpoint definitions — `_tokens.scss` or equivalent
+- Responsive wrapper components — `MobileOnly`, `DesktopOnly`
+- Bottom navigation component — mobile navigation bar
+- Touch gesture utilities — swipe handlers, pull-to-refresh
+- KPI card components — responsive grid layout
+
+## Verification
+
+After applying this skill, verify:
+- [ ] All interactive elements are at least 44 x 44 CSS px on mobile
+- [ ] Primary actions are positioned in the bottom 50% of the screen
+- [ ] Data tables are replaced with card layouts below 640px
+- [ ] Bottom navigation has maximum 5 items with icon + label
+- [ ] No hover-only interactions exist — all have touch equivalents
+- [ ] KPI cards use 2-up layout on mobile
+- [ ] Pull-to-refresh is implemented for data lists
+- [ ] Test on a real device (not just browser DevTools resize)
+
+## Do NOT Use When
+
+| Instead of this skill | Use | Why |
+|---|---|---|
+| CSS breakpoint implementation details | `breakpoint-strategy` | Breakpoints cover the CSS system; this skill covers the UX design at each breakpoint |
+| General responsive layout patterns | `layout-composition` | Layout composition covers layout reflow across breakpoints; this skill covers mobile-specific interaction patterns |
+| Accessibility for touch interfaces | `a11y` | Accessibility covers WCAG compliance broadly; this skill covers mobile-specific ergonomics |
+| Data table design patterns | `data-table-ux` | Data table UX covers the table component; this skill covers how tables transform on mobile |
+
+---
+
+*Version 1.0.0 -- 2026-03-29. Initial creation.*
+*Version 1.1.0 -- 2026-06-01. Added comprehension model, eval artifact, portable scope cleanup, and corrected WCAG touch-target wording.*
+*Version 1.2.0 -- 2026-06-08. Reshaped to v8 single-file contract (sidecar split), flat Understanding fields with concept_boundary, enriched Concept-of-the-skill narrative.*

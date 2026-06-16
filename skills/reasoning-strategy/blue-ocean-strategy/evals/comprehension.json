@@ -1,0 +1,132 @@
+{
+  "skill_name": "blue-ocean-strategy",
+  "subject": "Blue Ocean Strategy",
+  "adjacent_concepts": [
+    "Porter's Five Forces",
+    "Seven Powers",
+    "Playing to Win",
+    "value innovation",
+    "strategy canvas",
+    "Six Paths Framework",
+    "buyer utility",
+    "three tiers of noncustomers"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define Blue Ocean Strategy in 2-3 sentences. Include value innovation, new demand, and why differentiation plus low cost matters.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names W. Chan Kim and Renee Mauborgne or the Blue Ocean Strategy framework",
+        "Explains creating uncontested market space or new demand",
+        "Explains simultaneous differentiation and low cost",
+        "Does not define the method as ordinary competitor avoidance"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Blue Ocean Strategy. Name at least 6 primitives and describe how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "At least 6 of: strategy canvas, value curve, factors of competition, buyer utility, price, cost, adoption hurdles, noncustomers, alternatives, ERRC choices",
+        "Explains how eliminate/reduce fund cost change",
+        "Explains how raise/create lift buyer value",
+        "Explains that a new value curve must be commercially viable"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents calling ordinary differentiation a blue ocean",
+        "Prevents competitor benchmarking with a blue-ocean label",
+        "Prevents raise/create-only overengineering",
+        "Prevents ignoring noncustomers and commercial viability"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish Blue Ocean Strategy from Five Forces, Seven Powers, Playing to Win, framework-fit-analysis, and prioritization. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Five Forces diagnoses industry structure and profit pressure",
+        "Seven Powers classifies durable firm-level power",
+        "Playing to Win formulates integrated strategy choices",
+        "Framework-fit-analysis chooses which framework to apply",
+        "Prioritization ranks a known queue of work",
+        "Blue Ocean Strategy reconstructs value curves and market boundaries"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place Blue Ocean Strategy among strategy frameworks. What upstream inputs can feed it, and what downstream outputs can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies it as market-creating strategy / value innovation",
+        "Names upstream inputs such as customer/noncustomer research, alternatives, industry canvas, or Five Forces",
+        "Names downstream outputs such as a value curve, ERRC grid, experiments, strategy cascade, or execution goals",
+        "Keeps it distinct from moat diagnosis and task prioritization"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for Blue Ocean Strategy that preserves value-curve reconstruction. Then name one bad analogy and explain what it gets wrong.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving changing the game board, map, market boundary, or rules",
+        "Maps old competition factors to old rules or old terrain",
+        "Maps ERRC choices to the new value curve",
+        "Rejects a bad analogy that treats the method as mere avoidance or generic creativity"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A crowded project-management app says it will create a blue ocean by adding more AI features and lowering price. Apply Blue Ocean Strategy by diagnosing what is missing and proposing a better next analysis step.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects feature addition plus low price as insufficient",
+        "Requires a strategy canvas or current factors of competition",
+        "Requires noncustomer or alternative-industry insight",
+        "Applies eliminate/reduce/raise/create logic",
+        "Tests buyer utility, price, cost, and adoption",
+        "Labels assumptions rather than inventing certainty"
+      ]
+    }
+  ]
+}

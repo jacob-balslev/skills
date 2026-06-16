@@ -1,0 +1,98 @@
+{
+  "skill_name": "gpt-5-5",
+  "subject": "Routing a task to OpenAI's GPT-5.5 frontier model versus the Claude tiers",
+  "adjacent_concepts": [
+    "codex",
+    "claude-opus",
+    "claude-sonnet",
+    "gemini-pro",
+    "skill-router"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define what this skill decides in 2-3 sentences. Distinguish the GPT-5 MODEL-routing decision from the choice of HARNESS that runs GPT.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "negative_expectation": "Must NOT conflate routing-to-GPT-5 with running Codex, and must not claim GPT-5 is universally best."
+    },
+    {
+      "id": 2,
+      "dimension": "application",
+      "prompt": "You have four tasks: (a) write a Terraform CI pipeline, (b) re-architect a monolith into services across ~40 files, (c) a security review of an auth diff, (d) a cost-sensitive CRUD feature. Route each to GPT-5, Claude Opus, or Claude Sonnet, and give the per-task reason.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT route the cross-system re-architecture to GPT-5 over Opus, and must NOT send the cost-sensitive CRUD work to a frontier tier when Sonnet suffices."
+    },
+    {
+      "id": 3,
+      "dimension": "misconception",
+      "prompt": "Correct this claim: 'GPT-5.5 is #1 on SWE-bench Verified, so it's the best coding model — route all coding to it.' Why is the reasoning flawed, and name a concrete coding task where Claude Opus is the better route.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must reject 'highest verified score ⇒ route everything to GPT-5'; must cite the narrow margin + contamination caveat AND that Opus leads SWE-bench Pro / complex multi-file resolution."
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "For each, say whether `gpt-5-5` owns it or name the skill that does: (a) 'resume my Codex session', (b) 'Opus or Sonnet for this task?', (c) 'GPT-5.5 or Claude for this CI script?', (d) 'which local skill routes payment tasks?'.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must route (a) to codex, (b) to claude-opus/claude-sonnet, (d) to skill-router; only (c) is gpt-5-5."
+    },
+    {
+      "id": 5,
+      "dimension": "purpose",
+      "prompt": "Why does an explicit GPT-vs-Claude routing rule exist instead of just defaulting to the strongest available model? Reference both task-shape and cost.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Organize GPT-5.5's documented edges and Claude Opus's documented edges into a per-axis routing table (e.g. terminal/CLI work, architecture, multi-file resolution, analytical review, multi-tool coordination). Which axis sends work to which model?",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for why you route GPT-5 vs Opus by task type rather than by overall benchmark rank, and why the per-task choice can flip even between two near-equal models.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "medium"
+    },
+    {
+      "id": 8,
+      "dimension": "mental_model",
+      "prompt": "A teammate routes by headline per-token price ($25 Opus output vs $30 GPT-5 output) and always picks the cheaper one. Explain why that is the wrong routing primitive, including the >272K-token surcharge and the subscription-vs-API billing distinction.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "negative_expectation": "Must not endorse headline-price routing; must note capability-per-task dominates and that on a subscription the per-token USD is notional, not billed."
+    }
+  ]
+}

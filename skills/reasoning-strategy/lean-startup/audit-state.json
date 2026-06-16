@@ -1,0 +1,69 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-14",
+  "drift_check": {
+    "last_verified": "2026-06-14",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/lean-startup/references/lean-startup-sources.md": "8c5d9e782c1deda31a03bc73a02cd9bb4c4b4680b5acae6007e72ecfdc893612",
+      "skills/reasoning-strategy/lean-startup/references/upstream-displacement-2026-06-14.md": "33f1ae5ddbafedfc5d52d817d41a0b6d71b21c7557519512bc9383d340039810"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "last_audited": "2026-06-14",
+  "lint_verdict": "PASS",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-14",
+    "last_run": {
+      "at": "2026-06-14T09:23:07.330Z",
+      "operation": "panel",
+      "phase": "curate",
+      "agent": "opus",
+      "status": "completed",
+      "duration_ms": 420055,
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "source": "unavailable"
+      },
+      "line_delta": {
+        "before_lines": 355,
+        "after_lines": 529,
+        "added_lines": 240,
+        "removed_lines": 66,
+        "net_lines": 174,
+        "algorithm": "lcs"
+      },
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 33,
+      "total_duration_ms": 3024593,
+      "total_tokens": 0,
+      "tokens_observed_count": 33
+    }
+  },
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "UNVERIFIED",
+  "eval_score": 3.89,
+  "eval_failed_ids": []
+}

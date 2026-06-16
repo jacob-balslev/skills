@@ -1,0 +1,406 @@
+{
+  "skill_name": "layout-composition",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept, Coverage, Method, Verification, Do NOT Use When) and current responsive-layout best practices (hierarchy-first, content-driven breakpoints, scan patterns, stable dimensions, state footprints, reflow decisions).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "mobile-scan-path",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An analytics dashboard puts a large promo banner and three secondary widgets above the key revenue metric. On desktop it scans fine; on mobile users scroll past everything to reach the metric they came for.",
+      "context": "task-analysis identifies the revenue metric as the primary content; the banner is supporting.",
+      "question": "How should the agent recompose the layout?",
+      "expected_flags": [
+        "Re-derive mobile section order from the content hierarchy: primary metric first",
+        "Demote/collapse/hide the banner and secondary widgets below the primary on narrow viewports",
+        "Keep primary content above the fold and preserve action/recovery order as widgets stack",
+        "Design the narrow viewport deliberately rather than reusing the desktop order"
+      ],
+      "expected_fix_hints": [
+        "Reorder so the revenue metric leads on mobile; move promo below or behind disclosure",
+        "Stack secondary widgets after the primary at the narrow breakpoint"
+      ],
+      "absent_signals": [
+        "Do not keep desktop section order on mobile",
+        "Do not bury the primary task below supporting content"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Re-derive mobile section order from the content hierarchy: primary metric first."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Demote/collapse/hide the banner and secondary widgets below the primary on narrow viewports."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep primary content above the fold and preserve action/recovery order as widgets stack."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Design the narrow viewport deliberately rather than reusing the desktop order."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reorder so the revenue metric leads on mobile; move promo below or behind disclosure."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Stack secondary widgets after the primary at the narrow breakpoint."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep desktop section order on mobile."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not bury the primary task below supporting content."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "device-breakpoints",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A layout sets breakpoints at exactly 375px, 768px, and 1024px to match specific phones and tablets. A new device width falls between them and the three-column grid collapses to unreadable narrow columns.",
+      "context": "The grid needs roughly 280px per column to stay legible.",
+      "question": "What is wrong and how should the agent set breakpoints?",
+      "expected_flags": [
+        "Device-named breakpoints expire as new devices ship",
+        "Set breakpoints where the content breaks (e.g. when a column drops below its ~280px legible width)",
+        "Derive the column-drop points from the content, not the device catalogue",
+        "Content-driven breakpoints stay durable across new viewports"
+      ],
+      "expected_fix_hints": [
+        "Replace fixed device widths with min-column-width grid behavior (e.g. auto-fit/minmax)",
+        "Define breakpoints at the legibility-break of each column/table/card"
+      ],
+      "absent_signals": [
+        "Do not pin breakpoints to specific device widths",
+        "Do not let columns shrink below their legible minimum"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Device-named breakpoints expire as new devices ship."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Set breakpoints where the content breaks (e.g. when a column drops below its ~280px legible width)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Derive the column-drop points from the content, not the device catalogue."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Content-driven breakpoints stay durable across new viewports."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace fixed device widths with min-column-width grid behavior (e.g. auto-fit/minmax)."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define breakpoints at the legibility-break of each column/table/card."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pin breakpoints to specific device widths."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let columns shrink below their legible minimum."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "layout-shift",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A product page shows a hero image, a price, and an 'Add to cart' button. As the image and price load asynchronously, the button jumps down the page and users mis-click.",
+      "context": "The image dimensions and price length are known or boundable in advance.",
+      "question": "How should the agent eliminate the shift?",
+      "expected_flags": [
+        "Reserve stable dimensions / aspect-ratio for the image and a min-height for the price region",
+        "Loading and loaded states must occupy the same structural slot",
+        "Layout shift during loading is a designed-out defect",
+        "Responsive media must not overflow or resize the surrounding layout"
+      ],
+      "expected_fix_hints": [
+        "Set aspect-ratio on the image and reserve space for the price block",
+        "Pin the action button position independent of async content arrival"
+      ],
+      "absent_signals": [
+        "Do not let async content push the button position",
+        "Do not leave the media region without reserved space"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reserve stable dimensions / aspect-ratio for the image and a min-height for the price region."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Loading and loaded states must occupy the same structural slot."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Layout shift during loading is a designed-out defect."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Responsive media must not overflow or resize the surrounding layout."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Set aspect-ratio on the image and reserve space for the price block."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pin the action button position independent of async content arrival."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let async content push the button position."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave the media region without reserved space."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "scan-pattern-choice",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A messaging app shows a full-screen conversation list, then navigates to a full-screen thread on tap. On wide desktop, users dislike losing the list when reading a thread.",
+      "context": "Users frequently switch between the list and a thread on desktop.",
+      "question": "What scan pattern should the agent use, and how should it reflow?",
+      "expected_flags": [
+        "Use a master-detail scan pattern (list + detail pane) on wide viewports",
+        "Collapse to single-column / stacked navigation on narrow viewports",
+        "Define the reflow: master-detail on desktop -> list then thread on mobile",
+        "Keep the primary content and recovery (back) path clear at each breakpoint"
+      ],
+      "expected_fix_hints": [
+        "Show list and thread side-by-side past the content-break width; stack below it",
+        "Preserve a clear back/return path on mobile"
+      ],
+      "absent_signals": [
+        "Do not force full-screen-only navigation on wide desktop",
+        "Do not drop the list context when space allows showing both"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use a master-detail scan pattern (list + detail pane) on wide viewports."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Collapse to single-column / stacked navigation on narrow viewports."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define the reflow: master-detail on desktop -> list then thread on mobile."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep the primary content and recovery (back) path clear at each breakpoint."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Show list and thread side-by-side past the content-break width; stack below it."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Preserve a clear back/return path on mobile."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not force full-screen-only navigation on wide desktop."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not drop the list context when space allows showing both."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "empty-state-footprint",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A data table region collapses to near-zero height when empty, so the page below jumps up; when data arrives the page jumps back down.",
+      "context": "The table can be empty (no rows), loading, or full.",
+      "question": "How should layout composition handle the region across its states?",
+      "expected_flags": [
+        "The empty, loading, and loaded states should occupy the same structural slot",
+        "Reserve a stable footprint so the page below does not jump between states",
+        "Design the empty state's footprint deliberately, not as collapse-to-nothing",
+        "Verify the layout holds across loading/empty/error/loaded"
+      ],
+      "expected_fix_hints": [
+        "Give the region a min-height so empty/loading/loaded share the slot",
+        "Render an empty-state message inside the reserved footprint"
+      ],
+      "absent_signals": [
+        "Do not let the empty state collapse the region to zero",
+        "Do not let surrounding content jump as the region's state changes"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The empty, loading, and loaded states should occupy the same structural slot."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reserve a stable footprint so the page below does not jump between states."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Design the empty state's footprint deliberately, not as collapse-to-nothing."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verify the layout holds across loading/empty/error/loaded."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Give the region a min-height so empty/loading/loaded share the slot."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Render an empty-state message inside the reserved footprint."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let the empty state collapse the region to zero."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let surrounding content jump as the region's state changes."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the layout-composition owner to design the global sitemap and navigation, pick the color palette and type scale, and define the card component's variants and tokens.",
+      "context": "The team conflates layout with navigation, visual style, and component API design.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Sitemap/navigation/page grouping is information-architecture, handed off",
+        "Color palette and type scale are visual-design-foundations, handed off",
+        "Card variants and tokens are design-system-architecture, handed off",
+        "Offer the in-scope part: the responsive structure and section order WITHIN the screen"
+      ],
+      "expected_fix_hints": [
+        "Route navigation to information-architecture, style to visual-design-foundations, component API to design-system-architecture",
+        "Own only the within-page spatial structure and responsive behavior"
+      ],
+      "absent_signals": [
+        "Do not design the sitemap/navigation",
+        "Do not pick the palette/type scale",
+        "Do not define component variants/tokens"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Sitemap/navigation/page grouping is information-architecture, handed off."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Color palette and type scale are visual-design-foundations, handed off."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Card variants and tokens are design-system-architecture, handed off."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: the responsive structure and section order WITHIN the screen."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route navigation to information-architecture, style to visual-design-foundations, component API to design-system-architecture."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Own only the within-page spatial structure and responsive behavior."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the sitemap/navigation."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the palette/type scale."
+        },
+        {
+          "id": "c9",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not define component variants/tokens."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

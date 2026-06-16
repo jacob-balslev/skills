@@ -1,0 +1,139 @@
+{
+  "skill_name": "microcopy",
+  "subject": "design",
+  "adjacent_concepts": [
+    "linguistics",
+    "interaction-feedback",
+    "a11y",
+    "form-ux-architecture"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define microcopy in 2-3 sentences. Name the surfaces it covers and what distinguishes it from marketing copy and documentation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Microcopy is the functional text inside a working interface (button labels, empty states, tooltips, dialogs, errors, toasts, validation, loading)",
+        "Its job is to make the interface operable — what just happened, what will happen, what to do next — in few specific words",
+        "Distinct from marketing copy (persuades) and documentation (teaches at length)",
+        "Each surface has a fixed shape/pattern the words must fill"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why is each microcopy surface treated as a contract with a fixed shape rather than free-form writing? Give two surface examples.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Each interface surface carries a fixed pattern the words must fill, so quality is reproducible not accidental",
+        "Button label = verb-first promise of what the click does (consequence-matching)",
+        "Empty state = three-part acknowledge → explain → guide; error = What → Why → What-to-do",
+        "Treating the surface as a contract is what catches defects like 'Submit' or 'No data'"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Loading and progress copy is staged by elapsed time. Walk through the stages and explain the tradeoff each stage is balancing.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "0–300ms show nothing so the action feels instant (avoid flicker for fast operations)",
+        "300ms–2s spinner/skeleton for brief acknowledgment",
+        "2–10s a message describing what is happening; 10s+ progress (X of Y); 30s+ reassurance",
+        "Tradeoff: too-early feedback adds noise/flicker, too-late feedback leaves the user uncertain — escalate detail as the wait grows"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A confirmation dialog for a destructive action currently has a title 'Are you sure?' and buttons 'OK' and 'Cancel'. Rewrite it per the skill's rules and name each rule you applied.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "State the consequence first (e.g. 'This will permanently delete 3 orders and their profit data')",
+        "Name the action in the button ('Delete 3 Orders'), not 'OK'/'Confirm'",
+        "Include the count and the word 'permanently'; red button for destructive",
+        "Keep 'Cancel' as the always-present escape; avoid double negatives"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "An error toast reads 'An error has occurred while processing your request. Please try again later.' Rewrite it and explain the structure you used.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Use What → Why → What-to-do (e.g. 'Payment failed — your card was declined. Check your card details or try another method.')",
+        "Say what errored, not 'An error occurred'; say what/when to try, not 'try again later'",
+        "Blame-free framing ('We couldn't…' not 'You have an error')",
+        "Short, specific, actionable; no error codes in user-facing text"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the microcopy skill to decide when the success state should appear, how long it should persist, and where it sits relative to the loading state. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — when/where/how feedback states appear (timing, placement, persistence, staging) is interaction-feedback",
+        "Microcopy owns the words inside the staged element, not the staging",
+        "Correctly redirects the staging question to interaction-feedback while offering the in-scope part (the words)"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A developer says 'microcopy is just writing — anyone can dash off a button label.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Each surface has a contract — UI text is not free-form prose subject to taste",
+        "'Submit' / 'No data' are defects against the contract, not stylistic choices",
+        "Generic, hedged, blame-assigning text is the structural default agents/devs fall into",
+        "The skill's value is the discipline of replacing it with short, specific, actionable, surface-correct copy"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify the functional UI text of a feature is correct?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Button labels verb-first and name the action (no bare Submit/OK/Yes/Continue)",
+        "Empty states acknowledge → explain → guide with a real next-step button; tooltips one sentence, no terminal period",
+        "Confirmation dialogs state consequence first and name the action with a Cancel escape; errors are What → Why → What-to-do, blame-free",
+        "Inline validation appears on blur and clears on fix; toasts give action + context with undo for reversible actions; text stays inside the interface, not marketing/docs"
+      ]
+    }
+  ]
+}

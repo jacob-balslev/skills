@@ -1,0 +1,87 @@
+{
+  "skill_name": "claude-opus",
+  "subject": "Routing tasks to the frontier reasoning model tier (Claude Opus)",
+  "adjacent_concepts": [
+    "claude-sonnet",
+    "claude-haiku",
+    "autonomous-loop-patterns",
+    "agent-engineering",
+    "tool-call-strategy"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "In 2-3 sentences, define what reaching for the Opus tier means as a routing decision. Name the binding constraint that justifies it over a cheaper tier.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Why is 'use the smartest model when in doubt' the wrong default, and what is the correct direction to route under uncertainty? Explain the two-sided cost of over-escalation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT claim that defaulting to the frontier tier is the safe choice under uncertainty; doubt routes DOWN until the task proves it needs the ceiling."
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Two tasks arrive: (a) 'rename a SCSS class across 8 files' and (b) 'find why a payment-reconciliation job intermittently double-counts orders across the Stripe and Shopify views.' Decide the tier for each and justify the split.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT route the mechanical multi-file rename to Opus; that is script or fast-tier work. Must NOT route the intermittent multi-system root-cause to a cheaper tier."
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish claude-opus from claude-sonnet, claude-haiku, and autonomous-loop-patterns. Name the specific mechanism that separates each, not just the label.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT fold loop/harness design into the model-tier decision, and must NOT describe Sonnet/Haiku routing as the same decision as Opus routing."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place these Opus capability facts into the routing decision: 1M context window, the xhigh/max effort ceiling, adaptive thinking, the cost premium, and high-resolution vision. For each, state whether it is a REASON to escalate or a CONSTRAINT to account for.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'The 1M context window means Opus is expensive to run on large inputs, so route big multi-file tasks to a cheaper model to save money.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must NOT accept that the wide window carries a long-context pricing premium on the current Opus generation; it does not."
+    },
+    {
+      "id": 7,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for why routing every task to the frontier tier is wrong even though it is the most capable model, and what the analogy implies about the right default.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "medium"
+    }
+  ]
+}

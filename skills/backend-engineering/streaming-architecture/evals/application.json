@@ -1,0 +1,470 @@
+{
+  "skill_name": "streaming-architecture",
+  "subject": "Streaming architecture",
+  "mode": "application",
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "slow-consumer-backpressure",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An export endpoint streams rows from a database cursor as fast as the database produces them. Some clients process rows slowly, and server memory grows until the process is killed.",
+      "context": "The endpoint has no bounded queue, no credit signal, and no cancellation cleanup when clients disconnect.",
+      "question": "Diagnose the architecture failure and recommend fixes.",
+      "expected_flags": [
+        "Identifies slow-consumer backpressure as the primary failure.",
+        "Names producer, stream, consumer, and where buffering accumulates.",
+        "Distinguishes transport-level flow control from an explicit application-level strategy."
+      ],
+      "expected_fix_hints": [
+        "Use pull-based reads or a bounded queue that pauses the producer.",
+        "Add cancellation handling so abandoned consumers release cursors and buffers.",
+        "Load test with deliberately slow consumers and assert memory bounds."
+      ],
+      "absent_signals": [
+        "Must not solve this as JSON response-shape design.",
+        "Must not assume the database cursor or TCP stack alone bounds application memory.",
+        "Must not materialize all rows before streaming."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies slow-consumer backpressure as the primary failure."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names producer, stream, consumer, and where buffering accumulates."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes transport-level flow control from an explicit application-level strategy."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use pull-based reads or a bounded queue that pauses the producer."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add cancellation handling so abandoned consumers release cursors and buffers."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Load test with deliberately slow consumers and assert memory bounds."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not solve this as JSON response-shape design."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not assume the database cursor or TCP stack alone bounds application memory."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not materialize all rows before streaming."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "termination-and-resume",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A progress stream sometimes goes quiet for 20 seconds during a long compute step. The client treats silence as completion and marks the job done, but the server later emits more progress.",
+      "context": "The protocol does not send an explicit done event, close frame, trailer, or final chunk marker. Resume state is also unspecified.",
+      "question": "What is wrong with the stream contract?",
+      "expected_flags": [
+        "Flags that termination must be an explicit signal distinct from quiet.",
+        "Explains that reconnect/resume requires a last-seen id or resume token if correctness matters.",
+        "Separates liveness/heartbeat from end-of-stream semantics."
+      ],
+      "expected_fix_hints": [
+        "Define a `done` event or transport-specific close/trailer semantics.",
+        "Add heartbeats only to prove liveness, not to indicate completion.",
+        "Include resumable cursor or last-event-id semantics when gaps or duplicates matter."
+      ],
+      "absent_signals": [
+        "Must not use timeout silence as completion.",
+        "Must not claim SSE-style Last-Event-ID exists for all transports.",
+        "Must not ignore partial-result correctness after reconnect."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags that termination must be an explicit signal distinct from quiet."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that reconnect/resume requires a last-seen id or resume token if correctness matters."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates liveness/heartbeat from end-of-stream semantics."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define a `done` event or transport-specific close/trailer semantics."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add heartbeats only to prove liveness, not to indicate completion."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Include resumable cursor or last-event-id semantics when gaps or duplicates matter."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not use timeout silence as completion."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not claim SSE-style Last-Event-ID exists for all transports."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore partial-result correctness after reconnect."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "sse-vs-websocket-contract",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A product wants to stream server-generated status updates to a browser. The browser never sends unsolicited messages after connecting, and updates are UTF-8 text events.",
+      "context": "The team proposes WebSocket because it sounds real time. The infrastructure supports regular HTTP responses more reliably than upgrade connections.",
+      "question": "How should the streaming-architecture skill frame the transport decision?",
+      "expected_flags": [
+        "Starts from directionality, framing, backpressure, reconnect, and termination requirements.",
+        "Recognizes SSE as the simpler default for one-way server-to-client text event streams.",
+        "Keeps WebSocket for bidirectional unsolicited messages or binary framed interaction."
+      ],
+      "expected_fix_hints": [
+        "Use text/event-stream with explicit event ids if resume matters.",
+        "Add an explicit done or terminal event.",
+        "Document application-level pacing because SSE has no full application backpressure protocol by itself."
+      ],
+      "absent_signals": [
+        "Must not pick WebSocket solely because the feature is live.",
+        "Must not treat transport choice as complete without backpressure and termination.",
+        "Must not route browser freshness UX concerns to this case unless the low-level stream contract is in scope."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Starts from directionality, framing, backpressure, reconnect, and termination requirements."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes SSE as the simpler default for one-way server-to-client text event streams."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps WebSocket for bidirectional unsolicited messages or binary framed interaction."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use text/event-stream with explicit event ids if resume matters."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add an explicit done or terminal event."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Document application-level pacing because SSE has no full application backpressure protocol by itself."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not pick WebSocket solely because the feature is live."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat transport choice as complete without backpressure and termination."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not route browser freshness UX concerns to this case unless the low-level stream contract is in scope."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "rsc-streaming-boundary",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A React server-rendered route streams partial HTML while data dependencies resolve. A nested boundary fails after earlier chunks have already reached the browser.",
+      "context": "The team is debating whether streaming means errors can be handled like ordinary all-at-once SSR errors.",
+      "question": "What should the design account for?",
+      "expected_flags": [
+        "Explains that partial results may already be visible before later work fails.",
+        "Names boundary/error semantics as part of the streamed contract.",
+        "Connects framework APIs to the underlying producer/stream/consumer/termination model."
+      ],
+      "expected_fix_hints": [
+        "Define what fallback or error boundary output can be sent after earlier chunks.",
+        "Define abort/cancellation behavior for unfinished rendering.",
+        "Verify client behavior for partial output, late errors, and abandoned connections."
+      ],
+      "absent_signals": [
+        "Must not treat streaming SSR as identical to a single completed HTML response.",
+        "Must not ignore what the consumer has already observed.",
+        "Must not collapse this into page-level rendering taxonomy only."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that partial results may already be visible before later work fails."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names boundary/error semantics as part of the streamed contract."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Connects framework APIs to the underlying producer/stream/consumer/termination model."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define what fallback or error boundary output can be sent after earlier chunks."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define abort/cancellation behavior for unfinished rendering."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify client behavior for partial output, late errors, and abandoned connections."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat streaming SSR as identical to a single completed HTML response."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore what the consumer has already observed."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not collapse this into page-level rendering taxonomy only."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "single-response-api-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks for the JSON envelope, status codes, and error fields for a single bounded request/response endpoint.",
+      "context": "The endpoint returns one complete payload and has no incremental delivery or long-lived consumer.",
+      "question": "Should streaming-architecture own the task?",
+      "expected_flags": [
+        "Routes the task to api-design.",
+        "Explains that streaming-architecture owns multi-value-over-time responses, not single payload shape.",
+        "Keeps streaming relevant only if the endpoint later becomes incremental."
+      ],
+      "expected_fix_hints": [
+        "Use api-design for payload envelope, status codes, and error shape.",
+        "Revisit streaming-architecture only when producer/backpressure/termination questions appear."
+      ],
+      "absent_signals": [
+        "Must not force streaming concepts onto a single bounded response.",
+        "Must not discuss SSE/WebSocket as the primary answer."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes the task to api-design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that streaming-architecture owns multi-value-over-time responses, not single payload shape."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps streaming relevant only if the endpoint later becomes incremental."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use api-design for payload envelope, status codes, and error shape."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Revisit streaming-architecture only when producer/backpressure/termination questions appear."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not force streaming concepts onto a single bounded response."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not discuss SSE/WebSocket as the primary answer."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "browser-freshness-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A dashboard should show when data is stale, reconnect after disconnect, and avoid disruptive auto-refresh while users are reading.",
+      "context": "The main decisions are freshness indicators, subscription ownership, catch-up behavior, and whether polling/SSE/WebSocket fits the UX.",
+      "question": "Should streaming-architecture own the task?",
+      "expected_flags": [
+        "Routes browser freshness UX to real-time-updates.",
+        "Explains that streaming-architecture owns low-level stream/backpressure/termination contracts.",
+        "Notes that streaming-architecture may verify the low-level stream if SSE or WebSocket is selected."
+      ],
+      "expected_fix_hints": [
+        "Use real-time-updates for freshness promise, reconnect catch-up, and UI behavior.",
+        "Use streaming-architecture only for the underlying producer/consumer/backpressure contract."
+      ],
+      "absent_signals": [
+        "Must not treat every SSE/WebSocket question as low-level streaming architecture.",
+        "Must not ignore the user-visible freshness contract."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes browser freshness UX to real-time-updates."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that streaming-architecture owns low-level stream/backpressure/termination contracts."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes that streaming-architecture may verify the low-level stream if SSE or WebSocket is selected."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use real-time-updates for freshness promise, reconnect catch-up, and UI behavior."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use streaming-architecture only for the underlying producer/consumer/backpressure contract."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat every SSE/WebSocket question as low-level streaming architecture."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore the user-visible freshness contract."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "background-job-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A CSV export takes 12 minutes and should survive process restarts. The team asks for queue retries, idempotency, and where to persist job status.",
+      "context": "No incremental stream contract is being designed yet; the work must be durable and retryable.",
+      "question": "Should streaming-architecture own the primary design?",
+      "expected_flags": [
+        "Routes durable execution, retries, and persisted status to background-jobs.",
+        "Explains that streaming-architecture may later deliver progress or results incrementally.",
+        "Separates producer execution durability from consumer delivery over time."
+      ],
+      "expected_fix_hints": [
+        "Use background-jobs to design queueing, retry, idempotency, and status persistence.",
+        "Apply streaming-architecture only to a progress/result stream layered on top."
+      ],
+      "absent_signals": [
+        "Must not use a long-lived stream as the durability mechanism.",
+        "Must not skip retry and persistence semantics because the output might stream later."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes durable execution, retries, and persisted status to background-jobs."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that streaming-architecture may later deliver progress or results incrementally."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates producer execution durability from consumer delivery over time."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use background-jobs to design queueing, retry, idempotency, and status persistence."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Apply streaming-architecture only to a progress/result stream layered on top."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not use a long-lived stream as the durability mechanism."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not skip retry and persistence semantics because the output might stream later."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

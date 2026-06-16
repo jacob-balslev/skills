@@ -1,0 +1,315 @@
+{
+  "skill_name": "test-coverage-strategy",
+  "subject": "strategic code-coverage interpretation",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "testing-strategy",
+    "mutation-testing",
+    "test-doubles-design",
+    "eval-driven-development",
+    "performance-testing"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "ai-generated-coverage-inflation",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A coding agent opened a pull request that raises line coverage on `billing/discounts.ts` from 54% to 96%. The new tests call each exported function with one happy-path input and assert only that the result is not null. The PR description says: 'Coverage is now excellent, so this module is safe.'",
+      "context": "The module calculates customer-visible discounts and has several branchy rules for coupon expiration, customer segment, and currency rounding. No mutation score, known-bug variant, property test, or assertion review has been run.",
+      "question": "Review the coverage evidence and decide what should happen before the tests are accepted.",
+      "expected_flags": [
+        "High line coverage is structural reach, not proof of behavioral verification.",
+        "The new tests are assertion-weak and may be AI-generated coverage padding.",
+        "Branchy discount logic needs behavioral oracles for rule boundaries, not only function calls.",
+        "The coverage rise should be treated as inconclusive until paired with mutation, property, known-bug, or assertion-strength evidence."
+      ],
+      "expected_fix_hints": [
+        "Require assertions tied to discount contracts and boundary cases.",
+        "Add or run mutation testing, property tests, or a known-buggy variant to prove the suite catches defects.",
+        "Inspect branch or condition coverage for the coupon/customer/currency decision logic.",
+        "Do not approve solely because the line-coverage percentage crossed a target."
+      ],
+      "absent_signals": [
+        "Do not say 96% line coverage proves the module is well tested.",
+        "Do not reward tests that only traverse code without meaningful assertions.",
+        "Do not route this primarily to testing-strategy; the issue is coverage interpretation and oracle quality."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Distinguishes structural coverage from behavioral verification."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Flags assertion-weak generated tests as insufficient evidence."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Requires a behavioral companion signal such as mutation, property, known-bug, or assertion review."
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not approve the PR solely from high line coverage."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "denominator-hygiene",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A service's reported coverage jumps from 68% to 88% in one commit. The only testing change is adding `coveragePathIgnorePatterns` for generated clients and switching the JS tool from loaded-files-only reporting to `--all` in a subpackage, while the CI summary still posts one aggregate percentage.",
+      "context": "Reviewers are arguing that the jump proves the test suite got better.",
+      "question": "How should the agent interpret the coverage change and what evidence should it request?",
+      "expected_flags": [
+        "A coverage trend is uninterpretable until the denominator and counter semantics are stable.",
+        "Exclusions and all-files-vs-loaded-only behavior can change the reported percentage without changing tests.",
+        "The aggregate number can hide per-package or per-risk gaps.",
+        "The correct response is to inspect included roots, exclusions, visited-vs-all-files behavior, and tool counter definitions before drawing quality conclusions."
+      ],
+      "expected_fix_hints": [
+        "Record the denominator: included roots, exclusions with reasons, all-files behavior, and tool/version.",
+        "Recompute or compare coverage with a stable denominator before claiming improvement.",
+        "Review uncovered high-risk files and patch coverage separately from project coverage.",
+        "Treat unexplained jumps as measurement changes until proven otherwise."
+      ],
+      "absent_signals": [
+        "Do not claim the suite improved because the aggregate percentage rose.",
+        "Do not compare two percentages without naming their denominator and criterion.",
+        "Do not ignore generated-file exclusions; require explicit reasons."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Identifies denominator change as the first explanation to rule out."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Separates project aggregate, patch coverage, and high-risk module slices."
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not treat the 68-to-88 percent jump as direct quality evidence."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "criterion-mismatch",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A security helper has this decision: `return isStaff || (hasPaidPlan && !isSuspended && requestOriginAllowed)`. The suite has 100% line coverage and calls the helper once with a paying active user from an allowed origin. A reviewer asks whether coverage is sufficient for this access-control code.",
+      "context": "The code protects an admin-only data export. The current coverage report is line-only.",
+      "question": "What coverage criterion and companion evidence should be required?",
+      "expected_flags": [
+        "Line coverage is too weak for compound Boolean access-control logic.",
+        "Branch, condition/decision, or MC/DC-style evidence is more appropriate because individual conditions must be exercised.",
+        "The suite needs tests showing each load-bearing condition can independently affect the decision, or an explicit rationale for a weaker criterion.",
+        "Coverage still needs behavioral assertions about allow/deny outcomes."
+      ],
+      "expected_fix_hints": [
+        "Add cases for staff override, paid-plan true/false, suspended true/false, origin allowed/denied, and expected deny/allow results.",
+        "Use condition/decision or MC/DC where supported, or approximate independence with explicit decision-table tests.",
+        "Pair coverage with mutation tests or negative authorization cases to prove defects are caught.",
+        "Keep the conversation scoped to coverage criterion selection, not broad test-level strategy."
+      ],
+      "absent_signals": [
+        "Do not say 100% line coverage is sufficient for the access check.",
+        "Do not require path coverage for loops that are not present.",
+        "Do not skip assertions over deny outcomes."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Rejects line coverage as too weak for compound Boolean access control."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Recommends condition/decision or MC/DC-style independent-condition evidence."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Requires behavioral allow/deny assertions, not only execution counts."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "safety-critical-mcdc",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An avionics team is preparing verification evidence for Level A flight-control software. A developer proposes using 100% statement coverage from a general unit-test tool as the coverage gate, with no requirements traceability or object-code coverage analysis.",
+      "context": "The code contains compound decisions and will be reviewed by certification authorities. The team asks how to frame the coverage requirement.",
+      "question": "What should the agent require and what should it avoid overstating?",
+      "expected_flags": [
+        "DO-178C Level A needs MC/DC-style structural coverage evidence, not merely statement coverage.",
+        "Safety-critical coverage is requirements-based evidence inside a certification process, not standalone correctness proof.",
+        "Source/object-code gaps and tool qualification or validation may matter when the tool output substantiates verification.",
+        "The response should be precise about ISO 26262-style recommendations and project safety-plan rationale rather than making blanket claims beyond the standard."
+      ],
+      "expected_fix_hints": [
+        "Require requirements traceability, MC/DC analysis for decisions, investigation of coverage gaps, and certification-acceptable tool evidence.",
+        "Analyze whether source-level coverage is sufficient or whether compiler-generated object code needs additional verification.",
+        "Document deviations and supplementary verification where the applicable safety plan allows them.",
+        "Do not use a raw line/statement percentage as the certification-quality criterion."
+      ],
+      "absent_signals": [
+        "Do not claim 100% statement coverage is enough for Level A.",
+        "Do not describe MC/DC as a standalone proof of correctness.",
+        "Do not overstate ISO 26262 as a universal blanket mandate without safety-plan context."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Requires MC/DC-level structural evidence for DO-178C Level A instead of statement coverage."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Frames coverage as requirements-based certification evidence, not standalone correctness proof."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Mentions source/object-code and tool-qualification or validation considerations."
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Avoids overclaiming ISO 26262 beyond the applicable safety plan or table."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "goodhart-resistant-policy",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A platform lead wants to add a repository-wide build failure whenever project line coverage drops below 95%. Several legacy packages have weak tests, a few payment/security modules are high-risk, and most new bugs happen in changed code.",
+      "context": "The team asks for a coverage policy that improves quality without causing coverage-padding.",
+      "question": "Recommend a coverage policy and explain the trade-offs.",
+      "expected_flags": [
+        "A single top-down project line-coverage gate is Goodhart-prone.",
+        "Diff or patch coverage can act as a changed-code floor while legacy cleanup is handled separately.",
+        "Thresholds and criteria should be risk-weighted by module criticality and paired with reviewable exceptions.",
+        "Coverage should be paired with behavioral signals such as mutation testing, assertion review, property tests, or contract/integration evidence."
+      ],
+      "expected_fix_hints": [
+        "Use PR-visible diagnostic coverage first, then soft/hard gates on changed code where the team can sustain them.",
+        "Set stronger criteria for payment/security modules and explicit exception reasons for generated or defensive code.",
+        "Track project coverage as a slow health signal, not the only merge gate.",
+        "Require review of uncovered high-risk lines rather than chasing every uncovered line equally."
+      ],
+      "absent_signals": [
+        "Do not recommend a blanket 95% line-coverage gate as the whole policy.",
+        "Do not treat project coverage, patch coverage, and behavioral quality as the same metric.",
+        "Do not omit exception governance."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Prefers diagnostic and diff/patch-focused coverage over a blanket project trophy gate."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Risk-weights thresholds or criteria by module criticality."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Pairs coverage with behavioral signals and exception review."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "test-level-selection-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user asks: 'For this webhook idempotency fix, should we write a unit test, integration test, contract test, or e2e test?' They provide no coverage report, no coverage policy, and no question about structural reach.",
+      "context": "The request is about choosing the correct test level for a change.",
+      "question": "Should test-coverage-strategy own this request?",
+      "expected_flags": [
+        "The primary owner is testing-strategy.",
+        "test-coverage-strategy re-enters only after a test plan exists and the team needs to interpret structural reach or a coverage policy.",
+        "The answer should preserve the user's need for risk/level reasoning."
+      ],
+      "expected_fix_hints": [
+        "Route to testing-strategy for test-level selection.",
+        "Mention coverage as a later diagnostic, not the primary decision."
+      ],
+      "absent_signals": [
+        "Do not answer primarily with line, branch, or MC/DC coverage criteria.",
+        "Do not claim a coverage percentage decides the test level.",
+        "Do not over-trigger because the request mentions tests."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Routes the primary request to testing-strategy."
+        },
+        {
+          "id": "c2",
+          "polarity": "guard",
+          "statement": "Does not make coverage criterion the primary answer."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "mutation-score-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A QA lead asks whether a suite with decent coverage actually catches defects and requests a mutation-testing rollout for the highest-risk modules.",
+      "context": "The coverage report already shows the code is reached; the open question is whether defects would be detected.",
+      "question": "Should test-coverage-strategy own this request?",
+      "expected_flags": [
+        "The primary owner is mutation-testing.",
+        "Coverage is a necessary-but-not-sufficient floor; mutation testing supplies stronger behavioral defect-detection evidence.",
+        "test-coverage-strategy may provide context but should not displace mutation-testing."
+      ],
+      "expected_fix_hints": [
+        "Route rollout mechanics, mutant selection, survived-mutant triage, and mutation score interpretation to mutation-testing.",
+        "Use coverage only to identify unreachable code where mutants cannot be meaningfully killed."
+      ],
+      "absent_signals": [
+        "Do not treat coverage percentage as enough to answer whether tests catch defects.",
+        "Do not keep the task inside test-coverage-strategy when mutation-testing is explicitly requested."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Routes primary ownership to mutation-testing."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Explains coverage as necessary but insufficient for mutation evidence."
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not answer with coverage policy alone."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

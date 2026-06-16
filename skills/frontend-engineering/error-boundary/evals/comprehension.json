@@ -1,0 +1,141 @@
+{
+  "skill_name": "error-boundary",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "suspense-patterns",
+    "hooks-patterns",
+    "error-tracking",
+    "server-components-design",
+    "api-design"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a React error boundary in 2-3 sentences. State what it catches and what implementation form React requires.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Catches JS errors thrown anywhere in its descendant tree during rendering, lifecycle methods, and constructors",
+        "Renders a fallback UI instead of unmounting the broken subtree to the root",
+        "Must still be a class component as of React 19 (getDerivedStateFromError / componentDidCatch; no hooks equivalent)",
+        "It is a tree-level recovery primitive above the failure point"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does an error boundary catch render and lifecycle throws but NOT event-handler or async errors?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Boundaries catch only what is thrown inside React's call stack during render or lifecycle",
+        "Event handlers run imperatively outside the render phase, so React never sees those throws",
+        "Async errors (setTimeout, Promise rejections, fetch) escape React's call stack entirely",
+        "They propagate to window.onerror / window.onunhandledrejection rather than the boundary"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Explain the granularity tradeoff in placing error boundaries (app-root vs feature vs leaf). How do you choose where they go?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Place boundaries by failure-blast-radius",
+        "A root boundary catches everything but replaces the whole page on any error",
+        "A feature/leaf boundary catches only that scope and lets siblings keep working",
+        "Choose the smallest scope where the fallback UI is still meaningful; layer them (root + route + feature)"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A click handler does `await doRiskyThing()` which can reject, and the team expects the surrounding error boundary to catch it. It doesn't. What is the correct pattern?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Async/event-handler errors are outside React's call stack — the boundary cannot catch them directly",
+        "Catch the async error locally with try/catch in the handler",
+        "Surface it into React state via setState(error)",
+        "Re-throw it during the next render (if (error) throw error) so the boundary catches it"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "How do error boundaries pair with Suspense, and why does nesting order matter?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Error boundaries catch thrown Errors; Suspense catches thrown Promises — distinct primitives, distinct components",
+        "ErrorBoundary outside Suspense: a failed fetch replaces the whole group (including loading state) with error UI — the common case",
+        "Suspense outside ErrorBoundary: loading state stays visible and only the inner slot swaps to error",
+        "Reset/retry (resetKeys, resetErrorBoundary) pairs with Suspense to re-attempt the failed async render"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the error-boundary skill to decide where Suspense fallback boundaries go and to configure the Sentry SDK. Are those in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Suspense fallback placement is out of scope — that is suspense-patterns (loading-state boundary mechanism)",
+        "Configuring the error-reporting SDK and dashboards is out of scope — that is error-tracking (infrastructure)",
+        "error-boundary owns the React-level failure-state primitive and how it feeds caught errors into reporting",
+        "Correctly redirects to suspense-patterns / error-tracking rather than answering out of lane"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A developer says 'error boundaries catch any error that happens in the component, so I don't need try/catch in my handlers.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Boundaries do NOT catch all errors 'in the component' — only render/lifecycle/constructor throws in React's call stack",
+        "Event-handler throws run outside render; the boundary never fires and they hit window.onerror",
+        "Async errors escape the boundary entirely",
+        "The fix is local try/catch + setState + re-throw during render to route the error into the boundary"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify error boundaries are correctly placed and wired in a Next.js App Router app?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Every route segment with render-time failure risk has an error.tsx (or equivalent boundary); global-error.tsx exists as backstop",
+        "Every boundary reports caught errors to external observability (onError / componentDidCatch), not silent swallow",
+        "Event-handler and async errors are caught locally and surfaced via state, not assumed to hit the boundary",
+        "Placement matches failure-blast-radius and Suspense nesting order matches the desired failure-mode UI; reset actually retries the failed work"
+      ]
+    }
+  ]
+}

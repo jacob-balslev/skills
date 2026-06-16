@@ -1,0 +1,99 @@
+{
+  "skill_name": "indexing-strategy",
+  "subject": "Database indexing strategy",
+  "adjacent_concepts": [
+    "query-optimization",
+    "data-modeling",
+    "database-migration",
+    "schema-evolution",
+    "transaction-isolation",
+    "sharding-strategy"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define indexing strategy as this skill teaches it. Include the idea of a maintained access path, the index portfolio, and the read benefit versus write/storage/maintenance cost.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not define indexing as adding an index for every filtered column."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain how B-tree, hash, GIN, GiST, SP-GiST, BRIN, Bloom, columnstore, LSM-family, and vector indexes differ by the access pattern they make cheap.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not say B-tree is always the right structure or that vector indexes are exact."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why is the goal a small explainable index portfolio rather than many per-column indexes? Name at least five costs every extra index can impose.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A team has one slow SQL statement and asks whether to add an index, then separately asks how to create the chosen index online in production. Which part belongs to query-optimization, which part belongs to indexing-strategy, which part belongs to database-migration, and why?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not let indexing-strategy own slow-query diagnosis or live migration lock/rollback mechanics."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify these concerns as indexing-strategy, query-optimization, database-migration, data-modeling, or sharding-strategy: column order for a composite index, EXPLAIN ANALYZE for one bad query, CREATE INDEX CONCURRENTLY rollout, deciding tenant_id as a shard key, generated column versus expression index, and entity key design.",
+      "substance": "boundary",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use the back-of-the-book index analogy to explain why indexes speed some lookups but become harmful when the book has too many maintained indexes.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "A workload filters by tenant_id equality, sorts by created_at descending, and ranges over status; a teammate wants the most selective column first. Apply the skill to choose a composite-index order and explain the trap.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not repeat the most-selective-first myth as the governing rule."
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'The database has an index, so the planner will use it, and if it does not then we should add another one.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not skip plan evidence, selectivity, expression/type mismatch, stale statistics, or unused-index cost."
+    }
+  ]
+}

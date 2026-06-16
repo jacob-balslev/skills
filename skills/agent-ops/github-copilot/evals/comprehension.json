@@ -1,0 +1,98 @@
+{
+  "skill_name": "github-copilot",
+  "subject": "GitHub Copilot's metered cost model and the routing decision of when to spend it",
+  "adjacent_concepts": [
+    "opencode",
+    "opencode-free-models",
+    "autonomous-loop-patterns",
+    "ai-native-development"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define what this skill teaches in 2-3 sentences: Copilot's two cost surfaces (always-free completions vs metered chat/agent), its current billing unit, and when its metered budget is worth spending.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must NOT describe Copilot as a model or as unlimited because it is a paid subscription."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain Copilot's post-June-1-2026 billing: GitHub AI Credits (1 credit = $0.01), how cost is computed from tokens, what changed from the legacy premium-request multipliers, and what stays always-free.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT claim per-model multipliers still govern general cost post-June-2026, nor that completions are credit-billed."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why have an explicit rule for when to spend Copilot's metered budget — what property of the allowance makes spending it on boilerplate pure waste?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must NOT ignore the no-rollover / finite-allowance property that makes the waste real."
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish the `github-copilot` skill from `opencode`, `opencode-free-models`, and `autonomous-loop-patterns`. Name the mechanism each owns.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT claim this skill owns the OpenCode runtime, free-model selection, or agent-loop authoring."
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "You have an agentic multi-file refactor and, separately, a batch of repetitive formatting edits. You are on Copilot Pro (≈300/month, no rollover). Route each and justify the choice in terms of the metered budget.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT spend metered Copilot budget on the repetitive formatting edits when a free/cheap lane or script suffices."
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Classify these as always-free Copilot surface, metered Copilot surface, or 'route off Copilot': inline completions, next-edit suggestions, frontier-model agent refactor, bulk classification of 5000 docs, a deterministic rename across 40 files.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'I pay for Copilot Pro+, so running agent flows all day costs me nothing extra and the old request multipliers tell me the cost.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT accept that a subscription makes metered agent flows free, nor that legacy multipliers govern current cost."
+    },
+    {
+      "id": 8,
+      "dimension": "analogy",
+      "prompt": "Give an analogy that captures the always-free surface vs the metered, non-rolling allowance, and why you only take the metered lane when the work earns it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "medium"
+    }
+  ]
+}

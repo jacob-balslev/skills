@@ -1,0 +1,158 @@
+{
+  "skill_name": "ref-patterns",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "hooks-patterns",
+    "state-management",
+    "client-server-boundary",
+    "component-architecture",
+    "form-ux-architecture"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a React ref in 2-3 sentences. Explain its shape and how it relates to the render cycle.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A ref is a mutable object `{ current: T }` created by useRef(initial) that persists across renders",
+        "Writing to ref.current does NOT trigger a re-render; reading does NOT subscribe the component to changes",
+        "The ref lives outside the reactive graph / outside the render cycle",
+        "Names the two canonical uses: DOM access and mutable instance values"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does a ref persist across renders without participating in the render cycle, and what two families of values is it the right primitive for?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "React creates the { current } container once per component instance and returns the same object every render",
+        "Family 1: DOM access — a stable handle to a DOM node for focus, measurement, animation, or non-React library handoff",
+        "Family 2: mutable instance values — interval id, rAF id, latest-args closure, previous-value snapshot that drive side effects but are not rendered",
+        "The ref exists outside the reactive graph, which is why it does not cause or subscribe to re-renders"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "An engineer wants to store a frequently-changing value and says 'I'll use a ref instead of state to avoid re-renders.' Explain the real trade-off and how to decide.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The choice is SEMANTIC, not a performance optimization: ref = outside the render cycle, state = inside it",
+        "The sharp rule: if the value should cause a re-render when it changes, it is state; if not, it is a ref — no middle ground",
+        "Using a ref to dodge re-renders for a value the UI must reflect breaks the contract: the value changes but the UI does not update",
+        "useMemo (not a ref) is the answer for caching an expensive value derived from inputs"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A parent needs to open and close a child Modal imperatively. Apply this skill to design the API, and state the discipline rules.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Expose a controlled handle via useImperativeHandle (e.g. { open, close }) attached to the forwarded ref, not the raw DOM node",
+        "Expose the MINIMUM surface the parent needs — the parent's ref is a public API",
+        "Do not expose state-read functions; if the parent must read state, lift it up",
+        "Default to props: most cases are better as an isOpen prop + onOpenChange callback than an imperative handle"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A consumer attaches a ref to a compound-component primitive (e.g. <Tabs.Trigger ref={...}>) to focus it on mount, but ref.current stays null. Apply this skill to diagnose and fix it.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Every layer between the consumer and the underlying DOM element must forward the ref",
+        "The fix is to forward refs through each primitive part to its DOM node (Radix Slot / composeRefs pattern merges consumer + internal refs)",
+        "Diagnose by checking that intermediate wrappers accept and pass the ref rather than dropping it",
+        "A compound-component library that does not forward refs through every primitive is not finished"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the ref-patterns skill to decide whether the app's form state should live in the URL, on the server, or in client state, and to set the dependency-array rules for the project's effects. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "State location/ownership (server / client UI / URL / persistent) is state-management's territory, not ref-patterns",
+        "Dependency-array discipline, Rules of Hooks, and effect rules belong to hooks-patterns",
+        "ref-patterns owns the not-state mutable-handle primitive and the ref-vs-state decision boundary, plus the ref family (useRef, forwardRef, useImperativeHandle, ref callbacks)",
+        "Correctly redirects rather than over-owning state architecture or hook discipline"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Someone says 'refs and state are just two mutable-value options — use a ref if you don't want a re-render, state if you do.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The sentence is true but incomplete — it frames a semantic distinction as a performance optimization",
+        "Refs are for values OUTSIDE the render cycle (drive side effects, not displayed); state is for values INSIDE it (changing them must re-evaluate the output)",
+        "Names concrete failures: useRef holding form values that should be useState (UI does not update on edit); useState holding interval ids that should be useRef (re-render storm per tick)",
+        "Do not present 'no re-render' as a free optimization knob"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check when reviewing a component's ref usage to verify it follows this skill?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Every ref is a DOM ref or a mutable instance value — never a substitute for state that drives the UI",
+        "ref.current is read only inside effects, event handlers, or callbacks — never during render; no DOM nodes in useState",
+        "Compound-component primitives forward refs; useImperativeHandle exposes the minimum surface (props + callbacks considered first)",
+        "No ref is passed across the 'use client' boundary as a prop from a Server Component; ref-held resources have cleanup paths",
+        "On React 19, new code uses ref-as-prop; existing forwardRef retained for back-compat or codemod-migrated"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "application",
+      "prompt": "A Server Component renders a child and wants to pass it a ref to measure it on the server. Apply this skill to explain what happens and what to do instead.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Refs only work in Client Components; a ref cannot be created in a Server Component, passed across the 'use client' boundary, or returned from a Server Action (not serializable)",
+        "Server Components produce HTML on the server — there is no DOM node and no client runtime to hold the mutable container",
+        "Move the part of the tree that needs the ref into a Client Component marked 'use client'",
+        "The broader boundary mechanics belong to client-server-boundary; this is the ref-specific consequence"
+      ]
+    }
+  ]
+}

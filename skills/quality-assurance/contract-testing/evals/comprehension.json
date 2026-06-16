@@ -1,0 +1,144 @@
+{
+  "skill_name": "contract-testing",
+  "subject": "Contract testing for consumer/provider compatibility",
+  "adjacent_concepts": [
+    "integration-test-design",
+    "e2e-test-design",
+    "api-design",
+    "event-contract-design",
+    "system-interface-contracts",
+    "testing-strategy"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define contract testing for a service API or message boundary.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "mentions consumer and provider responsibilities",
+        "describes a shared executable contract or pact",
+        "includes provider verification against the real provider or provider test harness",
+        "distinguishes contract testing from generic integration testing"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model behind consumer-driven contract testing.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "consumer expresses the behavior it depends on",
+        "provider proves compatibility by replaying those expectations",
+        "broker or CI records verification results per version",
+        "independent deploy confidence comes from matching consumer, provider, and result versions"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why would a team introduce contract testing instead of adding more cross-service end-to-end tests?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "end-to-end suites are slower and more brittle across service boundaries",
+        "contract tests focus on interface promises",
+        "providers can change internals while preserving consumer obligations",
+        "deploy gates can be based on verified compatibility evidence"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "How is contract testing different from API schema validation, integration tests, and end-to-end tests?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not collapse contract testing into generic schema validation, integration testing, or end-to-end testing.",
+      "expected_elements": [
+        "schema validation checks shape but not complete consumer behavior",
+        "integration tests exercise in-service components or adapters",
+        "end-to-end tests check full user journeys across systems",
+        "contract testing checks versioned interface compatibility between parties"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify Pact, Spring Cloud Contract, Specmatic, OpenAPI validation, and a message fixture suite.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high",
+      "expected_elements": [
+        "Pact as consumer-driven contract testing",
+        "Spring Cloud Contract as JVM contract DSL and stub/provider verification tooling",
+        "Specmatic as API-spec-driven contract testing",
+        "OpenAPI validation alone as schema/signature evidence, not full behavioral compatibility",
+        "message fixtures require executable producer or consumer verification to count as contract tests"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain contract testing, then state where the analogy breaks.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "uses a clear agreement, lease, or promise analogy",
+        "maps each party to consumer and provider obligations",
+        "includes executable verification as more than a written promise",
+        "notes that real systems still need implementation, integration, and journey tests"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "A provider wants to remove a response field. One current consumer ignores it, another older deployed consumer reads it. What contract-testing evidence should decide whether the change can deploy?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "expected_elements": [
+        "checks contracts for all relevant deployed or target consumer versions",
+        "requires provider verification results against those contracts",
+        "uses broker or equivalent deploy gate such as can-i-deploy",
+        "does not rely only on latest consumer tests or OpenAPI optionality"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: Contract tests are just mocks, so they cannot prove anything useful.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "consumer-side mocks generate or validate the contract artifact",
+        "provider-side replay verifies the contract against provider behavior",
+        "published verification results create deploy evidence",
+        "mocks without provider verification are insufficient"
+      ]
+    }
+  ]
+}

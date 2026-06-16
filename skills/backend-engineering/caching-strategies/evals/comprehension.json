@@ -1,0 +1,97 @@
+{
+  "skill_name": "caching-strategies",
+  "subject": "Designing caching across layers to reduce latency and backend load without serving incorrect data.",
+  "adjacent_concepts": [
+    "indexing-strategy",
+    "query-optimization",
+    "http-semantics",
+    "cap-theorem-tradeoffs",
+    "api-design"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define caching in 2-3 sentences. Name the trade it makes and the two coupled choices (staleness budget and invalidation strategy) every caching decision involves.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Explain why caching is worth a dedicated discipline rather than 'wrap it in Redis with a TTL.' What coherence problem does the copy introduce, and what does the discipline control?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "misconception",
+      "prompt": "A developer says 'caching is just setting a TTL.' Explain what this misses. Be specific about invalidation after a source change and the mass-expiry stampede.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not treat a TTL as a complete caching strategy; must name the invalidation-on-change gap and the stampede when keys expire together."
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "An endpoint returns per-user account data and is slow. An engineer proposes caching the response at the CDN with a 5-minute TTL. What is dangerous about this, and what is the correct layer + key design?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must flag that caching per-user (private) data in a shared CDN leaks one user's data to another; must require a private/per-user-keyed layer or Cache-Control: private."
+    },
+    {
+      "id": 5,
+      "dimension": "tradeoff",
+      "prompt": "Compare cache-aside (lazy loading) with write-through for a record that is read often and updated occasionally but must never be served stale after an update. Which fits, and what does each cost?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "anti_pattern",
+      "prompt": "Every cached key is created with the same 60-second TTL. Under steady traffic, what happens every 60 seconds, and what are three mitigations?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "negative_expectation": "Must identify the synchronized-expiry stampede and not propose simply lowering or raising the TTL as the fix; must name jitter, coalescing/single-flight, or stale-while-revalidate."
+    },
+    {
+      "id": 7,
+      "dimension": "boundary",
+      "prompt": "A user asks: \"This query is slow — add an index so it returns faster.\" Should caching-strategies own this? Explain the boundary and name the better owner.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not claim that adding a cache is the same as making the source query faster; must route index work to indexing-strategy / query-optimization."
+    },
+    {
+      "id": 8,
+      "dimension": "mental_model",
+      "prompt": "Explain the principle 'the miss path is the design.' Why is a system's behavior under cache misses (cold start, mass expiry, hot-key invalidation) where caches cause outages, and how does that shape the design?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}

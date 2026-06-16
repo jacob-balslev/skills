@@ -1,0 +1,137 @@
+{
+  "skill_name": "positioning",
+  "subject": "April Dunford product positioning",
+  "adjacent_concepts": [
+    "Playing to Win",
+    "Blue Ocean Strategy",
+    "Porter's Five Forces",
+    "Seven Powers",
+    "competitive alternatives",
+    "market category",
+    "value themes",
+    "sales narrative"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define April Dunford-style product positioning in 2-3 sentences. Include competitive alternatives, differentiated value, best-fit customers, and market category.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Explains positioning as market-context design or choosing context for product value",
+        "Starts from customer-real competitive alternatives",
+        "Connects unique attributes to differentiated value",
+        "Names best-fit customers or customers who care most",
+        "Names market category or frame of reference",
+        "Does not define positioning as a tagline or brand slogan"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Dunford positioning. Name at least 6 primitives and describe how they connect in sequence.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "At least 6 of: competitive alternatives, unique attributes, value themes, best-fit customers, market category, trend context, proof, captured position, sales narrative",
+        "Explains that alternatives come before attributes",
+        "Explains that attributes must map to customer value",
+        "Explains that target customers and category depend on the value evidence",
+        "Explains that the output aligns go-to-market teams"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this positioning skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents treating positioning as tagline writing",
+        "Prevents company-internal competitor lists",
+        "Prevents differentiation without buyer value",
+        "Prevents broad category choice that hides advantage",
+        "Prevents trend hype before value and category are clear"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish positioning from Playing to Win, Blue Ocean Strategy, Porter's Five Forces, Seven Powers, and microcopy. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Playing to Win formulates integrated strategy choices",
+        "Blue Ocean Strategy reconstructs value curves and market boundaries",
+        "Porter's Five Forces diagnoses industry structure and profit pressure",
+        "Seven Powers classifies durable moat mechanisms",
+        "Microcopy writes finished wording after the position is chosen",
+        "Positioning chooses the product-market context that makes differentiated value obvious"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place Dunford positioning among strategy and go-to-market frameworks. What upstream inputs can feed it, and what downstream outputs can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies it as product positioning or go-to-market strategy method",
+        "Names upstream inputs such as customer research, win/loss, sales calls, alternatives, or product attributes",
+        "Names downstream outputs such as sales deck, website messaging, demo flow, category choice, or product-marketing narrative",
+        "Keeps it distinct from full company strategy and final copywriting"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for positioning that preserves category framing and customer-relative alternatives. Then name one bad analogy and explain what it gets wrong.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving shelf placement, map placement, frame of reference, or comparison context",
+        "Maps alternatives to comparison set",
+        "Maps category to the context that creates buyer expectations",
+        "Rejects a bad analogy that treats positioning as decoration, slogan writing, or pure persuasion"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A startup says its positioning is \"the AI platform for modern teams\". Buyers actually compare it with spreadsheets and weekly status meetings. Apply Dunford positioning by diagnosing what is missing and proposing a better next analysis step.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects the generic AI-platform claim as insufficient",
+        "Starts from spreadsheets and status meetings as competitive alternatives",
+        "Asks for unique attributes relative to those alternatives",
+        "Maps attributes to buyer value themes",
+        "Identifies which customers care most",
+        "Tests market category before writing final copy",
+        "Labels assumptions rather than inventing certainty"
+      ]
+    }
+  ]
+}

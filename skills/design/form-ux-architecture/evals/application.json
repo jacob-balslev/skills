@@ -1,0 +1,388 @@
+{
+  "skill_name": "form-ux-architecture",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept of the skill, Coverage, Philosophy of the skill, Method, Verification, Do NOT Use When) and portable form-UX best practice (minimum-data principle, validation timing, client/server split, submission lifecycle, multi-step forms).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "client-server-split",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A signup form does thorough client-side validation in React and the backend endpoint inserts the payload directly, trusting that the client already checked it.",
+      "context": "The team argues server validation is redundant because the client blocks bad input.",
+      "question": "How should the agent respond?",
+      "expected_flags": [
+        "Client-side validation is a UX aid, never a security boundary",
+        "The server must validate every submitted field — the client can be bypassed",
+        "Flags the direct insert of trusted client data as a trust/security defect",
+        "Server errors must map back to fields or a clear form-level recovery path"
+      ],
+      "expected_fix_hints": [
+        "Add server-side validation mirroring the client rules before any insert",
+        "Return field-mapped server errors and surface them on the form"
+      ],
+      "absent_signals": [
+        "Do not treat client validation as sufficient",
+        "Do not insert client-supplied data without server validation"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Client-side validation is a UX aid, never a security boundary."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The server must validate every submitted field — the client can be bypassed."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags the direct insert of trusted client data as a trust/security defect."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Server errors must map back to fields or a clear form-level recovery path."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add server-side validation mirroring the client rules before any insert."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Return field-mapped server errors and surface them on the form."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat client validation as sufficient."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not insert client-supplied data without server validation."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "validation-timing",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An email field shows 'Invalid email' in red after the very first character is typed, and stays red until the address is complete. Users report it feels accusatory.",
+      "context": "Validation is wired to the on-change event for every field.",
+      "question": "How should the agent fix the validation timing?",
+      "expected_flags": [
+        "On-keystroke validation is hostile — it errors before the user can finish",
+        "Move format validation to on-blur (or on-submit) so it fires once the field is complete",
+        "Reserve on-change feedback for cases where immediate feedback is genuinely necessary",
+        "Run async/uniqueness checks after blur or a debounce, not per keystroke"
+      ],
+      "expected_fix_hints": [
+        "Switch the email field to validate on blur",
+        "Only re-validate on change after the first failed blur, to confirm correction"
+      ],
+      "absent_signals": [
+        "Do not keep per-keystroke error display on an incomplete field"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: On-keystroke validation is hostile — it errors before the user can finish."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Move format validation to on-blur (or on-submit) so it fires once the field is complete."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reserve on-change feedback for cases where immediate feedback is genuinely necessary."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Run async/uniqueness checks after blur or a debounce, not per keystroke."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Switch the email field to validate on blur."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Only re-validate on change after the first failed blur, to confirm correction."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep per-keystroke error display on an incomplete field."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "field-minimization",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A lead-capture form asks for 14 fields including company size, industry, job title, and fax number, all marked required. Conversion is poor.",
+      "context": "Sales wants the data 'eventually' but only an email is needed to start the conversation.",
+      "question": "How should the agent restructure the form?",
+      "expected_flags": [
+        "Name the user goal and ask only the minimum data it truly requires",
+        "Remove fields not needed now or that cannot be acted on (e.g. fax)",
+        "Reclassify most fields from required to optional, defaulted, derived, or deferred",
+        "Defer enrichment data to a later step rather than gating the first action"
+      ],
+      "expected_fix_hints": [
+        "Reduce the initial form to the few fields the goal needs",
+        "Collect the rest progressively or after the lead is captured"
+      ],
+      "absent_signals": [
+        "Do not keep 14 required fields for a lead-capture goal",
+        "Do not require data that cannot be acted on"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Name the user goal and ask only the minimum data it truly requires."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Remove fields not needed now or that cannot be acted on (e.g. fax)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reclassify most fields from required to optional, defaulted, derived, or deferred."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Defer enrichment data to a later step rather than gating the first action."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reduce the initial form to the few fields the goal needs."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Collect the rest progressively or after the lead is captured."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep 14 required fields for a lead-capture goal."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not require data that cannot be acted on."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "submission-lifecycle",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A long application form submits, the network drops, and the user loses 20 minutes of typed data with only a generic 'Something went wrong' and no way to retry.",
+      "context": "The form has no pending, failure, retry, or partial-save handling.",
+      "question": "How should the agent define the submission lifecycle?",
+      "expected_flags": [
+        "Define explicit submit, pending, success, failure, retry, and partial-save states",
+        "Preserve entered data on failure so the user can retry without re-typing",
+        "Map the failure to a recovery path rather than a dead-end generic message",
+        "Add autosave/partial-save for long or high-risk data entry"
+      ],
+      "expected_fix_hints": [
+        "Persist form state locally and offer a retry that re-submits the kept data",
+        "Add a clear failure state with a recovery action, not just an error toast"
+      ],
+      "absent_signals": [
+        "Do not discard entered data on submission failure",
+        "Do not leave failure without a defined recovery path"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define explicit submit, pending, success, failure, retry, and partial-save states."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Preserve entered data on failure so the user can retry without re-typing."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Map the failure to a recovery path rather than a dead-end generic message."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add autosave/partial-save for long or high-risk data entry."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Persist form state locally and offer a retry that re-submits the kept data."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a clear failure state with a recovery action, not just an error toast."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not discard entered data on submission failure."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave failure without a defined recovery path."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "multi-step-decision",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A 30-field onboarding form is one scrolling page; later fields depend on answers to earlier ones, and users abandon midway.",
+      "context": "The team is unsure whether to keep one page, build a wizard, or use progressive disclosure.",
+      "question": "What structure should the agent recommend?",
+      "expected_flags": [
+        "Split into a multi-step wizard grouped by the user's mental model",
+        "Use progressive disclosure for fields that depend on earlier answers",
+        "Add a review step before final submit for a long flow",
+        "Each step should be a coherent sub-task, not an arbitrary slice of fields"
+      ],
+      "expected_fix_hints": [
+        "Group the 30 fields into a few mental-model-aligned steps",
+        "Reveal dependent fields only after the answer that makes them relevant"
+      ],
+      "absent_signals": [
+        "Do not keep an undifferentiated 30-field single page"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Split into a multi-step wizard grouped by the user's mental model."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use progressive disclosure for fields that depend on earlier answers."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add a review step before final submit for a long flow."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Each step should be a coherent sub-task, not an arbitrary slice of fields."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Group the 30 fields into a few mental-model-aligned steps."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reveal dependent fields only after the answer that makes them relevant."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep an undifferentiated 30-field single page."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the form-ux owner to rewrite all the inline error message copy to sound friendlier and to add ARIA labels so screen readers announce each field.",
+      "context": "The team conflates form UX with all text and accessibility work on the form.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Error-message wording is out of scope — that is microcopy",
+        "ARIA labels and screen-reader announcement are out of scope — that is a11y",
+        "This skill owns when validation appears and how users recover, plus structure and the submit lifecycle",
+        "Redirects the copy and a11y parts rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand message wording to microcopy and labels/announcement to a11y",
+        "Provide the in-scope part: validation timing and the recovery flow"
+      ],
+      "absent_signals": [
+        "Do not rewrite the error copy as if it were this skill's job",
+        "Do not author the ARIA labeling here"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Error-message wording is out of scope — that is microcopy."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: ARIA labels and screen-reader announcement are out of scope — that is a11y."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This skill owns when validation appears and how users recover, plus structure and the submit lifecycle."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirects the copy and a11y parts rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand message wording to microcopy and labels/announcement to a11y."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide the in-scope part: validation timing and the recovery flow."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rewrite the error copy as if it were this skill's job."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not author the ARIA labeling here."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

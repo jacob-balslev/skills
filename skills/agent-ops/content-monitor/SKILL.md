@@ -1,54 +1,50 @@
 ---
 name: content-monitor
+# description: routing-facing summary of when this skill activates and what it covers.
 description: "Use when building or operating multi-source intelligence pipelines across video, GitHub, Reddit, curated lists, search, and RSS feeds. Covers source adapters, discovery/transcription/summarization/evaluation phases, deduplication, schedules, model-stage choice, and actionable brief generation. Do NOT use for SEO keyword research (use `keywords`) or competitive product analysis (use `user-research`)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime and portability notes for this skill.
 compatibility:
   notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
 
 
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: agent-ops
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # scope: free-text PRD-style statement of what the skill teaches and where it deploys
   # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
   scope: "Building and operating multi-source intelligence pipelines across video, GitHub, Reddit, curated lists, search, and RSS — source adapters, the discovery/transcription/summarization/evaluation phases, deduplication, schedules, per-stage model choice, and actionable brief generation. Portable across any content-monitoring pipeline; principle-grounded, not repo-bound. Excludes SEO keyword research (keywords) and competitive product analysis (user-research)."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: agent/ops
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-03-28"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-03-28\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -56,55 +52,52 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"content monitor\",\"github trending\",\"blog monitor\",\"intelligence brief\",\"youtube monitor\",\"awesome list\",\"trend tracking\",\"content pipeline\",\"content-monitor\",\"rss feed\"]"
+  keywords: ["content monitor","github trending","blog monitor","intelligence brief","youtube monitor","awesome list","trend tracking","content pipeline","content-monitor","rss feed"]
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
-  triggers: "[\"content-monitor-skill\",\"research-mode\"]"
+  triggers: ["content-monitor-skill","research-mode"]
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"boundary\":[\"keywords\",\"seo-strategy\"],\"verify_with\":[\"evaluation\"]}"
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/content-monitor/SKILL.md
+  skill_graph_canonical_skill: skills/agent-ops/content-monitor/SKILL.md
   # === Health Block (written by the audit loop, not hand-authored) ===
   # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+relations:
+  related: ["seo-strategy","keywords","positioning"]
+  verify_with: ["evaluation"]
 ---
 # Content Monitor
+
+## Concept of the skill
+
+Building and operating multi-source intelligence pipelines across video, GitHub, Reddit, curated lists, search, and RSS — source adapters, the discovery/transcription/summarization/evaluation phases, deduplication, schedules, per-stage model choice, and actionable brief generation.
+
 
 ## Domain Context
 
@@ -127,8 +120,7 @@ Use the ordered phases, checklists, and guardrails in the sections below as the 
 
 The multi-source intelligence pipeline that tracks AI coding, e-commerce tooling, and agent infrastructure trends. Covers the live source groups configured in `scripts/content-monitor/sources.json` and `scripts/content-monitor/channels.json`, the 4-phase pipeline (Discover, Extract, Summarize, Evaluate), the MiniMax/GPT-5.4 model split, source adapter contract, deduplication via `seen-items.json` (at `.content-monitor/`), scheduling cadence per source type, evaluation rubric dimensions, and the daily digest output format. Source code lives at `scripts/content-monitor/`. State files live at `.content-monitor/` (the Development repo root).
 
-## Philosophy
-
+## Philosophy of the skill
 Staying current on AI tooling, agent patterns, and e-commerce integrations is essential for a system that competes on engineering velocity. Without this pipeline, the team would manually scan dozens of sources and miss emerging patterns that could inform skill creation, architecture decisions, or competitive positioning. The pipeline automates discovery and extraction (cheap) and reserves expensive model reasoning for evaluation (scarce), following the same constraint-awareness principle that governs the rest of the system.
 
 ### Location Precision

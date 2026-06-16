@@ -1,0 +1,428 @@
+{
+  "skill_name": "claude-haiku",
+  "subject": "routing a task to the fast/cheap tier (Claude Haiku)",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "claude-sonnet",
+    "claude-opus",
+    "autonomous-loop-patterns",
+    "claude-api"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "correct-fast-tier-fit",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A high-volume pipeline transcribes incoming webhook bodies into a fixed target schema — one cheap structured-output call per record, tens of thousands per day. The team is running them on the balanced tier and complaining about cost and latency.",
+      "context": "Mechanical slot-filling against a known schema; throughput and per-call cost dominate; no reasoning depth required.",
+      "question": "Where should this work run, and why?",
+      "expected_flags": [
+        "Mechanical, high-volume slot-filling against a fixed schema is the fast tier's lane",
+        "Per-call cost and latency dominate at this volume, so the cheaper/faster tier is the right home",
+        "The balanced tier's reasoning is wasted here"
+      ],
+      "expected_fix_hints": [
+        "Route the transcription/slot-filling to the fast tier (claude-haiku)",
+        "Keep app-side validation; the model only fills the schema"
+      ],
+      "absent_signals": [
+        "Do not keep high-volume mechanical slot-filling on the balanced tier",
+        "Do not claim this work needs reasoning depth"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Mechanical, high-volume slot-filling against a fixed schema is the fast tier's lane."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Per-call cost and latency dominate at this volume, so the cheaper/faster tier is the right home."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The balanced tier's reasoning is wasted here."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the transcription/slot-filling to the fast tier (claude-haiku)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep app-side validation; the model only fills the schema."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep high-volume mechanical slot-filling on the balanced tier."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim this work needs reasoning depth."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "context-ceiling-boundary",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A task is mechanically trivial — extract a few fields from a single very large document — but the document is 600K tokens. The team plans to run it on the fast tier 'because the task is simple.'",
+      "context": "The task is simple but the input exceeds the fast tier's 200K context ceiling.",
+      "question": "Can the fast tier run this? Explain the boundary that applies.",
+      "expected_flags": [
+        "The fast tier's 200K context ceiling is a STRUCTURAL limit — a 600K-token input cannot run on it regardless of how mechanical the task is",
+        "The context-size boundary is separate from the reasoning-difficulty boundary and must not be conflated",
+        "This forces escalation to a 1M-context tier even though the task needs no reasoning depth"
+      ],
+      "expected_fix_hints": [
+        "Escalate to a 1M-context tier (balanced or frontier) because the input exceeds 200K",
+        "Alternatively chunk the document so each call fits under 200K if that preserves correctness"
+      ],
+      "absent_signals": [
+        "Do not run a 600K-token input on the fast tier because the task 'looks simple'",
+        "Do not conflate the context ceiling with the reasoning-difficulty limit"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The fast tier's 200K context ceiling is a STRUCTURAL limit — a 600K-token input cannot run on it regardless of how mechanical the task is."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The context-size boundary is separate from the reasoning-difficulty boundary and must not be conflated."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This forces escalation to a 1M-context tier even though the task needs no reasoning depth."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Escalate to a 1M-context tier (balanced or frontier) because the input exceeds 200K."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Alternatively chunk the document so each call fits under 200K if that preserves correctness."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run a 600K-token input on the fast tier because the task 'looks simple'."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not conflate the context ceiling with the reasoning-difficulty limit."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "high-correctness-cost-trap",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A small-looking task validates whether a financial discount calculation is correct before money moves. The team routes it to the fast tier 'because it's just a quick check.'",
+      "context": "The task is short but a wrong answer causes a financial miscalculation; correctness cost is high.",
+      "question": "Is the fast tier the right choice for this check? Justify.",
+      "expected_flags": [
+        "A small-looking task with a high wrong-answer cost (money math) is the fast tier's trap case",
+        "The cost of a wrong answer outweighs the token saving, so this routes UP despite looking trivial",
+        "Cheapness is only safe inside the difficulty/correctness edges, not across them"
+      ],
+      "expected_fix_hints": [
+        "Route the financial-correctness check up to the balanced or frontier tier",
+        "Reserve the fast tier for low-stakes bounded judgment"
+      ],
+      "absent_signals": [
+        "Do not route high-correctness-cost money math to the fast tier to save tokens",
+        "Do not treat task size as a proxy for safe-to-cheapen"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A small-looking task with a high wrong-answer cost (money math) is the fast tier's trap case."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The cost of a wrong answer outweighs the token saving, so this routes UP despite looking trivial."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cheapness is only safe inside the difficulty/correctness edges, not across them."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the financial-correctness check up to the balanced or frontier tier."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve the fast tier for low-stakes bounded judgment."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route high-correctness-cost money math to the fast tier to save tokens."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat task size as a proxy for safe-to-cheapen."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "drop-below-to-script",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A job does a fully deterministic bulk rename and find-and-replace across a directory with a known target string. The team routes it to the fast tier to keep it cheap.",
+      "context": "The transformation is fully deterministic and repeatable; no judgment of any kind is required.",
+      "question": "Is the fast tier the right executor? What is below it?",
+      "expected_flags": [
+        "Fully deterministic, repeatable work belongs below any model — a script",
+        "The fast tier still costs tokens and latency for work a script does identically and exactly",
+        "The floor below the fast tier is 'no model at all'"
+      ],
+      "expected_fix_hints": [
+        "Use a deterministic script (sed/codemod) for the rename and replace",
+        "Reserve the fast tier for tasks needing a little judgment a regex cannot give"
+      ],
+      "absent_signals": [
+        "Do not route fully deterministic find-and-replace to any model when a script suffices",
+        "Do not treat the fast tier as the cheapest possible option when a script is cheaper and exact"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Fully deterministic, repeatable work belongs below any model — a script."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The fast tier still costs tokens and latency for work a script does identically and exactly."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The floor below the fast tier is 'no model at all'."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a deterministic script (sed/codemod) for the rename and replace."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve the fast tier for tasks needing a little judgment a regex cannot give."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route fully deterministic find-and-replace to any model when a script suffices."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat the fast tier as the cheapest possible option when a script is cheaper and exact."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "missing-effort-knob",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A task on the fast tier needs to dial up reasoning depth for a borderline-hard classification, and the engineer plans to pass an `effort: high` parameter to the fast-tier call.",
+      "context": "The decision rests on a capability fact: whether the fast tier supports the effort parameter.",
+      "question": "Will that work? What does it imply about the routing?",
+      "expected_flags": [
+        "The fast tier does not support the effort parameter — there is no way to dial up reasoning depth on it",
+        "A task that needs tunable reasoning depth needs a higher tier by definition",
+        "The absence of the effort knob is itself a routing signal, not just a missing feature"
+      ],
+      "expected_fix_hints": [
+        "If the task genuinely needs more reasoning depth, escalate to a tier that supports effort",
+        "Verify the current effort-support fact live rather than assuming"
+      ],
+      "absent_signals": [
+        "Do not assume the fast tier accepts an effort parameter",
+        "Do not keep a reasoning-depth-dependent task on the fast tier"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The fast tier does not support the effort parameter — there is no way to dial up reasoning depth on it."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A task that needs tunable reasoning depth needs a higher tier by definition."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The absence of the effort knob is itself a routing signal, not just a missing feature."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: If the task genuinely needs more reasoning depth, escalate to a tier that supports effort."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify the current effort-support fact live rather than assuming."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the fast tier accepts an effort parameter."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep a reasoning-depth-dependent task on the fast tier."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "overload-fallback",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "During a provider overload (529 errors) on the busier tiers, a team needs to keep a batch of mechanical classification jobs flowing and asks whether the fast tier helps.",
+      "context": "The jobs are mechanical and low-stakes; the busier tiers are returning overload errors; the fast tier is often less loaded.",
+      "question": "Is the fast tier a reasonable fallback here? Any caveat?",
+      "expected_flags": [
+        "The fast tier is often less loaded, making it a practical fallback during provider overload for mechanical work",
+        "It fits because the jobs are mechanical and low-stakes, not merely because it is available",
+        "High-volume ramps may hit the fast tier's separate rate-limit pool, which should be checked before scaling"
+      ],
+      "expected_fix_hints": [
+        "Use the fast tier as an overload fallback for the mechanical classification batch",
+        "Check the fast tier's rate-limit pool before scaling volume onto it"
+      ],
+      "absent_signals": [
+        "Do not move reasoning-heavy work to the fast tier just because the busier tiers are overloaded",
+        "Do not assume unlimited fast-tier capacity without checking its separate rate-limit pool"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The fast tier is often less loaded, making it a practical fallback during provider overload for mechanical work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: It fits because the jobs are mechanical and low-stakes, not merely because it is available."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: High-volume ramps may hit the fast tier's separate rate-limit pool, which should be checked before scaling."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use the fast tier as an overload fallback for the mechanical classification batch."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check the fast tier's rate-limit pool before scaling volume onto it."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not move reasoning-heavy work to the fast tier just because the busier tiers are overloaded."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume unlimited fast-tier capacity without checking its separate rate-limit pool."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "harness-and-loop-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks how to design the polling loop and checkpoint topology their fast-tier status-checker runs inside, and how to write the API request that configures it — framing both as 'Haiku questions.'",
+      "context": "Loop topology and API call syntax are separate concerns from which model tier to pick; the team folds them under the Haiku label.",
+      "question": "How should the agent scope and route this request?",
+      "expected_flags": [
+        "Designing the polling/checkpoint loop is loop architecture (autonomous-loop-patterns), not a model-tier decision",
+        "Writing the API request is call-site syntax (the claude-api reference), not the routing decision",
+        "Neither sub-question is answered by the fast-tier routing skill; both should be redirected"
+      ],
+      "expected_fix_hints": [
+        "Route the loop/checkpoint design to autonomous-loop-patterns",
+        "Route the API request syntax to the claude-api reference"
+      ],
+      "absent_signals": [
+        "Do not answer loop-topology design as if it were a model-tier choice",
+        "Do not write the API request syntax under the fast-tier routing skill's lane"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Designing the polling/checkpoint loop is loop architecture (autonomous-loop-patterns), not a model-tier decision."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Writing the API request is call-site syntax (the claude-api reference), not the routing decision."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Neither sub-question is answered by the fast-tier routing skill; both should be redirected."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the loop/checkpoint design to autonomous-loop-patterns."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the API request syntax to the claude-api reference."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer loop-topology design as if it were a model-tier choice."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the API request syntax under the fast-tier routing skill's lane."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

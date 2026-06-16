@@ -1,0 +1,47 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-08",
+  "drift_check": {
+    "last_verified": "2026-06-08"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-11",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "drift_status": "UNKNOWN",
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-14",
+    "last_run": {
+      "at": "2026-06-14T05:58:53.172Z",
+      "operation": "panel",
+      "phase": "text",
+      "agent": "gpt-5.5",
+      "status": "failed",
+      "duration_ms": 20881,
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "source": "input4.token_usage"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 37,
+      "total_duration_ms": 4994985,
+      "total_tokens": 0,
+      "tokens_observed_count": 37
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-05-29",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/positioning/references/positioning-sources.md": "4c11da796dffc5528922ebb48e137516b33474d4e000e01c282b086c4c28c0c4",
+      "skills/reasoning-strategy/positioning/references/upstream-displacement-2026-05-29.md": "3d982f7fd2cfd4e0e24d248117a8f7bc0e4caa21ff5ead8c2e5f5f0ca5aa0547"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-06-13",
+  "last_changed": "2026-05-29",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "drift_status": "EXTERNAL_UNHASHED",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  }
+}

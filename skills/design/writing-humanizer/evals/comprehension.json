@@ -1,0 +1,139 @@
+{
+  "skill_name": "writing-humanizer",
+  "subject": "design",
+  "adjacent_concepts": [
+    "linguistics",
+    "microcopy",
+    "semantics"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define writing humanization in 2-3 sentences. Name its primitives and the workflow it follows.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as prose-quality repair (clear, direct, trustworthy text) while preserving truth and intent — not authorship laundering",
+        "Names primitives: AI tells, readability signals, rhythm signals, audience register, evidence specificity",
+        "States the repeatable 5-step pass (Tell Scan, Readability Check, Structural Rewrite, Rhythm Pass, Voice Calibration)",
+        "Notes the reader, not the detector, is the audience"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does the skill order its workflow as remove tells → clarify actors → improve readability → vary rhythm → calibrate tone, rather than jumping straight to tone?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "The primitives are addressed in a fixed order so earlier fixes (tells, voice, readability) set up later ones (rhythm, tone)",
+        "Structural uniformity is a stronger fingerprint than word choice, so rhythm/structure precede surface polish",
+        "Tone calibration is last because it is surface-specific and applies to already-clarified prose",
+        "It replaces vague 'make it sound human' with a repeatable, ordered edit pass"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Readability formulas (Flesch-Kincaid, Gunning Fog, Reading Ease) — how should they be used, and what is the risk of treating them as optimization targets?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Use formulas to diagnose problems, not as targets to optimize toward",
+        "Over-optimizing for a score produces choppy, unnatural prose",
+        "Match the formula to the surface (FK grade for general docs, Fog for technical docs, Reading Ease for UI copy)",
+        "Names the rough targets and red-flag thresholds"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A paragraph starts six consecutive sentences with 'The dashboard' and every sentence is about the same length. How do you apply the rhythm rules?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Rotate opening words — never start 3+ consecutive sentences with the same word (especially The/This/It/There)",
+        "Vary sentence length with a short-long-medium (3-beat) pattern",
+        "Mix sentence structures (declarative, compound, conditional, question+answer, fragment)",
+        "Monotonous structure is the #1 AI tell; the fix restores natural cadence without padding"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Convert this to active voice and remove hedging: 'In order to ensure that the migration is applied, it is recommended that the connection be checked.' Explain the decision.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Identify the reader as the actor → use the imperative ('Check the connection before applying the migration')",
+        "Delete 'in order to ensure' → 'to' / 'before'; delete 'it is recommended that' → direct imperative",
+        "Names the actor-knownness decision tree (known actor → name them; reader is actor → imperative)",
+        "Result is shorter, direct, and still accurate"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A PM asks the writing-humanizer skill to write a persuasive marketing headline for the pricing page and to restructure the doc into a progressive-disclosure tutorial. Is either in scope? Why?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Persuasive marketing/brand-voice work is copywriting, out of scope",
+        "Restructuring into a tutorial / progressive disclosure is documentation architecture, out of scope",
+        "Writing-humanizer owns prose-quality humanization (AI-tell removal, rhythm, tone) within prose, not doc structure or persuasion",
+        "Offers the in-scope part: humanizing the existing prose form"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Someone says: 'To humanize, just add contractions, slang, and a few typos until the AI-detector score drops.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Gaming a detector treats the detector as the audience; the real audience is the reader",
+        "Never insert typos or grammatical errors, or obscure vocabulary just to raise perplexity",
+        "Detectors are probabilistic, not proof of authorship; do not promise detector-proof output",
+        "Good humanization preserves truth, sharpens specificity, and refuses edits that reduce clarity or honesty"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What checks confirm a piece of prose has been properly humanized?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Zero Tier 1 AI tells remaining; no avoidable passive voice",
+        "Average sentence length ~12-18 words; sentence lengths vary; no 3+ consecutive sentences with the same opener",
+        "Paragraph length within the per-context limit; tone matches the surface; concrete details over abstract claims",
+        "No metacommentary; no claim of detector-proof or human authorship when AI was materially involved"
+      ]
+    }
+  ]
+}

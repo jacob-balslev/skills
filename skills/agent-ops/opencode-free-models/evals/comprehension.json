@@ -1,0 +1,98 @@
+{
+  "skill_name": "opencode-free-models",
+  "subject": "Cost-routing across free and cheap agent models, with a hard quality-ceiling boundary",
+  "adjacent_concepts": [
+    "opencode",
+    "github-copilot",
+    "autonomous-loop-patterns",
+    "ai-native-development"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define what this skill teaches in 2-3 sentences: cost-routing among free/cheap agent models, the quality-bar-vs-quality-ceiling match, and escalate-on-signal.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must NOT reduce the skill to 'always use the cheapest model' — that ignores the quality ceiling."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the quality-bar (of the task) vs quality-ceiling (of the model) framing, and how it decides whether free is the right lane and when to escalate.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT treat retrying a free model as a substitute for escalating when the task's bar exceeds the model's ceiling."
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "A task is to GRADE skill-eval responses (LLM-as-judge). Which model lane does this skill route it to, and why is that a hard boundary rather than a cost tradeoff?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT route quality-judging (grading/eval scoring/audit verdicts) to a free or cheap model under any cost rationale."
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "You have 5,000 short documents to classify into 6 categories, plus a separate task to author a security review of an auth change. Route each to a model lane and justify using each model's ceiling.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT send the security review to a free/cheap model, and must NOT send the bulk classification to a frontier model by default."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Match each free model family to its best-fit work: MiniMax M3 Free, NVIDIA Nemotron 3, GLM-class, GPT-5 Nano-class. State each one's distinguishing strength and its ceiling/tradeoff.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must NOT claim a fixed permanent free roster — the Zen free tier is promotional and changes."
+    },
+    {
+      "id": 6,
+      "dimension": "purpose",
+      "prompt": "Why route mechanical and high-volume work to free models at all — what does it preserve, and why is that worth the routing overhead?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Free models are basically toys — and anyway, if a free model gets it wrong I'll just retry until it's right, so cost is the only thing that matters.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT accept either error: free models clear a real band of work, AND retrying cannot raise a model above its quality ceiling."
+    },
+    {
+      "id": 8,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for matching a model's ceiling to a task's bar, and for why pushing quality-judging work onto a free model backfires.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "medium"
+    }
+  ]
+}

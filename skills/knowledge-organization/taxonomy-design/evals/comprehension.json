@@ -1,0 +1,88 @@
+{
+  "skill_name": "taxonomy-design",
+  "subject": "Teaches controlled classification systems for categories, facets, browse taxonomies, SKOS broader/narrower links,…",
+  "adjacent_concepts": [
+    "skill-infrastructure",
+    "information-architecture",
+    "context-graph",
+    "canonical-repo-structure",
+    "conceptual-modeling",
+    "ontology-modeling",
+    "knowledge-modeling",
+    "semantic-relations"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define taxonomy-design in 2-3 sentences. Include the work it owns and the kind of user request that should activate it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Explain why an agent would need the taxonomy-design skill instead of relying on generic reasoning. Name the failure it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "mental_model",
+      "prompt": "Describe the mental model or main primitives behind taxonomy-design. Keep it operational rather than just naming the topic.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks: \"define OWL class restrictions and property domains for this knowledge base\". Should taxonomy-design activate? Explain the boundary and name the better owner when possible.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not force taxonomy-design onto a request it explicitly excludes or that belongs to skill-infrastructure, information-architecture, context-graph, canonical-repo-structure, conceptual-modeling, ontology-modeling, knowledge-modeling, semantic-relations."
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A user asks: \"our skill categories are drifting: some are by domain, some by activity, and some by tool - how should the taxonomy be redesigned?\". Show the first concrete steps an agent should take when applying taxonomy-design.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Place taxonomy-design among its adjacent skills (skill-infrastructure, information-architecture, context-graph, canonical-repo-structure, conceptual-modeling, ontology-modeling, knowledge-modeling, semantic-relations). What does it own, and what does it verify with or defer to?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "medium",
+      "negative_expectation": "Must not collapse related skills into interchangeable names; ownership must be mechanism-level."
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Name one plausible misconception about taxonomy-design and correct it with a mechanism-level explanation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

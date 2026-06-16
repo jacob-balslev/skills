@@ -29,6 +29,48 @@
       "absent_signals": [
         "Do not treat this as visual polish.",
         "Do not add ARIA without matching keyboard behavior."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keyboard operation and focus management are core accessibility behavior."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Focus should move into the modal on open, stay contained while open, and return to the trigger on close."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Escape close behavior and visible focus must be tested."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use an accessible dialog pattern or native primitives where available."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Wire Escape, tab containment, aria-modal/dialog labelling, and focus return."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify with keyboard-only navigation and assistive technology announcements."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat this as visual polish."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add ARIA without matching keyboard behavior."
+        }
       ]
     },
     {
@@ -52,6 +94,48 @@
       "absent_signals": [
         "Do not only rewrite the text tone.",
         "Do not rely on color or toast placement as the accessibility fix."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Validation state changes must be perceivable to assistive technology."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Errors need programmatic association with their fields or a live region summary."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Visible-only toast feedback is insufficient."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use aria-describedby or equivalent field-error association."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a role=status or role=alert/live region for summary changes when appropriate."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep labels and error text programmatically reachable."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not only rewrite the text tone."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on color or toast placement as the accessibility fix."
+        }
       ]
     },
     {
@@ -74,7 +158,169 @@
       "absent_signals": [
         "Do not claim reading level alone proves accessibility compliance.",
         "Do not prescribe ARIA for a pure copy rewrite."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is language/readability work, not interactive accessibility implementation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The correct owner is linguistics, documentation, or microcopy depending on context."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: a11y should not over-trigger on every use of the word accessible."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to the wording skill."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Only re-enter a11y if the message has programmatic labeling, announcement, or interaction implications."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim reading level alone proves accessibility compliance."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not prescribe ARIA for a pure copy rewrite."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "custom-menu-keyboard-support",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A custom account menu opens on click, but arrow keys do nothing, Escape does not close the menu, and focus remains on a hidden item after the menu closes.",
+      "context": "The component is implemented with div elements and click handlers in a React navigation bar.",
+      "question": "What should be required before this menu ships?",
+      "expected_flags": [
+        "Keyboard behavior is a core accessibility requirement for custom interactive widgets.",
+        "The menu needs a coherent focus model while open and after close.",
+        "ARIA role/name/state must match the actual keyboard behavior."
+      ],
+      "expected_fix_hints": [
+        "Prefer a native or proven accessible menu/disclosure pattern when possible.",
+        "Implement and test arrow-key or disclosure-appropriate keyboard behavior, Escape close, visible focus, and focus return.",
+        "Expose programmatic names and expanded/open state that match the visible UI."
+      ],
+      "absent_signals": [
+        "Do not approve click-only interaction.",
+        "Do not add ARIA roles without implementing the required keyboard behavior."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keyboard behavior is a core accessibility requirement for custom interactive widgets."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The menu needs a coherent focus model while open and after close."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: ARIA role/name/state must match the actual keyboard behavior."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Prefer a native or proven accessible menu/disclosure pattern when possible."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Implement and test arrow-key or disclosure-appropriate keyboard behavior, Escape close, visible focus, and focus return."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Expose programmatic names and expanded/open state that match the visible UI."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not approve click-only interaction."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add ARIA roles without implementing the required keyboard behavior."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "visual-branding-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user asks for a more premium visual style for a button: different radius, shadow, and brand color. No contrast, keyboard, focus, semantic, labeling, or state-announcement problem is described.",
+      "context": "The button is already a native button with a visible focus indicator and accessible name.",
+      "question": "Should a11y own this request?",
+      "expected_flags": [
+        "This is visual design work unless the requested color or styling harms perceivability.",
+        "The correct owner is visual-design-foundations or color-system-design for brand styling.",
+        "a11y re-enters scope only when contrast, focus visibility, semantics, keyboard operation, naming, or announcements are affected."
+      ],
+      "expected_fix_hints": [
+        "Route the visual-branding request to the design skill.",
+        "Keep an accessibility check only as a verification constraint for contrast and focus visibility if styling changes."
+      ],
+      "absent_signals": [
+        "Do not treat all button styling as a11y-owned implementation work.",
+        "Do not prescribe ARIA for a purely visual styling request."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is visual design work unless the requested color or styling harms perceivability."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The correct owner is visual-design-foundations or color-system-design for brand styling."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: a11y re-enters scope only when contrast, focus visibility, semantics, keyboard operation, naming, or announcements are affected."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the visual-branding request to the design skill."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep an accessibility check only as a verification constraint for contrast and focus visibility if styling changes."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat all button styling as a11y-owned implementation work."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not prescribe ARIA for a purely visual styling request."
+        }
       ]
     }
-  ]
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
 }

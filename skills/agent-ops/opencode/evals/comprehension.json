@@ -1,0 +1,97 @@
+{
+  "skill_name": "opencode",
+  "subject": "The OpenCode provider-agnostic agent runtime and its non-interactive invocation",
+  "adjacent_concepts": [
+    "opencode-free-models",
+    "github-copilot",
+    "autonomous-loop-patterns",
+    "ai-native-development"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define OpenCode in 2-3 sentences. Make clear it is a runtime/harness, that it is provider-agnostic across many LLM providers, and that it has both an interactive TUI and a non-interactive `opencode run` mode.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "negative_expectation": "Must NOT describe OpenCode as a model, a model quality tier, or a hosted marketplace."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the harness-vs-engine separation OpenCode embodies, and how model-selection precedence resolves at startup (CLI flag, opencode.json, last session, internal default).",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT claim the model is fixed to the runtime, nor invent a precedence order where config silently overrides an explicit --model flag."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does OpenCode exist — what problem does decoupling the agent harness from the model vendor solve that single-vendor CLIs do not?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish the `opencode` skill from `opencode-free-models`, `autonomous-loop-patterns`, and `github-copilot`. Name the mechanism each owns.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT claim this skill owns which free model to pick for a task, nor owns the agent-loop logic, nor owns Copilot premium-request economics."
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "You need to run a one-shot prompt through OpenCode from a shell script, select a specific provider's model, and parse the result as JSON. Which command and flags do you use, and where does the model string come from?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "negative_expectation": "Must NOT use the interactive TUI for an automated script, nor invent a non-existent flag instead of `opencode run --model provider/model --format json`."
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Classify these as runtime concerns vs model concerns vs loop concerns: `opencode run`, the `provider/model` string, OpenCode Zen's free tier, which free model fits a classification job, the retry/claim logic of an agent loop, local Ollama model config.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'We ran it on OpenCode, so the output is high quality and the run was expensive.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT accept that naming the runtime implies anything about quality or cost; quality/cost come from the routed provider/model."
+    },
+    {
+      "id": 8,
+      "dimension": "analogy",
+      "prompt": "Give an analogy that captures why the runtime stays constant while the model is swapped per task, and why 'I used OpenCode' says nothing about capability.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "medium"
+    }
+  ]
+}

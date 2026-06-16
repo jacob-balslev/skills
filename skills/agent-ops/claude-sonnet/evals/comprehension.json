@@ -1,0 +1,86 @@
+{
+  "skill_name": "claude-sonnet",
+  "subject": "Routing tasks to the balanced implementation model tier (Claude Sonnet)",
+  "adjacent_concepts": [
+    "claude-opus",
+    "claude-haiku",
+    "autonomous-loop-patterns",
+    "agent-engineering",
+    "tool-call-strategy"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "In 2-3 sentences, define the role of the balanced implementation tier in a model roster. Explain why it is described as the 'default lane' rather than a budget compromise.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "What is the 'default-lane test' for deciding whether a task stays on the balanced tier or moves off it, and in which two directions can it move? Explain why anchoring a default prevents the two opposite routing failures.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Three tasks: (a) 'add a paginated list endpoint with tests against the existing repository pattern', (b) 'design the cross-service event contract between billing and fulfillment', (c) 'convert 400 product rows from CSV to our JSON shape'. Assign a tier to each and justify the split across all three tiers.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT route the well-specified endpoint+tests up to the frontier tier, must NOT route the cross-service contract design down to the balanced tier, and must NOT route the mechanical CSV conversion to any reasoning-heavy tier when a script or the fast tier suffices."
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish claude-sonnet from claude-opus and claude-haiku by the specific signal that triggers a move OFF the balanced default in each direction. Name the mechanism, not just 'harder' or 'cheaper'.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT describe the move to Opus and the move to Haiku as the same kind of decision; one is an escalation on task hardness, the other a drop on mechanical/volume signals."
+    },
+    {
+      "id": 5,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Sonnet is always cheaper than Opus, so for any large 1M-context task you should always pick Sonnet to save money.' Address both the standard window and the 1M-context tier.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT assert that the balanced tier's 1M-context mode is unconditionally cheaper; on subscription runners the frontier tier's 1M-context can be entitlement-included while the balanced tier's 1M-context routes to metered per-token billing."
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Classify these facts as either a REASON to keep a task on the balanced tier or a REASON to escalate to the frontier tier: the shared 1M context window, the absence of the xhigh/max effort settings, the 64K output ceiling, and the lower per-token cost. Explain each.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "dimension": "analogy",
+      "prompt": "Give an analogy that captures why the balanced tier handles the bulk of the workload well while still leaving room to escalate or delegate, and what the analogy implies about treating it as the default.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "medium"
+    }
+  ]
+}

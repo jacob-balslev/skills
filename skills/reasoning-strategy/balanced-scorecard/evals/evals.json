@@ -1,0 +1,149 @@
+{
+  "skill_name": "balanced-scorecard",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A manufacturing company has a strategy to win on reliable premium service, but its monthly review only tracks revenue and margin. Build a minimum useful Balanced Scorecard and do not invent private data.",
+      "expected_output": "The agent should start from the stated strategy, use balanced perspectives, define strategic objectives, propose measures with placeholders for baseline/target/data source, include initiatives and owners, and create a review cadence. It should avoid making up actual performance numbers.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Starts from strategy",
+        "Uses multiple perspectives",
+        "Defines objectives before measures",
+        "Includes baselines/targets/data-source placeholders",
+        "Links initiatives to objectives",
+        "Adds review cadence",
+        "Avoids invented data"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A team asks for a Balanced Scorecard but really wants three quarterly Objectives and Key Results for a launch. Should balanced-scorecard own this?",
+      "expected_output": "The agent should route the primary task to OKRs because the user is asking for period goal-setting. It may note that a Balanced Scorecard could provide the broader strategy-management context if the organization needs cross-perspective objectives and cadence.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes primary task to okrs",
+        "Explains OKR period-goal mechanism",
+        "Explains Balanced Scorecard broader strategy-execution mechanism",
+        "Does not force a full scorecard"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A public agency wants to track a digital-service transformation but does not have profit as a goal. Apply Balanced Scorecard appropriately.",
+      "expected_output": "The agent should adapt perspectives, using stewardship/resource resilience rather than shareholder return, stakeholder/citizen outcomes, internal service delivery processes, and organizational capacity. It should define objectives, measures, targets, initiatives, owners, and cadence without profit-only logic.",
+      "type": "public-sector-adaptation",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Adapts financial perspective",
+        "Uses stakeholder/citizen outcomes",
+        "Includes internal process perspective",
+        "Includes capacity/learning perspective",
+        "Defines scorecard elements",
+        "Avoids shareholder-profit framing"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A draft scorecard has 45 metrics, no strategy map, and no linked initiatives. Review it.",
+      "expected_output": "The agent should flag it as a KPI dump rather than a useful Balanced Scorecard. It should recommend starting from strategy and objectives, selecting a smaller set of lead/lag measures, adding baselines/targets/owners/cadence, linking initiatives, and using a strategy map to expose cause-effect assumptions.",
+      "type": "quality-review",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Flags KPI dump",
+        "Requires strategy/objective linkage",
+        "Requires strategy map or causal hypothesis",
+        "Reduces metric count",
+        "Adds target and owner discipline",
+        "Links initiatives"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "prompt": "A user asks for latency, uptime, error-rate, and bundle-size budgets for a web product and calls it a balanced scorecard. What should happen?",
+      "expected_output": "The agent should route the primary task to performance-budgets because the requested work is technical threshold-setting. It can mention that those measures might appear inside a broader product scorecard only if tied to strategic objectives.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes to performance-budgets",
+        "Explains technical threshold mechanism",
+        "Names a limited supporting role for scorecards if strategy objectives exist",
+        "Does not relabel technical budgets as Balanced Scorecard by default"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A strategy map links employee training to faster onboarding, faster onboarding to activation, and activation to retention. Explain how to turn this into a scorecard.",
+      "expected_output": "The agent should treat the links as causal hypotheses, define objectives in learning/capacity, internal process, customer, and financial/stewardship perspectives, choose lead and lag measures, assign baselines/targets/owners/cadence, and identify initiatives and review decisions.",
+      "type": "strategy-map-to-scorecard",
+      "grounding": "principle",
+      "difficulty": "advanced",
+      "expectations": [
+        "Treats causal links as hypotheses",
+        "Maps objectives to perspectives",
+        "Chooses lead and lag measures",
+        "Adds baselines and targets",
+        "Adds owners and cadence",
+        "Links initiatives and review decisions"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "A business unit wants to cascade the enterprise scorecard to teams and individuals. Identify risks and give a safer cascade approach.",
+      "expected_output": "The agent should warn against copy-paste cascading and personal surveillance, translate only influenceable objectives to lower levels, keep shared guardrails, define local objectives/measures/initiatives, assign owners, and preserve line of sight to enterprise strategy.",
+      "type": "cascading",
+      "grounding": "principle",
+      "difficulty": "advanced",
+      "expectations": [
+        "Rejects copy-paste cascading",
+        "Warns against surveillance/compensation misuse",
+        "Translates influenceable objectives",
+        "Keeps strategy line of sight",
+        "Adds owners and guardrails",
+        "Defines local measures and initiatives"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}

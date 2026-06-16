@@ -1,0 +1,44 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-11",
+  "drift_check": {
+    "last_verified": "2026-06-14",
+    "truth_source_hashes": {
+      "skills/skills/reasoning-strategy/scenario-planning/references/scenario-planning-sources.md": "f06a8cd38347de1d12b28b414edc99f4a1dc072b0a80a9f3068749ec153175a1",
+      "skills/skills/reasoning-strategy/scenario-planning/references/upstream-displacement-2026-06-11.md": "32fe87ba04c735077249f03c7e2aa3e8d053ec74f06dad2b2d8117cdd7206eff"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "passing",
+  "eval_last_run": {
+    "at": "2026-06-11T08:40:07.118Z",
+    "status": "pass",
+    "runner": "node skill-graph/bin/skill-graph.js evaluate --mode comprehension skills/skills/reasoning-strategy/scenario-planning/evals/comprehension.json",
+    "model": "opus",
+    "receipt": "agent-orchestration/logs/eval-results/scenario-planning/2026-06-11T08-40-07-118Z.json",
+    "receipt_hash": "66250f87617655e7c25b01108ab5f7b3d49ae6fc5a3a0ede757672f748b3140b"
+  },
+  "routing_eval": "present",
+  "last_changed": "2026-06-11",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "declared",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "structural_verdict": "PASS",
+  "truth_verdict": "DRIFT",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "UNVERIFIED",
+  "last_audited": "2026-06-13",
+  "lint_verdict": "PASS",
+  "eval_score": 4.38,
+  "eval_failed_ids": []
+}

@@ -1,0 +1,477 @@
+{
+  "skill_name": "middleware-patterns",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (The File Contract, Runtime, Matcher syntax, The Four Response Shapes, Header and Cookie Discipline, The Canonical Pattern Library, The Auth Reality CVE-2025-29927, Performance Discipline, Common Anti-Patterns, Verification, Do NOT Use When) plus current Next.js docs (proxy.ts convention, the Next.js 15 geo/ip removal, @vercel/functions, CVE advisories, next/experimental/testing/server).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "auth-gate-not-security-boundary",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team protects /admin solely with a middleware.ts auth check that redirects to /login when the session cookie is missing, and treats /admin as secured. No route-level or Server Action authorization exists.",
+      "context": "The app is on Next.js 15.0; the team believes the middleware check is the access-control gate.",
+      "question": "How should the agent assess and fix this auth design?",
+      "expected_flags": [
+        "The proxy/middleware auth gate is a UX optimization, not the authorization boundary.",
+        "Cites CVE-2025-29927 (and the May-2026 transport-variant bypasses) — the layer can be bypassed entirely and the matcher is not a perimeter.",
+        "Authorization must be enforced at the route, Route Handler, Server Action, and Data Access Layer, ideally through a shared verifySession.",
+        "Every Server Action must verify authz itself because a matcher exclusion silently skips Server Function calls on its path.",
+        "Recommends upgrading to a patched version (>=15.2.3 for 29927; >=15.5.18 for the May-2026 cluster) and keeping the proxy check as a redirect only."
+      ],
+      "expected_fix_hints": [
+        "Add route/DAL-level authorization that runs regardless of the proxy redirect.",
+        "Keep the middleware redirect for UX speed but never as the only gate.",
+        "Patch the framework and, on Turbopack, go one patch higher."
+      ],
+      "absent_signals": [
+        "Do not call the middleware cookie check 'secure'.",
+        "Do not add more matcher rules as the fix for an auth bypass.",
+        "Do not do a per-request DB session lookup inside middleware."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The proxy/middleware auth gate is a UX optimization, not the authorization boundary."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cites CVE-2025-29927 (and the May-2026 transport-variant bypasses) — the layer can be bypassed entirely and the matcher is not a perimeter."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Authorization must be enforced at the route, Route Handler, Server Action, and Data Access Layer, ideally through a shared verifySession."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Every Server Action must verify authz itself because a matcher exclusion silently skips Server Function calls on its path."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends upgrading to a patched version (>=15.2.3 for 29927; >=15.5.18 for the May-2026 cluster) and keeping the proxy check as a redirect only."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add route/DAL-level authorization that runs regardless of the proxy redirect."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the middleware redirect for UX speed but never as the only gate."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Patch the framework and, on Turbopack, go one patch higher."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not call the middleware cookie check 'secure'."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add more matcher rules as the fix for an auth bypass."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not do a per-request DB session lookup inside middleware."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "missing-matcher-perf",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A proxy.ts ships with no config.matcher and does a header-injection step. Lighthouse shows the layer executing on every image fetch and static asset; p99 latency on the site has climbed.",
+      "context": "The header injection is only needed on HTML page responses.",
+      "question": "How should the agent fix the proxy's execution scope?",
+      "expected_flags": [
+        "No matcher means it runs on every request including /_next/static, /_next/image, and favicon.ico — always set a matcher.",
+        "Use a negative-lookahead matcher excluding _next/static, _next/image, favicon.ico, and metadata files (sitemap.xml, robots.txt).",
+        "Notes /_next/data still runs even when excluded (by design) — account for it rather than assuming the exclusion removed it.",
+        "Every matched request pays the cost; target <10ms p99 and exclude paths that don't need the layer."
+      ],
+      "expected_fix_hints": [
+        "Add config.matcher with build-time-constant sources and negative lookahead.",
+        "Test matcher coverage with unstable_doesProxyMatch."
+      ],
+      "absent_signals": [
+        "Do not leave the default no-matcher behavior in place.",
+        "Do not run header injection on static asset fetches."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: No matcher means it runs on every request including /_next/static, /_next/image, and favicon.ico — always set a matcher."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use a negative-lookahead matcher excluding _next/static, _next/image, favicon.ico, and metadata files (sitemap.xml, robots.txt)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes /_next/data still runs even when excluded (by design) — account for it rather than assuming the exclusion removed it."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Every matched request pays the cost; target <10ms p99 and exclude paths that don't need the layer."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add config.matcher with build-time-constant sources and negative lookahead."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Test matcher coverage with unstable_doesProxyMatch."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave the default no-matcher behavior in place."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run header injection on static asset fetches."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "geo-api-migration",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "After upgrading to Next.js 15, a geo-routing middleware that reads request.geo.country now redirects everyone to the default locale because request.geo is undefined.",
+      "context": "The app deploys on Vercel.",
+      "question": "How should the agent restore geo-routing?",
+      "expected_flags": [
+        "request.geo and request.ip were removed from NextRequest in Next.js 15.",
+        "On Vercel, read country via geolocation(request) from @vercel/functions (and ipAddress(request) for IP); install the package.",
+        "Read defensively — values may be undefined locally and off-Vercel; parse platform geo headers as a fallback.",
+        "Geo routing is product behavior, not a security boundary; hard region-blocking belongs in the platform WAF."
+      ],
+      "expected_fix_hints": [
+        "Replace request.geo with geolocation(request) from @vercel/functions.",
+        "Guard for undefined country off-Vercel / locally."
+      ],
+      "absent_signals": [
+        "Do not keep reading request.geo / request.ip.",
+        "Do not treat app-level geo routing as access control."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: request.geo and request.ip were removed from NextRequest in Next.js 15."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: On Vercel, read country via geolocation(request) from @vercel/functions (and ipAddress(request) for IP); install the package."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Read defensively — values may be undefined locally and off-Vercel; parse platform geo headers as a fallback."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Geo routing is product behavior, not a security boundary; hard region-blocking belongs in the platform WAF."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace request.geo with geolocation(request) from @vercel/functions."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Guard for undefined country off-Vercel / locally."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep reading request.geo / request.ip."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat app-level geo routing as access control."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "csp-nonce-cache-xss",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A proxy generates a per-request CSP nonce, injects it into request and response headers, and the page that uses it is served from the CDN cache for performance. A reviewer also sees the nonce being read from an inbound Content-Security-Policy request header on one code path.",
+      "context": "The team wants both a strict nonce-based CSP and CDN caching.",
+      "question": "How should the agent evaluate the CSP-nonce implementation?",
+      "expected_flags": [
+        "A per-request nonce forces dynamic rendering — a nonce'd response and a cacheable/shared response are mutually exclusive (the CVE-2026-44581 / GHSA-ffhc-5mcf-pf4q failure).",
+        "Never cache or share a nonce across responses; caching the page replays one nonce to many users and lets injected script run under a valid nonce.",
+        "Never derive nonce material from untrusted inbound headers — generate it server-side (btoa(crypto.randomUUID()), which works on Edge and Node).",
+        "If per-request script allow-listing is not genuinely required, use a static CSP in next.config headers or a hash/SRI policy (cacheable); stay patched (>=15.5.18 / >=16.2.6)."
+      ],
+      "expected_fix_hints": [
+        "Stop caching the nonce'd page; keep it dynamic, or switch to a static/hash CSP for cacheable pages.",
+        "Generate the nonce in proxy server-side; strip/distrust inbound CSP/nonce headers."
+      ],
+      "absent_signals": [
+        "Do not serve a nonce'd page from a shared cache.",
+        "Do not read CSP/nonce values from request headers.",
+        "Do not use Buffer.from(...) for the nonce in middleware.ts (Node-only, breaks the Edge build)."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A per-request nonce forces dynamic rendering — a nonce'd response and a cacheable/shared response are mutually exclusive (the CVE-2026-44581 / GHSA-ffhc-5mcf-pf4q failure)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Never cache or share a nonce across responses; caching the page replays one nonce to many users and lets injected script run under a valid nonce."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Never derive nonce material from untrusted inbound headers — generate it server-side (btoa(crypto.randomUUID()), which works on Edge and Node)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: If per-request script allow-listing is not genuinely required, use a static CSP in next.config headers or a hash/SRI policy (cacheable); stay patched (>=15.5.18 / >=16.2.6)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Stop caching the nonce'd page; keep it dynamic, or switch to a static/hash CSP for cacheable pages."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Generate the nonce in proxy server-side; strip/distrust inbound CSP/nonce headers."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not serve a nonce'd page from a shared cache."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not read CSP/nonce values from request headers."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use Buffer.from(...) for the nonce in middleware.ts (Node-only, breaks the Edge build)."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "rewrite-vs-redirect-and-headers",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An A/B test middleware uses NextResponse.redirect to send /pricing visitors to /pricing-a or /pricing-b, and a separate locale step rewrites with a hand-rolled fetch() to /en/about. Users report the URL bar flipping to /pricing-a, and the rewritten page serves a stale React Server Component payload on soft navigation.",
+      "context": "The team wants the canonical /pricing URL preserved and correct RSC payloads.",
+      "question": "How should the agent correct the response-shape and rewrite usage?",
+      "expected_flags": [
+        "A/B variants should use rewrite (invisible URL), not redirect (visible URL + a second request) — pin the variant in a cookie.",
+        "Use NextResponse.rewrite(), not a hand-rolled fetch() — Next.js propagates internal RSC/Flight headers so soft client-side navigation serves the correct payload.",
+        "A hand-rolled fetch rewrite drops/mishandles those headers, causing wrong/stale RSC payloads on soft navigation.",
+        "Set only headers you own on top of the rewrite; consider next.config redirects/headers first for static cases."
+      ],
+      "expected_fix_hints": [
+        "Switch the A/B step to NextResponse.rewrite with a variant cookie.",
+        "Replace the fetch()-based locale rewrite with NextResponse.rewrite()."
+      ],
+      "absent_signals": [
+        "Do not redirect when the canonical URL should be preserved.",
+        "Do not re-implement a rewrite with fetch()."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A/B variants should use rewrite (invisible URL), not redirect (visible URL + a second request) — pin the variant in a cookie."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use NextResponse.rewrite(), not a hand-rolled fetch() — Next.js propagates internal RSC/Flight headers so soft client-side navigation serves the correct payload."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A hand-rolled fetch rewrite drops/mishandles those headers, causing wrong/stale RSC payloads on soft navigation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Set only headers you own on top of the rewrite; consider next.config redirects/headers first for static cases."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Switch the A/B step to NextResponse.rewrite with a variant cookie."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace the fetch()-based locale rewrite with NextResponse.rewrite()."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not redirect when the canonical URL should be preserved."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not re-implement a rewrite with fetch()."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "route-handler-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks for help implementing a /api/posts POST endpoint: request validation, persistence, and the JSON response shape.",
+      "context": "The request is about per-route, per-method endpoint logic, not cross-cutting preprocessing.",
+      "question": "Should middleware-patterns own this request?",
+      "expected_flags": [
+        "This is route-handler-design work — per-route, per-method endpoint logic.",
+        "The proxy layer runs once before route resolution across many routes; it does not own per-route business logic.",
+        "Per-route logic in proxy hides it from the route that owns it and is harder to test."
+      ],
+      "expected_fix_hints": [
+        "Route to route-handler-design for the endpoint.",
+        "Use middleware-patterns only for cross-cutting preprocessing in front of that route."
+      ],
+      "absent_signals": [
+        "Do not implement endpoint persistence/validation inside proxy.",
+        "Do not move per-route business logic into the matcher-scoped layer."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is route-handler-design work — per-route, per-method endpoint logic."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The proxy layer runs once before route resolution across many routes; it does not own per-route business logic."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Per-route logic in proxy hides it from the route that owns it and is harder to test."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to route-handler-design for the endpoint."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use middleware-patterns only for cross-cutting preprocessing in front of that route."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not implement endpoint persistence/validation inside proxy."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not move per-route business logic into the matcher-scoped layer."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "webhook-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team wants the proxy layer to verify the HMAC signature on incoming Stripe-style webhooks and handle idempotency/retries before the request reaches the route.",
+      "context": "Webhook routes carry large raw payloads and need exact-body signature verification.",
+      "question": "Should middleware-patterns own webhook reliability here?",
+      "expected_flags": [
+        "Webhook signature verification, idempotency, and retries belong to webhook-integration, in the route handler.",
+        "Webhook routes should generally be excluded from the matcher — proxy buffers the body up to proxyClientMaxBodySize, which large raw payloads can exceed.",
+        "HMAC verification needs the exact raw body and belongs in the handler, not the cross-cutting layer."
+      ],
+      "expected_fix_hints": [
+        "Exclude webhook paths from the matcher.",
+        "Verify the HMAC off the raw body in the Route Handler; route reliability concerns to webhook-integration."
+      ],
+      "absent_signals": [
+        "Do not run the auth gate / header injection on webhook routes.",
+        "Do not implement signature verification inside proxy."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Webhook signature verification, idempotency, and retries belong to webhook-integration, in the route handler."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Webhook routes should generally be excluded from the matcher — proxy buffers the body up to proxyClientMaxBodySize, which large raw payloads can exceed."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: HMAC verification needs the exact raw body and belongs in the handler, not the cross-cutting layer."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Exclude webhook paths from the matcher."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify the HMAC off the raw body in the Route Handler; route reliability concerns to webhook-integration."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run the auth gate / header injection on webhook routes."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not implement signature verification inside proxy."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

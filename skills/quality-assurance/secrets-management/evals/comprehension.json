@@ -1,0 +1,96 @@
+{
+  "skill_name": "secrets-management",
+  "subject": "Managing the lifecycle of sensitive credentials so they never leak into code, logs, build artifacts, or version control.",
+  "adjacent_concepts": [
+    "owasp-security",
+    "security-fundamentals",
+    "dependency-architecture",
+    "ci-cd-pipelines"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define secrets management in 2-3 sentences. What counts as a secret, and what is the lifecycle this skill governs?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Explain why secrets management is a distinct discipline rather than 'just don't commit passwords.' Name the failure class (leaked/long-lived/over-scoped credentials) it is designed to contain and why externalizing alone is insufficient.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "mental_model",
+      "prompt": "Describe the operating principle 'assume every secret will eventually leak, design so the leak is survivable.' How do short lifetimes, least privilege, rotation, and audit each follow from it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A developer moves an API key from a hardcoded string into a .env file and an environment variable and says it is now 'secured.' Explain what is and is not solved, and the specific ways an env var / .env still leaks.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not endorse environment variables or a .env file as a sufficient security control; must name process/child-process/log/crash-dump leakage and committed-.env git-history exposure."
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A production API key was accidentally committed to a public repository an hour ago. Walk through the correct response in order. Justify why each step is needed.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must not treat deleting the secret from the repo / latest commit as the fix. Must rotate and revoke first, because the value is compromised and remains in git history."
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A user asks: \"Design the OAuth2 authorization-code flow with PKCE for our login.\" Should secrets-management activate as the owner? Explain the boundary and name the better owner.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not claim ownership of authentication-protocol design. Must distinguish governing the credential value's lifecycle from designing the auth flow / authorization model."
+    },
+    {
+      "id": 7,
+      "dimension": "tradeoff",
+      "prompt": "Compare a long-lived static API key shared across services with short-lived, dynamically-issued credentials via workload identity (OIDC/SPIFFE). What does each cost and protect, and why is 'no standing credential' the stronger posture?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 8,
+      "dimension": "anti_pattern",
+      "prompt": "An org mints one broadly-scoped admin credential and shares it across every service and environment 'for convenience.' Name the anti-pattern, the blast-radius consequence, and the least-privilege fix.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not endorse shared broad credentials; must require per-consumer least-privilege scoping."
+    }
+  ]
+}

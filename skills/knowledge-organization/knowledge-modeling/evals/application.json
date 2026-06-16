@@ -1,0 +1,565 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "knowledge-modeling",
+  "subject": "Teaches choosing and maintaining the representation paradigm for domain knowledge: graphs, frames, semantic networks,…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "skill-infrastructure",
+    "entity-relationship-modeling",
+    "context-graph",
+    "context-engineering",
+    "conceptual-modeling",
+    "ontology-modeling",
+    "taxonomy-design",
+    "semantic-relations"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"should this domain knowledge be a graph, a set of rules, a frame structure, or a hybrid?\"",
+      "context": "The agent has access to the knowledge-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is knowledge-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes knowledge-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against skill-infrastructure, entity-relationship-modeling, context-graph",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the knowledge-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore knowledge-modeling",
+        "Does not route to skill-infrastructure, entity-relationship-modeling, context-graph when the knowledge-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes knowledge-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore knowledge-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"our skill library keeps adding prose but the agent can't reason over relationships — which representation should change?\"",
+      "context": "The agent has access to the knowledge-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is knowledge-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes knowledge-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against skill-infrastructure, entity-relationship-modeling, context-graph",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the knowledge-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore knowledge-modeling",
+        "Does not route to skill-infrastructure, entity-relationship-modeling, context-graph when the knowledge-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes knowledge-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore knowledge-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"the agent retrieves topically similar passages but misses structurally related facts — is GraphRAG the right shift?\"",
+      "context": "The agent has access to the knowledge-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is knowledge-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes knowledge-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against skill-infrastructure, entity-relationship-modeling, context-graph",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the knowledge-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore knowledge-modeling",
+        "Does not route to skill-infrastructure, entity-relationship-modeling, context-graph when the knowledge-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes knowledge-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore knowledge-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"how do I capture decision traces and triggers as first-class entities so the agent can replay why it chose Y?\"",
+      "context": "The agent has access to the knowledge-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is knowledge-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes knowledge-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against skill-infrastructure, entity-relationship-modeling, context-graph",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the knowledge-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore knowledge-modeling",
+        "Does not route to skill-infrastructure, entity-relationship-modeling, context-graph when the knowledge-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes knowledge-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore knowledge-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"we have facts, exceptions, and procedural decisions for an audit system — what representation keeps both retrieval and reasoning tractable?\"",
+      "context": "The agent has access to the knowledge-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is knowledge-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes knowledge-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against skill-infrastructure, entity-relationship-modeling, context-graph",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the knowledge-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore knowledge-modeling",
+        "Does not route to skill-infrastructure, entity-relationship-modeling, context-graph when the knowledge-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes knowledge-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore knowledge-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"should this workflow stay a human concept map or be promoted to machine-usable production rules?\"",
+      "context": "The agent has access to the knowledge-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is knowledge-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes knowledge-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against skill-infrastructure, entity-relationship-modeling, context-graph",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the knowledge-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore knowledge-modeling",
+        "Does not route to skill-infrastructure, entity-relationship-modeling, context-graph when the knowledge-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes knowledge-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore knowledge-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"design the database tables and foreign keys for this schema\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should knowledge-modeling be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside knowledge-modeling's ownership",
+        "Routes the work to skill-infrastructure or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying knowledge-modeling terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply knowledge-modeling as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if knowledge-modeling has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim knowledge-modeling should own the request",
+        "Does not use knowledge-modeling's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside knowledge-modeling's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim knowledge-modeling should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use knowledge-modeling's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"I just need a clean IS-A category hierarchy with no rules or graph behavior\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should knowledge-modeling be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside knowledge-modeling's ownership",
+        "Routes the work to skill-infrastructure or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying knowledge-modeling terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply knowledge-modeling as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if knowledge-modeling has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim knowledge-modeling should own the request",
+        "Does not use knowledge-modeling's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside knowledge-modeling's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim knowledge-modeling should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use knowledge-modeling's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"I need formal OWL axioms with class restrictions and reasoning semantics\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should knowledge-modeling be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside knowledge-modeling's ownership",
+        "Routes the work to skill-infrastructure or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying knowledge-modeling terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply knowledge-modeling as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if knowledge-modeling has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim knowledge-modeling should own the request",
+        "Does not use knowledge-modeling's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside knowledge-modeling's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim knowledge-modeling should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use knowledge-modeling's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"I want the exact edge labels (hypernymy / meronymy / synonymy) between concepts\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should knowledge-modeling be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside knowledge-modeling's ownership",
+        "Routes the work to skill-infrastructure or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying knowledge-modeling terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply knowledge-modeling as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if knowledge-modeling has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim knowledge-modeling should own the request",
+        "Does not use knowledge-modeling's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside knowledge-modeling's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim knowledge-modeling should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use knowledge-modeling's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}

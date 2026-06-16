@@ -1,0 +1,35 @@
+{
+  "schema_version": 8,
+  "version": "1.0.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-07",
+  "drift_check": {
+    "last_verified": "2026-06-07",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/okrs/references/okrs-sources.md": "6a13842fa7f2a28eb074e8d07ec60e44ed62d4d810e5eb5f5b8da1e8f578d7af",
+      "skills/reasoning-strategy/okrs/references/upstream-displacement-2026-05-30.md": "c2847669c62fc06eb90a0fd7d559aac88642a6055c831fb0245825e5f932f252"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-13",
+  "last_changed": "2026-06-07",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "drift_status": "EXTERNAL_UNHASHED"
+}

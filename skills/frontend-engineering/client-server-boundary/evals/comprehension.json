@@ -1,0 +1,142 @@
+{
+  "skill_name": "client-server-boundary",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "rendering-models",
+    "http-semantics",
+    "frontend-architecture",
+    "type-safety",
+    "api-design"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define the client-server boundary in a unified codebase in 2-3 sentences. Name the three governing properties.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "The line at which execution context changes between a server runtime (filesystem, secrets, DB) and a client runtime (browser sandbox, no secrets)",
+        "Anything crossing must be serialized — encoded as bytes on one side, decoded on the other",
+        "Names the three properties: serialization, direction, trust",
+        "Notes directives make the boundary syntactically visible but do not create it"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does the same TypeScript type appearing on both sides of the boundary not make the boundary go away?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Types are a compile-time claim; the runtime boundary is a serialization-and-trust event regardless",
+        "Values lose their type when they cross — the type system stops at the boundary until parsed on the other side",
+        "A Date becomes a string in JSON; a function becomes an opaque RSC token, not a real function",
+        "Client→server input is adversarial no matter what type it is annotated as"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "What does explicitly marking the boundary with directives cost, and what does it buy? Why is the ceremony worth it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Cost: a small upfront ceremony ('use client'/'use server'/'server-only'/'client-only' markers)",
+        "Benefit: legibility and refactor safety — the boundary becomes visible and the bundler can catch leaks",
+        "Without explicit marking, a unified codebase silently leaks secrets, ships server modules, and trusts adversaries",
+        "Frames the directives as marks that make an always-present boundary visible"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A teammate wants to pass a server-built Map<string, User> and an onClick callback as props to a 'use client' component. Walk through what survives the boundary and what must change.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A Map does not cross plain JSON (only structured clone / RSC can); convert to an array of [key, value] pairs for JSON",
+        "A closure/callback cannot cross — only data, server-action references, and RSC primitives can",
+        "Use a 'use server' function (serializes as an RPC reference) or pass the data and reconstruct behavior client-side",
+        "States the practical rule: if you cannot describe the value in bytes, it cannot cross"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Write the correct discipline for a server action updateUserName(rawInput). What four steps must it perform and why?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Authenticate the caller from a server-authoritative source (session), not the client's claim",
+        "Validate rawInput with a runtime schema — TypeScript types are not validation; bytes from the client may be anything",
+        "Authorize the action — the authenticated user may not be allowed to operate on input.userId",
+        "Perform the action only after the above; treats the action as an RPC handler with a hostile caller"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "Distinguish client-server-boundary from rendering-models, http-semantics, api-design, and type-safety by the mechanism each owns.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "rendering-models owns staging of work across build/request/stream/interaction; this skill owns the serialization frontier — they compose",
+        "http-semantics owns the wire protocol (verbs, status, headers, caching); this skill is upstream, deciding what data exists at the boundary and how it is encoded",
+        "api-design owns the external API surface; this skill owns the in-program server/client boundary inside one unified codebase",
+        "type-safety owns compile-time checking; this skill is where the type system stops at runtime"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A developer says a server action 'is just a normal async function I import and call.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "A server action looks like a local call (await sendEmail(formData)) but is an HTTP POST / RPC handler",
+        "The caller on the other side of the network is hostile — every byte is adversarial",
+        "It must parse, validate, authenticate, authorize, and rate-limit; a local-call mental model skips all of that",
+        "The 'use server' directive marks the function as network-reachable, not as a local helper"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a codebase handles the client-server boundary correctly?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Client-shipped files carry 'use client'; server actions carry 'use server' — the implicit-server default is intentional",
+        "Server actions validate input with a runtime schema and re-derive trust from a server-authoritative source",
+        "Secret-holding modules import 'server-only'; browser-global modules import 'client-only' — the bundler errors on leaks",
+        "Props from server to client are serializable in the project's wire format; no closures cross",
+        "Auth, authorization, and rate-limiting live in server actions/route handlers, not client components"
+      ]
+    }
+  ]
+}

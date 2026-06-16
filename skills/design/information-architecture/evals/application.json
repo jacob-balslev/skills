@@ -1,0 +1,459 @@
+{
+  "skill_name": "information-architecture",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept of the skill, Coverage, Method, Verification, Do NOT Use When) and standard IA practice (task-first grouping, placement by frequency/task-entry, single-canonical-home, user-language labeling, wayfinding, test against task scenarios).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "docs-findability",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A documentation site has strong content but users repeatedly fail to find setup instructions. Setup, troubleshooting, billing, and admin-role pages are filed under per-product-feature categories that mirror the engineering team's modules.",
+      "context": "Support tickets are dominated by 'how do I get started' questions even though a setup page exists.",
+      "question": "How should the agent restructure the IA?",
+      "expected_flags": [
+        "Names 'getting set up' as a top user task / primary entry point",
+        "Inventories existing content before moving anything",
+        "Regroups by user goal (a coherent setup hub) rather than by engineering modules",
+        "Adds cross-links and wayfinding from related pages to setup",
+        "Verifies against no-prior-knowledge task prompts"
+      ],
+      "expected_fix_hints": [
+        "Create a goal-based setup section and surface it as an obvious entry point",
+        "Cross-link troubleshooting and billing back to the canonical setup home"
+      ],
+      "absent_signals": [
+        "Do not keep mirroring the engineering module structure in the nav",
+        "Do not just rename pages without regrouping by goal"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names 'getting set up' as a top user task / primary entry point."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Inventories existing content before moving anything."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Regroups by user goal (a coherent setup hub) rather than by engineering modules."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Adds cross-links and wayfinding from related pages to setup."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verifies against no-prior-knowledge task prompts."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Create a goal-based setup section and surface it as an obvious entry point."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Cross-link troubleshooting and billing back to the canonical setup home."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep mirroring the engineering module structure in the nav."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not just rename pages without regrouping by goal."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "nav-promotion-pressure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A stakeholder insists a newly launched but rarely used feature must become a top-level navigation item 'because it is strategically important.'",
+      "context": "The top-level nav already has nine items and is getting hard to scan.",
+      "question": "How should the agent respond to the placement request?",
+      "expected_flags": [
+        "Importance alone does not earn a top-level nav slot",
+        "Placement is governed by frequency of use and whether it is a genuine task entry point",
+        "Proposes a tab, section, filter, or cross-link as a better home",
+        "Notes that promoting everything dilutes the navigation's meaning"
+      ],
+      "expected_fix_hints": [
+        "Place the feature where its actual task-entry and frequency warrant",
+        "Trim or regroup the nine top-level items toward limited, predictable levels"
+      ],
+      "absent_signals": [
+        "Do not add it to top-level nav purely on stated importance",
+        "Do not keep growing the top-level nav unbounded"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Importance alone does not earn a top-level nav slot."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Placement is governed by frequency of use and whether it is a genuine task entry point."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Proposes a tab, section, filter, or cross-link as a better home."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes that promoting everything dilutes the navigation's meaning."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Place the feature where its actual task-entry and frequency warrant."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Trim or regroup the nine top-level items toward limited, predictable levels."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add it to top-level nav purely on stated importance."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep growing the top-level nav unbounded."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "duplicate-homes",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An app shows the same 'API keys' content in three places: under Settings, under Developers, and on a Getting Started checklist. The copies have already drifted and users are unsure which is current.",
+      "context": "The team duplicated the content so it would be 'easy to find from anywhere.'",
+      "question": "How should the agent fix the structure?",
+      "expected_flags": [
+        "Establishes a single canonical home for the API-keys content",
+        "Replaces the duplicate copies with cross-links to the canonical home",
+        "Names the cost of multiple homes: fragmented maintenance and unclear currency",
+        "Groups the content by the user goal it serves"
+      ],
+      "expected_fix_hints": [
+        "Designate one authoritative location and cross-link from the other two",
+        "Remove the drifted duplicate copies"
+      ],
+      "absent_signals": [
+        "Do not keep three independent copies in sync",
+        "Do not solve findability by duplicating content"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Establishes a single canonical home for the API-keys content."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replaces the duplicate copies with cross-links to the canonical home."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names the cost of multiple homes: fragmented maintenance and unclear currency."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Groups the content by the user goal it serves."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Designate one authoritative location and cross-link from the other two."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Remove the drifted duplicate copies."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep three independent copies in sync."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not solve findability by duplicating content."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "labeling-jargon",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An admin tool labels its main sections 'Entities', 'Provisioning', and 'RBAC' — terms drawn directly from the backend domain model. New users cannot tell where to manage their team members.",
+      "context": "Engineers named the sections after the database tables and internal subsystems.",
+      "question": "How should the agent improve the IA?",
+      "expected_flags": [
+        "Relabels sections in recognizable user language (e.g. 'Team', 'Access', 'Members')",
+        "Uses stable user nouns and avoids internal jargon",
+        "Groups by the goal the user is pursuing rather than the internal subsystem",
+        "Tests the labels against first-time users / task prompts"
+      ],
+      "expected_fix_hints": [
+        "Replace implementation-term labels with user-language labels",
+        "Validate label recognizability with no-prior-knowledge users"
+      ],
+      "absent_signals": [
+        "Do not keep backend-domain terms as primary navigation labels",
+        "Do not assume the team's vocabulary matches the user's"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Relabels sections in recognizable user language (e.g. 'Team', 'Access', 'Members')."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses stable user nouns and avoids internal jargon."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Groups by the goal the user is pursuing rather than the internal subsystem."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Tests the labels against first-time users / task prompts."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace implementation-term labels with user-language labels."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Validate label recognizability with no-prior-knowledge users."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep backend-domain terms as primary navigation labels."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the team's vocabulary matches the user's."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "wayfinding-deadend",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "Users drilling four levels deep into a settings tree report getting 'lost' — there is no breadcrumb, no indication of sibling options, and the only way back is the browser button.",
+      "context": "The nesting is logically correct but offers no orientation cues.",
+      "question": "How should the agent address the disorientation?",
+      "expected_flags": [
+        "Adds wayfinding: current location, sibling options, next action, and an escape path",
+        "Ensures users can recover from a wrong turn without restarting",
+        "Reconsiders whether the levels are limited and predictable (flatten if too deep)"
+      ],
+      "expected_fix_hints": [
+        "Add breadcrumbs / location indicators and a clear back-to-anchor path",
+        "Flatten unnecessarily deep nesting"
+      ],
+      "absent_signals": [
+        "Do not rely on the browser back button as the only escape path",
+        "Do not leave deep trees without orientation cues"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Adds wayfinding: current location, sibling options, next action, and an escape path."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ensures users can recover from a wrong turn without restarting."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reconsiders whether the levels are limited and predictable (flatten if too deep)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add breadcrumbs / location indicators and a clear back-to-anchor path."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Flatten unnecessarily deep nesting."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on the browser back button as the only escape path."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave deep trees without orientation cues."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the information-architecture owner to (a) define the controlled vocabulary and assignment rules for content categories, (b) rewrite the empty-state copy on the inbox, and (c) audit the keyboard/ARIA accessibility of the new nav.",
+      "context": "The team treats 'information architecture' as an umbrella for all structure, text, and classification work.",
+      "question": "How should the agent scope these requests?",
+      "expected_flags": [
+        "Controlled vocabulary and assignment rules are out of scope — that is taxonomy-design",
+        "Empty-state wording is out of scope once structure is settled — that is microcopy",
+        "Keyboard/ARIA accessibility audit is out of scope — that is a11y",
+        "Offers the in-scope part: the grouping, placement, labeling, and wayfinding of the nav"
+      ],
+      "expected_fix_hints": [
+        "Redirect classification governance to taxonomy-design, copy to microcopy, and accessibility to a11y",
+        "Deliver the IA structure and labels, and verify_with task-analysis and a11y"
+      ],
+      "absent_signals": [
+        "Do not author the taxonomy's assignment rules here",
+        "Do not write the empty-state sentences or run the ARIA audit here"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Controlled vocabulary and assignment rules are out of scope — that is taxonomy-design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Empty-state wording is out of scope once structure is settled — that is microcopy."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keyboard/ARIA accessibility audit is out of scope — that is a11y."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offers the in-scope part: the grouping, placement, labeling, and wayfinding of the nav."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Redirect classification governance to taxonomy-design, copy to microcopy, and accessibility to a11y."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Deliver the IA structure and labels, and verify_with task-analysis and a11y."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not author the taxonomy's assignment rules here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the empty-state sentences or run the ARIA audit here."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "empty-state-structure",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A new workspace renders a navigation and dashboard that look coherent when populated but collapse into a confusing blank shell on day one, when no projects, data, or members exist yet.",
+      "context": "The IA was designed only for the steady-state, data-rich case.",
+      "question": "How should the agent handle the low-data case?",
+      "expected_flags": [
+        "Treats empty and low-data states as part of the IA, not an afterthought",
+        "Ensures the structure still reads clearly and preserves wayfinding when sections are empty",
+        "Keeps top-task entry points visible and meaningful in the empty state"
+      ],
+      "expected_fix_hints": [
+        "Design the navigation/section structure to hold its shape with zero data",
+        "Surface the first meaningful task as an entry point in the empty state"
+      ],
+      "absent_signals": [
+        "Do not assume the populated layout is sufficient for the empty case",
+        "Do not let empty sections erase the structural cues"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treats empty and low-data states as part of the IA, not an afterthought."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ensures the structure still reads clearly and preserves wayfinding when sections are empty."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps top-task entry points visible and meaningful in the empty state."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Design the navigation/section structure to hold its shape with zero data."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Surface the first meaningful task as an entry point in the empty state."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the populated layout is sufficient for the empty case."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let empty sections erase the structural cues."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

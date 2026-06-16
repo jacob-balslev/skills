@@ -1,0 +1,142 @@
+{
+  "skill_name": "form-ux-architecture",
+  "subject": "design",
+  "adjacent_concepts": [
+    "a11y",
+    "microcopy",
+    "api-design",
+    "data-modeling",
+    "interaction-feedback"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define form UX architecture in 2-3 sentences. Name the main decisions it owns.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Frames a form as a guided conversation, not a data dump",
+        "Names which fields to ask, how to group them, field classification (required/optional/defaulted/derived/deferred)",
+        "Names validation timing and the client/server validation split",
+        "Names the submission lifecycle (submit, pending, success, failure, retry, partial-save, recovery)"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why should fields be grouped by the user's mental model rather than by the database table that stores them?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The form mirrors the user's task and goal, not the storage shape",
+        "Grouping by table exposes irrelevant columns and confuses the user",
+        "The minimum data the goal requires drives the field set, not the schema",
+        "A form is a conversation about the user's task, not an editor for a row"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Compare validation timing options (on change, on blur, on submit, after async check). What is the trade-off and what is the usual default?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "On-change/on-keystroke gives fastest feedback but is hostile — fires errors before the user finishes",
+        "On-blur validates once the user has finished a field; on-submit validates the whole form",
+        "Default avoids hostile on-keystroke errors unless immediate feedback is genuinely necessary",
+        "Async checks (e.g. uniqueness) fire after a debounce or on blur, not per keystroke"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "How should client-side and server-side validation responsibilities be split, and why is the split non-negotiable?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Client-side validation is a UX aid that speeds correction, never a security boundary",
+        "The server must validate every submitted field even when the client appeared correct",
+        "The client can be bypassed, so server validation is mandatory for trust and security",
+        "Server errors must map back to specific fields or a clear form-level recovery path"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "When should a form be split into a multi-step wizard or use progressive disclosure rather than a single long form?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Split or disclose when the field set is large or fields depend on earlier answers",
+        "Group by the user's mental model so each step is a coherent sub-task",
+        "Add a review step and autosave/partial-save for long or high-risk flows",
+        "Avoid asking for fields not needed now — defer or remove rather than crowd one screen"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks form-ux-architecture to rewrite the inline validation error messages. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — message wording belongs to microcopy",
+        "This skill owns WHEN a validation message appears and how the user recovers, not what it says",
+        "Distinguishes timing/recovery (owned here) from copy (owned by microcopy)",
+        "Offers the in-scope part: validation timing and the recovery path"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A developer says 'the form should expose every column and validate hard on the client to catch errors early.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A form mirrors the user's goal and mental model, not the storage row",
+        "Aggressive on-keystroke validation produces hostile errors before the user can answer",
+        "Client validation is never a security boundary — the server must re-validate every field",
+        "Expose only the minimum fields needed now; validate at the moment the user can answer"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a form's UX architecture is sound?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Every field has a reason tied to the user's goal or a system requirement; required fields are truly required",
+        "Field groups match how users think about the task",
+        "Validation timing avoids hostile on-keystroke errors unless immediate feedback is necessary",
+        "Client checks speed correction but do not replace server validation; server errors map back to fields",
+        "Submit, pending, success, failure, retry, and partial-save states are all defined"
+      ]
+    }
+  ]
+}

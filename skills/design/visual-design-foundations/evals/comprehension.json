@@ -1,0 +1,141 @@
+{
+  "skill_name": "visual-design-foundations",
+  "subject": "design",
+  "adjacent_concepts": [
+    "semiotics",
+    "design-system-architecture",
+    "layout-composition",
+    "microcopy",
+    "a11y"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define visual design foundations in 2-3 sentences. What does it cover and at what level?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Shaping the visual craft of an interface — palette, type scale, spacing rhythm, density, elevation, hierarchy, contrast intent, motion feel, brand fit",
+        "It is foundation level, not deep color/typography/motion/token engineering",
+        "Visual design makes structure legible — it is not decoration applied after structure",
+        "It hands off deeper concerns to the skills that own those contracts"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why choose palette roles and type roles before picking raw colors and sizes?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Roles encode purpose (surface, text, accent, success/warning/danger/info, disabled; title/heading/label/body/metadata/numeric) before any raw value",
+        "Choosing by role keeps decisions consistent and changeable rather than ad hoc per screen",
+        "Raw colors/sizes picked first produce inconsistency and invisible hierarchy",
+        "Roles make priority and grouping derivable rather than hand-tuned"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Why set spacing and density rules against repeated real use rather than a single screenshot, and what's the trade-off with elevation/borders?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "One screenshot hides how density holds up across real, repeated, data-varying use",
+        "Density must match the surface's repeated-use context (e.g. dense operational tool vs editorial page)",
+        "Elevation, border, and background should be used only to clarify grouping or affordance",
+        "Used decoratively, elevation/borders add noise rather than clarifying structure"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A dashboard 'feels flat and hard to scan.' Walk through how to improve the visual hierarchy without changing the task structure.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Name the surface type and intended tone/scanning demand first",
+        "Make primary content faster to find via type roles, weight, and spacing — not more color",
+        "Use elevation/borders only to clarify grouping or affordance",
+        "Preserve the task structure (this is craft, not layout/structure work)"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "You are starting visual direction for an internal admin tool. Walk through the method steps in order.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Name the surface type (operational tool) and state tone + scanning demand",
+        "Choose palette roles before raw colors; define type roles (title, heading, label, body, metadata, numeric)",
+        "Set spacing/density for repeated use; use elevation/border/background only to clarify grouping or affordance",
+        "Check decisions against semiotics and a11y before treating them as done"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "Someone asks visual-design-foundations to define the semantic design tokens and component variant APIs, and separately to verify WCAG contrast. Are these in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Token definitions, component APIs, theming contracts, and governance are out of scope — that is design-system-architecture",
+        "WCAG contrast/focus/labels/keyboard/AT verification is out of scope — that is a11y",
+        "visual-design-foundations owns the craft choices (palette/type/rhythm/density/polish) at foundation level, not those contracts",
+        "Correctly redirects each to its owning skill rather than absorbing it"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'visual design is the decoration you add at the end to make it look nice.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Visual design is not decoration after structure — it is how structure becomes legible",
+        "It makes priority, grouping, affordance, and tone visible without the user parsing every label",
+        "Weak craft produces a surface that is harder to use, not merely plainer",
+        "It is also foundation-level: deeper color math/font engineering/token governance route to their owning skills"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a visual design pass is sound?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Visual hierarchy makes primary content faster to find; palette roles named by purpose not raw color",
+        "Type roles consistent and not oversized inside compact UI; spacing/density fit the repeated-use context",
+        "Elevation and borders clarify grouping rather than add noise; motion (if used) clarifies state/continuity and can be reduced",
+        "A11y contrast and non-color-only checks are deferred to a11y rather than asserted here"
+      ]
+    }
+  ]
+}

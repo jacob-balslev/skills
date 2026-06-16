@@ -4,14 +4,21 @@
   "owner": "skill-graph-maintainer",
   "freshness": "2026-05-18",
   "drift_check": {
-    "last_verified": "2026-05-18"
+    "last_verified": "2026-06-13",
+    "truth_source_hashes": {
+      "https://doi.org/10.1016/0004-3702(82)90012-1": "c65c7f5dd82ed08742f08282be9d8fe5ead0c3df817b967a89f85b7826da292c",
+      "https://books.google.com/books/about/Knowledge_Representation_and_Reasoning.html?id=ln6Ux-EZm6YC": "586b0e1eda3d760772eaf03d0f4928c65a96747f0ca9070cfa3412254020ca8a",
+      "https://courses.media.mit.edu/2004spring/mas966/Minsky%201974%20Framework%20for%20knowledge.pdf": "1b0aa8ad811d29901ae9c23049297b2489cde81849c4c960ccea5c5cc5e18913",
+      "https://www.w3.org/TR/skos-reference/": "3aa00cd16ee4d86d3a19b75501bb317d0b0c134e1f4029e9f3098c4dd3669e4c",
+      "https://arxiv.org/abs/2404.16130": "b4f49cd918aee76d323110c0b03b8cdb3e360f34be5c82f85d14a5fb3bf048b0"
+    }
   },
-  "eval_artifacts": "planned",
+  "eval_artifacts": "present",
   "eval_state": "unverified",
   "routing_eval": "absent",
-  "last_audited": "2026-06-01",
+  "last_audited": "2026-06-13",
   "structural_verdict": "PASS",
-  "truth_verdict": "UNVERIFIED",
+  "truth_verdict": "DRIFT",
   "comprehension_verdict": "UNVERIFIED",
   "application_verdict": "UNVERIFIED",
   "lint_verdict": "PASS",
@@ -25,5 +32,6 @@
   "lifecycle": {
     "stale_after_days": 365,
     "review_cadence": "quarterly"
-  }
+  },
+  "drift_status": "EXTERNAL_UNHASHED"
 }

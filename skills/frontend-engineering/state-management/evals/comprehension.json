@@ -1,0 +1,173 @@
+{
+  "skill_name": "state-management",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "rendering-models",
+    "client-server-boundary",
+    "frontend-architecture",
+    "api-design",
+    "state-machine-modeling"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define state management as this skill teaches it. Your answer must mention where state lives, who owns it, propagation, consistency, and the four main kinds of state.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The discipline of deciding, for each changing value, where it lives, who owns it, how it propagates, and how it stays consistent over time",
+        "Names the four kinds: server state, client UI state, URL state, persistent state",
+        "Classify the value first, then choose the narrowest owner/tool that fits its lifetime and invalidation needs",
+        "Distinguishes the location/ownership decision from tactical state-library selection"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model behind classifying state before choosing a library. Include server state, client UI state, URL state, persistent state, lifetimes, and invalidation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Server state: owned by a backend, session lifetime with revalidation, time/event-based + manual invalidation (React Query/SWR/RTK Query/Apollo/Server Components)",
+        "Client UI state: owned by component/hook, ephemeral within a render lifecycle, recreated on unmount (useState/useReducer/Context/Zustand/Jotai)",
+        "URL state: owned by the URL/router, lifetime until navigation, invalidated by URL change; persistent state: owned by browser storage, lifetime until cleared, manual invalidation",
+        "Classifying first prevents the same library being used wrongly for all four kinds"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill say 'global store for everything' and 'useState everywhere' are both weak starting points? Name the bugs the classification prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Most recurring frontend bugs come from putting the right value in the wrong place",
+        "Server data in a general-purpose store loses automatic revalidation; URL-worthy state in component state breaks the back-button",
+        "Persistent state in component state loses on refresh; globally-shared state that should be local re-renders everything on every change",
+        "The discipline asks 'which kind is this?' before 'where should it live?' and reaches for the tool best suited to the kind"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks whether a wizard's statuses should be represented as legal transitions and also where the current value should live. Which part belongs to state-machine-modeling, which part belongs to state-management, and why?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Representing the legal statuses and transitions/guards belongs to state-machine-modeling (the finite-state representation of the workflow)",
+        "Deciding WHERE the current value lives (client UI state? URL? persistent?) belongs to state-management",
+        "The machine names the legal values; this skill names the location — the two are orthogonal and compose",
+        "Does not collapse the two concerns into one"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Classify these values by state kind and likely owner: fetched order rows, table sort/filter/page, currently-hovered row id, theme preference that survives reload, and form draft text.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Fetched order rows = server state (server-state library: React Query/SWR/etc.)",
+        "Table sort/filter/page = URL state (shareable, back-button works)",
+        "Currently-hovered row id = client UI state, ephemeral, local to the component",
+        "Theme that survives reload = persistent state (or server-stored if it must affect SSR); form draft text = client UI state (ephemeral, not URL-worthy)"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "misconception",
+      "prompt": "A developer's instinct is to put every new piece of state in the global store 'so it's available everywhere.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The wrong starting question is 'which library should hold this?'; the right first question is 'what kind of state is this and how long should it live?'",
+        "Most state should live locally with the component that uses it; a global store is the exception, not the default (premature globalization causes state sprawl)",
+        "Start local, lift only on observed need; the cost of climbing the ladder later is less than the cost of starting too high",
+        "A global store is justified only when many components depend on many slices of a frequently-changing value"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: a data table stores fetched rows, current search text, selected tab, and user's density preference in one Zustand store. Apply the skill to propose where each value should live and what evidence would justify any exception.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Fetched rows = server state → move out of Zustand into a server-state library (gets dedup, staleness, mutation-invalidation for free)",
+        "Search text and selected tab = URL state → move to useSearchParams/route params so they survive refresh, are shareable, and respond to back-button",
+        "Density preference = persistent state (localStorage) or server-stored if it must affect SSR — not the general store",
+        "An exception (keeping something in the store) requires measured evidence, e.g. many components subscribing to many slices of a frequently-changing value"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "analogy",
+      "prompt": "Use the mail-addressing analogy from the skill to explain why one global mailbox for every kind of state causes predictable failures.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "You do not ask 'should this letter exist?', you ask 'where does it live?' — the right destination depends on the letter's kind",
+        "Server data = a registered package (provable delivery/revalidation), URL state = a postcard (public on the back / shareable), client UI state = a private letter (inside an envelope), persistent state = a deed (kept in the safe)",
+        "One mailbox for everything produces predictable failures (each kind handled slightly wrong simultaneously)",
+        "Maps each analogy element back to the real invalidation/lifetime property it represents"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "application",
+      "prompt": "Why does server state need a server-state library rather than a general-purpose store, and what happens when teams use Redux/Zustand for it instead?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Server state has four properties no general store handles by default: remote canonical source (stale-while-revalidate, refetch on focus/reconnect), deduplication by query key, staleness invalidation, mutation-triggered invalidation",
+        "Using a general store forces teams to hand-build refetch-on-focus, manual dedup, manual cache expiry, manual mutation-invalidation",
+        "Each piece is correct in concept but together they reimplement React Query, badly",
+        "The disciplined answer: server-state library for server data, keep the general store (if any) for genuinely client UI state"
+      ]
+    },
+    {
+      "id": 10,
+      "dimension": "application",
+      "prompt": "What would you check to verify a frontend's state model is structured correctly per this skill?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Every distinct piece of state is classified into one of the four kinds; server data is held by a server-state library, not a general-purpose store",
+        "State that should survive refresh / be shareable / respond to back-button is in the URL",
+        "No value is duplicated across two independent locations without an explicit sync mechanism and a recorded reason (single source of truth)",
+        "Local state stays local (lifts are justified); derived state is computed at read time; optimistic updates are limited to high-confidence mutations with rollback paths"
+      ]
+    }
+  ]
+}

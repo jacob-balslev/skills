@@ -1,0 +1,453 @@
+{
+  "skill_name": "visual-design-foundations",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Method, Verification, Do NOT Use When) and foundation-level visual-craft practice (role-before-raw palette/type, density-for-repeated-use, elevation-for-grouping, cross-check against semiotics and a11y).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "improve-hierarchy",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A data-dense dashboard 'feels flat and hard to scan.' Every card uses the same text size, the same gray, and a drop shadow on every element.",
+      "context": "The team wants it easier to scan but must not change which widgets appear or the page's task structure.",
+      "question": "How should the agent improve the visual craft?",
+      "expected_flags": [
+        "Establish hierarchy via type roles, weight, and spacing so primary content is faster to find — not by adding more color",
+        "Reserve elevation/shadow for clarifying grouping or affordance; remove shadow-on-everything noise",
+        "Name palette roles by purpose (surface, text, accent) rather than reaching for raw colors",
+        "Preserve the task structure — this is craft, not layout restructuring"
+      ],
+      "expected_fix_hints": [
+        "Differentiate title/heading/label/body/metadata via the type roles",
+        "Drop blanket shadows; use elevation only where grouping needs it"
+      ],
+      "absent_signals": [
+        "Do not add more accent colors to create hierarchy",
+        "Do not reorder or remove widgets to fix scanability"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Establish hierarchy via type roles, weight, and spacing so primary content is faster to find — not by adding more color."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reserve elevation/shadow for clarifying grouping or affordance; remove shadow-on-everything noise."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Name palette roles by purpose (surface, text, accent) rather than reaching for raw colors."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Preserve the task structure — this is craft, not layout restructuring."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Differentiate title/heading/label/body/metadata via the type roles."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Drop blanket shadows; use elevation only where grouping needs it."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add more accent colors to create hierarchy."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not reorder or remove widgets to fix scanability."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "palette-direction",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A designer hands over a palette as a list of 14 raw hex codes 'that look nice together' with no indication of what each is for.",
+      "context": "The product is an operational admin tool that will reuse these colors across many states.",
+      "question": "How should the agent set the palette direction?",
+      "expected_flags": [
+        "Define palette roles first: surface, text, accent, success, warning, danger, info, disabled — then assign raw colors",
+        "Raw-hex-first leads to inconsistency and missing/overloaded status colors",
+        "Roles make the palette consistent and changeable across states",
+        "Calibrate to the operational-tool surface type and its tone"
+      ],
+      "expected_fix_hints": [
+        "Map the 14 colors onto named roles; drop or merge ones with no role",
+        "Ensure every status state has a dedicated role color"
+      ],
+      "absent_signals": [
+        "Do not keep the palette as an unlabeled list of raw colors",
+        "Do not pick colors purely for 'looks nice' without a role"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define palette roles first: surface, text, accent, success, warning, danger, info, disabled — then assign raw colors."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Raw-hex-first leads to inconsistency and missing/overloaded status colors."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Roles make the palette consistent and changeable across states."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Calibrate to the operational-tool surface type and its tone."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Map the 14 colors onto named roles; drop or merge ones with no role."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Ensure every status state has a dedicated role color."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the palette as an unlabeled list of raw colors."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick colors purely for 'looks nice' without a role."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "density-for-repeated-use",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "Spacing and type sizes were tuned against one marketing-style hero screenshot, but the tool's real screens are dense tables with hundreds of rows that now feel cramped and oversized.",
+      "context": "Most real usage is high-density data screens, not the hero.",
+      "question": "How should the agent fix the spacing and type?",
+      "expected_flags": [
+        "Set spacing and density rules against repeated real use, not one screenshot",
+        "Type roles should not be oversized inside compact/dense UI",
+        "Calibrate density to the actual dense-table context",
+        "Verify on representative real screens, not the hero mockup"
+      ],
+      "expected_fix_hints": [
+        "Define a compact density scale for the data screens",
+        "Right-size body/label type for dense tables"
+      ],
+      "absent_signals": [
+        "Do not keep marketing-hero spacing/type on dense data screens"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Set spacing and density rules against repeated real use, not one screenshot."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Type roles should not be oversized inside compact/dense UI."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Calibrate density to the actual dense-table context."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verify on representative real screens, not the hero mockup."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define a compact density scale for the data screens."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Right-size body/label type for dense tables."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep marketing-hero spacing/type on dense data screens."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "elevation-as-noise",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A page uses shadows, borders, and background tints on nearly every element 'for depth,' and it now reads as visually busy with no clear grouping.",
+      "context": "The team thinks more elevation equals more polish.",
+      "question": "How should the agent advise on elevation and borders?",
+      "expected_flags": [
+        "Use elevation, border, and background only to clarify grouping or affordance — not for decoration",
+        "Blanket elevation adds noise rather than structure",
+        "Remove depth treatments that don't communicate grouping/affordance",
+        "Let hierarchy come from type/weight/spacing, reserving elevation for genuine grouping signals"
+      ],
+      "expected_fix_hints": [
+        "Strip decorative shadows/borders; keep them where they delineate a real group or interactive surface",
+        "Audit each elevation use against 'does this clarify grouping or affordance?'"
+      ],
+      "absent_signals": [
+        "Do not add more elevation to signal polish"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use elevation, border, and background only to clarify grouping or affordance — not for decoration."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Blanket elevation adds noise rather than structure."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Remove depth treatments that don't communicate grouping/affordance."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Let hierarchy come from type/weight/spacing, reserving elevation for genuine grouping signals."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Strip decorative shadows/borders; keep them where they delineate a real group or interactive surface."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Audit each elevation use against 'does this clarify grouping or affordance?'."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add more elevation to signal polish."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "cross-check-handoff",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "The agent has chosen a low-contrast gray-on-white for secondary text and a color-only success/error indicator, and is about to call the visual pass done.",
+      "context": "The product has accessibility requirements but the team treats a11y as someone else's later step.",
+      "question": "What should the agent do before treating the visual decisions as final?",
+      "expected_flags": [
+        "Check visual decisions against a11y and semiotics before treating them as done",
+        "Low-contrast text and color-only status indicators are a11y concerns to verify (contrast, non-color-only)",
+        "Defer the WCAG verification itself to a11y rather than asserting compliance here",
+        "Flag color-only meaning to semiotics/a11y rather than shipping it unchecked"
+      ],
+      "expected_fix_hints": [
+        "Route contrast and non-color-only checks to a11y",
+        "Add a non-color cue (icon/label) to status indicators"
+      ],
+      "absent_signals": [
+        "Do not declare the pass done without the a11y/semiotics cross-check",
+        "Do not claim WCAG compliance from inside this skill"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Check visual decisions against a11y and semiotics before treating them as done."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Low-contrast text and color-only status indicators are a11y concerns to verify (contrast, non-color-only)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Defer the WCAG verification itself to a11y rather than asserting compliance here."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flag color-only meaning to semiotics/a11y rather than shipping it unchecked."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route contrast and non-color-only checks to a11y."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a non-color cue (icon/label) to status indicators."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not declare the pass done without the a11y/semiotics cross-check."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim WCAG compliance from inside this skill."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks visual-design-foundations to: define the semantic token names and component variant APIs, decide the responsive breakpoint behavior and section order, and explain what the red 'overdue' badge communicates to users.",
+      "context": "The team treats 'visual design' as the owner of every appearance-related decision.",
+      "question": "How should the agent scope these requests?",
+      "expected_flags": [
+        "Token names + component variant APIs are out of scope — design-system-architecture",
+        "Responsive breakpoint behavior and section order are out of scope — layout-composition",
+        "What the red badge communicates is sign meaning — semiotics",
+        "Offer the in-scope part: the craft of how the badge looks (palette role, type, weight) once meaning is settled"
+      ],
+      "expected_fix_hints": [
+        "Redirect each request to its owning skill",
+        "Keep only the foundation-level craft choices in this lane"
+      ],
+      "absent_signals": [
+        "Do not define tokens, component APIs, or breakpoints here",
+        "Do not answer what a sign means out of lane"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Token names + component variant APIs are out of scope — design-system-architecture."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Responsive breakpoint behavior and section order are out of scope — layout-composition."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: What the red badge communicates is sign meaning — semiotics."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: the craft of how the badge looks (palette role, type, weight) once meaning is settled."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Redirect each request to its owning skill."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep only the foundation-level craft choices in this lane."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not define tokens, component APIs, or breakpoints here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer what a sign means out of lane."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "motion-restraint",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A team adds bouncy entrance animations to every card and a parallax background 'to feel modern,' and motion now competes for attention on a work-focused tool.",
+      "context": "The surface is an operational tool used all day; some users are motion-sensitive.",
+      "question": "How should the agent advise on motion?",
+      "expected_flags": [
+        "Motion should clarify state or continuity, not decorate",
+        "Decorative bounce/parallax on a work tool competes for attention and should be cut",
+        "Motion must be reducible (respect reduced-motion preferences)",
+        "Keep motion feel appropriate to the surface's tone and scanning demand"
+      ],
+      "expected_fix_hints": [
+        "Replace decorative animation with purposeful state/continuity transitions",
+        "Provide a reduced-motion path"
+      ],
+      "absent_signals": [
+        "Do not keep decorative motion 'to feel modern'",
+        "Do not ship motion with no reduced-motion fallback"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Motion should clarify state or continuity, not decorate."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Decorative bounce/parallax on a work tool competes for attention and should be cut."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Motion must be reducible (respect reduced-motion preferences)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep motion feel appropriate to the surface's tone and scanning demand."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace decorative animation with purposeful state/continuity transitions."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide a reduced-motion path."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep decorative motion 'to feel modern'."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ship motion with no reduced-motion fallback."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 8,
+  "version": "1.1.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-07",
+  "drift_check": {
+    "last_verified": "2026-06-07",
+    "truth_source_hashes": {
+      "../skills/skills/backend-engineering/real-time-updates/references/real-time-updates-2026-06-07.md": "5b3c62ccdb3b89dfcc604c6a7702e97cf73e6ba61a222ad6fe360f6169e7c29b"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-13",
+  "last_changed": "2026-06-07",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "drift_status": "EXTERNAL_UNHASHED",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 180,
+    "review_cadence": "quarterly"
+  }
+}

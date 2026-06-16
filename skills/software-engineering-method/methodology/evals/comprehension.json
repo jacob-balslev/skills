@@ -1,0 +1,106 @@
+{
+  "skill_name": "methodology",
+  "subject": "Methodology",
+  "adjacent_concepts": [
+    "method",
+    "process",
+    "quality gate",
+    "Cleanroom",
+    "PSP",
+    "TSP",
+    "DMAIC",
+    "PDCA",
+    "verification",
+    "validation",
+    "checklist design",
+    "agent eval design"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define methodology, method, and process in 2-3 sentences and explain why the distinction matters for agent work.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Methodology is the governing philosophy or why",
+        "Method is a specific technique or how",
+        "Process is the ordered sequence or when",
+        "Explains that agents skip steps when they lack the underlying why",
+        "Connects the distinction to rigorous task planning or verification"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the methodology-method-process stack and give one concrete example of each layer for a multi-step agent implementation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Names all three layers",
+        "Gives a quality principle at methodology level",
+        "Gives a concrete method such as checklist, hypothesis, or V&V trace",
+        "Gives an ordered process with steps",
+        "Explains how the method and process serve the methodology"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish methodology from code-review, testing-strategy, agent-eval-design, guardrails, and best-practice with a mechanism-level reason for each boundary.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "code-review owns concrete diff or PR review",
+        "testing-strategy owns behavior/test-level selection",
+        "agent-eval-design owns eval cases, rubrics, hard negatives, or graders",
+        "guardrails owns high-risk action blocking or escalation",
+        "best-practice owns broad final quality enforcement",
+        "methodology owns process principles, gates, and why the sequence exists"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A team says, 'We already have a checklist, so we have methodology.' Diagnose the misconception and correct it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Says a checklist is a method or process artifact, not the methodology by itself",
+        "Asks what principle or failure mode the checklist is designed to prevent",
+        "Explains that generic checklists become cargo-cult process",
+        "Mentions calibrating checklist items to known failure modes",
+        "Connects to quality gates or evidence receipts"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Design a methodology-backed verification protocol for an agent changing a risky script. Include the governing principle, method, process, and hard gate.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Names a governing principle such as defect prevention, V&V, or hypothesis-before-action",
+        "Names at least one method such as preflight checklist, test receipt, or traceability",
+        "Defines an ordered process before implementation starts",
+        "Includes a binary hard gate with observable evidence",
+        "Separates methodology design from concrete code-review or test-strategy ownership"
+      ]
+    }
+  ]
+}

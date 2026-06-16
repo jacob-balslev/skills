@@ -1,0 +1,333 @@
+{
+  "skill_name": "opencode-free-models",
+  "subject": "Cost-routing across free and cheap agent models with a hard quality-ceiling boundary",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "opencode",
+    "github-copilot",
+    "autonomous-loop-patterns",
+    "ai-native-development"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "quality-judging-hard-boundary",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An agent plans to grade a batch of eval responses (assigning quality verdicts) using a free/cheap model 'to save cost,' reasoning that grading is mechanical-ish and a free model can handle it.",
+      "context": "The grader's verdicts become the quality signal that downstream decisions are built on.",
+      "question": "Is a free model appropriate for this work, and how should it be routed?",
+      "expected_flags": [
+        "Grading / eval scoring / quality verdicts are quality-judging work — a weak judge silently poisons every downstream decision built on its verdicts",
+        "This is the hard boundary: quality-creating and quality-judging work never goes to a free/cheap model, regardless of cost"
+      ],
+      "expected_fix_hints": [
+        "Route the grading to a frontier model — never a free/cheap one",
+        "Treat the cost saving as illusory when the output is the quality bar"
+      ],
+      "absent_signals": [
+        "Do not route grading/eval scoring to a free or cheap model to save cost",
+        "Do not claim retrying a free model enough makes it a valid judge"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Grading / eval scoring / quality verdicts are quality-judging work — a weak judge silently poisons every downstream decision built on its verdicts."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is the hard boundary: quality-creating and quality-judging work never goes to a free/cheap model, regardless of cost."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the grading to a frontier model — never a free/cheap one."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Treat the cost saving as illusory when the output is the quality bar."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route grading/eval scoring to a free or cheap model to save cost."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim retrying a free model enough makes it a valid judge."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "mechanical-work-route",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A job is a deterministic bulk rename + format pass across many files, and a teammate wants to send it to a frontier model 'to be safe.'",
+      "context": "The work involves no reasoning; a script could arguably do most of it.",
+      "question": "Where should this work be routed and why?",
+      "expected_flags": [
+        "Deterministic/mechanical work needs no reasoning; routing it to a frontier model wastes premium capacity",
+        "A script is the first choice; otherwise the cheapest free model clears this low per-item bar"
+      ],
+      "expected_fix_hints": [
+        "Do it with a script first; else route to the cheapest free model (GPT-5 Nano-class)",
+        "Do not escalate to a frontier model merely because one is available"
+      ],
+      "absent_signals": [
+        "Do not route deterministic mechanical work to a frontier model by default",
+        "Do not treat 'a frontier model is available' as a reason to escalate"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Deterministic/mechanical work needs no reasoning; routing it to a frontier model wastes premium capacity."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A script is the first choice; otherwise the cheapest free model clears this low per-item bar."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Do it with a script first; else route to the cheapest free model (GPT-5 Nano-class)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Do not escalate to a frontier model merely because one is available."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route deterministic mechanical work to a frontier model by default."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'a frontier model is available' as a reason to escalate."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "large-context-coding-route",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A large-context agentic coding task on a big repo needs a free model with both frontier-band coding ability and a huge context window.",
+      "context": "The task is genuine agentic coding over a large codebase; the team wants to stay on the free lane if a model clears the bar.",
+      "question": "Which free model best fits, and what is its tradeoff?",
+      "expected_flags": [
+        "MiniMax M3 Free is the strongest free default for large-context coding — frontier-band coding plus a 1M-token context window",
+        "It is the highest-capability free lane for this shape of work"
+      ],
+      "expected_fix_hints": [
+        "Route the large-context coding to MiniMax M3 Free",
+        "Confirm the live free roster before relying on it (`opencode models opencode`)"
+      ],
+      "absent_signals": [
+        "Do not route this to a low-ceiling nano-class model",
+        "Do not assume any free model clears the large-context coding bar"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: MiniMax M3 Free is the strongest free default for large-context coding — frontier-band coding plus a 1M-token context window."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: It is the highest-capability free lane for this shape of work."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the large-context coding to MiniMax M3 Free."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Confirm the live free roster before relying on it (`opencode models opencode`)."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route this to a low-ceiling nano-class model."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume any free model clears the large-context coding bar."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "escalate-on-signal",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A free model assigned to a triage job starts looping without progress and returns a contradictory, low-confidence result. The operator's instinct is to keep retrying the same free model until it converges.",
+      "context": "The free model is showing concrete failure signals; the task has not crossed into quality-judging.",
+      "question": "What should the operator do, and what is the rule for escalating?",
+      "expected_flags": [
+        "Looping without progress, self-contradiction, and a low-confidence/malformed result are concrete escalation signals",
+        "Retrying cannot raise a model above its ceiling — these signals mean promote the work, not retry harder"
+      ],
+      "expected_fix_hints": [
+        "Escalate this work to a frontier model on the concrete failure signal",
+        "Escalate on signal (looping/contradiction/low-confidence/scope crossing), not merely because a frontier model is available"
+      ],
+      "absent_signals": [
+        "Do not keep retrying the same free model past a clear failure signal",
+        "Do not escalate by default in the absence of any signal"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Looping without progress, self-contradiction, and a low-confidence/malformed result are concrete escalation signals."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Retrying cannot raise a model above its ceiling — these signals mean promote the work, not retry harder."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Escalate this work to a frontier model on the concrete failure signal."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Escalate on signal (looping/contradiction/low-confidence/scope crossing), not merely because a frontier model is available."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep retrying the same free model past a clear failure signal."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not escalate by default in the absence of any signal."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "throughput-triage-route",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A high-volume bulk classification/extraction lane needs throughput with a capped thinking budget, where each item's quality bar is low.",
+      "context": "The per-item bar is low; the lane is background and volume-bound.",
+      "question": "Which free model family fits this lane?",
+      "expected_flags": [
+        "High-throughput reasoning with a capped thinking budget (Nemotron-class) fits a volume triage/extraction lane",
+        "It is a throughput choice, not the top-end coding choice"
+      ],
+      "expected_fix_hints": [
+        "Route the bulk triage/extraction to a high-throughput free model (Nemotron-class)",
+        "Match the per-item bar to the model ceiling rather than picking purely on cost"
+      ],
+      "absent_signals": [
+        "Do not route correctness-critical synthesis to a throughput-tuned model",
+        "Do not assume throughput implies top-end coding ability"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: High-throughput reasoning with a capped thinking budget (Nemotron-class) fits a volume triage/extraction lane."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: It is a throughput choice, not the top-end coding choice."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the bulk triage/extraction to a high-throughput free model (Nemotron-class)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Match the per-item bar to the model ceiling rather than picking purely on cost."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route correctness-critical synthesis to a throughput-tuned model."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume throughput implies top-end coding ability."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "runtime-and-loop-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A user asks: 'How do I invoke OpenCode non-interactively from a script, and how do I structure the retry/claim logic for my autonomous agent loop?'",
+      "context": "The first question is about operating the OpenCode runtime; the second is about authoring the agent loop's control flow. Neither is a per-task free-model choice.",
+      "question": "How should the agent scope this request?",
+      "expected_flags": [
+        "Invoking/operating the OpenCode runtime is owned by the opencode skill, not this model-choice skill",
+        "Authoring the agent loop's retry/claim/escalation control flow is owned by the autonomous-loop-patterns skill"
+      ],
+      "expected_fix_hints": [
+        "Route the runtime-invocation question to the opencode skill",
+        "Route the loop-authoring question to the autonomous-loop-patterns skill"
+      ],
+      "absent_signals": [
+        "Do not answer the runtime-invocation question as a model-choice decision",
+        "Do not treat agent-loop authoring as within this skill's scope"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Invoking/operating the OpenCode runtime is owned by the opencode skill, not this model-choice skill."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Authoring the agent loop's retry/claim/escalation control flow is owned by the autonomous-loop-patterns skill."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the runtime-invocation question to the opencode skill."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the loop-authoring question to the autonomous-loop-patterns skill."
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer the runtime-invocation question as a model-choice decision."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat agent-loop authoring as within this skill's scope."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

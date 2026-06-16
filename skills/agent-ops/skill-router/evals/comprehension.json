@@ -1,0 +1,99 @@
+{
+  "skill_name": "skill-router",
+  "subject": "Skill dispatch mechanics for multi-skill agent runtimes",
+  "adjacent_concepts": [
+    "graph-audit",
+    "skill-scaffold",
+    "skill-infrastructure",
+    "agent-eval-design",
+    "context-graph",
+    "debugging"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define skill-router in 2-3 sentences. Include request-time dispatch, manifest activation signals, relation-aware co-loading/exclusion, and coverage gaps.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must not define the router as a generic nearest-neighbor semantic search."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the current Skill Graph routing pipeline from scoring through project filtering, quality boosts, tie-breaking, boundary exclusion, co-loading, and no-match output.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not use the old `scope: codebase` enum as the current tiebreaker; current code uses `deployment_target` plus optional project fit."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does skill-router prefer an explicit coverage gap over silent fallback to the closest skill?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish skill-router from graph-audit, skill-scaffold, skill-infrastructure, agent-eval-design, and debugging.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not route a known single-skill quality audit or a new-skill authoring task back to skill-router."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place triggers, paths, keywords, description semantics, project fit, deployment-target tiebreaking, application-verdict boosts, boundary exclusion, depends_on, verify_with, and coverage gaps into a routing taxonomy.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why the router must sometimes say no skill matches instead of picking the nearest skill.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "A request mentions `skill-router`, touches an unrelated file path, and contains keywords that overlap graph-audit. Apply the skill: what evidence should decide the owner and what should the explanation include?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not let weak keyword overlap override explicit routing evidence."
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'If no skill is a strong match, the router should pick whatever skill is most popular so the user still gets an answer.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not accept popularity, recency, or default fallback as routing evidence."
+    }
+  ]
+}

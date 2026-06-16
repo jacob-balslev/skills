@@ -1,0 +1,180 @@
+{
+  "skill_name": "server-actions-design",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "server-components-design",
+    "client-server-boundary",
+    "api-design",
+    "form-ux-architecture",
+    "hooks-patterns",
+    "security-fundamentals"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define Server Actions design in 2-3 sentences. Include React Server Functions, the mutation/action context, and why the function-like syntax still crosses an HTTP boundary.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not define 'use server' as making functions private or internal-only.",
+      "expected_elements": [
+        "Defines it as designing React Server Functions used as mutations (Server Actions) without forgetting the function-shaped API is still an HTTP boundary",
+        "Notes an action invocation becomes a generated POST endpoint that runs privileged code server-side",
+        "States the syntactic collapse (function call) does not change the semantic reality (untrusted input over HTTP)",
+        "Mentions the action returns state and optionally refreshed UI"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the flow from a `<form action={serverAction}>` submission through server execution, return state, cache update, and UI refresh.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not omit validation/authorization or cache revalidation after a write.",
+      "expected_elements": [
+        "The form serializes values and POSTs to the generated action endpoint",
+        "Server-side the action authenticates, authorizes, and validates (parses) the untrusted input before mutating",
+        "After the write, a cache/router primitive updates affected read paths (revalidatePath/revalidateTag/updateTag/refresh) or a redirect navigates",
+        "Returned action state (e.g. via useActionState) and refreshed UI come back in the round trip"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why would a team use a Server Action instead of duplicating client fetch code and a route handler for an in-app form mutation?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Collapses the duplicated stack (client fetch + route handler + hand-maintained wire format) into one server-side function the UI binds to",
+        "Less drift, better type locality, and form-first progressive enhancement",
+        "Tight integration with the App Router cache",
+        "Notes the collapse is syntactic, not semantic — the security work (parse/auth/authorize/revalidate) remains"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "Design a create-comment form using a Server Action so it works without JavaScript and reports server-side validation errors. What does the action do in order?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not rely only on client-side validation or a JS-only click handler.",
+      "expected_elements": [
+        "Wire the form with `<form action={serverAction}>` (form-first) so it submits pre-hydration",
+        "The action consumes FormData, authenticates (reads server session), authorizes against the target resource, then parses with a runtime schema",
+        "On success it mutates, revalidates the affected path/tag, and returns ok; on failure it returns field errors",
+        "Use useActionState for returned validation state and useFormStatus (in a child) for pending UI when client enhancement is wanted"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A delete button calls a Server Action with `deletePost.bind(null, post.id)`. What must the action verify before deleting, and what UI/cache update should follow?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not treat the bound id as secret, trusted, or sufficient authorization.",
+      "expected_elements": [
+        "Treats the bound id as attacker-controlled input, not a security boundary",
+        "Validates the id shape server-side, then authenticates the caller and authorizes them against that specific resource",
+        "Performs the delete only after auth+authz pass",
+        "Revalidates/refreshes the affected detail and list read paths after the mutation"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A mobile app and a third-party integration need to call the same mutation. Should server-actions-design own the contract? Explain the boundary.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must route externally consumed stable contracts to api-design or route-handler work, not generated Server Action endpoints.",
+      "expected_elements": [
+        "Not in scope — Server Actions are generated in-app UI endpoints, not stable public contracts",
+        "Routes the external/mobile/third-party contract to api-design (or explicit route-handler design)",
+        "Notes external consumers need stable URLs, status codes, auth docs, versioning, and observability independent of one App Router UI",
+        "May share the underlying mutation logic behind both the API and the internal action"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "taxonomy",
+      "prompt": "Place `'use server'`, form action/formAction, useActionState, useFormStatus, revalidatePath, revalidateTag, updateTag, refresh, and redirect into a simple Server Actions design taxonomy.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Directive / declaration: `'use server'` marks an async function or module exports as server-executed",
+        "Invocation / form integration: `action` and `formAction` bind a form/button to the action; the framework generates the POST endpoint",
+        "Client state hooks: useActionState carries the last returned state; useFormStatus reports pending for the nearest parent form (called in a descendant)",
+        "Post-write cache/navigation: revalidatePath / revalidateTag / updateTag (read-your-own-writes, actions only) / refresh (actions only) / redirect (throws control-flow)"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'The action is safe because the only UI control that calls it is a disabled button visible to admins.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not trust client visibility, disabled controls, or UI-only role checks as server-side authorization.",
+      "expected_elements": [
+        "The action is a reachable POST endpoint; a hidden/disabled/admin-only button does not constrain who can POST to it",
+        "Client visibility and UI controls are not authorization — anyone can invoke the generated endpoint directly",
+        "The action must authenticate the caller and authorize the exact mutation server-side",
+        "Encrypted/non-deterministic action IDs reduce accidental exposure but are not authorization"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why a Server Action can look like a local function call while still needing public-endpoint security checks.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Captures that the ergonomic surface (a function call) hides a privileged remote operation",
+        "Conveys that the request can arrive from a caller other than your UI (hostile input over HTTP)",
+        "Preserves the core mechanism: identity, authority, and input must still be checked server-side (e.g. the service-counter / back-office framing)"
+      ]
+    },
+    {
+      "id": 10,
+      "dimension": "application",
+      "prompt": "A Server Action updates a product title and returns `{ ok: true }`, but users still see the old title until a hard refresh. What is missing and which primitive fits?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not claim the returned result alone updates Server Component caches.",
+      "expected_elements": [
+        "The mutation never invalidated the cached read path, so Server Component UI stays stale",
+        "Choose the smallest primitive that makes the next read correct based on affected paths/tags",
+        "updateTag for immediate read-your-own-writes on tagged data (Server Actions only); revalidatePath for specific pages/route patterns",
+        "Call cache updates before redirect when navigating after the write"
+      ]
+    }
+  ]
+}

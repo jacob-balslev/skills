@@ -1,0 +1,233 @@
+{
+  "schema_version": 8,
+  "version": "1.2.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-11",
+  "drift_check": {
+    "last_verified": "2026-06-01"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-06-01",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 90,
+    "review_cadence": "quarterly"
+  },
+  "model_run_coverage": {
+    "schema_version": 1,
+    "updated_at": "2026-06-11T11:56:17.012Z",
+    "registry_version": "2026-06-10",
+    "models": {
+      "opus": {
+        "model": "opus",
+        "provider": "anthropic",
+        "backend": "claude",
+        "tier": "mandatory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T11:56:17.012Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "mandatory",
+            "status": "degraded",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "completed",
+              "evaluate": "skipped",
+              "apply": "completed",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": true,
+            "failure_reason": "non-certifying-run",
+            "failure_detail": "non-converged:round-budget(2)",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/keywords/runs/2026-06-11T1141--merge--opus--f49173/keywords.merge-ledger.json"
+          }
+        }
+      },
+      "codex-current": {
+        "model": "codex-current",
+        "provider": "openai",
+        "backend": "codex",
+        "tier": "mandatory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T11:56:17.012Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "mandatory",
+            "status": "degraded",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "completed",
+              "evaluate": "skipped",
+              "apply": "completed",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": true,
+            "failure_reason": "non-certifying-run",
+            "failure_detail": "non-converged:round-budget(2)",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/keywords/runs/2026-06-11T1141--merge--opus--f49173/keywords.merge-ledger.json"
+          }
+        }
+      },
+      "gemini": {
+        "model": "gemini",
+        "provider": "google",
+        "backend": "gemini",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T11:56:17.012Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/keywords/runs/2026-06-11T1141--merge--opus--f49173/keywords.merge-ledger.json"
+          }
+        }
+      },
+      "deepseek-flash": {
+        "model": "deepseek-flash",
+        "provider": "opencode",
+        "backend": "opencode",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T11:56:17.012Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "failed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "failed",
+              "cross_review": "skipped",
+              "revise": "skipped",
+              "curate": "skipped",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "failure_reason": "error",
+            "failure_detail": "deepseek-flash: captured 0b of text (not document-shaped) and no file written; dispatch ok=false; reason=error",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/keywords/runs/2026-06-11T1141--merge--opus--f49173/keywords.merge-ledger.json"
+          }
+        }
+      },
+      "mimo": {
+        "model": "mimo",
+        "provider": "opencode",
+        "backend": "opencode",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T11:56:17.012Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "failed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "failed",
+              "cross_review": "skipped",
+              "revise": "skipped",
+              "curate": "skipped",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "failure_reason": "error",
+            "failure_detail": "mimo: captured 0b of text (not document-shaped) and no file written; dispatch ok=false; reason=error",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/keywords/runs/2026-06-11T1141--merge--opus--f49173/keywords.merge-ledger.json"
+          }
+        }
+      },
+      "gemini-flash": {
+        "model": "gemini-flash",
+        "provider": "google",
+        "backend": "gemini",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T11:56:17.012Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/keywords/runs/2026-06-11T1141--merge--opus--f49173/keywords.merge-ledger.json"
+          }
+        }
+      }
+    }
+  },
+  "last_changed": "2026-06-11",
+  "eval_score": 3.96,
+  "eval_failed_ids": []
+}

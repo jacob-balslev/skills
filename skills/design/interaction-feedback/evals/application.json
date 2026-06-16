@@ -1,0 +1,406 @@
+{
+  "skill_name": "interaction-feedback",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept, Coverage, Method, Verification, Do NOT Use When) and current interaction-feedback best practices (lifecycle states, duration classes, optimistic UI rollback, recoverable errors, perceived-latency staging).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "long-running-action",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user clicks 'Generate Report.' The job runs server-side for roughly 40 seconds. The current UI disables the button and shows nothing else; users click again, refresh, or leave thinking it broke.",
+      "context": "The work happens on a backend queue and can run while the user does other things.",
+      "question": "How should the agent design the feedback?",
+      "expected_flags": [
+        "Acknowledge the click immediately (button enters a pending state)",
+        "Classify as long work: show progress and/or let the user background it",
+        "Provide a leave-and-return path (job history / notification on completion)",
+        "On failure, surface a persistent, recoverable error rather than reverting to idle silently"
+      ],
+      "expected_fix_hints": [
+        "Move the action to a backgrounded job with a status row and completion notification",
+        "Add determinate or staged progress; keep the trigger disabled while pending"
+      ],
+      "absent_signals": [
+        "Do not just disable the button with no other signal",
+        "Do not trap the user on a blocking spinner for 40 seconds"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Acknowledge the click immediately (button enters a pending state)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Classify as long work: show progress and/or let the user background it."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Provide a leave-and-return path (job history / notification on completion)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: On failure, surface a persistent, recoverable error rather than reverting to idle silently."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move the action to a backgrounded job with a status row and completion notification."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add determinate or staged progress; keep the trigger disabled while pending."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not just disable the button with no other signal."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not trap the user on a blocking spinner for 40 seconds."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "optimistic-update-rollback",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A like button updates the count instantly on tap for snappiness. When the request fails (offline, rate-limited), the UI keeps the incremented count and the like silently does not persist.",
+      "context": "The team added optimistic UI for perceived speed but did not handle the failure path.",
+      "question": "What is wrong and how should the agent fix it?",
+      "expected_flags": [
+        "Optimistic update with no rollback is a UI that lies about the result",
+        "Define rollback: revert the count on rejection",
+        "Define conflict behavior when optimistic and server state disagree",
+        "Surface a recoverable signal (retry) rather than a silent divergence"
+      ],
+      "expected_fix_hints": [
+        "Revert to the confirmed server value on error and offer a retry",
+        "Reconcile against the server's authoritative count on response"
+      ],
+      "absent_signals": [
+        "Do not leave the optimistic state in place after a failed request",
+        "Do not fail silently"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Optimistic update with no rollback is a UI that lies about the result."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define rollback: revert the count on rejection."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define conflict behavior when optimistic and server state disagree."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Surface a recoverable signal (retry) rather than a silent divergence."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Revert to the confirmed server value on error and offer a retry."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reconcile against the server's authoritative count on response."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave the optimistic state in place after a failed request."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not fail silently."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "error-persistence",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A multi-step checkout shows payment errors as a 2-second toast that auto-dismisses. Users miss it, retry blindly, and some double-charge anxiety appears in support tickets.",
+      "context": "Errors are currently routed through the same transient toast channel used for success confirmations.",
+      "question": "How should the agent handle the error feedback?",
+      "expected_flags": [
+        "Errors must persist long enough to read and act on, not flash and disappear",
+        "Place the payment error inline/near the action, not in a transient toast",
+        "Provide a clear recovery path (retry, fix-field, contact support)",
+        "Separate the error channel from the brief success-toast channel"
+      ],
+      "expected_fix_hints": [
+        "Use a persistent inline/banner error with an explicit recovery action",
+        "Reserve auto-dismiss toasts for low-stakes success confirmations"
+      ],
+      "absent_signals": [
+        "Do not auto-dismiss a recoverable critical error",
+        "Do not rely on the same channel for success and failure"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Errors must persist long enough to read and act on, not flash and disappear."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Place the payment error inline/near the action, not in a transient toast."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Provide a clear recovery path (retry, fix-field, contact support)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separate the error channel from the brief success-toast channel."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a persistent inline/banner error with an explicit recovery action."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve auto-dismiss toasts for low-stakes success confirmations."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not auto-dismiss a recoverable critical error."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on the same channel for success and failure."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "skeleton-vs-spinner",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A dashboard shows a centered full-page spinner for ~2.5 seconds while several content cards load, then everything pops in at once causing a jarring layout jump.",
+      "context": "All regions load from one fetch and the page is content-dense.",
+      "question": "How should the agent improve the loading feedback?",
+      "expected_flags": [
+        "Use content-shaped skeletons for the card regions instead of a single page spinner",
+        "Reserve stable space so content does not pop and shift on arrival",
+        "Classify as medium-duration work needing region-level indicators",
+        "Render available regions progressively rather than all-at-once"
+      ],
+      "expected_fix_hints": [
+        "Replace the page spinner with per-region skeletons matching final layout",
+        "Stream/stagger region readiness to reduce the jump"
+      ],
+      "absent_signals": [
+        "Do not block the whole page on one spinner",
+        "Do not let content pop in and shift layout"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use content-shaped skeletons for the card regions instead of a single page spinner."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reserve stable space so content does not pop and shift on arrival."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Classify as medium-duration work needing region-level indicators."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Render available regions progressively rather than all-at-once."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace the page spinner with per-region skeletons matching final layout."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Stream/stagger region readiness to reduce the jump."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not block the whole page on one spinner."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let content pop in and shift layout."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "destructive-undo",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "Deleting an item opens a confirmation modal every time. Users find the constant interruption annoying, but the team is worried about accidental deletes.",
+      "context": "The delete is reversible on the backend for a short window.",
+      "question": "What feedback pattern should the agent recommend?",
+      "expected_flags": [
+        "Prefer optimistic delete + an undo window over a blocking confirmation for reversible actions",
+        "Show a clear 'Deleted - Undo' affordance that persists long enough to act",
+        "Preserve user control: the undo restores the item within the window",
+        "Reserve hard confirmation for genuinely irreversible actions"
+      ],
+      "expected_fix_hints": [
+        "Replace the confirm modal with an undo toast/inline affordance",
+        "Keep the item recoverable for the documented window"
+      ],
+      "absent_signals": [
+        "Do not interrupt every reversible delete with a modal",
+        "Do not remove recovery entirely"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prefer optimistic delete + an undo window over a blocking confirmation for reversible actions."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Show a clear 'Deleted - Undo' affordance that persists long enough to act."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Preserve user control: the undo restores the item within the window."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reserve hard confirmation for genuinely irreversible actions."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace the confirm modal with an undo toast/inline affordance."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the item recoverable for the documented window."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not interrupt every reversible delete with a modal."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not remove recovery entirely."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the interaction-feedback owner to rewrite the empty-state heading copy, make the 'Saved' status announce to screen readers, and 'make the save faster.'",
+      "context": "The team conflates feedback design with all of copy, accessibility, and performance.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Empty-state wording is microcopy's domain, handed off",
+        "Screen-reader announcement of the status is a11y's domain, handed off",
+        "Making the save faster is performance-engineering, not feedback design",
+        "Offer the in-scope part: the feedback states/surfaces/timing/recovery for save and the empty state"
+      ],
+      "expected_fix_hints": [
+        "Route copy to microcopy, announcement to a11y, latency to performance-engineering",
+        "Own the requirement that a confirmation and a recoverable error exist and where/when they appear"
+      ],
+      "absent_signals": [
+        "Do not write the empty-state copy",
+        "Do not optimize the endpoint",
+        "Do not implement the live-region plumbing"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Empty-state wording is microcopy's domain, handed off."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Screen-reader announcement of the status is a11y's domain, handed off."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Making the save faster is performance-engineering, not feedback design."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: the feedback states/surfaces/timing/recovery for save and the empty state."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route copy to microcopy, announcement to a11y, latency to performance-engineering."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Own the requirement that a confirmation and a recoverable error exist and where/when they appear."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the empty-state copy."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not optimize the endpoint."
+        },
+        {
+          "id": "c9",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not implement the live-region plumbing."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

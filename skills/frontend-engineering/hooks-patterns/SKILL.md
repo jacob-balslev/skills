@@ -1,0 +1,250 @@
+---
+name: hooks-patterns
+# description: routing-facing summary of when this skill activates and what it covers.
+description: "Use when reasoning about React Hooks as a discipline: why the Rules of Hooks exist as a call-order invariant, how dependency arrays encode a contract between closure and rerender, when useEffect is the wrong primitive, the distinction between derived state and stored state, when to extract a custom hook, when memoization (useMemo, useCallback, memo) is useful or obsolete, and how React 18/19 semantics (automatic batching, concurrent rendering, Strict Mode effect checks, Effect Events, React Compiler) change the calculus. Do NOT use for general React rendering models (use rendering-models), the client/server boundary (use client-server-boundary), component API architecture (use component-architecture), Suspense boundary design (use suspense-patterns), or application-wide state location (use state-management)."
+# license: SPDX-compatible license identifier for the skill content.
+license: MIT
+allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
+metadata:
+
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0017 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
+  subject: frontend-engineering
+  # public: publishability/private-data gate. Boolean.
+  # true = publishable/shareable; false = private and excluded from public export.
+  # Project anchoring is carried separately by non-empty `project[]` plus `grounding`.
+  public: true
+  # scope: free-text PRD-style statement of what the skill teaches and what it excludes.
+  # (v8 required; not an enum). Mirrors Coverage + Do NOT Use When at frontmatter level.
+  scope: "React Hooks as a discipline — when a render is the right shape for state, why the Rules of Hooks exist as a compile-time invariant, how the dependency array encodes a closure/rerender contract, when useEffect is the wrong primitive, derived vs stored state, when to extract a custom hook, and when memoization (useMemo, useCallback) is a footgun. Covers React 18+ (automatic batching, concurrent rendering); portable across React codebases; principle-grounded, not repo-bound. Excludes general React rendering models (rendering-models), the client/server boundary (client-server-boundary), component composition (component-architecture), and application-wide state location (state-management)."
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: engineering/frontend
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
+  stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
+  keywords: ["React Hooks","Rules of Hooks","useEffect dependencies","exhaustive deps","useEffectEvent","custom hooks","derived state","stale closure","useMemo useCallback","React Compiler"]
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
+  triggers: ["React Hooks","is this hook safe to call here","why does my useEffect run twice","dependency array warning","should this be state or derived","extract this into a custom hook"]
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
+  examples: ["review a React Hooks useEffect whose dependency array is missing a variable and decide whether to add it, hoist the value, use an Effect Event, or remove the effect","decide whether a React Hooks derived value should live in useState plus useEffect or simply be computed during render","explain why the Rules of Hooks are a call-order invariant, not just a convention","audit a React component for unnecessary useMemo, useCallback, and memo wrappers after React Compiler adoption"]
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.suppresses (or legacy boundary alias) to name the confusable territory's owner.
+  anti_examples: ["choose between Server Components and Client Components for a new page","decide where app state lives across server, client UI, URL, and persistent storage","pick between SSR, SSG, ISR, streaming, and client rendering for a route","design Suspense boundaries, loading fallbacks, and streamed data fetching for a page"]
+  # relations: typed graph edges to sibling skills. Current fields:
+  # related (adjacency for browse / co-routing expansion) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins; write reason
+  #             as "I own this exclusively over X", not "use X instead") /
+  # boundary (DEPRECATED alias of suppresses, retained for unmigrated skills) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
+  relations: "{\"related\":[\"rendering-models\",\"client-server-boundary\",\"component-architecture\",\"state-management\",\"suspense-patterns\",\"server-components-design\",\"server-actions-design\",\"performance-engineering\"],\"suppresses\":[{\"skill\":\"state-management\",\"reason\":\"state-management owns where state lives across the application; hooks-patterns owns the in-component discipline of expressing client state with hook primitives.\"},{\"skill\":\"client-server-boundary\",\"reason\":\"client-server-boundary owns serialization and use-client/use-server placement; hooks-patterns owns hook rules once code is on the client side.\"},{\"skill\":\"rendering-models\",\"reason\":\"rendering-models owns SSR, SSG, ISR, streaming, request-time, and client rendering choices; hooks-patterns owns hook semantics inside interactive React components.\"},{\"skill\":\"suspense-patterns\",\"reason\":\"suspense-patterns owns boundary and fallback design for async UI; hooks-patterns owns lower-level hook dependencies, effects, memoization, and custom-hook extraction.\"}],\"verify_with\":[\"code-review\",\"testing-strategy\",\"performance-engineering\"]}"
+
+  # === Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
+  mental_model: |
+    React identifies hooks by CALL ORDER. The first `useState` in a render is matched to slot 0 of the fiber's hook list, the second to slot 1, and so on. The Rules of Hooks (call at top level, call only from React functions or other hooks) exist to keep that call order stable across renders — a conditional hook would shift slot indices and corrupt state across the entire component. Once that foundation is internalized, every other hook rule falls out of it: dependency arrays exist because callbacks capture closures over render-time state (stale closure = referential bug); `useEffect` exists for synchronizing with non-React systems, not for general "do this when X changes"; Effect Events separate non-reactive reads from reactive effect dependencies; custom hooks exist when stateful logic must be reused or named; `useMemo`/`useCallback`/`memo` stabilize referential identity only when a memoized consumer or expensive computation makes that valuable, and React Compiler reduces how often humans need to add them manually.
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
+  purpose: |
+    Replaces "hooks as a generic toolkit" with "hooks as primitives with specific semantics." Without hooks-patterns discipline, components accumulate `useEffect` calls that should have been derived values during render, `useMemo` wrappers that do not actually prevent rerenders, stale-closure bugs that surface as "why does this run twice?", custom hooks extracted for stylistic shorter-body preference rather than reuse, and conditional hooks that pass eslint warnings but corrupt slot indices on the second render. The discipline asks at each hook call "what invariant am I expressing?" and reaches for the cheapest primitive that expresses it. Stale-closure bugs, "useEffect runs twice" mysteries, and over-memoized components are all symptoms of treating hooks as a toolkit rather than as primitives.
+  # concept_boundary: what this concept is NOT. Distinguishes from adjacent skills by naming
+  # the MECHANISM that differs, not just the label. Canonical replacement for top-level `boundary`.
+  concept_boundary: |
+    Distinct from state-management, which owns the question of WHERE state lives across the application (server / client UI / URL / persistent) — hooks-patterns owns the in-component discipline of expressing state with the hook primitives once the location is decided. Distinct from client-server-boundary, which owns serialization and the use-client/use-server split — hooks-patterns owns the rules of hook usage on the client side of that boundary. Distinct from rendering-models, which owns when and where the UI is produced (build / request / stream / interaction × server / edge / client) — hooks-patterns is a discipline within the client-side render and interaction stages. Distinct from suspense-patterns, which owns boundary and fallback architecture for async UI — hooks-patterns owns the lower-level effect/dependency/memoization/custom-hook decisions. Distinct from component-architecture, which owns the cross-product layering of primitives / composites / product-specific components — hooks-patterns is in-component implementation discipline, not cross-product API design.
+  # analogy: one-sentence metaphor preserving the core mechanism.
+  analogy: "Hooks are to function components what stack frames are to function calls — they let a function remember things across calls without breaking referential transparency from the outside, by tracking state in a slot array indexed by call order, and the Rules of Hooks are the same kind of invariant as 'do not goto into the middle of a stack frame': violating them produces undefined behavior masked by garbage collection rather than visible crashes."
+  # misconception: the wrong mental model people bring; corrected explicitly.
+  misconception: |
+    The wrong mental model is that `useEffect` is the general "run this when X changes" primitive. It is not. `useEffect`'s purpose is to synchronize with systems outside React's control (DOM mutations, browser APIs, network subscriptions, timers, third-party libraries). Most uses of `useEffect` that compute derived state, transform props, or trigger re-renders should be: (a) computed during render (derived state); (b) handled in an event handler (event-driven); or (c) handled in a `useMemo` or `useCallback` (referential stability for downstream consumers). Reaching for `useEffect` as the default "do this when X changes" produces components with synchronization bugs, double-execution surprises under StrictMode, and stale-closure footguns that better primitives would have prevented entirely.
+---
+# Hooks Patterns
+
+## Concept of the skill
+
+React Hooks are the discipline of treating `useState`, `useEffect`, `useMemo`, `useCallback`, `useRef`, and their kin not as a generic toolkit but as primitives with precise semantics, all resting on one mechanism: React identifies hooks by **call order**, matching the first hook call in a render to slot 0 of the component's fiber, the second to slot 1, and so on. Every "rule" of hooks falls out of preserving that order — the Rules of Hooks (top-level only, React-functions only) exist to keep slot indices stable across renders; dependency arrays exist because each callback captures a closure over the render that created it, so a missing or reference-unstable dependency is a stale-closure or over-firing bug; `useEffect` exists to *synchronize with systems React does not own* (DOM, network, timers, third-party widgets), not to compute derived state that belongs in render; custom hooks exist to *reuse or name* stateful logic, not to shorten a long component; and `useMemo`/`useCallback`/`memo` stabilize referential identity only when a memoized consumer or a provably-expensive computation makes that worthwhile. React 18/19 semantics — automatic batching, interruptible concurrent rendering, Strict Mode double-invocation, Effect Events, and the React Compiler's automatic memoization — change the calculus around effects and manual memoization but never the underlying call-order invariant. The skill's posture at every hook call is one question: *what invariant am I expressing, and what is the cheapest primitive that expresses it?*
+
+## Coverage
+
+The discipline of using React Hooks correctly: why the Rules of Hooks are a call-order invariant rather than a convention, how the dependency array encodes a contract between a closure and the next render, when `useEffect` is the wrong primitive (and what the right one is), the difference between *derived* values and *stored* values, the three legitimate reasons to extract a custom hook, when `useMemo`, `useCallback`, and `memo` actually prevent rerenders and when they merely add overhead, and the React 18/19 semantics that change the calculus: automatic batching, concurrent rendering, Strict Mode effect stress checks, Effect Events, and React Compiler.
+
+## Philosophy of the skill
+
+A React component is a function from props and state to a description of UI. Hooks are the primitives that let the function remember things across calls without breaking referential transparency from the outside — to the calling renderer, each render is a fresh function call producing fresh output; to the component, `useState` returns "the same" state across renders.
+
+This illusion is held together by a single mechanism: **React identifies hooks by call order**. The first `useState` call in a render is matched to slot 0 of the fiber's hook list, the second to slot 1, and so on. The Rules of Hooks exist to keep that call order stable across renders. A conditional `useState` would shift the slot indices and corrupt the state of every later hook in the component. The lint rule that flags conditional hooks is not enforcing style; it is preventing a class of memory-corruption bug from compiling.
+
+Once that foundation is internalized, every other "discipline" rule around hooks falls out of it: dependency arrays exist because hooks capture closures over the render's props and state, and a stale closure is a referential bug. `useEffect` exists for **synchronizing** with systems outside React, not for general "do this when X changes" logic — most uses are better expressed as derived values during render. Custom hooks exist when stateful logic must be **reused across components**, not as a stylistic preference for shorter component bodies. `useMemo` and `useCallback` exist to stabilize referential identity for downstream `React.memo` or hook dependency arrays, not as general performance optimizations.
+
+The discipline is to ask, at each hook call, *what invariant am I expressing?* — and to reach for the cheapest primitive that expresses it. Most stale-closure bugs, most "why does my effect run twice" mysteries, and most over-memoized components come from reaching for hooks as a generic toolkit rather than as primitives with specific semantics.
+
+## Rules of Hooks — Why They Are a Compile-Time Invariant
+
+The two rules:
+
+1. Only call hooks at the top level. Not inside conditions, loops, or nested functions.
+2. Only call hooks from React function components or from other hooks. Not from regular functions, event handlers, or class methods.
+
+The mechanism they protect:
+
+```
+// First render
+const [a, setA] = useState(0);   // slot 0
+const [b, setB] = useState('');  // slot 1
+useEffect(() => {...}, [a]);     // slot 2
+
+// Second render — what if the second hook is conditional?
+const [a, setA] = useState(0);   // slot 0
+if (a > 0) {
+  const [b, setB] = useState(''); // SOMETIMES slot 1, SOMETIMES skipped
+}
+useEffect(() => {...}, [a]);     // either slot 1 OR slot 2 — slot mismatch
+```
+
+React does not store hooks by name. It stores them by call-order index. A conditional hook makes the index of every later hook depend on the condition. State and effect state get reassigned to wrong slots, and the component starts reading another hook's state — a classic memory-corruption pattern, except in JavaScript with garbage collection it surfaces as silent bugs rather than crashes.
+
+`eslint-plugin-react-hooks` and the React runtime in development mode both enforce these rules. The cost of violating them is not lint-failure aesthetics; it is undefined behavior.
+
+## The Dependency Array — A Closure Contract
+
+Every callback you pass to `useEffect`, `useMemo`, `useCallback`, and similar hooks **captures the variables in scope at the time of the render that produced it**. The dependency array is the contract that says: "the next render's callback should replace this one if any of these values changed; otherwise keep using the cached one."
+
+Three failure modes:
+
+1. **Missing dependency (stale closure).** The callback references `x` but `x` is not in the array. The effect runs with the value of `x` from the render where the effect was last created — which may be many renders behind reality. Symptom: "the value seems frozen" or "this used to update and now doesn't."
+
+2. **Reference-unstable dependency (over-firing).** The callback depends on an object, array, or function that is *re-created on every render*. The dependency array compares by `Object.is`, so a new array literal `[a, b]` is never `===` to the previous one. The effect re-runs every render even when the meaningful values didn't change.
+
+3. **Disabled lint (silent drift).** `// eslint-disable-next-line react-hooks/exhaustive-deps`. The escape hatch exists, but every use should be a documented exception with a comment explaining why the missing dependency is intentional. Most production stale-closure bugs trace to silent disables.
+
+The right fix depends on the case:
+
+- **Missing dep**: add it. If adding it causes an infinite loop, the loop was already a latent bug — the effect was running every render and producing new state, you just hadn't noticed because the deps were lying about it.
+- **Reference-unstable dep**: lift the value up (define it outside the component, or pass it as a prop), memoize it with `useMemo` / `useCallback` at its source, or refactor so the effect depends on a primitive (string, number) rather than a reference.
+- **Genuinely-don't-want-to-react**: the React team's answer is `useEffectEvent` (RFC stage as of writing) — separate the "reactive" reads from the "latest snapshot" reads. Until that lands, a `useRef` mirror of the value is the documented escape hatch.
+
+## When `useEffect` Is the Wrong Primitive
+
+`useEffect` is for **synchronizing the component with an external system**: a DOM subscription, a network request, a timer, a third-party widget. It is not for "do this calculation when X changes." Most of the patterns below are mis-uses:
+
+| Pattern | What it does | Better primitive |
+|---|---|---|
+| `useState(initial); useEffect(() => setState(derive(props)), [props])` | Stores a derived value in state, then re-syncs on prop change | Compute during render: `const derived = derive(props);` |
+| `useState; useEffect(() => setState(...))` triggered by a prop change to reset | Resets local state when a prop changes | Use the `key` prop to remount, or lift state up |
+| `useEffect(() => { fetchData().then(setData) }, [])` for initial data | Imperative fetch-on-mount | Server Components, React Query / SWR, or Suspense data fetching |
+| `useEffect(() => onChange?.(value), [value])` to notify parent | Re-syncs parent state from child effect | Call `onChange` in the event handler that changed `value` |
+| `useEffect(() => { const id = setTimeout(...); return () => clearTimeout(id) }, [...])` to debounce | Effect-driven debounce | Custom `useDebouncedValue` hook, or library |
+
+The React docs' essay [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect) is the canonical taxonomy of effect misuse. The pattern: every `useEffect` is a code smell until it has earned its place by genuinely synchronizing with something React doesn't own.
+
+## Derived Values vs Stored Values
+
+A value is *derived* if it can be computed from other values you already have (props, state, refs). A value is *stored* if it has its own lifecycle — set by an event, persisted across renders, and not recoverable from other inputs.
+
+Stored:
+
+```tsx
+const [draft, setDraft] = useState('');
+<input value={draft} onChange={e => setDraft(e.target.value)} />
+```
+
+Derived (no extra `useState` needed):
+
+```tsx
+const fullName = `${firstName} ${lastName}`;          // from props
+const isValid = email.includes('@') && password.length >= 8;  // from state
+const filteredItems = items.filter(i => i.tag === activeTag);  // from props+state
+```
+
+The rule: if the value can be computed during render, compute it during render. State exists to remember things across renders; it is not a cache for computation. Storing a derived value in state introduces a two-step update cycle: render → effect → setState → rerender, where a single render with inline computation would have sufficed.
+
+When derived computation is expensive enough to matter, that's what `useMemo` is for — and *only then*, because for cheap computations the overhead of `useMemo` (a deps check, an array allocation, a callback closure) exceeds the cost of re-running the computation.
+
+## Custom Hooks — When and Why
+
+Three legitimate reasons to extract a custom hook:
+
+1. **Reuse across components.** The same stateful logic is needed in two or more components. Extract it once, import it twice.
+2. **Name the abstraction.** A sequence of `useState` + `useEffect` + `useCallback` whose collective purpose is "track the window's scroll position" deserves to be named `useScrollPosition`. The name is documentation.
+3. **Encapsulate a state machine.** A reducer plus its bound actions is a contained unit; `useFormDraft` is clearer at the call site than the seven hooks it composes.
+
+Anti-patterns:
+
+- **Extracting because the component is "too long".** Length is not a smell. Hooks have one-call-site-per-component semantics; splitting a 200-line component's hooks into three custom hooks that are each called from one place produces three indirections and no reuse.
+- **Extracting to "follow the pattern".** Custom hooks are not architecture; they are factorization. If the factor isn't reused or doesn't have a useful name, it's noise.
+- **Extracting effects without their state.** A custom hook that takes a callback and runs it in `useEffect` is almost always wrong — the callback closes over the caller's state, and you've just hidden the dependency-array problem from view.
+
+Library precedent: `react-use`, `usehooks-ts`, `@tanstack/react-query`, `swr` — these libraries are entirely composed of named, reusable custom hooks. They are the existence proof of what custom hooks earn their keep doing.
+
+## `useMemo` and `useCallback` — Footgun Cases
+
+These hooks have two valid jobs:
+
+1. **Stabilize referential identity** for a value that will be a dependency of another hook, or a prop to a `React.memo`-wrapped child.
+2. **Skip expensive computation** when the inputs haven't changed.
+
+For everything else, they are net negative — they add a deps-check cost, an allocation, and a closure, in exchange for no observable benefit.
+
+| Case | `useMemo` adds value? |
+|---|---|
+| `const total = items.reduce(...)` where items has 5 entries | No |
+| `const total = items.reduce(...)` where items has 50,000 entries | Yes (if rerender frequency is high) |
+| `const onClick = useCallback(() => ..., [...])` passed to a normal child | No — the child re-renders anyway when its parent re-renders |
+| `const onClick = useCallback(() => ..., [...])` passed to `React.memo(Child)` | Yes — keeps the memo equality check from breaking |
+| `const opts = useMemo(() => ({ a, b }), [a, b])` used in another hook's deps | Yes — without it, the outer hook over-fires |
+| `const opts = useMemo(() => ({ a, b }), [a, b])` never used as a dep | No |
+
+The compiler (React Compiler, formerly React Forget) when generally available will auto-memoize where beneficial and eliminate this discipline as a manual concern. Until then, the rule is: don't memoize until you have evidence — a profiler trace, a benchmark, or a `React.memo`'d consumer — that memoization is preventing real work.
+
+## React 18+ Semantics That Change Hook Reasoning
+
+- **Automatic batching.** All state updates inside any callback (event handlers, promises, timeouts, async functions) are batched into a single re-render in React 18+. Pre-React-18, only updates inside React event handlers batched. The discipline change: stop reaching for `flushSync` to force separate updates; conversely, don't write code that depends on updates *not* batching.
+- **Concurrent rendering.** A render can be interrupted, abandoned, or replayed. Two consequences: (1) render functions must be pure — no side effects, no I/O, no `Date.now()`-driven branching that won't survive replay; (2) effects run *after* the render commits, not after every render function call.
+- **Strict Mode double-invocation in development.** React 18 in dev mounts every component twice, runs every effect twice, to surface non-idempotent effects. Effects that don't clean up properly (subscribe without unsubscribe, fetch without abort) misbehave under this regimen — that's a bug Strict Mode is *showing* you, not a bug Strict Mode is *causing*.
+- **Effect Events.** `useEffectEvent` separates non-reactive reads from an effect's reactive dependencies. It is the right primitive for "read the latest value inside this effect, but do not re-run the effect when that value changes." Do not add Effect Events to dependency arrays.
+- **React Compiler and memoization.** React Compiler automatically applies memoization that is equivalent to `memo` for many components and reduces the need for manual `useMemo` and `useCallback`. Manual memoization remains useful for expensive computations, stable dependencies, or code not covered by the compiler, but "wrap it just in case" is even weaker guidance now.
+
+## Verification
+
+After applying this skill, verify:
+
+- [ ] Every hook is called at the top level of the component or another hook, with no conditional or loop wrapping.
+- [ ] Every dependency array is exhaustive (eslint-plugin-react-hooks passes), with documented exceptions only.
+- [ ] Each `useEffect` synchronizes with something React doesn't own; computational logic lives in render or in event handlers.
+- [ ] No state holds a value that could be derived during render.
+- [ ] Custom hooks have either ≥2 call sites or a meaningful name that earns its existence.
+- [ ] `useMemo` / `useCallback` wrap only values that (a) stabilize identity for a downstream consumer or (b) skip provably-expensive work.
+- [ ] Effects clean up: every subscribe has unsubscribe, every fetch has abort, every timer has clear.
+
+## Grounding Sources
+
+- React docs — [Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks). The official statement of the two rules and their rationale.
+- React docs — [exhaustive-deps lint](https://react.dev/reference/eslint-plugin-react-hooks/lints/exhaustive-deps). The official dependency-array contract and stale-closure correction guidance.
+- React docs — [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect). The canonical taxonomy of `useEffect` misuse.
+- React docs — [Reusing Logic with Custom Hooks](https://react.dev/learn/reusing-logic-with-custom-hooks). The official guidance on when extraction is warranted.
+- React docs — [useEffectEvent](https://react.dev/reference/react/useEffectEvent). Current guidance for reading latest props/state from effects without making those reads reactive dependencies.
+- React docs — [memo](https://react.dev/reference/react/memo), [useMemo](https://react.dev/reference/react/useMemo), and [useCallback](https://react.dev/reference/react/useCallback). Current guidance that React Compiler reduces the need for manual memoization while preserving the cases where stable identity or expensive computations matter.
+- Abramov, D. — [A Complete Guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/). The stale-closure model and the closure-over-render mental model.
+- React 18 working group — [Automatic batching for fewer renders in React 18](https://github.com/reactwg/react-18/discussions/21).
+- Markbåge, S. & Clark, A. — React 18 announcement post on concurrent rendering invariants.
+
+## Do NOT Use When
+
+| Instead of this skill | Use | Why |
+|---|---|---|
+| Choosing between Server Components, Client Components, and where to draw the boundary | `client-server-boundary` | client-server-boundary owns the serialization contract and the `'use client'` / `'use server'` rules; hooks-patterns operates on the client side of that boundary. |
+| Deciding where the application's state should live (server, client, URL, persistent storage) | `state-management` | state-management owns the location and ownership decision; hooks-patterns owns the local discipline once you've decided client-component state is the right home. |
+| Designing a reusable component library's API surface | `component-architecture` | component-architecture owns primitive/composite/product layering; hooks-patterns is one component's internal logic. |
+| Picking SSR vs SSG vs ISR for a route | `rendering-models` | rendering-models owns the rendering-strategy decision; hooks-patterns has nothing to say about it. |
+| Suspense for data fetching and streaming UI patterns | `suspense-patterns` | suspense-patterns owns the boundary-and-fallback discipline; hooks-patterns covers the underlying hook primitives but not the Suspense boundary protocol. |

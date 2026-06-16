@@ -1,0 +1,364 @@
+{
+  "skill_name": "indexing-strategy",
+  "subject": "Database indexing strategy",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "query-optimization",
+    "database-migration",
+    "entity-relationship-modeling",
+    "sharding-strategy"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "composite-index-order",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A SaaS table has 80M orders. The main list query filters by tenant_id equality, applies a status IN list, orders by created_at DESC, and returns the first 50 rows. A teammate proposes an index on (created_at, status, tenant_id) because created_at is the most selective field in recent data.",
+      "context": "The query is frequent and latency-sensitive. Writes are steady but not extreme. The team wants a durable index-design recommendation, not just a one-query EXPLAIN walkthrough.",
+      "question": "Evaluate the proposed index and recommend a better indexing strategy.",
+      "expected_flags": [
+        "Flags most-selective-first as the wrong governing rule for this composite index.",
+        "Identifies equality or stable partitioning predicates before sort/range as the key ordering concern.",
+        "Notes that the index choice must be validated against plan evidence and workload frequency."
+      ],
+      "expected_fix_hints": [
+        "Consider an index starting with tenant_id, then columns that support status filtering and created_at ordering, with exact order justified by the database planner and query shape.",
+        "Check whether a partial index is viable if the status set targets a small stable subset.",
+        "Measure write/storage cost and watch for redundant left-prefix indexes after adding the chosen index."
+      ],
+      "absent_signals": [
+        "Must not choose column order solely by selectivity.",
+        "Must not say every filtered column needs its own index.",
+        "Must not treat production index creation mechanics as the main answer."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags most-selective-first as the wrong governing rule for this composite index."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies equality or stable partitioning predicates before sort/range as the key ordering concern."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes that the index choice must be validated against plan evidence and workload frequency."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Consider an index starting with tenant_id, then columns that support status filtering and created_at ordering, with exact order justified by the database planner and query shape."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check whether a partial index is viable if the status set targets a small stable subset."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Measure write/storage cost and watch for redundant left-prefix indexes after adding the chosen index."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not choose column order solely by selectivity."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not say every filtered column needs its own index."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat production index creation mechanics as the main answer."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "json-contains-and-full-text",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A Postgres-backed product stores product attributes in jsonb and searches for rows where attributes contain a key/value pair plus a text-search condition. The current B-tree index on attributes is ignored.",
+      "context": "The team is deciding which index structures should exist for the workload. Query rewriting and schema redesign may be future options, but the immediate question is index-structure fit.",
+      "question": "What indexing guidance should be applied?",
+      "expected_flags": [
+        "Flags B-tree as structurally mismatched for jsonb containment and full-text search.",
+        "Identifies GIN/inverted-index structures as the relevant family for many-keys-per-row values.",
+        "Separates index-structure design from broader entity-relationship-modeling changes."
+      ],
+      "expected_fix_hints": [
+        "Evaluate an appropriate GIN index or specialized operator class for the jsonb containment path.",
+        "Evaluate a text-search GIN index or search-specific system for full-text predicates.",
+        "Verify planner usage and write/storage cost before keeping the index."
+      ],
+      "absent_signals": [
+        "Must not recommend another plain B-tree index on the jsonb column as the core fix.",
+        "Must not assume the existing index is useful merely because it exists.",
+        "Must not skip workload validation."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags B-tree as structurally mismatched for jsonb containment and full-text search."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies GIN/inverted-index structures as the relevant family for many-keys-per-row values."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates index-structure design from broader entity-relationship-modeling changes."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Evaluate an appropriate GIN index or specialized operator class for the jsonb containment path."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Evaluate a text-search GIN index or search-specific system for full-text predicates."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify planner usage and write/storage cost before keeping the index."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not recommend another plain B-tree index on the jsonb column as the core fix."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not assume the existing index is useful merely because it exists."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not skip workload validation."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "vector-ann-index",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team stores 4M embedding vectors and wants top-k semantic search. They plan to add a B-tree index on the vector column and expect exact recall with low latency.",
+      "context": "The database supports pgvector-style HNSW and IVFFlat indexes. The table is still ingesting new rows, and recall matters to product quality.",
+      "question": "Assess the indexing plan and recommend the right concerns to evaluate.",
+      "expected_flags": [
+        "Flags B-tree as the wrong structure for high-dimensional vector similarity search.",
+        "Identifies HNSW and IVFFlat as approximate nearest-neighbor index choices with recall/latency tradeoffs.",
+        "Calls out IVFFlat training on representative data and recall tuning as design concerns."
+      ],
+      "expected_fix_hints": [
+        "Choose HNSW or IVFFlat based on build cost, memory, insert pattern, latency, and recall budget.",
+        "Tune probes or ef_search and test recall against a baseline exact search sample.",
+        "Avoid wrapping the vector column in a function that prevents index use."
+      ],
+      "absent_signals": [
+        "Must not promise exact recall from ANN indexes.",
+        "Must not recommend B-tree for high-dimensional vector search.",
+        "Must not treat embedding-model selection as owned by this skill."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags B-tree as the wrong structure for high-dimensional vector similarity search."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies HNSW and IVFFlat as approximate nearest-neighbor index choices with recall/latency tradeoffs."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Calls out IVFFlat training on representative data and recall tuning as design concerns."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Choose HNSW or IVFFlat based on build cost, memory, insert pattern, latency, and recall budget."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Tune probes or ef_search and test recall against a baseline exact search sample."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Avoid wrapping the vector column in a function that prevents index use."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not promise exact recall from ANN indexes."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not recommend B-tree for high-dimensional vector search."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat embedding-model selection as owned by this skill."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "unused-index-retirement",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A write-heavy event table has ten secondary indexes. Monitoring shows several indexes with zero scans for months, while inserts and updates are slowing down. One index backs a uniqueness rule and another supports a rare compliance export.",
+      "context": "The team wants to reduce write amplification without breaking constraints or rare but necessary reads.",
+      "question": "Recommend an index lifecycle response.",
+      "expected_flags": [
+        "Identifies unused indexes as ongoing write/storage/planner cost, not harmless clutter.",
+        "Distinguishes candidate redundant/unused indexes from indexes that enforce constraints or support required rare workflows.",
+        "Calls for an observation window and workload/owner confirmation before dropping."
+      ],
+      "expected_fix_hints": [
+        "Review usage counters, constraints, query logs, and rare-job requirements before dropping.",
+        "Use hidden/invisible or hypothetical testing where the database supports it before removal.",
+        "Hand the final safe drop mechanics to database-migration for production rollout."
+      ],
+      "absent_signals": [
+        "Must not drop all zero-scan indexes blindly.",
+        "Must not ignore uniqueness or foreign-key/cascade implications.",
+        "Must not treat slow writes as query-optimization's primary ownership."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies unused indexes as ongoing write/storage/planner cost, not harmless clutter."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes candidate redundant/unused indexes from indexes that enforce constraints or support required rare workflows."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Calls for an observation window and workload/owner confirmation before dropping."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Review usage counters, constraints, query logs, and rare-job requirements before dropping."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use hidden/invisible or hypothetical testing where the database supports it before removal."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand the final safe drop mechanics to database-migration for production rollout."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not drop all zero-scan indexes blindly."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore uniqueness or foreign-key/cascade implications."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat slow writes as query-optimization's primary ownership."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "sharding-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A multi-tenant database has outgrown one node. Every query includes tenant_id, and the product asks whether tenant_id should decide which node owns each tenant's rows.",
+      "context": "The problem is write capacity and storage distribution across nodes. The question is data placement, not within-node lookup structure.",
+      "question": "Should indexing-strategy own this decision? If not, where should it route?",
+      "expected_flags": [
+        "Identifies this as shard-key or horizontal partitioning design rather than index-portfolio design.",
+        "Routes the decision to sharding-strategy.",
+        "Explains that indexes may still be needed within each shard after the sharding decision."
+      ],
+      "expected_fix_hints": [
+        "Use sharding-strategy to evaluate tenant_id as a shard key.",
+        "After sharding, design per-shard indexes for the local workload."
+      ],
+      "absent_signals": [
+        "Must not force indexing-strategy onto cross-node data placement.",
+        "Must not suggest a tenant_id index alone solves single-node write/storage limits.",
+        "Must not discuss HNSW, GIN, or B-tree structure fit as the central answer."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies this as shard-key or horizontal partitioning design rather than index-portfolio design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes the decision to sharding-strategy."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that indexes may still be needed within each shard after the sharding decision."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use sharding-strategy to evaluate tenant_id as a shard key."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: After sharding, design per-shard indexes for the local workload."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not force indexing-strategy onto cross-node data placement."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not suggest a tenant_id index alone solves single-node write/storage limits."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not discuss HNSW, GIN, or B-tree structure fit as the central answer."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

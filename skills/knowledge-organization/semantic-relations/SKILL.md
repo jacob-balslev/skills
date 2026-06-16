@@ -1,28 +1,32 @@
 ---
 name: semantic-relations
+# description: routing-facing summary of when this skill activates and what it covers.
 description: "Use when typing edges in a knowledge graph or concept map, resolving synonym/antonym/polysemy/homonym confusion, testing whether a connection is IS-A, PART-OF, causal, thematic, or vague, explaining adjacent concepts, or auditing whether hierarchy and skill-boundary decisions use the wrong relation type. Covers taxonomic, associative, and thematic relations plus symmetry, asymmetry, transitivity, reflexivity, and irreflexivity. Do NOT use for formal ontology axioms with reasoning constraints, database foreign-key or junction-table design, or operational data correspondence across systems."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime and portability notes for this skill.
 compatibility:
   notes: "Vocabulary-layer skill, stack- and storage-agnostic. The relation taxonomy and the substitution / property tests apply to any knowledge graph, concept map, taxonomy, naming system, or conceptual model; downstream implementation skills such as ontology-modeling, taxonomy-design, entity-relationship-modeling, and relational mapping consume the typed relations defined here."
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   # version: skill content version (semver). Bumped when the instructional content changes.
 
 
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: knowledge-organization
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # scope: PRD-style free-text statement of what the skill teaches and what it does not.
-  # Not an enum (deployment targeting belongs to `deployment_target`).
+  # Not an enum (publishability belongs to `public`; project anchoring belongs to `project[]`).
   scope: "Teaches pre-formal relation typing for concept edges in graphs, maps, taxonomies, ontologies-in-sketch, and skill-boundary analysis: IS-A, PART-OF, synonymy/polysemy, thematic roles, and relation properties. Excludes formal ontology axioms, full conceptual/domain modeling, representation-paradigm choice, taxonomy governance, database relationships, and operational ID mapping."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
@@ -50,23 +54,22 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: '["semantic relations","relation typing","IS-A relation","PART-OF relation","hypernymy hyponymy","meronymy holonymy","synonymy versus polysemy","thematic role analysis","relation property check","knowledge-graph edge typing","substitution test","relation-vocabulary discipline","typed-edge taxonomy","conceptual-relation analysis","adjacency-vs-boundary disambiguation","generic related-to anti-pattern","SKOS broader narrower related","WordNet semantic relations","FrameNet frame elements"]'
+  keywords: '["semantic relations","relation typing","IS-A relation","PART-OF relation","hypernymy hyponymy","meronymy holonymy","synonymy versus polysemy","thematic role analysis","relation property check","knowledge-graph edge typing"]'
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
   examples: '["our codebase uses customer, client, buyer, and user in different modules -- which relation analysis tells us whether this is synonymy, near-synonymy, or distinct domain language?","a new graph schema uses related_to for every edge -- which semantic relation types should replace it so traversal and reasoning stay meaningful?","is a refund a kind of payment, part of a payment, or the result of a payment action?","two skills seem close: one owns structure design and one owns assignment into that structure -- is that adjacency, a boundary, or a deeper taxonomic relation?","the word status appears across payments, orders, and fulfillment -- how should relation analysis expose the polysemy and guide disambiguation?","type these knowledge-graph edges so traversal is meaningful instead of generic","test whether every line item is an order passes the IS-A substitution test"]'
   # anti_examples: near-miss prompts that should route ELSEWHERE.
-  # Pair with relations.boundary to indicate the confusable territory's owner.
+  # Pair with relations.suppresses to indicate the confusable territory's owner.
   anti_examples: '["I need formal OWL axioms, class restrictions, and reasoning semantics on a knowledge base","I need the physical database foreign keys and junction-table design for these relationships","I need to connect external IDs from one platform to canonical IDs in our system operationally","I need the broader representation choice between graph, frames, rules, or hybrid knowledge systems","I need to analyze icon metaphors, color connotation, and UI sign systems","rename this function across all call-sites in the repo","design the full taxonomy, facets, and assignment rules for this category system"]'
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: '{"boundary":[{"skill":"linguistics","reason":"linguistics owns word form, morphology, register, and identifier-level phrasing; semantic-relations owns the typed meaning connection between concepts such as IS-A, PART-OF, causal, thematic, synonymy, polysemy, and homonymy."},{"skill":"conceptual-modeling","reason":"conceptual-modeling builds the full pre-implementation domain structure of entities, attributes, relationships, and cardinality; semantic-relations supplies the relation-type vocabulary used inside or around that structure."},{"skill":"knowledge-modeling","reason":"knowledge-modeling chooses the representation paradigm such as graph, frame, rules, concept map, or hybrid; semantic-relations chooses the edge vocabulary inside whichever representation is selected."},{"skill":"ontology-modeling","reason":"ontology-modeling formalizes classes, properties, axioms, constraints, and reasoning semantics; semantic-relations is the pre-formal relation-typing layer and must not imply OWL/RDFS/SHACL commitments by itself."},{"skill":"taxonomy-design","reason":"taxonomy-design governs browse/category hierarchies, facets, assignment rules, and SKOS-style classification; semantic-relations only tests whether a single relation is hierarchy, association, part-whole, thematic role, or another typed edge."},{"skill":"entity-relationship-modeling","reason":"entity-relationship-modeling owns physical or logical database relationships, keys, junction tables, and persistence constraints; semantic-relations owns conceptual meaning relations before schema implementation."}],"related":["linguistics","pattern-recognition","semantic-center","conceptual-modeling","knowledge-modeling","ontology-modeling","taxonomy-design"],"verify_with":["linguistics","taxonomy-design","ontology-modeling","code-review"]}'
-  # grounding: required when `deployment_target: project`. Declares the truth sources
+  relations: '{"suppresses":[{"skill":"linguistics","reason":"linguistics owns word form, morphology, register, and identifier-level phrasing; semantic-relations owns the typed meaning connection between concepts such as IS-A, PART-OF, causal, thematic, synonymy, polysemy, and homonymy."},{"skill":"conceptual-modeling","reason":"conceptual-modeling builds the full pre-implementation domain structure of entities, attributes, relationships, and cardinality; semantic-relations supplies the relation-type vocabulary used inside or around that structure."},{"skill":"knowledge-modeling","reason":"knowledge-modeling chooses the representation paradigm such as graph, frame, rules, concept map, or hybrid; semantic-relations chooses the edge vocabulary inside whichever representation is selected."},{"skill":"ontology-modeling","reason":"ontology-modeling formalizes classes, properties, axioms, constraints, and reasoning semantics; semantic-relations is the pre-formal relation-typing layer and must not imply OWL/RDFS/SHACL commitments by itself."},{"skill":"taxonomy-design","reason":"taxonomy-design governs browse/category hierarchies, facets, assignment rules, and SKOS-style classification; semantic-relations only tests whether a single relation is hierarchy, association, part-whole, thematic role, or another typed edge."},{"skill":"entity-relationship-modeling","reason":"entity-relationship-modeling owns physical or logical database relationships, keys, junction tables, and persistence constraints; semantic-relations owns conceptual meaning relations before schema implementation."}],"related":["linguistics","pattern-recognition","semantic-center","conceptual-modeling","knowledge-modeling","ontology-modeling","taxonomy-design"],"verify_with":["linguistics","taxonomy-design","ontology-modeling","code-review"]}'
+  # grounding: required when non-empty `project[]`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
   grounding: '{"subject_matter":"Semantic relation typing for concept edges, lexical sense relations, knowledge-organization links, thematic roles, and relation-property checks","grounding_mode":"universal","truth_sources":["https://wordnet.princeton.edu/","https://www.w3.org/TR/skos-reference/","https://www.w3.org/TR/owl2-primer/","https://framenet.icsi.berkeley.edu/WhatIsFrameNet"],"failure_modes":["generic_related_to_edges_collapse_relation_meaning","is_a_part_of_conflation_breaks_inheritance_reasoning","synonym_polysemy_homonymy_confusion_drives_wrong_rename_or_flattening","relation_properties_left_implicit","thematic_roles_conflate_actor_instrument_cause_or_goal","relation_typing_overowns_formal_ontology_taxonomy_or_database_design","publishability_scan_false_positive_from_customer_specific_examples"],"evidence_priority":"equal"}'
@@ -91,7 +94,7 @@ metadata:
     The discipline is: name the relation, then test whether the name is the right kind of relation. If "A is B" fails the substitution test, it is not hypernymy. If a part-whole relation changes lifecycle semantics, it is not loose association. If two words share one form but multiple related meanings, that is polysemy, not synonymy. Precision here compounds into every downstream knowledge, modeling, taxonomy, ontology, and routing skill.
   # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
   # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
-  boundary: |
+  concept_boundary: |
     This skill owns pre-formal relation typing: choosing whether a connection is IS-A, PART-OF, synonymy, polysemy, causal, thematic, associative, or property-constrained. It does not own word morphology or audience register (linguistics), the meaning encoded by a single identifier or signal (semantics), full domain structure discovery (conceptual-modeling), representation-paradigm choice (knowledge-modeling), formal class/property axioms and reasoning constraints (ontology-modeling), taxonomy/facet governance (taxonomy-design), database relationship implementation (entity-relationship-modeling), operational cross-system ID correspondence (relational mapping), or visual sign systems (semiotics).
   # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Semantic-relations is to a knowledge graph what road-type labels are to a transit map: motorway, slip road, roundabout, bridge, tunnel, and one-way street are each typed connections with their own traversal rules. A map that labels every road connector is nearly useless for navigation; precise relation vocabulary makes the map a tool rather than an illustration."
@@ -102,7 +105,6 @@ metadata:
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
   skill_graph_canonical_skill: skills/knowledge-organization/semantic-relations/SKILL.md
   # === Health Block (written by the audit loop, not hand-authored) ===
@@ -118,10 +120,22 @@ metadata:
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
   # semantic-debt: scope — author via /audit:* (schema_version intentionally NOT bumped until earned)
+relations:
+  related: ["pattern-recognition","linguistics","semantic-center","conceptual-modeling","knowledge-modeling","ontology-modeling","taxonomy-design","entity-relationship-modeling"]
+  suppresses: ["knowledge-modeling","linguistics","ontology-modeling","taxonomy-design"]
+  verify_with: ["code-review","linguistics","taxonomy-design","ontology-modeling"]
 ---
 
 
 # Semantic Relations
+
+## Concept of the skill
+
+Semantic relations are the *typed connections between concepts in a meaning structure* -- the edges in a knowledge graph, concept map, taxonomy, ontology sketch, or hierarchy, each of a named kind rather than a generic association. Drawn from lexical semantics, Princeton WordNet, W3C SKOS, W3C OWL property semantics, and FrameNet-style semantic roles, this skill treats every edge as a claim about traversal, inference, substitution, or role assignment.
+
+Replace generic related-to edges and untyped associations with named relation types that enable meaningful traversal, reasoning, retrieval, and disambiguation. Most knowledge-system failures are not failures to name nodes; they are failures to type the connections between nodes. A graph with only related-to edges cannot support reliable path reasoning. A naming audit that cannot separate synonymy from polysemy suggests the wrong fix. A skill system that cannot tell adjacency from boundary loads the wrong context.
+
+This skill owns pre-formal relation typing: choosing whether a connection is IS-A, PART-OF, synonymy, polysemy, causal, thematic, associative, or property-constrained. It does not own word morphology or audience register (linguistics), the meaning encoded by a single identifier or signal (semantics), full domain structure discovery (conceptual-modeling), representation-paradigm choice (knowledge-modeling), formal class/property axioms and reasoning constraints (ontology-modeling), taxonomy/facet governance (taxonomy-design), database relationship implementation (entity-relationship-modeling), operational cross-system ID correspondence (relational mapping), or visual sign systems (semiotics). Semantic-relations is to a knowledge graph what road-type labels are to a transit map: motorway, slip road, roundabout, bridge, tunnel, and one-way street are each typed connections with their own traversal rules. A map that labels every road connector is nearly useless for navigation; precise relation vocabulary makes the map a tool rather than an illustration. The wrong mental model is that relation typing is academic overhead and that related-to plus context is sufficient. It is not. Adjacent misconceptions: that PART-OF and IS-A are interchangeable; that synonymy means duplicate concepts; that polysemy is the same as homonymy; that all PART-OF relations are transitive; that thematic roles are just labels; and that relation properties can be omitted until implementation. Each shortcut changes the inferences readers and tools make.
 
 ## Coverage
 
@@ -134,8 +148,7 @@ Semantic relation analysis as a typed-connection discipline. Covers four familie
 
 Application surfaces include knowledge-graph edge typing, naming disambiguation (synonymy vs polysemy vs homonymy), skill / module boundary analysis (adjacent vs boundary vs verify-with), category / hierarchy sanity checks, and relation-aware explanation of how concepts connect. Includes a six-item anti-pattern catalog (generic `related_to` edges, circular IS-A, conflated PART-OF and IS-A, synonym sprawl, untyped polysemy, property-free relation definitions) and a six-item verification checklist.
 
-## Philosophy
-
+## Philosophy of the skill
 Every complex system depends on relation quality, not just node quality. Most knowledge-system failures are not failures to name the things; they are failures to *type the connection between things*. A graph with only `related_to` edges is nearly useless for reasoning. A naming audit that cannot separate synonymy from polysemy suggests the wrong fix. A skill system that cannot tell adjacency from boundary loads the wrong context.
 
 The discipline is: **name the relation, then test whether the name is the right kind of relation.** If "A is B" fails the substitution test, it is not hypernymy. If a part-whole relation changes lifecycle semantics, it is not just loose association. If two words share one form but multiple related meanings, that is polysemy, not synonymy. Precision here compounds into every other knowledge and modeling skill — the quality of every downstream representation depends on whether the relations were typed correctly upstream.
@@ -378,4 +391,4 @@ After applying this skill, verify:
 - Jackendoff, R. (1990). *Semantic Structures*. MIT Press. Modern cognitive-semantics treatment of thematic roles, conceptual structure, and the relationship between semantic and syntactic categories.
 - W3C. [SKOS Simple Knowledge Organization System Reference](https://www.w3.org/TR/skos-reference/) (2009). The lightweight RDF vocabulary for broader/narrower/related and prefLabel/altLabel; the minimum-viable formalism for transmissible semantic relations.
 - W3C. [OWL 2 Web Ontology Language: Primer (Second Edition)](https://www.w3.org/TR/owl2-primer/) (2012). Object properties and their characteristics — functional, inverse-functional, transitive, symmetric, asymmetric, reflexive, irreflexive — for the formal end of the relation-typing spectrum.
-- Storey, V. C. (1993). "Understanding Semantic Relationships." *VLDB Journal*, 2(4), 455-488. Survey of semantic relations in data-modeling contexts; the bridge from linguistic relation analysis to information-systems design.
+- Storey, V. C. (1993). "Understanding Semantic Relationships." *VLDB Journal*, 2(4), 455-488. Survey of semantic relations in entity-relationship-modeling contexts; the bridge from linguistic relation analysis to information-systems design.

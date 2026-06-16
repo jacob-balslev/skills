@@ -1,0 +1,143 @@
+{
+  "skill_name": "bcg-matrix",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A consumer goods company reviews four brands. Brand A has high relative share in a low-growth category and throws off cash. Brand B has high relative share in a high-growth category and needs production investment. Brand C has low relative share in a high-growth category. Brand D has low relative share in a low-growth category and absorbs management attention. Build a BCG Matrix.",
+      "expected_output": "The agent should define the portfolio scope and market boundaries, then classify Brand A as a cash cow, Brand B as a star, Brand C as a question mark, and Brand D as a dog/pet. It should state allocation hypotheses, cash-flow assumptions, evidence gaps, and avoid treating quadrant labels as final recommendations.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Defines portfolio scope and market boundaries",
+        "Classifies all four brands correctly",
+        "Names market growth and relative market share evidence",
+        "Discusses cash generation or cash needs",
+        "Does not treat the matrix as final recommendation"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A draft says: 'This unit is a cash cow because it has 70% absolute market share in a market we think is attractive.' Review the classification.",
+      "expected_output": "The agent should flag that BCG uses relative market share and market growth, not absolute share alone or vague attractiveness. It should ask for the market boundary, relevant competitor or reference share, growth rate, and actual cash generation before accepting a cash-cow classification.",
+      "type": "classification-review",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Identifies missing relative market share",
+        "Identifies missing market growth evidence",
+        "Asks for market boundary",
+        "Asks for cash generation or maintenance-investment evidence",
+        "Does not accept absolute share alone as enough"
+      ],
+      "substance": "mechanics",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A team asks for BCG, but their real question is whether supplier concentration, customer bargaining power, substitutes, entrants, and rivalry make a target market attractive. Should BCG own this?",
+      "expected_output": "The agent should route industry attractiveness and profit-pressure analysis to Porter's Five Forces. BCG can use market growth and relative share to map portfolio units, but buyer power, supplier power, substitutes, entrants, and rivalry are Five Forces mechanisms.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes profit-pressure work to Five Forces",
+        "Explains what BCG can still contribute",
+        "Names market growth and relative share as BCG's mechanism",
+        "Does not substitute BCG for industry-structure analysis"
+      ],
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A product lead says every question mark deserves aggressive investment because high-growth markets are always attractive. Critique the reasoning with BCG logic.",
+      "expected_output": "The agent should explain that question marks have high market growth but low relative share, so they may require significant cash to pursue leadership. It should ask whether there is a credible path to share gain, differentiation, capability fit, timing, downside protection, or option value. It should not endorse or reject investment solely from the quadrant label.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Defines question mark as high growth and low relative share",
+        "Explains investment requirement or cash need",
+        "Requires evidence beyond market growth",
+        "Allows invest, reposition, partner, or exit depending on evidence",
+        "Does not endorse investment purely by label"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "prompt": "A nonprofit has four programs competing for funding: a mature local tutoring program with strong share of the served population and steady cash support; a fast-growing youth mental-health program where it is a local leader; a fast-growing adult-skills program where it is small; and a shrinking low-share arts program. Produce the minimum useful BCG structure without inventing facts.",
+      "expected_output": "The agent should adapt BCG language to nonprofit programs, classify the tutoring program as cash-cow-like, youth mental-health as star-like, adult-skills as question-mark-like, and arts as dog/pet-like or weak-position low-growth. It should mark missing evidence about market definition, growth, relative share, funding, mission fit, outcomes, and strategic dependency, without inventing facts.",
+      "type": "safe-scaffold",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Uses nonprofit-program language without forcing pure commercial terms",
+        "Maps all four programs",
+        "Marks missing evidence",
+        "Does not invent funding, share, or outcome facts",
+        "Names next validation needs"
+      ],
+      "substance": "mechanics",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A portfolio review has three units left after BCG classification: a cash cow, a star, and a question mark. What should happen next?",
+      "expected_output": "The agent should summarize what each quadrant implies, then route to downstream validation instead of declaring a winner. It can suggest Expected Value for quantified comparison, Five Forces for market attractiveness, Seven Powers for advantage durability, Playing to Win for integrated choices, and cash-flow or valuation work for capital allocation.",
+      "type": "handoff",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Does not choose solely from quadrant labels",
+        "Names assumptions and evidence needs",
+        "Routes to at least two appropriate downstream methods",
+        "Explains the matrix is an input to allocation work",
+        "Identifies possible sequencing or funding logic"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "A growth strategy workshop asks to classify ideas as selling existing products to existing markets, existing products to new markets, new products to existing markets, and new products to new markets. Is this BCG?",
+      "expected_output": "The agent should say no. That is Ansoff Matrix product-market growth logic, not the BCG Growth-Share Matrix. BCG classifies portfolio units by market growth and relative market share, not by existing/new products and markets.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects BCG ownership",
+        "Names existing/new products and markets as Ansoff mechanics",
+        "Explains BCG uses market growth and relative market share",
+        "Does not force growth ideas into BCG quadrants"
+      ],
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

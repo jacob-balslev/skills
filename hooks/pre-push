@@ -138,14 +138,14 @@ function getChangedSkillFiles(localSha, remoteSha) {
 
   let diffOutput;
   if (zeroSha) {
-    // New branch — scan all tracked SKILL.md files to be safe.
-    const result = spawnSync('git', ['ls-files', '*.md'], { cwd: repoRoot, encoding: 'utf8' });
+    // New branch — scan all tracked per-skill content files to be safe.
+    const result = spawnSync('git', ['ls-files', '*.md', '*.json'], { cwd: repoRoot, encoding: 'utf8' });
     diffOutput = (result.stdout || '').trim();
   } else {
     // Existing branch — only files changed vs the remote tip.
     const result = spawnSync(
       'git',
-      ['diff', '--name-only', '--diff-filter=ACMR', remoteSha, localSha, '--', '*.md'],
+      ['diff', '--name-only', '--diff-filter=ACMR', remoteSha, localSha, '--', '*.md', '*.json'],
       { cwd: repoRoot, encoding: 'utf8' }
     );
     diffOutput = (result.stdout || '').trim();
@@ -153,9 +153,18 @@ function getChangedSkillFiles(localSha, remoteSha) {
 
   if (!diffOutput) return [];
 
+  // Per-skill CONTENT artifacts: SKILL.md bodies + audit-state.json / evals JSON
+  // sidecars (sidecar eval receipts leaked /Users/... paths — SKI-736). Governance
+  // docs and other JSON (package.json, manifests) are excluded by name.
+  const isSkillContent = (f) =>
+    f.endsWith('SKILL.md') ||
+    f.endsWith('audit-state.json') ||
+    f.endsWith('comprehension.json') ||
+    f.endsWith('application.json');
+
   return diffOutput
     .split('\n')
-    .filter(f => f.endsWith('SKILL.md'))
+    .filter(isSkillContent)
     .map(f => path.resolve(repoRoot, f));
 }
 

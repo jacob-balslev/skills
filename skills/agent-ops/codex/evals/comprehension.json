@@ -1,0 +1,99 @@
+{
+  "skill_name": "codex",
+  "subject": "Selecting and scoping work for the Codex CLI agent harness",
+  "adjacent_concepts": [
+    "claude-code",
+    "gpt-5-5",
+    "autonomous-loop-patterns",
+    "agent-eval-design",
+    "claude-api"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define what the Codex CLI is in 2-3 sentences, and name the single capability that most distinguishes it from Claude Code. Separate the harness from the GPT model it runs.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "negative_expectation": "Must NOT define Codex as the GPT model or the OpenAI SDK; should surface resumable sessions (or exec stdout-piping) as the distinguishing capability."
+    },
+    {
+      "id": 2,
+      "dimension": "application",
+      "prompt": "You ran a multi-step migration in Codex yesterday, got interrupted, and want to continue today keeping the plan and approvals — then later automate the same flow in a CI script. Which exact Codex commands/modes do you use for each, and why is re-pasting the context into a fresh run the wrong move?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must use codex (exec) resume <ID> / --last for continuation and exec for the scripted flow; must reject cold one-shot re-priming as wasteful and state-losing."
+    },
+    {
+      "id": 3,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Codex will automatically spawn subagents to parallelize my big task, so I just give it the whole thing and it fans out.' What is wrong, and what is the actual subagent behavior?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must state Codex spawns subagents ONLY when explicitly asked, not autonomously."
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "For each, say whether `codex` owns it or name the skill that does: (a) 'is GPT-5 or Opus better for this review?', (b) 'what is Claude Code good at?', (c) 'resume my last Codex run non-interactively', (d) 'design a supervised resumable loop'.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must route (a) to gpt-5-5, (b) to claude-code, (d) to autonomous-loop-patterns; only (c) is codex. Must not claim codex owns GPT-vs-Claude model routing."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Organize Codex's permission/sandbox modes (Auto, Read-only, Full Access) into a risk taxonomy. For a task that must hit an external network from the agent, which mode is required and what is the safety implication of choosing it?",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must identify Full Access as the network/cross-machine mode and flag it as the elevated-risk boundary, not the default."
+    },
+    {
+      "id": 6,
+      "dimension": "purpose",
+      "prompt": "Why does Codex's resumable-session design matter for long, multi-step agentic work compared with a stateless harness that restarts each run? What concretely is preserved across a resume?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "dimension": "mental_model",
+      "prompt": "Explain why choosing Codex (the harness) and routing to GPT-5 (the model) are two separate decisions, and give one task where you'd want the GPT model but a DIFFERENT harness, or Codex but reconsider the model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "negative_expectation": "Must not collapse the harness and model into one decision."
+    },
+    {
+      "id": 8,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why resuming a Codex session by ID is fundamentally different from starting a fresh run and re-pasting the prior context.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "medium"
+    }
+  ]
+}

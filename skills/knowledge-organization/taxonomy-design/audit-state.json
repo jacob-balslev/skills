@@ -6,7 +6,7 @@
   "drift_check": {
     "last_verified": "2026-05-16"
   },
-  "eval_artifacts": "planned",
+  "eval_artifacts": "present",
   "eval_state": "unverified",
   "routing_eval": "absent",
   "last_audited": "2026-06-01",

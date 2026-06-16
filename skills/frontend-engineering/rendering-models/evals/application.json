@@ -1,0 +1,465 @@
+{
+  "skill_name": "rendering-models",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (The Time × Place Grid, Trade-off Profile, When to Choose Each Model, Hydration, Edge Rendering, Partial Prerendering, Verification, Do NOT Use When) and current web rendering practice (web.dev Rendering on the Web, React Server Components, Core Web Vitals).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "model-mismatch-marketing",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A marketing site renders every route with SSR (the framework default). Pages never change between deploys and carry no personalization, yet the team pays request-time render cost on every visit and TTFB spikes under traffic.",
+      "context": "Content is fully static and updated only on deploy. The team wants lower cost and faster first paint without losing crawlability.",
+      "question": "How should the agent change the rendering strategy for these routes?",
+      "expected_flags": [
+        "Identifies these routes' content profile as static (no per-request data, no personalization)",
+        "Recommends SSG (build-time, CDN-cached) instead of SSR for static marketing routes",
+        "Notes SSG gives best FCP/LCP and lowest request-time server cost while staying crawlable",
+        "Frames model choice as per-route, not a single app-wide default"
+      ],
+      "expected_fix_hints": [
+        "Move static routes to build-time generation (SSG); use ISR/on-demand revalidation only if content updates between deploys",
+        "Reserve SSR for routes that actually need per-request data"
+      ],
+      "absent_signals": [
+        "Do not keep SSR for fully static content just because it is the framework default",
+        "Do not switch the static pages to CSR (loses fast first paint and crawl reliability)"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies these routes' content profile as static (no per-request data, no personalization)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends SSG (build-time, CDN-cached) instead of SSR for static marketing routes."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes SSG gives best FCP/LCP and lowest request-time server cost while staying crawlable."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Frames model choice as per-route, not a single app-wide default."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move static routes to build-time generation (SSG); use ISR/on-demand revalidation only if content updates between deploys."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve SSR for routes that actually need per-request data."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep SSR for fully static content just because it is the framework default."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not switch the static pages to CSR (loses fast first paint and crawl reliability)."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "fast-html-slow-interactive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A dashboard is server-rendered and Lighthouse shows a good FCP, but real users report the page is unresponsive for seconds after it appears: buttons do nothing and inputs lag. The client JS bundle is ~1.8MB.",
+      "context": "The team concluded that because FCP is good, rendering is 'solved' and the slowness must be a backend issue.",
+      "question": "What should the agent diagnose and recommend?",
+      "expected_flags": [
+        "Identifies hydration cost, not HTML production, as the bottleneck (TTI/INP, not FCP)",
+        "States HTML production speed and hydration cost are independent — a fast-SSR page with a large bundle is not interactive until JS loads/parses/executes",
+        "Recommends reducing what hydrates: RSC (server components excluded from the client bundle), islands, or progressive hydration",
+        "Points to measuring TTI/INP in real-user conditions, not lab FCP"
+      ],
+      "expected_fix_hints": [
+        "Convert non-interactive subtrees to Server Components so they ship no client JS",
+        "Code-split and shrink the client bundle; hydrate interactive islands only"
+      ],
+      "absent_signals": [
+        "Do not conclude the page is fast because FCP is good",
+        "Do not treat hydration cost as a backend/server-render problem"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies hydration cost, not HTML production, as the bottleneck (TTI/INP, not FCP)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: States HTML production speed and hydration cost are independent — a fast-SSR page with a large bundle is not interactive until JS loads/parses/executes."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends reducing what hydrates: RSC (server components excluded from the client bundle), islands, or progressive hydration."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Points to measuring TTI/INP in real-user conditions, not lab FCP."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Convert non-interactive subtrees to Server Components so they ship no client JS."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Code-split and shrink the client bundle; hydrate interactive islands only."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not conclude the page is fast because FCP is good."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat hydration cost as a backend/server-render problem."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "static-plus-personalized",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A product-detail route has a large static layout (description, specs, images) plus a small per-user 'recommended for you' block and a live stock indicator. Today it is fully SSR so the whole page waits on the slow recommendation service before any paint.",
+      "context": "Most of the page could be cached; only two small regions are dynamic/personalized. The team wants instant first paint without removing the dynamic blocks.",
+      "question": "Which rendering model fits, and how should the page be staged?",
+      "expected_flags": [
+        "Recommends PPR: static shell at build time + streamed dynamic holes (recommendations, stock) at request time",
+        "Notes the user sees the cached shell instantly while the dynamic regions stream in",
+        "Considers ISR for the catalog portion if it updates periodically; SSR only if the dynamic part dominates",
+        "Reasons from the mixed content profile rather than forcing one model for the whole route"
+      ],
+      "expected_fix_hints": [
+        "Adopt partial prerendering (or streaming SSR + CDN-cached shell) so the slow region does not block first paint",
+        "Cache the static portion and isolate the personalized blocks as streamed/dynamic"
+      ],
+      "absent_signals": [
+        "Do not keep the whole route blocking on the slowest dynamic region",
+        "Do not make the whole route fully static (would drop personalization and live stock)"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends PPR: static shell at build time + streamed dynamic holes (recommendations, stock) at request time."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes the user sees the cached shell instantly while the dynamic regions stream in."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Considers ISR for the catalog portion if it updates periodically; SSR only if the dynamic part dominates."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reasons from the mixed content profile rather than forcing one model for the whole route."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Adopt partial prerendering (or streaming SSR + CDN-cached shell) so the slow region does not block first paint."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Cache the static portion and isolate the personalized blocks as streamed/dynamic."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the whole route blocking on the slowest dynamic region."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make the whole route fully static (would drop personalization and live stock)."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "edge-data-access",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team moves a per-request route to edge SSR for lower TTFB to a global audience. The route opens a direct TCP database connection during render, and it fails or times out at the edge.",
+      "context": "The audience is geographically distributed and the route genuinely needs per-request rendering.",
+      "question": "What is wrong, and how should the agent reconcile edge rendering with the data layer?",
+      "expected_flags": [
+        "Identifies that edge runtimes are constrained (Web Standard APIs, typically no direct DB connections)",
+        "Confirms edge SSR is appropriate for a global, per-request route — the rendering placement is fine",
+        "The fix is the data access path, not abandoning edge",
+        "Recommends HTTP-accessible data (origin API or data proxy), or a hybrid: edge for render, origin for data"
+      ],
+      "expected_fix_hints": [
+        "Access data over HTTP from the edge (origin API / data gateway) instead of a direct DB connection",
+        "Use a hybrid: render at the edge, fetch from origin; prefer cacheable fetches to avoid a round-trip per request"
+      ],
+      "absent_signals": [
+        "Do not blame edge rendering itself and revert without addressing data access",
+        "Do not assume full Node.js APIs (including direct DB drivers) are available at the edge"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies that edge runtimes are constrained (Web Standard APIs, typically no direct DB connections)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Confirms edge SSR is appropriate for a global, per-request route — the rendering placement is fine."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The fix is the data access path, not abandoning edge."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends HTTP-accessible data (origin API or data proxy), or a hybrid: edge for render, origin for data."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Access data over HTTP from the edge (origin API / data gateway) instead of a direct DB connection."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a hybrid: render at the edge, fetch from origin; prefer cacheable fetches to avoid a round-trip per request."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not blame edge rendering itself and revert without addressing data access."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume full Node.js APIs (including direct DB drivers) are available at the edge."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "ssr-vs-csr-false-binary",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An architect proposes a single rule for the whole app: 'logged-out pages CSR, logged-in pages SSR.' The app has a static docs section, a per-query search page, a real-time chart, and an admin panel hit weekly.",
+      "context": "The team is treating the decision as SSR-vs-CSR and applying it by login state rather than per-route content profile.",
+      "question": "How should the agent respond to the proposed rule?",
+      "expected_flags": [
+        "Flags SSR-vs-CSR as a false binary; the space is 6-8 models on a time × place grid",
+        "Maps each route to a fitting model: docs → SSG (+ client search); search → SSR/streaming SSR; real-time chart → CSR/RSC + client island; admin → RSC or SSR",
+        "Rejects login-state as the discriminator; the discriminator is content profile (static/dynamic/personalized) and performance constraints",
+        "Keeps the decision per-route, validated by measurement"
+      ],
+      "expected_fix_hints": [
+        "Replace the blanket rule with a per-route mapping from content profile to model",
+        "Use SSG for static docs, streaming SSR for slow search, RSC/CSR island for the chart"
+      ],
+      "absent_signals": [
+        "Do not adopt a single app-wide SSR/CSR rule",
+        "Do not pick the model from login state instead of content profile"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags SSR-vs-CSR as a false binary; the space is 6-8 models on a time × place grid."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Maps each route to a fitting model: docs → SSG (+ client search); search → SSR/streaming SSR; real-time chart → CSR/RSC + client island; admin → RSC or SSR."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Rejects login-state as the discriminator; the discriminator is content profile (static/dynamic/personalized) and performance constraints."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps the decision per-route, validated by measurement."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace the blanket rule with a per-route mapping from content profile to model."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use SSG for static docs, streaming SSR for slow search, RSC/CSR island for the chart."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not adopt a single app-wide SSR/CSR rule."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the model from login state instead of content profile."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the rendering-models owner to (a) reorganize the frontend folder structure into feature modules and (b) design the HTTP Cache-Control headers and CDN purge strategy for the API responses.",
+      "context": "The team conflates 'rendering' with all frontend and delivery decisions.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Folder/module reorganization is out of scope — that is frontend-architecture",
+        "Cache-Control headers / CDN purge / content negotiation is out of scope — that is http-semantics (the wire protocol)",
+        "Offers the in-scope adjacency: which rendering model each route should use, which then informs (but does not own) caching",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Route codebase organization to frontend-architecture and HTTP caching to http-semantics",
+        "Provide the per-route model choices that those skills can build on"
+      ],
+      "absent_signals": [
+        "Do not design the folder structure",
+        "Do not author the HTTP cache headers / purge policy"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Folder/module reorganization is out of scope — that is frontend-architecture."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cache-Control headers / CDN purge / content negotiation is out of scope — that is http-semantics (the wire protocol)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offers the in-scope adjacency: which rendering model each route should use, which then informs (but does not own) caching."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route codebase organization to frontend-architecture and HTTP caching to http-semantics."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide the per-route model choices that those skills can build on."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the folder structure."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not author the HTTP cache headers / purge policy."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "stale-cache-after-update",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A blog uses SSG with a time-based revalidation (ISR) window of 24 hours. Editors publish a correction and expect it live immediately, but readers see the old post for hours.",
+      "context": "The team wants fast cached delivery for normal traffic but immediate freshness when an editor publishes.",
+      "question": "How should the agent reconcile cached delivery with on-publish freshness?",
+      "expected_flags": [
+        "Recognizes the route correctly uses a build-time model (SSG/ISR) for a mostly-static blog",
+        "Flags the time-based-only revalidation as the cause of the stale window",
+        "Recommends on-demand revalidation triggered by the publish event (not just a TTL)",
+        "Notes SSG/ISR caches must be validated to invalidate correctly on content updates"
+      ],
+      "expected_fix_hints": [
+        "Add on-demand revalidation on publish so corrections go live immediately",
+        "Keep the TTL as a backstop, but drive freshness from the publish action"
+      ],
+      "absent_signals": [
+        "Do not switch the whole blog to SSR just to get freshness",
+        "Do not rely solely on the 24h TTL for editor-published corrections"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes the route correctly uses a build-time model (SSG/ISR) for a mostly-static blog."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags the time-based-only revalidation as the cause of the stale window."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends on-demand revalidation triggered by the publish event (not just a TTL)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes SSG/ISR caches must be validated to invalidate correctly on content updates."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add on-demand revalidation on publish so corrections go live immediately."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the TTL as a backstop, but drive freshness from the publish action."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not switch the whole blog to SSR just to get freshness."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely solely on the 24h TTL for editor-published corrections."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

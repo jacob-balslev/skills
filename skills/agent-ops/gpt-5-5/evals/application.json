@@ -1,0 +1,340 @@
+{
+  "skill_name": "gpt-5-5",
+  "subject": "Routing a task to OpenAI's GPT-5.5 frontier model versus the Claude tiers",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "codex",
+    "claude-opus",
+    "claude-sonnet",
+    "gemini-pro",
+    "skill-router"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "axis-favors-gpt",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team needs to author a multi-stage CI pipeline (build matrix, caching, deploy gates) plus a batch of small, well-specified shell/Terraform scripts. Someone proposes 'send it to the strongest model we have' and reaches for the architecture-grade tier by default.",
+      "context": "Both a GPT frontier tier and the Claude tiers are available. The work is concrete and well-specified, not architecturally novel.",
+      "question": "Which model should this work be routed to, and why?",
+      "expected_flags": [
+        "The task's dominant axis is concrete CLI/infra implementation, an axis GPT-5 (current GPT-5.5) owns (Terminal-Bench / tool-use lead)",
+        "'Use the strongest model' is the wrong primitive — strength is task-shaped, and this axis routes to GPT-5, not the architecture tier"
+      ],
+      "expected_fix_hints": [
+        "Route the CI/infra/scripting work to GPT-5 because its dominant axis is concrete implementation and CLI/tool-use",
+        "Name the axis explicitly before routing rather than defaulting to a habitual 'strongest' choice"
+      ],
+      "absent_signals": [
+        "Do not claim GPT-5 is universally the best coding model",
+        "Do not route purely on aggregate benchmark rank instead of task axis"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The task's dominant axis is concrete CLI/infra implementation, an axis GPT-5 (current GPT-5.5) owns (Terminal-Bench / tool-use lead)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: 'Use the strongest model' is the wrong primitive — strength is task-shaped, and this axis routes to GPT-5, not the architecture tier."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the CI/infra/scripting work to GPT-5 because its dominant axis is concrete implementation and CLI/tool-use."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Name the axis explicitly before routing rather than defaulting to a habitual 'strongest' choice."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim GPT-5 is universally the best coding model."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route purely on aggregate benchmark rank instead of task axis."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "axis-favors-opus",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A monolith must be re-architected into services, touching ~40 files with cross-cutting dependency changes and a new module boundary design. A teammate wants to route it to GPT-5 because 'GPT-5.5 is #1 on SWE-bench Verified.'",
+      "context": "The work is architecture-heavy and spans many files with complex resolution. Both frontier tiers are available.",
+      "question": "Is GPT-5 the right route here, and how should the decision be reasoned?",
+      "expected_flags": [
+        "The dominant axis is broad architecture + complex multi-file resolution, where Claude Opus leads (SWE-bench Pro)",
+        "The SWE-bench Verified headline does not generalize — its margin is within noise/contamination caveats and the ranking flips on multi-file resolution"
+      ],
+      "expected_fix_hints": [
+        "Route the re-architecture to Claude Opus, not GPT-5",
+        "Reason from the task's dominant axis, treating a single verified-bench lead as non-decisive for architecture work"
+      ],
+      "absent_signals": [
+        "Do not route the cross-system re-architecture to GPT-5 on the strength of a verified-bench score",
+        "Do not treat 'highest verified score' as 'route all coding here'"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The dominant axis is broad architecture + complex multi-file resolution, where Claude Opus leads (SWE-bench Pro)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The SWE-bench Verified headline does not generalize — its margin is within noise/contamination caveats and the ranking flips on multi-file resolution."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the re-architecture to Claude Opus, not GPT-5."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reason from the task's dominant axis, treating a single verified-bench lead as non-decisive for architecture work."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route the cross-system re-architecture to GPT-5 on the strength of a verified-bench score."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'highest verified score' as 'route all coding here'."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "cost-and-billing-basis",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A teammate routing rule is 'always pick whichever model has the cheaper per-token output price.' They route everything away from GPT-5 because its $30 output is higher than the Claude Opus $25, on a workspace that pays a flat subscription, including a long-context (>272K token) analysis job.",
+      "context": "Billing is a flat subscription, not per-token API. One job sends >272K input tokens.",
+      "question": "What is wrong with this routing rule and how should cost actually factor in?",
+      "expected_flags": [
+        "Headline per-token price is the wrong primitive — capability-per-task dominates the routing decision",
+        "On a flat subscription the per-token USD is notional, not the billed cost, so it should not drive routing",
+        "If per-token cost ever does matter, the >272K-token surcharge (2x in / 1.5x out for the full session) must be accounted for, not just the base rate"
+      ],
+      "expected_fix_hints": [
+        "Route on task axis and capability; use price only as a tie-breaker on a true per-token billing basis",
+        "Account for the long-context surcharge when costing the >272K job, rather than comparing base rates"
+      ],
+      "absent_signals": [
+        "Do not endorse routing by headline per-token price",
+        "Do not treat notional subscription per-token USD as the billed cost"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Headline per-token price is the wrong primitive — capability-per-task dominates the routing decision."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: On a flat subscription the per-token USD is notional, not the billed cost, so it should not drive routing."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: If per-token cost ever does matter, the >272K-token surcharge (2x in / 1.5x out for the full session) must be accounted for, not just the base rate."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route on task axis and capability; use price only as a tie-breaker on a true per-token billing basis."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Account for the long-context surcharge when costing the >272K job, rather than comparing base rates."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not endorse routing by headline per-token price."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat notional subscription per-token USD as the billed cost."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "analytical-review-route",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "An auth-middleware diff needs a careful analytical code review and a security pass before merge. The team asks which model to assign.",
+      "context": "The work is analytical diff-reading and threat-surface review, not implementation or architecture.",
+      "question": "Which model fits this review, and on what basis?",
+      "expected_flags": [
+        "Analytical diff review + security review is an axis GPT-5 is strong on (analytical diff-reading, threat-surface work)",
+        "The route follows the axis, not a default-to-strongest habit"
+      ],
+      "expected_fix_hints": [
+        "Route the analytical/security review to GPT-5, naming the review axis as the reason",
+        "Keep architecture-grade reasoning on Opus only if the diff turns out to require broad multi-file redesign"
+      ],
+      "absent_signals": [
+        "Do not claim only one model can review code",
+        "Do not over-weight a single benchmark over the task's actual review axis"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Analytical diff review + security review is an axis GPT-5 is strong on (analytical diff-reading, threat-surface work)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The route follows the axis, not a default-to-strongest habit."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the analytical/security review to GPT-5, naming the review axis as the reason."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep architecture-grade reasoning on Opus only if the diff turns out to require broad multi-file redesign."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim only one model can review code."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not over-weight a single benchmark over the task's actual review axis."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "stale-fact-guard",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An agent confidently routes a job citing 'GPT-5's context window is exactly 1.05M and output is $30' from memory, without checking the live provider docs, even though the model line iterates point releases frequently.",
+      "context": "The provider iterates GPT-5 generations, context windows, and pricing fast; the cited numbers may be stale.",
+      "question": "What should the agent do before relying on those capability and pricing facts?",
+      "expected_flags": [
+        "Capability and pricing facts for the GPT-5 line go stale fast and must be re-verified against live provider docs before being relied on",
+        "A stale context-window or pricing number can flip the routing decision"
+      ],
+      "expected_fix_hints": [
+        "Re-check the current GPT-5 generation, context window, and pricing against the provider's live documentation before routing on a specific number",
+        "Treat the skill's quoted numbers as a dated snapshot, not a live source"
+      ],
+      "absent_signals": [
+        "Do not present remembered version/pricing numbers as currently authoritative",
+        "Do not route on an unverified specific figure"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Capability and pricing facts for the GPT-5 line go stale fast and must be re-verified against live provider docs before being relied on."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A stale context-window or pricing number can flip the routing decision."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-check the current GPT-5 generation, context window, and pricing against the provider's live documentation before routing on a specific number."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Treat the skill's quoted numbers as a dated snapshot, not a live source."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present remembered version/pricing numbers as currently authoritative."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route on an unverified specific figure."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "harness-vs-model-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A user asks: 'Resume my last Codex session non-interactively and keep going on the migration — also, while you're at it, which of my local skills handles webhook tasks?'",
+      "context": "The request is about running a CLI harness session and about request-time dispatch among local skills — neither is a GPT-vs-Claude model-routing decision.",
+      "question": "How should the agent scope this request?",
+      "expected_flags": [
+        "Resuming a Codex session is a harness operation owned by the Codex skill, not a GPT-vs-Claude model-routing decision",
+        "Choosing which local skill handles webhook tasks is request-time dispatch owned by the skill-router, a different layer"
+      ],
+      "expected_fix_hints": [
+        "Route the Codex session-resume to the Codex harness skill",
+        "Route the local-skill dispatch question to the skill-router skill"
+      ],
+      "absent_signals": [
+        "Do not answer the Codex-resume request as if it were a model-routing decision",
+        "Do not treat local-skill dispatch as within this skill's scope"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Resuming a Codex session is a harness operation owned by the Codex skill, not a GPT-vs-Claude model-routing decision."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Choosing which local skill handles webhook tasks is request-time dispatch owned by the skill-router, a different layer."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the Codex session-resume to the Codex harness skill."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the local-skill dispatch question to the skill-router skill."
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer the Codex-resume request as if it were a model-routing decision."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat local-skill dispatch as within this skill's scope."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

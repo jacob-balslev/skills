@@ -1,51 +1,50 @@
 ---
 name: seo-strategy
+# description: routing-facing summary of when this skill activates and what it covers.
 description: "SEO implementation strategy for building pages that rank -- covering content strategy, programmatic SEO at scale, marketplace-specific SEO, and AI search optimization."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime and portability notes for this skill.
 compatibility:
   notes: "Markdown, Git, agent-skill runtimes"
 allowed-tools: Read Grep Bash
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
 
 
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: quality-assurance
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
+  # scope: required free-text statement of what this skill teaches and what it does not.
+  scope: "Teaches proactive SEO implementation strategy: page-type selection, content-cluster planning, programmatic template design, structured data choice, marketplace-specific ranking mechanics, and AI-search citation readiness. Portable across SaaS, e-commerce, marketplace, and content sites. Excludes keyword clustering as its own task, information-architecture/navigation design, monitoring trend sources, and conversion copy optimization."
+  subjects: [quality-assurance, product-domain]
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: quality/display
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-03-28"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-03-28\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -53,55 +52,51 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"seo strategy\",\"programmatic seo\",\"content strategy\",\"comparison page\",\"alternative page\",\"schema markup\",\"structured data\",\"ai seo\",\"marketplace seo\",\"etsy seo\"]"
+  keywords: ["seo strategy","programmatic seo","content strategy","comparison page","alternative page","schema markup","structured data","ai seo","marketplace seo","etsy seo"]
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
-  triggers: "[\"seo-strategy-skill\",\"seo-skill\",\"programmatic-seo-skill\"]"
+  triggers: ["seo-strategy-skill","seo-skill","programmatic-seo-skill"]
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"related\":[\"keywords\"]}"
   # portability: external-runtime export claims. Object with:
   # readiness — declared (claim only) / scripted (export tooling exists) /
   #             verified (proven with a receipt artifact).
   # targets — array; currently only `skill-md` is in the enum.
-  portability: "{\"readiness\":\"scripted\",\"targets\":[\"skill-md\"]}"
   # lifecycle: maintenance policy for the drift sentinel.
   # stale_after_days — skill flagged STALE when N days past `drift_check.last_verified`.
   # review_cadence — process commitment (quarterly / monthly / annual), not a calendar fact.
-  lifecycle: "{\"stale_after_days\":90,\"review_cadence\":\"quarterly\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/seo-strategy/SKILL.md
+  skill_graph_canonical_skill: skills/quality-assurance/seo-strategy/SKILL.md
   # === Health Block (written by the audit loop, not hand-authored) ===
   # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+relations:
+  related: ["keywords","content-monitor","etsy","information-architecture","microcopy"]
 ---
 # SEO Strategy Skill
+
+## Concept of the skill
+
+SEO implementation strategy for building pages that rank -- covering content strategy, programmatic SEO at scale, marketplace-specific SEO, and AI search optimization.
+
 
 ## Domain Context
 
@@ -112,8 +107,7 @@ metadata:
 | File | Purpose |
 |---|---|
 | `skills/seo-strategy/references/marketplace-seo-differences.md` | See for detailed algorithm breakdowns. |
-## Philosophy
-
+## Philosophy of the skill
 Auditing finds problems; this skill builds solutions. The distinction matters because agents conflate the two and either run a diagnostic when they should be building pages, or build pages without a strategy. SEO strategy is proactive — choosing the right page types, content structures, and schema markup before traffic data exists. The marketplace-specific sections exist because applying Google SEO assumptions to Etsy or Amazon actively hurts rankings: Etsy rewards recency and conversion rate, Amazon rewards sales velocity, and neither cares about backlinks. Without this skill, agents default to generic "add keywords" advice that misses the structural decisions (programmatic templates, hub-and-spoke linking, schema choice) that create ranking power at scale.
 
 ## Coverage
@@ -134,10 +128,11 @@ Load this skill when:
 - Adapting content for AI search (AI Overviews, chatbot citations)
 
 Do NOT use for:
-- Diagnosing existing SEO problems (use **seo-audit**)
-- Keyword research and clustering (use **keywords**)
-- Page hierarchy and navigation design (use **site-architecture**)
-- Conversion rate optimization (use **page-cro**)
+- Keyword research and clustering (use `keywords`)
+- Page hierarchy, navigation, or findability structure (use `information-architecture`)
+- Monitoring source feeds for trend discovery (use `content-monitor`)
+- Conversion-focused headline, CTA, or in-page copy wording (use `microcopy`)
+- Product or marketplace research before SEO decisions (use `user-research`)
 
 ---
 

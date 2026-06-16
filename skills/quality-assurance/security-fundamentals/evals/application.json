@@ -1,0 +1,359 @@
+{
+  "skill_name": "security-fundamentals",
+  "subject": "Application security fundamentals",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "owasp-security",
+    "prompt-injection-defense",
+    "type-safety",
+    "api-design",
+    "webhook-integration"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "authn-authz-confusion",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A route handler starts with `const user = await requireUser()` and then updates `/api/orgs/:orgId/billing-email` using the `orgId` path parameter. There is no check that the authenticated user belongs to that org or can edit billing settings.",
+      "context": "The app is multi-tenant. The handler validates that the email is syntactically valid, but authorization is not checked at the privileged action.",
+      "question": "Review the design and recommend the first security fixes.",
+      "expected_flags": [
+        "Identifies authentication-vs-authorization confusion.",
+        "Flags the tenant boundary and privileged billing action as requiring per-action authorization.",
+        "Notes that input validation alone does not prove the caller may mutate the target org."
+      ],
+      "expected_fix_hints": [
+        "Authorize the current principal against the target org and billing-email permission before mutation.",
+        "Derive tenant scope from the authenticated session or server-side membership check, not from trusted client input alone.",
+        "Add negative tests for cross-tenant update attempts."
+      ],
+      "absent_signals": [
+        "Must not say `requireUser()` is enough.",
+        "Must not route this primarily to type-safety or query tuning.",
+        "Must not suggest hiding the endpoint path as a security control."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies authentication-vs-authorization confusion."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags the tenant boundary and privileged billing action as requiring per-action authorization."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes that input validation alone does not prove the caller may mutate the target org."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Authorize the current principal against the target org and billing-email permission before mutation."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Derive tenant scope from the authenticated session or server-side membership check, not from trusted client input alone."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add negative tests for cross-tenant update attempts."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not say `requireUser()` is enough."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not route this primarily to type-safety or query tuning."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not suggest hiding the endpoint path as a security control."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "boundary-validation",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A server action receives `JSON.parse(formData.get('payload') as string) as InviteRequest`, then writes the invited email and role into the database. The UI only offers `member` and `viewer`, but the server never validates the parsed object.",
+      "context": "The payload comes from a browser. Attackers can alter form data outside the UI.",
+      "question": "What should a security-fundamentals review flag, and how should it be fixed?",
+      "expected_flags": [
+        "Flags untrusted input crossing a trust boundary without server-side parsing/validation.",
+        "Calls out the TypeScript cast as non-validation.",
+        "Flags role escalation risk if server accepts values outside the intended enum."
+      ],
+      "expected_fix_hints": [
+        "Parse the payload through a server-side schema with allowed role values.",
+        "Reject malformed or unauthorized roles with structured errors before database writes.",
+        "Log repeated validation failures as possible probing."
+      ],
+      "absent_signals": [
+        "Must not trust client-side UI constraints.",
+        "Must not treat `as InviteRequest` as a runtime check.",
+        "Must not defer validation until deep business logic."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags untrusted input crossing a trust boundary without server-side parsing/validation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Calls out the TypeScript cast as non-validation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags role escalation risk if server accepts values outside the intended enum."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Parse the payload through a server-side schema with allowed role values."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reject malformed or unauthorized roles with structured errors before database writes."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Log repeated validation failures as possible probing."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not trust client-side UI constraints."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat `as InviteRequest` as a runtime check."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not defer validation until deep business logic."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "secrets-and-logs",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An integration test failure logs the entire OAuth callback request, including `code`, `state`, access token response, refresh token, user email, and provider account id. The logs are shipped to a third-party error tracker.",
+      "context": "The team says logs are internal and useful for debugging. No redaction layer exists before outbound telemetry.",
+      "question": "Apply security fundamentals to classify the risk and recommend changes.",
+      "expected_flags": [
+        "Classifies tokens/codes as secrets or sensitive credentials that must not be logged.",
+        "Flags outbound telemetry as a trust boundary.",
+        "Notes blast-radius risk from long-lived refresh tokens and account identifiers in logs."
+      ],
+      "expected_fix_hints": [
+        "Add a centralized redaction/sanitization layer before logs leave the process.",
+        "Log stable non-sensitive correlation ids instead of raw credentials or PII.",
+        "Rotate any exposed credentials and add tests proving redaction."
+      ],
+      "absent_signals": [
+        "Must not say internal logs are inherently safe.",
+        "Must not rely only on access control to the log viewer.",
+        "Must not frame this as only an observability convenience issue."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Classifies tokens/codes as secrets or sensitive credentials that must not be logged."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags outbound telemetry as a trust boundary."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes blast-radius risk from long-lived refresh tokens and account identifiers in logs."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a centralized redaction/sanitization layer before logs leave the process."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Log stable non-sensitive correlation ids instead of raw credentials or PII."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rotate any exposed credentials and add tests proving redaction."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not say internal logs are inherently safe."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not rely only on access control to the log viewer."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not frame this as only an observability convenience issue."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "llm-prompt-injection-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user asks how to stop a RAG agent from following instructions hidden in retrieved documents and using tools to exfiltrate private files.",
+      "context": "The problem is untrusted natural-language content being interpreted as model instructions inside an LLM tool workflow.",
+      "question": "Should security-fundamentals own the detailed solution? If not, where should it route?",
+      "expected_flags": [
+        "Recognizes the broad security framing but routes the detailed solution to prompt-injection-defense.",
+        "Identifies the LLM instruction/data-channel collapse and tool-authority risk as the specialized mechanism.",
+        "Preserves security-fundamentals as a supporting threat-model lens rather than the owner."
+      ],
+      "expected_fix_hints": [
+        "Use prompt-injection-defense for the detailed controls.",
+        "Cross-check trust boundaries and least privilege from security-fundamentals when designing the tool permissions."
+      ],
+      "absent_signals": [
+        "Must not keep the task solely in security-fundamentals.",
+        "Must not route it to classical OWASP web-app injection only.",
+        "Must not suggest prompt wording alone as the security control."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes the broad security framing but routes the detailed solution to prompt-injection-defense."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies the LLM instruction/data-channel collapse and tool-authority risk as the specialized mechanism."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Preserves security-fundamentals as a supporting threat-model lens rather than the owner."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use prompt-injection-defense for the detailed controls."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Cross-check trust boundaries and least privilege from security-fundamentals when designing the tool permissions."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not keep the task solely in security-fundamentals."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not route it to classical OWASP web-app injection only."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not suggest prompt wording alone as the security control."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "webhook-mechanics-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A developer asks for the exact Stripe webhook signature-verification code path, raw body handling, timestamp tolerance, replay protection, and retry/idempotency behavior.",
+      "context": "The question is vendor-specific inbound webhook implementation mechanics.",
+      "question": "Should security-fundamentals own this task? If not, where should it route?",
+      "expected_flags": [
+        "Routes exact webhook mechanics to webhook-integration.",
+        "Recognizes security-fundamentals as the broad reason signatures, replay windows, and idempotency matter.",
+        "Keeps vendor-specific signature details out of this skill's ownership."
+      ],
+      "expected_fix_hints": [
+        "Use webhook-integration for raw payload, signature, retry, and idempotency details.",
+        "Use security-fundamentals only as a supporting trust-boundary and least-privilege check."
+      ],
+      "absent_signals": [
+        "Must not invent vendor-specific webhook code from this broad skill.",
+        "Must not omit signature verification as a trust-boundary concern.",
+        "Must not route the task to prompt-injection-defense."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes exact webhook mechanics to webhook-integration."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes security-fundamentals as the broad reason signatures, replay windows, and idempotency matter."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps vendor-specific signature details out of this skill's ownership."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use webhook-integration for raw payload, signature, retry, and idempotency details."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use security-fundamentals only as a supporting trust-boundary and least-privilege check."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not invent vendor-specific webhook code from this broad skill."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not omit signature verification as a trust-boundary concern."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not route the task to prompt-injection-defense."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

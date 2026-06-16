@@ -1,0 +1,805 @@
+{
+  "skill_name": "balanced-scorecard",
+  "subject": "Balanced Scorecard strategy execution and performance management",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "OKRs",
+    "Playing to Win",
+    "performance budgets",
+    "BCG Matrix",
+    "SWOT/TOWS",
+    "expected value",
+    "value chain analysis"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "strategy-to-scorecard",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A B2B services company has chosen a strategy to win by delivering faster, more reliable implementation for mid-market customers. Current reviews track only monthly revenue and margin.",
+      "context": "The user asks for a Balanced Scorecard that can guide monthly execution reviews. No private company metrics are provided.",
+      "question": "How should the agent structure the scorecard?",
+      "expected_flags": [
+        "The task is Balanced Scorecard because the user needs strategy execution and performance management.",
+        "The scorecard should start from the stated strategy.",
+        "The scorecard should balance financial/stewardship, customer, internal process, and capability perspectives.",
+        "Measures need baselines, targets, owners, cadence, and data sources."
+      ],
+      "expected_fix_hints": [
+        "Define strategic objectives before measures.",
+        "Include lead and lag measures and guardrails.",
+        "Link initiatives to objectives and create review decision rules.",
+        "Use placeholders for missing baselines or targets rather than inventing data."
+      ],
+      "absent_signals": [
+        "Do not produce a finance-only dashboard.",
+        "Do not list dozens of KPIs without objective linkage.",
+        "Do not invent actual revenue, margin, customer, or operations numbers."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The task is Balanced Scorecard because the user needs strategy execution and performance management."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The scorecard should start from the stated strategy."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The scorecard should balance financial/stewardship, customer, internal process, and capability perspectives."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Measures need baselines, targets, owners, cadence, and data sources."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define strategic objectives before measures."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Include lead and lag measures and guardrails."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Link initiatives to objectives and create review decision rules."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use placeholders for missing baselines or targets rather than inventing data."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not produce a finance-only dashboard."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not list dozens of KPIs without objective linkage."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not invent actual revenue, margin, customer, or operations numbers."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "okr-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A product team asks for three quarterly goals for a launch. They specifically want each goal expressed as an Objective with two to four measurable Key Results.",
+      "context": "The user does not ask for perspectives, strategy map, initiative portfolio, or a management review system.",
+      "question": "Should balanced-scorecard own this request?",
+      "expected_flags": [
+        "This is primarily OKR work, not Balanced Scorecard work.",
+        "The user asks for period goal-setting through Objectives and Key Results.",
+        "Balanced Scorecard could provide broader strategy-management context only if requested."
+      ],
+      "expected_fix_hints": [
+        "Route to okrs.",
+        "Mention Balanced Scorecard only as a broader context if the team needs cross-perspective strategy execution."
+      ],
+      "absent_signals": [
+        "Do not force financial/customer/internal/learning perspectives.",
+        "Do not call every OKR set a Balanced Scorecard.",
+        "Do not ignore the user's explicit OKR format."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily OKR work, not Balanced Scorecard work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The user asks for period goal-setting through Objectives and Key Results."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Balanced Scorecard could provide broader strategy-management context only if requested."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to okrs."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Mention Balanced Scorecard only as a broader context if the team needs cross-perspective strategy execution."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not force financial/customer/internal/learning perspectives."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not call every OKR set a Balanced Scorecard."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore the user's explicit OKR format."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "public-sector-scorecard",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A city agency has a strategy to improve permit-processing reliability while preserving public trust and equitable access.",
+      "context": "The agency cares about stewardship, citizen outcomes, internal processing, workforce capability, and technology capacity. Profit is not the goal.",
+      "question": "How should Balanced Scorecard be adapted?",
+      "expected_flags": [
+        "Financial perspective should be adapted to stewardship or resource resilience.",
+        "Customer perspective should account for citizens, applicants, stakeholders, or public trust.",
+        "Internal process and organizational capacity perspectives still matter.",
+        "The answer should avoid shareholder-profit logic."
+      ],
+      "expected_fix_hints": [
+        "Define objectives in adapted perspectives.",
+        "Choose measures with baselines, targets, owners, cadence, and data sources.",
+        "Link initiatives such as process redesign, staffing, data quality, or technology improvements to objectives.",
+        "State missing data rather than inventing local performance."
+      ],
+      "absent_signals": [
+        "Do not evaluate the agency primarily by profit or share price.",
+        "Do not use private citizen data in examples.",
+        "Do not skip stewardship and equity considerations."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Financial perspective should be adapted to stewardship or resource resilience."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Customer perspective should account for citizens, applicants, stakeholders, or public trust."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Internal process and organizational capacity perspectives still matter."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The answer should avoid shareholder-profit logic."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define objectives in adapted perspectives."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Choose measures with baselines, targets, owners, cadence, and data sources."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Link initiatives such as process redesign, staffing, data quality, or technology improvements to objectives."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: State missing data rather than inventing local performance."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not evaluate the agency primarily by profit or share price."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use private citizen data in examples."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip stewardship and equity considerations."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "technical-budget-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A web platform team asks for latency, uptime, error-rate, accessibility, and bundle-size thresholds for a new product surface.",
+      "context": "The user calls the request a balanced scorecard, but the task is to define operational technical limits and release guardrails.",
+      "question": "Should balanced-scorecard own this request?",
+      "expected_flags": [
+        "This is primarily performance-budgets work.",
+        "The requested outputs are technical thresholds and guardrails.",
+        "These measures could appear in a broader product scorecard only when linked to strategy objectives."
+      ],
+      "expected_fix_hints": [
+        "Route to performance-budgets.",
+        "Preserve a narrow supporting role for Balanced Scorecard if strategy execution context is added."
+      ],
+      "absent_signals": [
+        "Do not reframe technical thresholds as a full Balanced Scorecard by default.",
+        "Do not add business perspectives without user need.",
+        "Do not ignore the release-governance nature of the request."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily performance-budgets work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The requested outputs are technical thresholds and guardrails."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: These measures could appear in a broader product scorecard only when linked to strategy objectives."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to performance-budgets."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Preserve a narrow supporting role for Balanced Scorecard if strategy execution context is added."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not reframe technical thresholds as a full Balanced Scorecard by default."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add business perspectives without user need."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore the release-governance nature of the request."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "kpi-dump-repair",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A leadership team has a spreadsheet with 90 KPIs, many duplicates, and no clear owner or target. They ask whether it is a useful Balanced Scorecard.",
+      "context": "The spreadsheet includes sales, product, support, engineering, finance, people, and brand metrics, but no strategy map.",
+      "question": "What should the agent recommend?",
+      "expected_flags": [
+        "The artifact is a KPI dump, not a useful Balanced Scorecard.",
+        "The team needs strategy and strategic objectives before metric selection.",
+        "Metrics should be reduced to a small strategic set across perspectives.",
+        "Each measure needs baseline, target, owner, source, cadence, and interpretation rule."
+      ],
+      "expected_fix_hints": [
+        "Group metrics by strategic objective and perspective.",
+        "Build or request a strategy map.",
+        "Keep only measures that inform decisions.",
+        "Link initiatives and review cadence."
+      ],
+      "absent_signals": [
+        "Do not simply reformat all 90 KPIs into four boxes.",
+        "Do not invent strategic objectives if evidence is missing without labeling inference.",
+        "Do not treat metric availability as metric importance."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The artifact is a KPI dump, not a useful Balanced Scorecard."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The team needs strategy and strategic objectives before metric selection."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Metrics should be reduced to a small strategic set across perspectives."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Each measure needs baseline, target, owner, source, cadence, and interpretation rule."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Group metrics by strategic objective and perspective."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Build or request a strategy map."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep only measures that inform decisions."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Link initiatives and review cadence."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not simply reformat all 90 KPIs into four boxes."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not invent strategic objectives if evidence is missing without labeling inference."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat metric availability as metric importance."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "playing-to-win-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A founder asks which customer segment to pursue, what winning aspiration to choose, where to play, how to win, what capabilities to build, and what systems are required.",
+      "context": "The user has not chosen the strategy yet and is asking for an integrated strategy cascade.",
+      "question": "Should balanced-scorecard own this request?",
+      "expected_flags": [
+        "This is primarily Playing to Win strategy formulation.",
+        "Balanced Scorecard should wait until the strategic choices are stated or selected.",
+        "A scorecard can follow later to translate the chosen strategy into objectives, measures, targets, initiatives, and cadence."
+      ],
+      "expected_fix_hints": [
+        "Route to playing-to-win.",
+        "Ask for or help form the strategic choices before drafting a scorecard."
+      ],
+      "absent_signals": [
+        "Do not replace strategy choice with metrics.",
+        "Do not invent a winning aspiration or where-to-play choice while presenting it as scorecard work.",
+        "Do not treat a strategy map as the strategy formulation method."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily Playing to Win strategy formulation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Balanced Scorecard should wait until the strategic choices are stated or selected."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A scorecard can follow later to translate the chosen strategy into objectives, measures, targets, initiatives, and cadence."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to playing-to-win."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Ask for or help form the strategic choices before drafting a scorecard."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not replace strategy choice with metrics."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not invent a winning aspiration or where-to-play choice while presenting it as scorecard work."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat a strategy map as the strategy formulation method."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "bcg-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A leadership team wants to classify five business units by market growth and relative market share so they can decide where to invest, harvest, or divest.",
+      "context": "The request is about portfolio allocation, cash generation, and investment priority across business units.",
+      "question": "Should balanced-scorecard own this request?",
+      "expected_flags": [
+        "This is primarily BCG Matrix work.",
+        "The decision logic is market growth by relative market share, not cross-perspective strategy execution.",
+        "Balanced Scorecard could later track execution for a chosen portfolio decision."
+      ],
+      "expected_fix_hints": [
+        "Route to bcg-matrix.",
+        "Preserve Balanced Scorecard only as a downstream execution-management option."
+      ],
+      "absent_signals": [
+        "Do not force portfolio units into scorecard perspectives.",
+        "Do not replace growth/share portfolio logic with KPIs.",
+        "Do not recommend investments without the requested portfolio analysis."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily BCG Matrix work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The decision logic is market growth by relative market share, not cross-perspective strategy execution."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Balanced Scorecard could later track execution for a chosen portfolio decision."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to bcg-matrix."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Preserve Balanced Scorecard only as a downstream execution-management option."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not force portfolio units into scorecard perspectives."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not replace growth/share portfolio logic with KPIs."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not recommend investments without the requested portfolio analysis."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "swot-tows-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A team asks for a structured inventory of strengths, weaknesses, opportunities, and threats, then wants SO, WO, ST, and WT strategic options.",
+      "context": "The user is still generating strategic options from internal and external factors.",
+      "question": "Should balanced-scorecard own this request?",
+      "expected_flags": [
+        "This is primarily SWOT/TOWS work.",
+        "The requested output is a factor inventory and option-generation matrix.",
+        "Balanced Scorecard can follow only after strategy options are chosen for execution."
+      ],
+      "expected_fix_hints": [
+        "Route to swot-tows.",
+        "Avoid drafting measures before the strategy option is selected."
+      ],
+      "absent_signals": [
+        "Do not turn a SWOT inventory into scorecard perspectives.",
+        "Do not skip TOWS option generation.",
+        "Do not present unchosen options as execution objectives."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily SWOT/TOWS work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The requested output is a factor inventory and option-generation matrix."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Balanced Scorecard can follow only after strategy options are chosen for execution."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to swot-tows."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Avoid drafting measures before the strategy option is selected."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not turn a SWOT inventory into scorecard perspectives."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip TOWS option generation."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present unchosen options as execution objectives."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "expected-value-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A team has three possible product investments and wants to compare each option by probability, payoff, downside, and expected cash value.",
+      "context": "The user is asking for quantitative option comparison under uncertainty.",
+      "question": "Should balanced-scorecard own this request?",
+      "expected_flags": [
+        "This is primarily expected-value work.",
+        "The requested decision mechanism is probability-weighted payoff comparison.",
+        "Balanced Scorecard can track execution only after an option is selected."
+      ],
+      "expected_fix_hints": [
+        "Route to expected-value.",
+        "Keep Balanced Scorecard out of the primary decision unless the user asks for post-decision execution measures."
+      ],
+      "absent_signals": [
+        "Do not substitute scorecard perspectives for probability and payoff math.",
+        "Do not treat measures as expected-value inputs unless the user supplies probabilities and outcomes.",
+        "Do not choose an option without calculating or requesting the expected-value inputs."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily expected-value work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The requested decision mechanism is probability-weighted payoff comparison."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Balanced Scorecard can track execution only after an option is selected."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to expected-value."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep Balanced Scorecard out of the primary decision unless the user asks for post-decision execution measures."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not substitute scorecard perspectives for probability and payoff math."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat measures as expected-value inputs unless the user supplies probabilities and outcomes."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not choose an option without calculating or requesting the expected-value inputs."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "value-chain-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A COO asks to decompose inbound logistics, operations, outbound logistics, marketing, sales, service, technology, HR, procurement, and their cost drivers to identify differentiation opportunities.",
+      "context": "The user is asking for activity-level value and cost decomposition, not a strategy execution review system.",
+      "question": "Should balanced-scorecard own this request?",
+      "expected_flags": [
+        "This is primarily value-chain-analysis work.",
+        "The requested output decomposes activities, linkages, cost drivers, and differentiation sources.",
+        "Balanced Scorecard can later track strategic objectives that come out of value-chain analysis."
+      ],
+      "expected_fix_hints": [
+        "Route to value-chain-analysis.",
+        "Only introduce Balanced Scorecard if the user asks to manage execution after activity-level diagnosis."
+      ],
+      "absent_signals": [
+        "Do not flatten activities into generic scorecard KPIs.",
+        "Do not skip activity and linkage decomposition.",
+        "Do not confuse value-chain cost drivers with scorecard perspective balancing."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily value-chain-analysis work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The requested output decomposes activities, linkages, cost drivers, and differentiation sources."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Balanced Scorecard can later track strategic objectives that come out of value-chain analysis."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to value-chain-analysis."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Only introduce Balanced Scorecard if the user asks to manage execution after activity-level diagnosis."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not flatten activities into generic scorecard KPIs."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip activity and linkage decomposition."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not confuse value-chain cost drivers with scorecard perspective balancing."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "scenario_type": "ai-generated-metric-evidence",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A manager asks the agent to finish a Balanced Scorecard using AI-suggested customer trust, process quality, and capability metrics. The suggestions have no source, baseline, owner, formula, or data system behind them.",
+      "context": "The strategy is known, but the provided measures are machine-generated placeholders rather than verified operating metrics.",
+      "question": "How should the agent treat the suggested metrics?",
+      "expected_flags": [
+        "This is Balanced Scorecard work because the task is strategy execution and performance management.",
+        "AI-generated metrics must be treated as candidate hypotheses, not source-of-truth measures.",
+        "Each candidate metric needs a definition, data source, baseline, target, owner, cadence, and decision use before adoption.",
+        "The answer should flag evidence gaps and recommend validation or replacement measures."
+      ],
+      "expected_fix_hints": [
+        "Label unsourced metrics as assumptions.",
+        "Request or define evidence sources before finalizing the scorecard.",
+        "Keep measures only when they trace to strategic objectives and can drive decisions.",
+        "Use placeholders for missing baselines or targets rather than inventing values."
+      ],
+      "absent_signals": [
+        "Do not treat AI-suggested metrics as verified facts.",
+        "Do not invent baselines, targets, owners, formulas, or data-source availability.",
+        "Do not include metrics merely because they sound plausible."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is Balanced Scorecard work because the task is strategy execution and performance management."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: AI-generated metrics must be treated as candidate hypotheses, not source-of-truth measures."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Each candidate metric needs a definition, data source, baseline, target, owner, cadence, and decision use before adoption."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The answer should flag evidence gaps and recommend validation or replacement measures."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Label unsourced metrics as assumptions."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Request or define evidence sources before finalizing the scorecard."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep measures only when they trace to strategic objectives and can drive decisions."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use placeholders for missing baselines or targets rather than inventing values."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat AI-suggested metrics as verified facts."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not invent baselines, targets, owners, formulas, or data-source availability."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not include metrics merely because they sound plausible."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

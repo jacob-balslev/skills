@@ -1,0 +1,459 @@
+{
+  "skill_name": "client-server-boundary",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Directives, Serialization, Trust, Common Leakage Modes, RSC Server Actions worked example, Verification, Do NOT Use When) and the Understanding fields (serialization/direction/trust properties, types-are-not-validation misconception).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "secret-leakage",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A shared util module reads process.env.STRIPE_SECRET_KEY and is imported by both a server route and a 'use client' component for a constant it also exports. The build succeeds and the key string is now visible in the client bundle.",
+      "context": "The team is in a unified Next.js App Router codebase.",
+      "question": "How should the agent diagnose and fix this?",
+      "expected_flags": [
+        "Identifies a secret-in-shared-module leakage: the secret reaches the client bundle via the import graph",
+        "The client can read everything in what it receives — secrets must never cross",
+        "Recommends importing the secret only in a module guarded by import 'server-only', or reading it inside a server action / route handler",
+        "Split the shared constant out so the client never imports the secret-bearing module"
+      ],
+      "expected_fix_hints": [
+        "Add import 'server-only' to the secret-bearing module so the bundler errors on leaks",
+        "Move the client-needed constant into a separate client-safe module"
+      ],
+      "absent_signals": [
+        "Do not keep the secret in a module reachable from a 'use client' import",
+        "Do not assume a successful build means the secret is safe"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies a secret-in-shared-module leakage: the secret reaches the client bundle via the import graph."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The client can read everything in what it receives — secrets must never cross."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends importing the secret only in a module guarded by import 'server-only', or reading it inside a server action / route handler."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Split the shared constant out so the client never imports the secret-bearing module."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add import 'server-only' to the secret-bearing module so the bundler errors on leaks."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move the client-needed constant into a separate client-safe module."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the secret in a module reachable from a 'use client' import."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume a successful build means the secret is safe."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "untyped-server-action",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A server action deleteAccount(input: { userId: string }) trusts its TypeScript parameter type and calls db.user.delete({ where: { id: input.userId } }). The client posts { userId: someOtherUsersId }.",
+      "context": "There is no runtime validation or authorization in the action.",
+      "question": "What is wrong and how should the action be corrected?",
+      "expected_flags": [
+        "TypeScript types are a compile-time claim, not runtime validation — the bytes from the client may be anything",
+        "Missing authorization: a hostile caller can delete another user's account (broken access control)",
+        "Recommends validating input with a runtime schema (Zod/valibot) before use",
+        "Re-derive trust from a server-authoritative source (session) and authorize input.userId against it"
+      ],
+      "expected_fix_hints": [
+        "Parse rawInput with a runtime schema",
+        "Authenticate via session, then authorize the target userId against the session"
+      ],
+      "absent_signals": [
+        "Do not trust the TypeScript type of an RPC handler as validation",
+        "Do not operate on a client-supplied id without an authorization check"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: TypeScript types are a compile-time claim, not runtime validation — the bytes from the client may be anything."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Missing authorization: a hostile caller can delete another user's account (broken access control)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends validating input with a runtime schema (Zod/valibot) before use."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Re-derive trust from a server-authoritative source (session) and authorize input.userId against it."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Parse rawInput with a runtime schema."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Authenticate via session, then authorize the target userId against the session."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not trust the TypeScript type of an RPC handler as validation."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not operate on a client-supplied id without an authorization check."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "server-only-in-client",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A component imports `fs` (and a `pg.Client`) at the top, then adds 'use client' to use a useState hook. The dev build throws 'Module not found: fs' at runtime in the browser.",
+      "context": "The component does both server data access and client interactivity in one file.",
+      "question": "How should the agent restructure this?",
+      "expected_flags": [
+        "A server-only API (fs/pg) cannot live in a 'use client' module — its import graph ships to the browser",
+        "Split: keep data access in a server component / server action; keep interactivity in the 'use client' child",
+        "Pass the already-fetched serializable data down as props to the client component",
+        "Optionally guard the server util with import 'server-only' so leaks fail at build"
+      ],
+      "expected_fix_hints": [
+        "Move fs/pg access into a server component or server action",
+        "Render a 'use client' child that receives serializable props"
+      ],
+      "absent_signals": [
+        "Do not import fs/pg into a 'use client' file",
+        "Do not try to polyfill server modules in the browser"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A server-only API (fs/pg) cannot live in a 'use client' module — its import graph ships to the browser."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Split: keep data access in a server component / server action; keep interactivity in the 'use client' child."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Pass the already-fetched serializable data down as props to the client component."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Optionally guard the server util with import 'server-only' so leaks fail at build."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move fs/pg access into a server component or server action."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Render a 'use client' child that receives serializable props."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not import fs/pg into a 'use client' file."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not try to polyfill server modules in the browser."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "non-serializable-prop",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A server component builds a Map<string, User> and a Date, plus an inline onSelect closure, and passes all three as props to a 'use client' list component. The project serializes props as plain JSON.",
+      "context": "On the client the Map arrives empty and the Date is a string; the closure errors.",
+      "question": "What survives the boundary and what must change?",
+      "expected_flags": [
+        "Plain JSON cannot carry a Map (arrives empty/lost) — convert to an array of [key, value] pairs",
+        "A Date becomes a string in JSON — reparse on the client or send an ISO string intentionally",
+        "A closure cannot cross — only data, server-action references, and RSC primitives can",
+        "States the rule: if you cannot describe the value in bytes, it cannot cross"
+      ],
+      "expected_fix_hints": [
+        "Serialize the Map to entries and the Date to an ISO string",
+        "Replace the closure with a 'use server' action reference or pass data and reconstruct behavior client-side"
+      ],
+      "absent_signals": [
+        "Do not pass a Map or closure across plain JSON",
+        "Do not assume the Date keeps its JS identity across the boundary"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Plain JSON cannot carry a Map (arrives empty/lost) — convert to an array of [key, value] pairs."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A Date becomes a string in JSON — reparse on the client or send an ISO string intentionally."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A closure cannot cross — only data, server-action references, and RSC primitives can."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: States the rule: if you cannot describe the value in bytes, it cannot cross."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Serialize the Map to entries and the Date to an ISO string."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace the closure with a 'use server' action reference or pass data and reconstruct behavior client-side."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pass a Map or closure across plain JSON."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the Date keeps its JS identity across the boundary."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "trusted-client-claim",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A server action checks `if (req.body.role === 'admin') grantAccess()` where role is read from the request body the client sent.",
+      "context": "The client UI sets role from a hidden form field.",
+      "question": "How should the agent fix the trust model here?",
+      "expected_flags": [
+        "Trusted-by-default client claim: role came from the client and is adversarial",
+        "Trust must be re-derived from a server-authoritative source (session record, DB, IdP)",
+        "The client's self-report of its own role/permissions can never be authoritative",
+        "Frames it as the broken-access-control failure the skill exists to prevent"
+      ],
+      "expected_fix_hints": [
+        "Look up the caller's role from the session/database, not the request body",
+        "Authorize the action against the server-derived identity"
+      ],
+      "absent_signals": [
+        "Do not authorize based on a client-supplied role/permission claim"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Trusted-by-default client claim: role came from the client and is adversarial."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Trust must be re-derived from a server-authoritative source (session record, DB, IdP)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The client's self-report of its own role/permissions can never be authoritative."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Frames it as the broken-access-control failure the skill exists to prevent."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Look up the caller's role from the session/database, not the request body."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Authorize the action against the server-derived identity."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not authorize based on a client-supplied role/permission claim."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A developer asks the client-server-boundary owner to: (a) decide whether the /products route should be SSG or SSR, (b) design the JSON response shape for the public /api/products endpoint, and (c) add a Cache-Control header strategy.",
+      "context": "The team treats anything 'server vs client' as this skill's territory.",
+      "question": "How should the agent scope these requests?",
+      "expected_flags": [
+        "(a) SSG vs SSR is rendering-models — when/where the UI is produced",
+        "(b) public API JSON shape is api-design — the external surface contract",
+        "(c) Cache-Control strategy is http-semantics — the wire protocol",
+        "Redirects all three; notes they compose with but are distinct from the serialization/trust frontier"
+      ],
+      "expected_fix_hints": [
+        "Hand (a) to rendering-models, (b) to api-design, (c) to http-semantics",
+        "Offer only the in-scope part: what data crosses the internal server/client boundary and how it is encoded"
+      ],
+      "absent_signals": [
+        "Do not make the SSG/SSR staging decision here",
+        "Do not design the public API endpoint shape or the caching headers"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: (a) SSG vs SSR is rendering-models — when/where the UI is produced."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: (b) public API JSON shape is api-design — the external surface contract."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: (c) Cache-Control strategy is http-semantics — the wire protocol."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirects all three; notes they compose with but are distinct from the serialization/trust frontier."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand (a) to rendering-models, (b) to api-design, (c) to http-semantics."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Offer only the in-scope part: what data crosses the internal server/client boundary and how it is encoded."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make the SSG/SSR staging decision here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the public API endpoint shape or the caching headers."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "formdata-validation",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A form action receives FormData with a nested JSON string in one field, parses it with JSON.parse and casts the result `as OrderInput`, then writes it to the database.",
+      "context": "The cast satisfies TypeScript so no validation runs.",
+      "question": "What is the boundary error and how should it be fixed?",
+      "expected_flags": [
+        "FormData carries only string/File values; nested structure is a JSON string that must be validated after parsing",
+        "An `as` cast of a JSON.parse result does not validate at runtime — the bytes are adversarial",
+        "Recommends validating the parsed object with a runtime schema before use",
+        "Treats the FormData payload as client→server adversarial input"
+      ],
+      "expected_fix_hints": [
+        "Parse then validate the nested JSON with a runtime schema",
+        "Remove the `as` cast; never trust JSON.parse output as typed"
+      ],
+      "absent_signals": [
+        "Do not write `as`-casted parse output to the database",
+        "Do not treat the FormData nested field as already-validated"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: FormData carries only string/File values; nested structure is a JSON string that must be validated after parsing."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: An `as` cast of a JSON.parse result does not validate at runtime — the bytes are adversarial."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends validating the parsed object with a runtime schema before use."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treats the FormData payload as client→server adversarial input."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Parse then validate the nested JSON with a runtime schema."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Remove the `as` cast; never trust JSON.parse output as typed."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write `as`-casted parse output to the database."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat the FormData nested field as already-validated."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

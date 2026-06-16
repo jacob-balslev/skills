@@ -1,0 +1,331 @@
+{
+  "skill_name": "bcg-matrix",
+  "subject": "BCG Growth-Share Matrix portfolio allocation",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "ansoff-matrix",
+    "expected-value",
+    "porters-five-forces",
+    "seven-powers",
+    "swot-tows"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "portfolio-classification",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A consumer goods company reviews four brands. Brand A has high relative share in a low-growth category and throws off cash. Brand B has high relative share in a high-growth category and needs production investment. Brand C has low relative share in a high-growth category. Brand D has low relative share in a low-growth category and absorbs management attention.",
+      "context": "The user needs a BCG Growth-Share Matrix first pass for portfolio allocation. No private company facts are supplied beyond the synthetic scenario.",
+      "question": "Build the minimum useful portfolio review.",
+      "expected_flags": [
+        "The portfolio scope and market boundaries need to be stated before classification.",
+        "Brand A is a cash cow, Brand B is a star, Brand C is a question mark, and Brand D is a dog or pet.",
+        "The classification depends on market growth and relative market share evidence, not on general attractiveness.",
+        "Cash generation and cash needs should be separated from quadrant labels."
+      ],
+      "expected_fix_hints": [
+        "Ask for or state axis definitions for market growth and relative market share.",
+        "Present allocation hypotheses with evidence gaps rather than final invest/harvest/divest commands.",
+        "Carry assumptions about cash flow, production investment, and management attention into the recommendation."
+      ],
+      "absent_signals": [
+        "Does not treat quadrant labels as final recommendations.",
+        "Does not invent market-size, share, growth, profitability, or funding data.",
+        "Does not reframe the task as Ansoff product-market growth classification."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Defines portfolio scope and market boundaries before or alongside the matrix."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Correctly maps all four brands to cash cow, star, question mark, and dog or pet."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Explains cash generation or cash need for each quadrant."
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not make final allocation recommendations solely from quadrant labels."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "classification-review",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A draft says: 'This unit is a cash cow because it has 70% absolute market share in a market we think is attractive.'",
+      "context": "The user asks whether the classification is valid under BCG Matrix logic.",
+      "question": "Review the classification and identify what evidence is missing.",
+      "expected_flags": [
+        "Absolute market share alone is not the BCG relative market share axis.",
+        "Vague market attractiveness is not the same as the BCG market growth axis.",
+        "The market boundary and reference competitor are missing.",
+        "Cash generation or maintenance-investment evidence is missing."
+      ],
+      "expected_fix_hints": [
+        "Request relative share against the leading or reference competitor.",
+        "Request market-growth evidence for the defined market and horizon.",
+        "Treat cash-cow status as provisional until cash generation and maintenance needs are evidenced."
+      ],
+      "absent_signals": [
+        "Does not accept absolute share alone as enough for a cash-cow classification.",
+        "Does not substitute general market attractiveness for market growth.",
+        "Does not skip market-boundary definition."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Flags the absolute-share versus relative-share error."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Flags the missing market-growth evidence."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Requests market boundary, reference competitor, and cash-generation evidence."
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not endorse the cash-cow label as proven."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "industry-structure-red-herring",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A team asks for BCG, but their actual question is whether supplier concentration, customer bargaining power, substitutes, entrants, and rivalry make a target market attractive.",
+      "context": "The prompt uses BCG wording but names the five force mechanisms of industry profit-pressure analysis.",
+      "question": "Should the BCG Matrix own this analysis?",
+      "expected_flags": [
+        "The task is primarily industry-structure and profit-pressure analysis, not BCG portfolio allocation.",
+        "Supplier power, buyer power, substitutes, entrants, and rivalry are Porter's Five Forces mechanisms.",
+        "BCG could only contribute later if multiple portfolio units need growth/share mapping."
+      ],
+      "expected_fix_hints": [
+        "Route the main analysis to Porter's Five Forces.",
+        "If BCG is still useful, narrow it to portfolio-unit mapping by market growth and relative share."
+      ],
+      "absent_signals": [
+        "Does not force five-force mechanisms into BCG quadrants.",
+        "Does not treat industry attractiveness as market growth.",
+        "Does not claim BCG is the right primary method for buyer/supplier/substitute/entrant/rivalry analysis."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Routes the primary task to Porter's Five Forces."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Names BCG's own mechanism as market growth and relative market share across portfolio units."
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not over-trigger BCG on the red-herring prompt."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "question-mark-investment-anti-pattern",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A product lead says every question mark deserves aggressive investment because high-growth markets are always attractive.",
+      "context": "The user wants BCG Matrix reasoning to critique a quadrant-as-command recommendation.",
+      "question": "Critique the reasoning and state what evidence should decide the action.",
+      "expected_flags": [
+        "Question marks combine high market growth with low relative market share.",
+        "Question marks may require significant cash to pursue leadership and may not justify investment.",
+        "High growth alone does not prove attractiveness, feasibility, or value.",
+        "Investment, repositioning, partnering, harvesting, or exit depend on evidence."
+      ],
+      "expected_fix_hints": [
+        "Ask for path to share gain, required cash, differentiation, timing, capability fit, downside protection, and option value.",
+        "Separate quadrant classification from allocation decision.",
+        "Route quantified choice to Expected Value or valuation when needed."
+      ],
+      "absent_signals": [
+        "Does not endorse aggressive investment solely because a unit is a question mark.",
+        "Does not treat every high-growth market as attractive.",
+        "Does not ignore cash needs and downside risk."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Defines the question-mark quadrant accurately."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Requires evidence beyond high growth before recommending investment."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Names alternative actions besides aggressive investment."
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not make the quadrant label an investment command."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "nonprofit-portfolio-adaptation",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A nonprofit has four programs competing for funding: a mature local tutoring program with strong share of the served population and steady cash support; a fast-growing youth mental-health program where it is a local leader; a fast-growing adult-skills program where it is small; and a shrinking low-share arts program.",
+      "context": "The user needs a first-pass BCG-style structure while avoiding invented facts and commercial overreach.",
+      "question": "Produce the minimum useful BCG-style portfolio structure without inventing facts.",
+      "expected_flags": [
+        "The method can be adapted to nonprofit programs when the axes are translated carefully.",
+        "Tutoring is cash-cow-like, youth mental health is star-like, adult skills is question-mark-like, and arts is dog/pet-like or weak-position low-growth.",
+        "Mission fit, outcomes, funding reliability, and strategic dependency remain unresolved evidence needs.",
+        "Commercial cash-flow language needs careful translation to funding and resource needs."
+      ],
+      "expected_fix_hints": [
+        "Label the quadrants as analogies or BCG-style positions rather than pretending nonprofit programs are products.",
+        "Request evidence for market definition, growth, relative share, funding, outcomes, and mission fit.",
+        "Avoid inventing funding, share, or outcome facts."
+      ],
+      "absent_signals": [
+        "Does not force purely commercial terms without translation.",
+        "Does not invent missing market, funding, share, or outcome data.",
+        "Does not recommend closing the arts program solely from the dog/pet-like label."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Adapts BCG language to nonprofit programs without losing the two-axis mechanism."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Maps all four programs to appropriate BCG-style positions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Marks missing evidence for funding, outcomes, mission fit, and relative position."
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not invent facts or issue closure commands from labels alone."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "downstream-method-handoff",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A portfolio review has three units left after BCG classification: a cash cow, a star, and a question mark.",
+      "context": "The user asks what should happen next after the matrix has already classified the units.",
+      "question": "State the next analysis and decision path without pretending the matrix has chosen the answer.",
+      "expected_flags": [
+        "The BCG Matrix is an input to allocation work, not the full decision.",
+        "Each remaining unit needs assumptions, evidence gaps, cash-flow logic, and risk stated.",
+        "Different downstream questions need different methods."
+      ],
+      "expected_fix_hints": [
+        "Use Expected Value or valuation for quantified comparison.",
+        "Use Five Forces for market attractiveness and Seven Powers for durability of advantage.",
+        "Use Playing to Win for integrated strategic choice when allocation must become a strategy cascade.",
+        "Name possible sequencing or funding logic rather than choosing solely from labels."
+      ],
+      "absent_signals": [
+        "Does not choose a winner solely from quadrant labels.",
+        "Does not claim the cash cow always funds the star or question mark without cash-flow evidence.",
+        "Does not skip downstream validation."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "States that BCG classification is not a final decision."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Routes to at least two appropriate downstream methods based on remaining questions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Names assumptions and evidence needs for the remaining units."
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not select an allocation solely from labels."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "ansoff-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A growth strategy workshop asks to classify ideas as selling existing products to existing markets, existing products to new markets, new products to existing markets, and new products to new markets.",
+      "context": "The prompt asks if this is BCG Matrix work, but the mechanics describe the Ansoff Matrix.",
+      "question": "Identify the right method and explain why.",
+      "expected_flags": [
+        "The described mechanics are Ansoff Matrix product-market growth logic.",
+        "BCG classifies portfolio units by market growth and relative market share.",
+        "Existing/new product and existing/new market axes do not belong to BCG."
+      ],
+      "expected_fix_hints": [
+        "Route the task to Ansoff Matrix.",
+        "Use BCG only if the user later asks to allocate across portfolio units using market growth and relative share."
+      ],
+      "absent_signals": [
+        "Does not force Ansoff growth ideas into BCG quadrants.",
+        "Does not call existing/new product and market axes BCG axes.",
+        "Does not over-trigger BCG on a product-market growth task."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Rejects BCG ownership and routes to Ansoff Matrix."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Explains the mechanism difference between the two matrices."
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not treat existing/new product-market axes as BCG axes."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

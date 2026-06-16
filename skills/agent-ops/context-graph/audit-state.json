@@ -6,10 +6,10 @@
   "drift_check": {
     "last_verified": "2026-05-18"
   },
-  "eval_artifacts": "planned",
+  "eval_artifacts": "present",
   "eval_state": "unverified",
   "routing_eval": "absent",
-  "last_audited": "2026-06-01",
+  "last_audited": "2026-06-13",
   "structural_verdict": "PASS",
   "truth_verdict": "UNVERIFIED",
   "comprehension_verdict": "UNVERIFIED",

@@ -1,0 +1,465 @@
+{
+  "skill_name": "error-boundary",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept of the skill, What an Error Boundary Catches, Granularity, Pairing with Suspense, Next.js App Router Conventions, Reporting Caught Errors, Common Anti-Patterns, Verification) and the Understanding fields.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "async-error-not-caught",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A component has a button whose onClick does `await saveForm()`, which can reject. The team wrapped the page in an error boundary and is confused that a save failure shows an uncaught error in the console and never renders the fallback.",
+      "context": "The save logic lives entirely inside the click handler; the boundary is an ancestor in the tree.",
+      "question": "How should the agent fix this?",
+      "expected_flags": [
+        "Event-handler/async errors run outside React's call stack — the boundary cannot catch them directly",
+        "Catch the rejection locally with try/catch in the handler",
+        "Surface the error into React state via setState(error)",
+        "Re-throw during the next render (if (error) throw error) so the boundary catches it"
+      ],
+      "expected_fix_hints": [
+        "Add local try/catch + setError in the handler",
+        "Add `if (error) throw error` in the render path to route it into the boundary"
+      ],
+      "absent_signals": [
+        "Do not claim the boundary will catch the async error as-is",
+        "Do not just wrap a higher-level component in another boundary"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Event-handler/async errors run outside React's call stack — the boundary cannot catch them directly."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Catch the rejection locally with try/catch in the handler."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Surface the error into React state via setState(error)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Re-throw during the next render (if (error) throw error) so the boundary catches it."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add local try/catch + setError in the handler."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add `if (error) throw error` in the render path to route it into the boundary."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim the boundary will catch the async error as-is."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not just wrap a higher-level component in another boundary."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "granularity-placement",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A dashboard renders 8 independent widgets, each fetching its own data. One widget's malformed data throws during render, and the entire dashboard goes blank with a generic 'Something went wrong' page.",
+      "context": "There is a single app-root error boundary and nothing finer-grained.",
+      "question": "How should the agent restructure the boundaries?",
+      "expected_flags": [
+        "Place boundaries by failure-blast-radius — wrap each widget in its own feature-level boundary",
+        "One widget's failure should show that widget's fallback, not blank the whole dashboard",
+        "Keep the app-root boundary as a last-resort backstop, layered under route and feature boundaries",
+        "Each fallback should be meaningful at its scope (per-widget retry UI)"
+      ],
+      "expected_fix_hints": [
+        "Add per-widget error boundaries around each data-loading component",
+        "Layer app-root + route-segment + feature boundaries"
+      ],
+      "absent_signals": [
+        "Do not rely on a single app-root boundary alone",
+        "Do not let one widget's error replace the whole page"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Place boundaries by failure-blast-radius — wrap each widget in its own feature-level boundary."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: One widget's failure should show that widget's fallback, not blank the whole dashboard."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep the app-root boundary as a last-resort backstop, layered under route and feature boundaries."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Each fallback should be meaningful at its scope (per-widget retry UI)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add per-widget error boundaries around each data-loading component."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Layer app-root + route-segment + feature boundaries."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on a single app-root boundary alone."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let one widget's error replace the whole page."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "silent-swallow",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An error boundary renders a friendly 'Something went wrong' fallback but its componentDidCatch only does `console.log(error)`. In production, users hit the fallback regularly and the team has no idea why.",
+      "context": "There is an error-tracking service (Sentry) available but the boundary doesn't use it.",
+      "question": "What should the agent change?",
+      "expected_flags": [
+        "A caught error is still an error — a boundary that doesn't report externally is silent UI degradation",
+        "Wire onError / componentDidCatch to external observability (Sentry or equivalent)",
+        "Include info.componentStack for diagnosis (distinct from the JS stack trace)",
+        "The fallback is the user-facing recovery and the report is the developer-facing alarm"
+      ],
+      "expected_fix_hints": [
+        "Call Sentry.captureException(error, { contexts: { react: { componentStack: info.componentStack } } }) in componentDidCatch",
+        "Replace console.log with a real report-to-observability call"
+      ],
+      "absent_signals": [
+        "Do not leave the boundary swallowing errors with only a console.log",
+        "Do not treat the fallback alone as a complete solution"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A caught error is still an error — a boundary that doesn't report externally is silent UI degradation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Wire onError / componentDidCatch to external observability (Sentry or equivalent)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Include info.componentStack for diagnosis (distinct from the JS stack trace)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The fallback is the user-facing recovery and the report is the developer-facing alarm."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Call Sentry.captureException(error, { contexts: { react: { componentStack: info.componentStack } } }) in componentDidCatch."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace console.log with a real report-to-observability call."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave the boundary swallowing errors with only a console.log."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat the fallback alone as a complete solution."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "suspense-pairing",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team wants a data section that shows a skeleton while loading and an error UI if the fetch fails. They put a single component that tries to handle both loading and error states with try/catch around the suspense-throwing read.",
+      "context": "They are using Suspense for data fetching and want failure to replace the whole section.",
+      "question": "How should the agent structure the boundaries?",
+      "expected_flags": [
+        "Error boundaries catch thrown Errors; Suspense catches thrown Promises — they must be distinct components",
+        "Nest ErrorBoundary outside Suspense so a failed fetch replaces the whole group including the loading state",
+        "Do not try to catch a suspended Promise with try/catch",
+        "Wire reset (resetKeys / resetErrorBoundary) so retry re-attempts the failed async render"
+      ],
+      "expected_fix_hints": [
+        "Wrap <Suspense> inside an <ErrorBoundary> for the common single-failure-surface case",
+        "Add resetKeys tied to the query inputs for retry"
+      ],
+      "absent_signals": [
+        "Do not combine loading and error handling in one try/catch",
+        "Do not place the error boundary inside the Suspense slot for the common case"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Error boundaries catch thrown Errors; Suspense catches thrown Promises — they must be distinct components."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Nest ErrorBoundary outside Suspense so a failed fetch replaces the whole group including the loading state."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Do not try to catch a suspended Promise with try/catch."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Wire reset (resetKeys / resetErrorBoundary) so retry re-attempts the failed async render."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Wrap <Suspense> inside an <ErrorBoundary> for the common single-failure-surface case."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add resetKeys tied to the query inputs for retry."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not combine loading and error handling in one try/catch."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not place the error boundary inside the Suspense slot for the common case."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "nextjs-conventions",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "In a Next.js App Router app, an error thrown in `app/layout.tsx` (the root layout) is not being caught by `app/dashboard/error.tsx`, and the team added more nested error.tsx files trying to catch it.",
+      "context": "The app uses route-segment error.tsx files but has no global-error.tsx.",
+      "question": "How should the agent explain and fix this?",
+      "expected_flags": [
+        "error.tsx only catches errors from its descendant tree, not its sibling/parent layout",
+        "An error in the root layout escapes every error.tsx and only global-error.tsx can catch it",
+        "Add app/global-error.tsx as the app-root backstop",
+        "error.tsx must be a Client Component (uses state for the reset action)"
+      ],
+      "expected_fix_hints": [
+        "Create app/global-error.tsx to catch root-layout errors",
+        "Stop adding nested error.tsx files for a parent-layout failure"
+      ],
+      "absent_signals": [
+        "Do not expect a segment error.tsx to catch its parent layout's error",
+        "Do not keep nesting more error.tsx to fix a root-layout throw"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: error.tsx only catches errors from its descendant tree, not its sibling/parent layout."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: An error in the root layout escapes every error.tsx and only global-error.tsx can catch it."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add app/global-error.tsx as the app-root backstop."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: error.tsx must be a Client Component (uses state for the reset action)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Create app/global-error.tsx to catch root-layout errors."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Stop adding nested error.tsx files for a parent-layout failure."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not expect a segment error.tsx to catch its parent layout's error."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep nesting more error.tsx to fix a root-layout throw."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the error-boundary owner to design the API's 500-response JSON envelope and to set up the Sentry SDK initialization, sampling, and alerting dashboards.",
+      "context": "The team conflates 'error handling' across the whole stack with React error boundaries.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "The backend 500 error envelope is out of scope — that is api-design",
+        "Sentry SDK setup, sampling, and dashboards are out of scope — that is error-tracking",
+        "Offer the in-scope part: the React boundary that catches render failures and reports caught errors into the SDK",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand the wire format to api-design and the SDK/observability setup to error-tracking",
+        "Provide the in-tree boundary + onError reporting hook"
+      ],
+      "absent_signals": [
+        "Do not design the backend error response contract",
+        "Do not configure the Sentry SDK and dashboards"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The backend 500 error envelope is out of scope — that is api-design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Sentry SDK setup, sampling, and dashboards are out of scope — that is error-tracking."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: the React boundary that catches render failures and reports caught errors into the SDK."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand the wire format to api-design and the SDK/observability setup to error-tracking."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide the in-tree boundary + onError reporting hook."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the backend error response contract."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not configure the Sentry SDK and dashboards."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "function-component-attempt",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A developer tries to write an error boundary as a function component using a hypothetical useErrorBoundary hook and a try/catch around the JSX, and it never catches descendant render errors.",
+      "context": "They are on React 19 and prefer function components and hooks everywhere.",
+      "question": "What should the agent advise?",
+      "expected_flags": [
+        "As of React 19, error boundaries must be class components — there is no useErrorBoundary hook",
+        "getDerivedStateFromError / componentDidCatch have no hooks equivalent",
+        "try/catch around JSX does not catch a descendant's render throw",
+        "Use a class boundary or the react-error-boundary library"
+      ],
+      "expected_fix_hints": [
+        "Implement a class ErrorBoundary with getDerivedStateFromError/componentDidCatch",
+        "Or use the react-error-boundary library for reset and FallbackComponent support"
+      ],
+      "absent_signals": [
+        "Do not claim a function component can be an error boundary",
+        "Do not rely on try/catch around JSX to catch render errors"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: As of React 19, error boundaries must be class components — there is no useErrorBoundary hook."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: getDerivedStateFromError / componentDidCatch have no hooks equivalent."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: try/catch around JSX does not catch a descendant's render throw."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use a class boundary or the react-error-boundary library."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Implement a class ErrorBoundary with getDerivedStateFromError/componentDidCatch."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Or use the react-error-boundary library for reset and FallbackComponent support."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim a function component can be an error boundary."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on try/catch around JSX to catch render errors."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

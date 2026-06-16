@@ -1,0 +1,565 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "conceptual-modeling",
+  "subject": "Translating messy business requirements, stakeholder language, and early product ideas into an implementation-neutral…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "taxonomy-design",
+    "entity-relationship-modeling",
+    "entity-relationship-modeling",
+    "semantic-relations",
+    "ontology-modeling",
+    "bounded-context-mapping",
+    "naming-conventions",
+    "code-review"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"a stakeholder says users place orders that ship in multiple boxes -- how do I capture this as a model before naming tables?\"",
+      "context": "The agent has access to the conceptual-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is conceptual-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes conceptual-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against taxonomy-design, entity-relationship-modeling, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the conceptual-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore conceptual-modeling",
+        "Does not route to taxonomy-design, entity-relationship-modeling, entity-relationship-modeling when the conceptual-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes conceptual-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore conceptual-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"is a refund its own entity or just a payment status -- what conceptual test decides that?\"",
+      "context": "The agent has access to the conceptual-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is conceptual-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes conceptual-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against taxonomy-design, entity-relationship-modeling, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the conceptual-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore conceptual-modeling",
+        "Does not route to taxonomy-design, entity-relationship-modeling, entity-relationship-modeling when the conceptual-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes conceptual-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore conceptual-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"two business stakeholders disagree on whether a cart and an order are the same thing -- how should the conceptual model resolve that?\"",
+      "context": "The agent has access to the conceptual-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is conceptual-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes conceptual-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against taxonomy-design, entity-relationship-modeling, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the conceptual-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore conceptual-modeling",
+        "Does not route to taxonomy-design, entity-relationship-modeling, entity-relationship-modeling when the conceptual-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes conceptual-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore conceptual-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"our domain diagram already mentions UUIDs and cascade-delete -- what anti-pattern is that and how do I pull it back?\"",
+      "context": "The agent has access to the conceptual-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is conceptual-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes conceptual-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against taxonomy-design, entity-relationship-modeling, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the conceptual-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore conceptual-modeling",
+        "Does not route to taxonomy-design, entity-relationship-modeling, entity-relationship-modeling when the conceptual-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes conceptual-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore conceptual-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"this relationship has a date, an amount, and a status -- should it stay as a line between entities or become its own entity?\"",
+      "context": "The agent has access to the conceptual-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is conceptual-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes conceptual-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against taxonomy-design, entity-relationship-modeling, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the conceptual-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore conceptual-modeling",
+        "Does not route to taxonomy-design, entity-relationship-modeling, entity-relationship-modeling when the conceptual-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes conceptual-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore conceptual-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"should this attribute live on Customer or Order -- what is the rule?\"",
+      "context": "The agent has access to the conceptual-modeling skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is conceptual-modeling the right skill to apply?",
+      "expected_flags": [
+        "Recognizes conceptual-modeling as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against taxonomy-design, entity-relationship-modeling, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the conceptual-modeling workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore conceptual-modeling",
+        "Does not route to taxonomy-design, entity-relationship-modeling, entity-relationship-modeling when the conceptual-modeling scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes conceptual-modeling as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore conceptual-modeling"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"give me the physical table design with PKs, FKs, and normalization forms\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should conceptual-modeling be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside conceptual-modeling's ownership",
+        "Routes the work to taxonomy-design or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying conceptual-modeling terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply conceptual-modeling as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if conceptual-modeling has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim conceptual-modeling should own the request",
+        "Does not use conceptual-modeling's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside conceptual-modeling's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim conceptual-modeling should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use conceptual-modeling's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"turn this model into SQL migrations and index definitions\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should conceptual-modeling be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside conceptual-modeling's ownership",
+        "Routes the work to taxonomy-design or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying conceptual-modeling terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply conceptual-modeling as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if conceptual-modeling has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim conceptual-modeling should own the request",
+        "Does not use conceptual-modeling's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside conceptual-modeling's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim conceptual-modeling should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use conceptual-modeling's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"I need OWL class axioms and reasoning constraints for these concepts\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should conceptual-modeling be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside conceptual-modeling's ownership",
+        "Routes the work to taxonomy-design or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying conceptual-modeling terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply conceptual-modeling as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if conceptual-modeling has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim conceptual-modeling should own the request",
+        "Does not use conceptual-modeling's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside conceptual-modeling's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim conceptual-modeling should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use conceptual-modeling's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"build the DDD aggregate boundaries and anti-corruption layer\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should conceptual-modeling be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside conceptual-modeling's ownership",
+        "Routes the work to taxonomy-design or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying conceptual-modeling terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply conceptual-modeling as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if conceptual-modeling has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim conceptual-modeling should own the request",
+        "Does not use conceptual-modeling's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside conceptual-modeling's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim conceptual-modeling should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use conceptual-modeling's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}

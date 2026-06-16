@@ -1,0 +1,465 @@
+{
+  "skill_name": "server-components-design",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, the review rubric, Data Security, Suspense/Streaming, Caching the Read Path, Common Anti-Patterns, Verification, Do NOT Use When) and current React/Next.js App Router practice (RSC payload, server-only DTOs, React.cache, use() Promise handoff, Cache Components / 'use cache' / PPR, CVE-2025-55182).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "boundary-placement",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A dashboard page renders a header, a non-interactive metrics grid fed by a DB query, and one filter dropdown with a click handler. The developer has marked the entire page.tsx file 'use client' so the dropdown's useState works.",
+      "context": "Next.js App Router. The metrics grid and header have no interactivity; bundle size and TTI are a concern.",
+      "question": "How should the agent restructure the component tree?",
+      "expected_flags": [
+        "Marking the whole page 'use client' loses all RSC benefit — ships the whole page as a client bundle and re-runs on hydration",
+        "Move 'use client' to the thinnest interactive leaf (the dropdown), keep header/metrics-grid/layout as Server Components",
+        "Keep the DB query in a Server Component; pass server-rendered content (the grid) into the interactive shell via children/slot",
+        "Default is Server; a component is Client only because a forcing requirement forced it"
+      ],
+      "expected_fix_hints": [
+        "Extract the dropdown into its own small 'use client' component",
+        "Pass the Server-rendered grid as a children/slot prop to the interactive filter shell"
+      ],
+      "absent_signals": [
+        "Do not keep the whole page as a Client Component",
+        "Do not move the DB query into a Client Component / useEffect"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Marking the whole page 'use client' loses all RSC benefit — ships the whole page as a client bundle and re-runs on hydration."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Move 'use client' to the thinnest interactive leaf (the dropdown), keep header/metrics-grid/layout as Server Components."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep the DB query in a Server Component; pass server-rendered content (the grid) into the interactive shell via children/slot."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Default is Server; a component is Client only because a forcing requirement forced it."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Extract the dropdown into its own small 'use client' component."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pass the Server-rendered grid as a children/slot prop to the interactive filter shell."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the whole page as a Client Component."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not move the DB query into a Client Component / useEffect."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "data-leak",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A Server Component does `const user = await db.user.findUnique(...)` and renders `<ProfileCard user={user} />`, a Client Component that displays only the name and avatar. The row also contains passwordHash, stripeCustomerId, and an internalRiskScore.",
+      "context": "Next.js App Router with a Postgres DB. Security review flagged the page.",
+      "question": "What is the vulnerability and how should the agent fix it?",
+      "expected_flags": [
+        "Every prop passed to a Client Component is serialized into the RSC payload and shipped to the browser, including fields never rendered",
+        "passwordHash / stripeCustomerId / internalRiskScore are now visible in browser devtools — a data leak",
+        "Filter to a minimal DTO before crossing: return only { name, avatarUrl }",
+        "Centralize in a server-only Data Access Layer that authorizes and returns DTOs; back with the server-only package and/or taint APIs"
+      ],
+      "expected_fix_hints": [
+        "Map the row to a UI-shaped DTO in a 'server-only' module before passing it",
+        "Re-check authorization (resource ownership), not just authentication, in the DAL"
+      ],
+      "absent_signals": [
+        "Do not pass the whole DB row to the Client Component",
+        "Do not assume 'it's a Server Component so the props are private'"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Every prop passed to a Client Component is serialized into the RSC payload and shipped to the browser, including fields never rendered."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: passwordHash / stripeCustomerId / internalRiskScore are now visible in browser devtools — a data leak."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Filter to a minimal DTO before crossing: return only { name, avatarUrl }."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Centralize in a server-only Data Access Layer that authorizes and returns DTOs; back with the server-only package and/or taint APIs."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Map the row to a UI-shaped DTO in a 'server-only' module before passing it."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-check authorization (resource ownership), not just authentication, in the DAL."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pass the whole DB row to the Client Component."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume 'it's a Server Component so the props are private'."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "waterfall-and-streaming",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A page Server Component awaits a 2s analytics query, then renders a child that awaits an independent 1.5s orders query, then renders the whole result. The page shows nothing for ~3.5s.",
+      "context": "Both queries are independent. The team wants the shell and header to appear immediately.",
+      "question": "How should the agent fix the data fetching and reveal timing?",
+      "expected_flags": [
+        "This is a sequential waterfall — the orders query cannot start until the analytics await resolves, even though they are independent",
+        "Render the two reads as siblings (or Promise.all) so their awaits happen in parallel",
+        "Wrap each slow section in its own Suspense boundary co-located with the data so the shell/header flush immediately and each section streams in when ready",
+        "Dedupe any shared read with React.cache() / fetch auto-dedup"
+      ],
+      "expected_fix_hints": [
+        "Split analytics and orders into sibling Server Components, each in its own <Suspense fallback>",
+        "Use Promise.all only when one component genuinely needs both results"
+      ],
+      "absent_signals": [
+        "Do not keep the parent-await-then-child-await waterfall",
+        "Do not put one giant Suspense boundary at the page root"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is a sequential waterfall — the orders query cannot start until the analytics await resolves, even though they are independent."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Render the two reads as siblings (or Promise.all) so their awaits happen in parallel."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Wrap each slow section in its own Suspense boundary co-located with the data so the shell/header flush immediately and each section streams in when ready."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Dedupe any shared read with React.cache() / fetch auto-dedup."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Split analytics and orders into sibling Server Components, each in its own <Suspense fallback>."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use Promise.all only when one component genuinely needs both results."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the parent-await-then-child-await waterfall."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not put one giant Suspense boundary at the page root."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "caching-freshness",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "Under Cache Components (cacheComponents: true), a developer adds 'use cache' to a layout component that reads cookies() to greet the logged-in user, to 'make it fast'. In dev it errors / serves the wrong user's name.",
+      "context": "Next.js 16 App Router with Cache Components enabled.",
+      "question": "What is wrong and what is the correct caching design?",
+      "expected_flags": [
+        "A component that reads cookies()/headers()/searchParams is request-specific (dynamic) and must NOT be cached — caching freezes one user's data and serves it to everyone",
+        "Cache only request-independent output; place 'use cache' close to the data (a cacheable function/component), not a whole layout that reads request input",
+        "Wrap the per-request greeting in Suspense and leave it uncached/dynamic (Partial Prerendering: static shell + dynamic holes)",
+        "Read cookies() in the leaf that needs it, not in the root layout, so the rest stays prerenderable"
+      ],
+      "expected_fix_hints": [
+        "Remove 'use cache' from the request-specific layout; cache the request-independent parts instead",
+        "Move the cookies() read down into a Suspense-wrapped dynamic leaf"
+      ],
+      "absent_signals": [
+        "Do not cache a component that reads cookies/headers/searchParams",
+        "Do not read request inputs high in the tree just to cache the layout"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A component that reads cookies()/headers()/searchParams is request-specific (dynamic) and must NOT be cached — caching freezes one user's data and serves it to everyone."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cache only request-independent output; place 'use cache' close to the data (a cacheable function/component), not a whole layout that reads request input."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Wrap the per-request greeting in Suspense and leave it uncached/dynamic (Partial Prerendering: static shell + dynamic holes)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Read cookies() in the leaf that needs it, not in the root layout, so the rest stays prerenderable."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Remove 'use cache' from the request-specific layout; cache the request-independent parts instead."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move the cookies() read down into a Suspense-wrapped dynamic leaf."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not cache a component that reads cookies/headers/searchParams."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not read request inputs high in the tree just to cache the layout."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "trust-and-authz",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An admin page reads `searchParams` and does `if (searchParams.role === 'admin') return <AdminPanel data={await getAllUsers()} />`. The developer also accesses params synchronously without await.",
+      "context": "Next.js 15+ App Router; params/searchParams are async.",
+      "question": "How should the agent review this Server Component?",
+      "expected_flags": [
+        "searchParams is user-controlled URL input and is NOT an authorization signal — ?role=admin proves nothing",
+        "Re-verify the real session server-side and check authorization (does this user own/permit this resource), not just authentication",
+        "params and searchParams are async in the current App Router and must be awaited",
+        "Reading request inputs makes the subtree dynamic — read low in the tree, not in a shared ancestor"
+      ],
+      "expected_fix_hints": [
+        "Gate AdminPanel on a verified session role from the data layer, not on a URL param",
+        "await params / await searchParams before use"
+      ],
+      "absent_signals": [
+        "Do not trust searchParams/params/headers as a permission check",
+        "Do not access params synchronously"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: searchParams is user-controlled URL input and is NOT an authorization signal — ?role=admin proves nothing."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Re-verify the real session server-side and check authorization (does this user own/permit this resource), not just authentication."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: params and searchParams are async in the current App Router and must be awaited."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reading request inputs makes the subtree dynamic — read low in the tree, not in a shared ancestor."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Gate AdminPanel on a verified session role from the data layer, not on a URL param."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: await params / await searchParams before use."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not trust searchParams/params/headers as a permission check."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not access params synchronously."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A teammate asks the server-components-design owner to design the 'use server' form-submission action that creates an order, including re-authorization and the revalidateTag invalidation after the write, and separately to decide whether the marketing page should be SSG or SSR.",
+      "context": "The team conflates 'anything on the server' with this skill.",
+      "question": "How should the agent scope these requests?",
+      "expected_flags": [
+        "The 'use server' mutation/action + revalidation trigger is out of scope — that is server-actions-design (the write path)",
+        "The SSG-vs-SSR strategy choice is out of scope — that is rendering-models",
+        "This skill owns the read-path RSC design; it can hand off the write-path and the rendering-strategy decisions to the owning skills",
+        "Correctly redirects rather than designing the mutation flow or picking a rendering strategy out of lane"
+      ],
+      "expected_fix_hints": [
+        "Route the mutation/revalidation work to server-actions-design",
+        "Route the SSG/SSR decision to rendering-models"
+      ],
+      "absent_signals": [
+        "Do not design the Server Action mutation flow here",
+        "Do not pick SSG vs SSR here"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The 'use server' mutation/action + revalidation trigger is out of scope — that is server-actions-design (the write path)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The SSG-vs-SSR strategy choice is out of scope — that is rendering-models."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This skill owns the read-path RSC design; it can hand off the write-path and the rendering-strategy decisions to the owning skills."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than designing the mutation flow or picking a rendering strategy out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the mutation/revalidation work to server-actions-design."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the SSG/SSR decision to rendering-models."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the Server Action mutation flow here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick SSG vs SSR here."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "client-data-handoff",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "An interactive chart (a Client Component) currently fetches its data in a useEffect on mount, causing a hydration delay and a double-fetch. The chart needs interactivity (zoom, tooltips).",
+      "context": "Next.js App Router, React 19. The team wants the data fetched on the server but the chart to stay interactive.",
+      "question": "How should the agent restructure the data flow?",
+      "expected_flags": [
+        "useEffect-fetch-on-mount produces hydration delay, double-fetch, and lost streaming benefit",
+        "Start the query in a Server Component and pass the unawaited Promise as a prop; unwrap it in the Client chart with use() under a Suspense boundary",
+        "The Promise must be created on the server, never freshly in the Client Component's render (otherwise it re-suspends forever)",
+        "The Suspense boundary must sit above the component calling use()"
+      ],
+      "expected_fix_hints": [
+        "Create the data Promise in the Server Component (or a cached server-only read) and pass it down",
+        "use(dataPromise) inside the 'use client' chart, wrapped in <Suspense fallback>"
+      ],
+      "absent_signals": [
+        "Do not keep fetching in useEffect on mount",
+        "Do not create the Promise inside the Client Component's render"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: useEffect-fetch-on-mount produces hydration delay, double-fetch, and lost streaming benefit."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Start the query in a Server Component and pass the unawaited Promise as a prop; unwrap it in the Client chart with use() under a Suspense boundary."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The Promise must be created on the server, never freshly in the Client Component's render (otherwise it re-suspends forever)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The Suspense boundary must sit above the component calling use()."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Create the data Promise in the Server Component (or a cached server-only read) and pass it down."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: use(dataPromise) inside the 'use client' chart, wrapped in <Suspense fallback>."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep fetching in useEffect on mount."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not create the Promise inside the Client Component's render."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

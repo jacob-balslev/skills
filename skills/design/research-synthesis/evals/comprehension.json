@@ -1,0 +1,142 @@
+{
+  "skill_name": "research-synthesis",
+  "subject": "design",
+  "adjacent_concepts": [
+    "user-research",
+    "journey-mapping",
+    "problem-framing",
+    "design-thinking",
+    "conceptual-modeling"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define research synthesis in 2-3 sentences. Name what it operates on and what it produces.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Operates on a corpus of raw qualitative material (transcripts, field notes, diary entries, observation logs)",
+        "Turns it into themes, insights, and design-ready artifacts a team can act on",
+        "Names canonical methods: affinity mapping (KJ method), plus empathy maps / JTBD / personas",
+        "Distinguishes it from collecting data and from summarizing a single document"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does affinity mapping cluster observations bottom-up by proximity and name themes only afterward, rather than sorting into pre-existing categories?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Themes should emerge from the evidence, not be imposed by the researcher",
+        "A theme named too early becomes a magnet that pulls unrelated observations into it",
+        "Delaying naming (IDEO field guide / d.school) keeps the researcher re-evaluating whether two cards belong together",
+        "Bottom-up clustering produces defensible themes rather than impression-based ones"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "What is the tension between speed/intuition and traceability in synthesis, and which side does the discipline favor and why?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Fast impression-based summary reproduces the researcher's priors rather than the participants' patterns",
+        "The discipline favors slow, physical, traceable synthesis over speed",
+        "Every theme must trace back to at least two specific, attributable cards",
+        "The cost of speed is unfalsifiable conclusions; the benefit of slowness is defensibility"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "You have 14 interview transcripts. Walk through how you would synthesize them into a small set of insight statements.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Download research first: lift atomic observations onto a shared surface, one observation per card, in the participant's words",
+        "Cluster bottom-up by proximity into emergent themes; name clusters only when their shape is undeniable",
+        "Move from descriptive themes (what we heard) to insights (what it means) to point-of-view statements",
+        "Produce a small set (typically 3-7) of insight statements in observation + interpretation + implication form"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Describe the three layers of synthesis output (themes, insights, point-of-view statements) and what each requires from the layer below it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Descriptive themes = what we heard; built from clustered cards",
+        "Interpretive insights = what it means; built on top of themes",
+        "Point-of-view statements = what we will act on; built on insights",
+        "Each layer requires the previous one as evidence — they are not collapsed into one bullet list"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate hands you a single PDF report and asks you to 'synthesize' it, and separately asks you to run five more interviews. Are either of these research-synthesis work? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Summarizing a single document is NOT synthesis — synthesis is built for cross-session pattern extraction across a corpus",
+        "Running new interviews is NOT synthesis — that is user-research (collecting primary data)",
+        "Correctly distinguishes transforming a corpus from collecting data and from document summarization",
+        "Notes user-research and research-synthesis are needed in that order"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A researcher says 'I read all the transcripts, I get the gist — users want simplicity.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The 'gist' is the danger — a comfortable label named too early pulls unrelated observations into it",
+        "Impression-based summary reproduces the team's priors, not the participants' patterns; it is unfalsifiable",
+        "Real synthesis is slow, physical, delays naming, and traces every theme to specific cards",
+        "Good synthesis should surface at least one uncomfortable, belief-contradicting insight"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a synthesis was done well rather than charitably reproducing prior assumptions?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Every theme traces back to at least two specific cards, each attributable to a session/participant",
+        "Themes were named after clusters formed, not before",
+        "At least one insight contradicts a prior team belief",
+        "Output distinguishes observations / interpretations / implications and is small enough to act on (typically 3-7 themes)",
+        "A reader unfamiliar with the raw research could roughly predict what a participant said (specificity is preserved)"
+      ]
+    }
+  ]
+}

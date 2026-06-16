@@ -1,0 +1,395 @@
+{
+  "skill_name": "skill-evolution",
+  "subject": "Skill Graph corpus-level skill evolution loop",
+  "mode": "application",
+  "schema_version": 1,
+  "skill_key": "skill-evolution",
+  "adjacent_concepts": [
+    "graph-audit",
+    "skill-infrastructure",
+    "skill-scaffold",
+    "evaluation",
+    "eval-driven-development"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "corpus-evolve-run",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A maintainer says: 'Run skill-graph evolve over the top five stale skills and keep the run resumable if the process dies halfway through.'",
+      "context": "The Skill Graph repo has the bundled evolve implementation, audit-state sidecars, checkpoint output, and standalone workspace flags. The work should operate at corpus level, not as one hand-edited SKILL.md.",
+      "question": "What should the agent inspect and what loop discipline should it apply before making changes?",
+      "expected_flags": [
+        "Identifies this as corpus-level skill evolution rather than a single-skill graph audit.",
+        "Uses Audit Status sidecars, staleness, verdicts, scores, and registry facts as priority signals.",
+        "Requires analyze, triage, execute, verify, and checkpoint steps so the run can resume."
+      ],
+      "expected_fix_hints": [
+        "Use the `skill-graph evolve` command surface or the bundled evolve implementation as the authority.",
+        "Keep each improvement bounded and verify it before advancing to the next skill.",
+        "Record checkpoints and findings for each attempted action."
+      ],
+      "absent_signals": [
+        "Must not treat evolve as a manual batch edit across many SKILL.md files.",
+        "Must not ignore audit-state.json and read obsolete Health Block fields from SKILL.md."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies this as corpus-level skill evolution rather than a single-skill graph audit."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses Audit Status sidecars, staleness, verdicts, scores, and registry facts as priority signals."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires analyze, triage, execute, verify, and checkpoint steps so the run can resume."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use the `skill-graph evolve` command surface or the bundled evolve implementation as the authority."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep each improvement bounded and verify it before advancing to the next skill."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Record checkpoints and findings for each attempted action."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat evolve as a manual batch edit across many SKILL.md files."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore audit-state.json and read obsolete Health Block fields from SKILL.md."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "truth-drift-during-audit",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An evolve target passes lint, but `skill-graph-drift.js --json` reports DRIFT for every implementation file in its grounding truth_sources. The current repo also has unrelated uncommitted system changes.",
+      "context": "The maintainer wants honest audit status. A fresh hash baseline would turn the truth verdict green, but the changed source files have not been reviewed against the skill body yet.",
+      "question": "What should the agent do before recording new truth-source hashes?",
+      "expected_flags": [
+        "Treats drift as a real finding even when structural lint passes.",
+        "Requires comparing the skill body claims against the changed truth-source files.",
+        "Recognizes that recording hashes against an unreviewed dirty tree would be an unearned PASS."
+      ],
+      "expected_fix_hints": [
+        "Leave truth_verdict as DRIFT until the changed sources are reviewed.",
+        "Update the skill body if the implementation behavior changed.",
+        "Record new drift hashes only after source claims and current implementation agree."
+      ],
+      "absent_signals": [
+        "Must not run `--record --apply` as a reflexive cleanup step.",
+        "Must not claim truth PASS based only on `skill-lint` output."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treats drift as a real finding even when structural lint passes."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires comparing the skill body claims against the changed truth-source files."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes that recording hashes against an unreviewed dirty tree would be an unearned PASS."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Leave truth_verdict as DRIFT until the changed sources are reviewed."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Update the skill body if the implementation behavior changed."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Record new drift hashes only after source claims and current implementation agree."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not run `--record --apply` as a reflexive cleanup step."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not claim truth PASS based only on `skill-lint` output."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "keep-or-revert-improvement",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "The evolve loop proposes adding an eval file to a stale skill, but the generated eval fails schema validation and causes the application-eval checker to fail.",
+      "context": "The user asked for Karpathy-style auto improvement: one bounded edit, one primary measurement, and keep-or-revert based on evidence.",
+      "question": "Should the change be kept, repaired, or reverted, and what evidence decides?",
+      "expected_flags": [
+        "Applies keep-or-revert discipline to a bounded skill/eval artifact change.",
+        "Uses deterministic validation failure as a blocking verification result.",
+        "Separates repairing a simple artifact-shape defect from keeping a broken change."
+      ],
+      "expected_fix_hints": [
+        "Fix the eval shape if the defect is local and cheap, then rerun validation.",
+        "Revert the attempted change if it cannot be made valid within the time box.",
+        "Log the attempted action, verification result, and final keep/revert decision."
+      ],
+      "absent_signals": [
+        "Must not keep an invalid eval because the idea seemed useful.",
+        "Must not continue broad unrelated edits after the bounded attempt fails."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Applies keep-or-revert discipline to a bounded skill/eval artifact change."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses deterministic validation failure as a blocking verification result."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates repairing a simple artifact-shape defect from keeping a broken change."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Fix the eval shape if the defect is local and cheap, then rerun validation."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Revert the attempted change if it cannot be made valid within the time box."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Log the attempted action, verification result, and final keep/revert decision."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not keep an invalid eval because the idea seemed useful."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not continue broad unrelated edits after the bounded attempt fails."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "single-skill-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user says: 'Audit graph-audit for schema conformance, broken relation targets, and sidecar consistency.'",
+      "context": "The target skill is known and the request is about one skill's structural and graph consistency, not corpus-level queue walking.",
+      "question": "Should skill-evolution own this request? If not, what should happen?",
+      "expected_flags": [
+        "Identifies this as graph-audit or the audit operation, not skill-evolution.",
+        "Explains that skill-evolution owns corpus-level selection and repeated improvement, not one known-target conformance review.",
+        "Avoids adding evolve queue machinery to a focused one-skill audit."
+      ],
+      "expected_fix_hints": [
+        "Load graph-audit directly or run the single-skill audit command.",
+        "Use skill-evolution only if the task is deciding which skill to improve next across the corpus."
+      ],
+      "absent_signals": [
+        "Must not route all Skill Audit Loop requests to skill-evolution.",
+        "Must not turn a one-skill schema audit into a corpus-wide evolve run."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies this as graph-audit or the audit operation, not skill-evolution."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that skill-evolution owns corpus-level selection and repeated improvement, not one known-target conformance review."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Avoids adding evolve queue machinery to a focused one-skill audit."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Load graph-audit directly or run the single-skill audit command."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use skill-evolution only if the task is deciding which skill to improve next across the corpus."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not route all Skill Audit Loop requests to skill-evolution."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not turn a one-skill schema audit into a corpus-wide evolve run."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "scaffold-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user asks: 'Create a brand-new SKILL.md for database query optimization with the right template, examples, and frontmatter.'",
+      "context": "This is first-time skill authoring. No corpus queue, stale sidecar, or keep-or-revert improvement loop has been requested.",
+      "question": "Which skill should own the work and what should skill-evolution avoid claiming?",
+      "expected_flags": [
+        "Routes first-time skill authoring to skill-scaffold.",
+        "Keeps skill-evolution scoped to corpus-level maintenance and bounded improvement actions.",
+        "Distinguishes creating a skill's initial shape from evolving an existing corpus by priority."
+      ],
+      "expected_fix_hints": [
+        "Use the scaffold/template workflow for the new skill.",
+        "Add the new skill to later corpus health checks only after it exists."
+      ],
+      "absent_signals": [
+        "Must not claim skill-evolution owns first-principles skill authoring.",
+        "Must not skip the scaffold contract and hand-roll a new template."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes first-time skill authoring to skill-scaffold."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps skill-evolution scoped to corpus-level maintenance and bounded improvement actions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes creating a skill's initial shape from evolving an existing corpus by priority."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use the scaffold/template workflow for the new skill."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add the new skill to later corpus health checks only after it exists."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not claim skill-evolution owns first-principles skill authoring."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not skip the scaffold contract and hand-roll a new template."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "standalone-path-safety",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A standalone Skill Graph install runs `skill-graph evolve --workspace-root /tmp/skill-workspace`, but an improvement adapter tries to read or write files under the maintainer's `/Users/.../Development` checkout.",
+      "context": "The evolve command is intended to operate outside the maintainer workspace. Cross-repo path assumptions were explicitly removed from the standalone contract.",
+      "question": "What should the agent flag and how should the loop constrain file access?",
+      "expected_flags": [
+        "Flags maintainer-local path assumptions as a standalone safety regression.",
+        "Requires package-root and workspace-root separation.",
+        "Keeps evolve writes inside the configured skill workspace and allowed output directory."
+      ],
+      "expected_fix_hints": [
+        "Use the configured workspace root and package-owned bundled assets instead of hardcoded Development paths.",
+        "Verify output artifacts land under the configured output directory.",
+        "Fail loudly when an adapter tries to escape the public skill graph and skill-library scope."
+      ],
+      "absent_signals": [
+        "Must not rely on the maintainer's local checkout as a hidden dependency.",
+        "Must not treat standalone path escape as a harmless portability warning."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags maintainer-local path assumptions as a standalone safety regression."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires package-root and workspace-root separation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps evolve writes inside the configured skill workspace and allowed output directory."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use the configured workspace root and package-owned bundled assets instead of hardcoded Development paths."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify output artifacts land under the configured output directory."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Fail loudly when an adapter tries to escape the public skill graph and skill-library scope."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not rely on the maintainer's local checkout as a hidden dependency."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat standalone path escape as a harmless portability warning."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

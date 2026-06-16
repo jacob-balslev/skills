@@ -1,0 +1,159 @@
+{
+  "skill_name": "interaction-patterns",
+  "subject": "design",
+  "adjacent_concepts": [
+    "interaction-feedback",
+    "task-analysis",
+    "a11y",
+    "design-system-architecture",
+    "component-architecture",
+    "form-ux-architecture"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define interaction-pattern selection in 2-3 sentences. What two questions drive the choice?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as choosing the shape of how a user makes a decision/takes an action on a surface",
+        "Question 1: what is the user deciding (compare/choose one/choose many/sequence/search/edit/confirm/recover)",
+        "Question 2: what is the choice set like (small/large/searchable/hierarchical/ordered/destructive/reversible/repeated)",
+        "States the pattern is derived from the decision shape, not from a component catalogue"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why should the control be derived from the user's decision shape rather than chosen from available components?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Most confusing UIs chose the wrong pattern for the decision, not missing components",
+        "The decision shape determines whether options must be comparable, ordered, searchable, etc.",
+        "Picking the familiar widget first produces mismatches (dropdown hiding comparable options, modal blocking needed context)",
+        "The control is a consequence of the decision, not a starting point"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "When is hiding options (dropdown, accordion, overflow) acceptable, and when does it harm the user?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Hiding options is acceptable only when comparison is not required",
+        "When the user must weigh options side by side, hidden options force memory and re-opening",
+        "Visible/always-on controls suit small comparable sets; search suits large sets",
+        "The simplest pattern that keeps needed context visible wins"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A settings area has 30 options. Should it be tabs, an accordion, or separate pages? How do you decide?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Decide from the user's decision shape and how related the groups are",
+        "Tabs suit a few peer groups the user switches between; accordion suits many independent collapsible sections; pages suit large/independent areas needing their own URL",
+        "Consider whether the user needs to compare across groups (favor visibility) or navigate one at a time",
+        "Avoid wizard-style ceremony for non-sequential settings"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A table needs bulk editing of many rows. What interaction pattern fits and what edges must be defined?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Use a multi-select (choose-many) pattern with a contextual bulk-action bar",
+        "Define select-all / range select / clear and keyboard alternatives for repeated actions",
+        "Define behavior on invalid/partial action, cancel, and undo",
+        "Check the pattern under loading, empty, error, and permission-limited states"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the interaction-patterns skill to audit a combobox for ARIA roles and keyboard support. In scope or not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope - ARIA roles and keyboard semantics are a11y's domain",
+        "interaction-patterns owns choosing that a combobox is the right pattern; a11y owns implementing it accessibly",
+        "Correctly hands off the accessibility implementation after the pattern choice",
+        "Distinguishes selecting the control from making the control conformant"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Someone says 'just use the component that looks nicest / the one we already have.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "That treats interaction design as styling/inventory, not decision-fit",
+        "Names mismatches: dropdown for comparable options, modal for an edit needing source context, wizard around a 3-field form",
+        "Corrected: start from decision shape + choice-set characteristics, pick the simplest pattern keeping context visible",
+        "Component choice and styling come after the pattern decision"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify an interaction-pattern choice is sound?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "The pattern matches the user's decision type",
+        "Hidden options only when comparison is not required; needed context stays visible",
+        "Cancel, escape, undo, and invalid-action behavior are defined",
+        "Pointer-only gestures have keyboard alternatives; loading/empty/error/disabled states fit",
+        "Accessibility implementation is handed off to a11y"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "boundary",
+      "prompt": "Where does interaction-patterns sit relative to task-analysis and interaction-feedback in the design sequence?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "task-analysis runs BEFORE: it discovers the goal/top task that the pattern must serve",
+        "interaction-patterns chooses the control once the task is known",
+        "interaction-feedback runs AFTER: it stages what the UI shows during/after the action",
+        "Choosing the pattern is upstream of component design and accessibility implementation"
+      ]
+    }
+  ]
+}

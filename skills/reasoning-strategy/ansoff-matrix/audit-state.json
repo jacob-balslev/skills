@@ -1,0 +1,34 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-04",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/ansoff-matrix/references/ansoff-matrix-sources.md": "5773a7dd0eed4df94578777f18af8628304933bc120a4012749efeab17352b52",
+      "skills/reasoning-strategy/ansoff-matrix/references/upstream-displacement-2026-06-04.md": "311e06e51227d4e34c8657c91a3812d539f50fb53536701ecad15169b9c830aa"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_changed": "2026-06-04",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "last_audited": "2026-06-04",
+  "lint_verdict": "PASS",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED"
+}

@@ -1,0 +1,148 @@
+{
+  "skill_name": "pestel",
+  "subject": "PESTEL macro-environment scanning",
+  "adjacent_concepts": [
+    "PESTLE",
+    "environmental scanning",
+    "macro environment",
+    "SWOT/TOWS",
+    "Porter's Five Forces",
+    "Blue Ocean Strategy",
+    "Playing to Win",
+    "Expected Value",
+    "research synthesis",
+    "epistemic grounding"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define PESTEL/PESTLE in 2-3 sentences. Include the six forces and what kind of environment it scans.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines PESTEL or PESTLE as an external macro-environment scanning method",
+        "Names political",
+        "Names economic",
+        "Names social or sociological",
+        "Names technological",
+        "Names environmental",
+        "Names legal",
+        "Does not treat PESTEL as internal capability analysis or final strategy"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of PESTEL. Name the primitives and how they connect from evidence to strategy work.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names decision context or planning question",
+        "Names geography or jurisdiction",
+        "Names time horizon",
+        "Names the six external force categories",
+        "Explains evidence-backed signals",
+        "Explains impact, likelihood, uncertainty, or timing",
+        "Explains outputs such as opportunities, threats, assumptions, monitoring triggers, or downstream strategy inputs"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a PESTEL skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents ignoring external macro forces",
+        "Prevents trend lists without implications",
+        "Prevents internal factors being mislabeled as external macro forces",
+        "Prevents stale or unsourced macro claims",
+        "Prevents treating the PESTEL table as a completed strategy",
+        "Forces scope, evidence, impact, uncertainty, and monitoring"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish PESTEL from SWOT/TOWS, Porter's Five Forces, Blue Ocean Strategy, Playing to Win, and Expected Value. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "SWOT/TOWS inventories internal and external factors and crosses them into options",
+        "Five Forces analyzes industry profit-pressure structure",
+        "Blue Ocean Strategy reconstructs value curves and demand",
+        "Playing to Win integrates strategy choices into a cascade",
+        "Expected Value compares quantified outcomes by probability and value",
+        "PESTEL scans broad external macro forces before or around those methods"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place PESTEL among strategy methods. What inputs feed it, what outputs should it produce, and which methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies PESTEL as macro-environment or external-environment scanning",
+        "Names inputs such as current sources, market/geography scope, policy/economic/social/technology/environment/legal evidence, or user context",
+        "Names outputs such as prioritized signals, opportunities, threats, assumptions, monitoring triggers, or evidence gaps",
+        "Explains it can feed SWOT/TOWS, Five Forces, scenario work, strategy formulation, or expected-value modeling",
+        "Does not classify it as internal capability diagnosis"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for PESTEL that preserves the external-condition scanning mechanism. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving weather, terrain, outside conditions, radar, horizon scanning, or contextual scanning",
+        "Maps PESTEL to scanning conditions outside the actor's control",
+        "Explains that the analogy does not choose the strategy by itself",
+        "Rejects an analogy that treats PESTEL as a final score, internal audit, or decision engine",
+        "Explains why the bad analogy loses scope, evidence, or downstream interpretation"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A telehealth startup is considering expansion into a new country. The country has pending reimbursement reform, high inflation, aging demographics, new AI triage tools, stricter data privacy rules, and climate-related power outages. Apply PESTEL reasoning and state what evidence is missing.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Classifies reimbursement reform as political and/or legal depending on source",
+        "Classifies high inflation as economic",
+        "Classifies aging demographics as social",
+        "Classifies AI triage tools as technological",
+        "Classifies stricter data privacy rules as legal",
+        "Classifies power outages as environmental or physical-environment risk",
+        "Connects signals to opportunities, threats, assumptions, or monitoring triggers",
+        "Names evidence gaps such as jurisdiction-specific laws, reimbursement timing, inflation data, demographic demand, technology adoption, privacy compliance, infrastructure resilience, or source dates",
+        "Does not claim PESTEL alone proves the expansion strategy"
+      ]
+    }
+  ]
+}

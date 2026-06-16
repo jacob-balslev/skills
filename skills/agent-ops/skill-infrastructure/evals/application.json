@@ -32,6 +32,48 @@
       "absent_signals": [
         "Do not recommend ignoring stderr because the schema failure is not a skill issue.",
         "Do not stamp PASS based only on an empty parsed-diagnostics array."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags this as a false-green infrastructure path, not as a passing lint run."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies that non-zero subprocess exit with zero parseable diagnostics must synthesize an error finding."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prevents lint_verdict and structural_verdict from being stamped PASS when lint infrastructure failed."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pass package/workspace root environment to the lint subprocess."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a synthetic P1 diagnostic for non-zero lint exits with no parseable error lines."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Make dry-run return non-zero when the normalized lint diagnostics include errors."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not recommend ignoring stderr because the schema failure is not a skill issue."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not stamp PASS based only on an empty parsed-diagnostics array."
+        }
       ]
     },
     {
@@ -55,6 +97,48 @@
       "absent_signals": [
         "Do not remove the invariant from documentation merely because schema cannot enforce it.",
         "Do not treat subjects[] order as irrelevant tag-bag metadata."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes this as a protocol invariant that belongs in deterministic lint or a focused protocol check."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that JSON Schema alone cannot portably express this sibling equality in the current setup."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires a clear lint error on subjects[0] when it differs from subject."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a custom check after schema validation in skill-lint.js."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Report the expected subject value and the actual first subjects[] value."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the schema description and linter behavior aligned."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not remove the invariant from documentation merely because schema cannot enforce it."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat subjects[] order as irrelevant tag-bag metadata."
+        }
       ]
     },
     {
@@ -78,6 +162,48 @@
       "absent_signals": [
         "Do not tell users to copy schemas into every skill workspace.",
         "Do not hardcode the maintainer's Development directory."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates package root from workspace root."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires schemas/templates to resolve from the package when absent in the workspace."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps skill discovery rooted in the caller workspace or configured skill_roots."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a shared roots helper for packageRoot, workspaceRoot, and resolveSchemaPath."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Ensure delegated subprocesses receive SKILL_GRAPH_PACKAGE_ROOT and SKILL_GRAPH_WORKSPACE."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep error messages clear about whether a schema came from the package or the workspace."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not tell users to copy schemas into every skill workspace."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hardcode the maintainer's Development directory."
+        }
       ]
     },
     {
@@ -100,7 +226,110 @@
       "absent_signals": [
         "Must not answer by designing CI health checks for a one-skill scaffolding request.",
         "Must not claim skill-infrastructure owns all SKILL.md work."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Refuses over-ownership by skill-infrastructure."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes the task to skill-scaffold or the authoring template workflow."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Preserves skill-infrastructure for library-wide health checks such as lint, manifest, routing, drift, overlap, and eval coverage."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Name the correct owner skill or workflow for individual skill authoring."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Do not inject library-health tooling unless the user asks how to maintain a library."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not answer by designing CI health checks for a one-skill scaffolding request."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not claim skill-infrastructure owns all SKILL.md work."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "verdict-artifact-honesty",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A batch migration moves audit status from SKILL.md into audit-state.json. After the migration, several skills still declare application_verdict: APPLICABLE in sidecars, but their evals/application.json files are missing or have too few cases.",
+      "context": "The user needs the skill library to be honest about what has been proven. The checker must distinguish artifact existence, structural readiness, and actual graded behavior.",
+      "question": "Which infrastructure gate should catch this, and what should the maintainer do before trusting the verdicts?",
+      "expected_flags": [
+        "Separates verdict claims from eval-artifact evidence.",
+        "Requires deterministic artifact checks before any graded application verdict is trusted.",
+        "Recognizes that a structurally valid sidecar cannot by itself prove application usefulness."
+      ],
+      "expected_fix_hints": [
+        "Run the audit-manifest and application-eval shape checks across the affected corpus.",
+        "Downgrade or leave application_verdict as UNVERIFIED until a valid application eval and grader receipt exist.",
+        "Add missing application cases to meet the schema floor before running model graders."
+      ],
+      "absent_signals": [
+        "Do not accept APPLICABLE merely because the sidecar says it.",
+        "Do not treat JSON schema validation of audit-state.json as behavior certification."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates verdict claims from eval-artifact evidence."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires deterministic artifact checks before any graded application verdict is trusted."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes that a structurally valid sidecar cannot by itself prove application usefulness."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run the audit-manifest and application-eval shape checks across the affected corpus."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Downgrade or leave application_verdict as UNVERIFIED until a valid application eval and grader receipt exist."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add missing application cases to meet the schema floor before running model graders."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept APPLICABLE merely because the sidecar says it."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat JSON schema validation of audit-state.json as behavior certification."
+        }
       ]
     }
-  ]
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
 }

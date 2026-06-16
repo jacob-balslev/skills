@@ -1,0 +1,143 @@
+{
+  "skill_name": "middleware-patterns",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "route-handler-design",
+    "server-actions-design",
+    "http-semantics",
+    "security-fundamentals",
+    "server-components-design",
+    "client-server-boundary",
+    "webhook-integration"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define the Next.js request-preprocessing layer in 2-3 sentences. Name the current file/function convention, where it runs in the request lifecycle, and the four response shapes it can return.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A single async function in one root file that runs before route resolution for requests matching its matcher config",
+        "As of Next.js 16 the file is proxy.ts (function proxy, Node.js runtime); middleware.ts (function middleware, Edge by default) is deprecated but retained for Edge use cases",
+        "It receives a NextRequest and returns a NextResponse in one of four shapes: next (pass through), rewrite, redirect, or a direct response",
+        "It runs once per request before any page render, Server Component fetch, Server Action, or Route Handler"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain why the runtime (Node.js for proxy.ts vs Edge for middleware.ts) is the load-bearing axis of this layer. What does each runtime allow, and what discipline persists regardless of runtime?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "proxy.ts runs on Node.js only (its runtime config throws if set) — full Node APIs (crypto, fs, Buffer) are available",
+        "middleware.ts runs on Edge by default (Node.js opt-in since 15.5) — Web Crypto/fetch/Web Streams only, no Node crypto/fs/child_process, plus a per-plan gzip bundle ceiling where one Node-only import breaks the build",
+        "The runtime turned 'no DB query' from a capability wall into a performance/architecture rule — on Node it is possible but still forbidden because the cost multiplies across every matched request",
+        "Regardless of runtime: keep it small and fast (target <10ms p99); no per-request I/O"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "What is the architectural trade this layer makes, and why does Vercel now recommend reaching for native features (next.config redirects/headers, the WAF, route-level auth) before writing proxy code?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The trade is breadth for power: it can shape the whole request/response edge in one place but runs on every matched request, has no per-route knowledge until rewrite/redirect resolves, and cannot read the response body",
+        "next.config redirects/headers run before proxy in the routing chain and cost no per-request execution — push static decisions there",
+        "Use proxy only when the decision is dynamic (depends on a cookie, header, geo, or A/B bucket) or a per-request value (CSP nonce) is genuinely needed",
+        "A smaller, faster proxy is a better proxy; the Next.js 16 rename discourages Express-style 'do everything here' misuse"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A team wants to redirect logged-out users away from /dashboard and /admin to /login. Walk through how to implement this correctly with proxy, and state explicitly what this implementation does and does not guarantee.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Check the session cookie's presence (request.cookies.get) and NextResponse.redirect to /login when missing on protected paths, scoped via a matcher to /dashboard/:path* and /admin/:path*",
+        "This is a UX optimization only — the cookie is checked for presence, not cryptographically verified; no per-request DB lookup belongs here",
+        "Authorization MUST still be enforced at the route, Route Handler, Server Action, and Data Access Layer — the proxy gate can be bypassed (CVE-2025-29927) or silently skipped by a matcher exclusion",
+        "Every Server Action must verify authz itself because a matcher exclusion skips Server Function calls on that path"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Geo-routing broke after upgrading to Next.js 15 because request.geo is undefined. How should the agent read country/IP now, and what caveats apply on and off Vercel?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "request.geo and request.ip were removed from NextRequest in Next.js 15",
+        "On Vercel, read via geolocation(request) and ipAddress(request) from @vercel/functions (install the package; the Next.js 15 codemod does this)",
+        "Off Vercel, parse the platform's geo headers (e.g. x-vercel-ip-country or the CDN equivalent) and read defensively — values may be undefined locally or wrong behind another proxy",
+        "Geo is not a security boundary; for hard enforcement prefer the platform firewall/WAF"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "Distinguish middleware-patterns from route-handler-design, server-actions-design, and security-fundamentals. Give a mechanism-level reason each differs, not just the label.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "route-handler-design runs AFTER route resolution for one route and one method; the proxy layer runs ONCE BEFORE route resolution across many routes via a matcher — they compose, proxy passes through to the handler",
+        "server-actions-design owns the in-app mutation surface; a Server Action passes through proxy but a matcher exclusion silently skips it, so authz must live inside each action, not only in proxy",
+        "security-fundamentals owns the CSP policy, hardening, and the actual authorization architecture; proxy is one delivery surface for headers and a UX optimization for auth redirects — never the policy or the security boundary",
+        "Names the differing mechanism (before vs after route resolution, delivery surface vs policy owner), not just the skill name"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Next.js middleware is where I enforce auth — if the matcher protects /admin and I check the session cookie there, /admin is secure.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "This layer is NOT a security boundary — CVE-2025-29927 let attackers bypass it entirely by spoofing x-middleware-subrequest, skipping every auth check",
+        "The matcher is not a security perimeter: May-2026 bypasses reached protected pages through transport variants (.rsc/segment-prefetch, dynamic-route injection) the matcher never enumerated",
+        "Real authorization belongs at the route, Server Action, and Data Access Layer; the proxy auth check is only a fast UX redirect",
+        "Stay patched (>=14.2.25/>=15.2.3 for 29927; >=15.5.18/>=16.2.6 for the May-2026 cluster, one patch higher on Turbopack) and enforce authz at the route regardless"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a proxy/middleware implementation is correct and safe?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A matcher is set with build-time constants excluding _next/static, _next/image, favicon.ico, metadata files, and typically webhooks; matcher coverage is tested (including a transport/data variant) with next/experimental/testing/server",
+        "Authorization is enforced at the route/handler/action/DAL — not only in proxy — and a defense-in-depth test bypasses proxy and asserts an unauthorized caller is still rejected; framework patched against CVE-2025-29927 and the May-2026 cluster",
+        "No per-request DB queries or I/O adding >10ms even on Node; geo/IP read via @vercel/functions; cookies read via request.cookies and written via response.cookies.set (no cookies() import); modified request headers use NextResponse.next({ request: { headers } })",
+        "rewrite vs redirect vs direct response is chosen by whether the URL should visibly change; per-request CSP nonces are generated server-side, never cached/shared/derived from inbound headers, and their dynamic-rendering cost is accepted"
+      ]
+    }
+  ]
+}

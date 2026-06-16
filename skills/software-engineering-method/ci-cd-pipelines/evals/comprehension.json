@@ -1,0 +1,99 @@
+{
+  "skill_name": "ci-cd-pipelines",
+  "subject": "Designing and operating CI/CD pipelines — the automated, staged path from commit to a verified, promotable, deployed artifact.",
+  "adjacent_concepts": [
+    "version-control",
+    "test-driven-development",
+    "testing-strategy",
+    "merge-queue",
+    "owasp-security",
+    "secrets-management",
+    "supply-chain-security"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a CI/CD pipeline in 2-3 sentences. Distinguish continuous integration from continuous delivery from continuous deployment, and name the kind of request that should activate this skill.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "Explain why a team needs an automated pipeline instead of integrating and releasing manually. Name the specific failures (divergent long-lived branches, environment-specific binaries, release-night risk) it is designed to prevent.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "mental_model",
+      "prompt": "Describe the mental model of a pipeline as a staged graph of gates. Why are stages ordered the way they are, and what determines that order? Keep it operational.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A team rebuilds the application separately for the staging deploy and again for the production deploy. Explain why this is wrong and what the correct build-once/promote design is, including where environment configuration enters.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must not endorse rebuilding per environment or treating the staging and prod binaries as interchangeable when separately built. Must require the same content-addressed artifact be promoted, with only config injected."
+    },
+    {
+      "id": 5,
+      "dimension": "boundary",
+      "prompt": "A user asks: \"Rotate our production database password and make sure the app reads it from the vault at runtime.\" Should ci-cd-pipelines activate? Explain the boundary and name the better owner.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not claim ownership of the runtime secret lifecycle (rotation/vaulting). Must route to secrets-management; the pipeline only needs short-lived CI credentials."
+    },
+    {
+      "id": 6,
+      "dimension": "anti_pattern",
+      "prompt": "A pipeline shows green on every PR, yet broken changes keep reaching production. List the failure modes that produce a meaningless green check (advisory-only gates, flaky tests retried until green, promoted artifact differing from the verified one) and how to fix each.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not treat a green pipeline as proof of safety on its own, and must not recommend retrying flaky tests until they pass as a fix."
+    },
+    {
+      "id": 7,
+      "dimension": "gate_enforcement",
+      "prompt": "Classify these as blocking or advisory gates and justify: failing unit tests, a critical dependency CVE, a style-lint nit that auto-fixes, a coverage-trend decrease of 0.3%, a leaked secret detected by secret scanning. What goes wrong if everything is advisory, or if everything is blocking?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_application",
+      "skill_type": "procedure",
+      "criticality": "high"
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "DORA reports your deployment frequency and lead time are improving. Leadership concludes delivery is healthier. What is the misconception, and which DORA metrics must you check before agreeing?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not equate throughput (frequency, lead time) alone with health; must require checking the stability metrics (change-failure rate, failed-deployment recovery time)."
+    }
+  ]
+}

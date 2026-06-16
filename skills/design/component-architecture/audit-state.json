@@ -1,0 +1,69 @@
+{
+  "schema_version": 8,
+  "version": "1.0.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-07",
+  "drift_check": {
+    "last_verified": "2026-06-07",
+    "truth_source_hashes": {
+      "../skills/skills/design/component-architecture/references/component-architecture-2026-06-07.md": "87c0ca511744877d6e0d8edb40fe4cf57ae5d9c8de2f3ae57d37621850577937"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-13",
+  "last_changed": "2026-06-07",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "PROVISIONAL",
+  "lint_verdict": "PASS",
+  "drift_status": "EXTERNAL_UNHASHED",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 180,
+    "review_cadence": "quarterly"
+  },
+  "eval_last_run": {
+    "at": "2026-06-13T07:52:08.605Z",
+    "status": "pass",
+    "runner": "node skill-graph/lib/audit/evaluate-skill.js --mode application",
+    "receipt": ".skill-graph/logs/eval-results/component-architecture/2026-06-13T07-52-08-602Z.json",
+    "receipt_hash": "8ff934c663809ad6aabe8fc50a9e4593844c0863623f81be75a5e11d92059447",
+    "model": "opus"
+  },
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-13",
+    "last_run": {
+      "at": "2026-06-13T07:52:08.597Z",
+      "operation": "evaluate",
+      "phase": "grader",
+      "agent": "opus",
+      "status": "completed",
+      "duration_ms": 46590,
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "source": "unavailable"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 252,
+      "total_duration_ms": 8051842,
+      "total_tokens": 0,
+      "tokens_observed_count": 252
+    }
+  }
+}

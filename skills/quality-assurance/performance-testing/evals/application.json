@@ -1,0 +1,534 @@
+{
+  "skill_name": "performance-testing",
+  "subject": "Controlled-load performance testing",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/quality-assurance/performance-testing/SKILL.md",
+    "skills/quality-assurance/performance-testing/references/performance-testing-2026-06-07.md"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "api-slo-load-test",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An API team wants to verify readiness for launch. Expected production traffic is 800 RPS with 70% reads, 25% writes, and 5% complex queries. The product SLO says p95 below 250ms, p99 below 750ms, and error rate below 0.1%.",
+      "context": "They ask for a load test plan and pass/fail criteria.",
+      "question": "How should the agent design the performance test?",
+      "expected_flags": [
+        "Uses controlled load that matches expected traffic plus a clear margin.",
+        "Includes realistic workload mix rather than only one endpoint.",
+        "Uses percentile thresholds and error-rate thresholds as pass/fail criteria.",
+        "Runs in production-equivalent environment and data volume.",
+        "Records throughput, latency distribution, resource utilization, and saturation.",
+        "Ensures the load generator is not the bottleneck."
+      ],
+      "expected_fix_hints": [
+        "Declare thresholds in the load tool, such as k6 thresholds.",
+        "Run long enough to make the verdict meaningful.",
+        "Pair with production observability later but do not substitute it for pre-launch controlled load."
+      ],
+      "absent_signals": [
+        "Do not certify readiness from average latency.",
+        "Do not ignore error rate.",
+        "Do not use a toy staging environment as production proof."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses controlled load that matches expected traffic plus a clear margin."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Includes realistic workload mix rather than only one endpoint."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses percentile thresholds and error-rate thresholds as pass/fail criteria."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Runs in production-equivalent environment and data volume."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Records throughput, latency distribution, resource utilization, and saturation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ensures the load generator is not the bottleneck."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Declare thresholds in the load tool, such as k6 thresholds."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run long enough to make the verdict meaningful."
+        },
+        {
+          "id": "c9",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pair with production observability later but do not substitute it for pre-launch controlled load."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not certify readiness from average latency."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore error rate."
+        },
+        {
+          "id": "c12",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use a toy staging environment as production proof."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "soak-degradation",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A service passes a 30-minute load test but during a 6-hour run memory grows steadily, p99 latency degrades after hour 4, and errors rise near the end.",
+      "context": "The team asks whether this is a performance-testing issue or an optimization task.",
+      "question": "How should the agent interpret and act on the result?",
+      "expected_flags": [
+        "Classifies this as a soak-test failure revealing leak or degradation behavior.",
+        "Keeps measurement and verdict in performance-testing.",
+        "Routes profiling and code optimization follow-up to performance-engineering.",
+        "Requires memory/resource/saturation evidence over time.",
+        "Requires rerunning the soak test after the fix to verify improvement."
+      ],
+      "expected_fix_hints": [
+        "Preserve the failing test as regression coverage.",
+        "Correlate latency/error rise with memory and resource metrics.",
+        "Do not shorten the test to hide the failure mode."
+      ],
+      "absent_signals": [
+        "Do not call the system ready because the short load test passed.",
+        "Do not jump straight to code guesses without preserving measurement.",
+        "Do not use average latency to mask tail degradation."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Classifies this as a soak-test failure revealing leak or degradation behavior."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps measurement and verdict in performance-testing."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes profiling and code optimization follow-up to performance-engineering."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires memory/resource/saturation evidence over time."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires rerunning the soak test after the fix to verify improvement."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Preserve the failing test as regression coverage."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Correlate latency/error rise with memory and resource metrics."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Do not shorten the test to hide the failure mode."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not call the system ready because the short load test passed."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not jump straight to code guesses without preserving measurement."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use average latency to mask tail degradation."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "coordinated-omission",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A load tool waits for each response before scheduling the next request. During a GC pause, request rate drops, but the report still shows acceptable latency percentiles.",
+      "context": "A reviewer suspects coordinated omission.",
+      "question": "How should the agent evaluate the validity of the result?",
+      "expected_flags": [
+        "Identifies coordinated omission as a latency-measurement validity problem.",
+        "Explains that not sending requests during pauses can hide the user's experienced delay.",
+        "Requires a tool or mode that accounts for scheduled arrival rate and missed time.",
+        "Checks actual achieved throughput versus intended arrival rate.",
+        "Treats the current report as non-certifying until measurement is corrected."
+      ],
+      "expected_fix_hints": [
+        "Use constant-arrival-rate or otherwise coordinated-omission-aware configuration where available.",
+        "Report both intended and achieved RPS.",
+        "Include tail percentiles and error/backpressure signals."
+      ],
+      "absent_signals": [
+        "Do not trust the percentile output blindly.",
+        "Do not lower load during a stall and call that user experience.",
+        "Do not accept only average latency."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies coordinated omission as a latency-measurement validity problem."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that not sending requests during pauses can hide the user's experienced delay."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires a tool or mode that accounts for scheduled arrival rate and missed time."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Checks actual achieved throughput versus intended arrival rate."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treats the current report as non-certifying until measurement is corrected."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use constant-arrival-rate or otherwise coordinated-omission-aware configuration where available."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Report both intended and achieved RPS."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Include tail percentiles and error/backpressure signals."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not trust the percentile output blindly."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not lower load during a stall and call that user experience."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept only average latency."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "load-shape-selection",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A launch plan expects steady daily traffic, occasional flash-sale spikes, and unknown capacity ceiling. The team proposes only one 10-minute expected-load test.",
+      "context": "They ask which performance tests are required before launch.",
+      "question": "How should the agent choose load shapes?",
+      "expected_flags": [
+        "Uses load/average test for expected steady traffic.",
+        "Uses spike test for flash-sale sudden traffic increases.",
+        "Uses stress or breakpoint to understand capacity and failure behavior.",
+        "Uses soak if degradation/leaks over time matter.",
+        "Keeps smoke tests for script sanity in CI.",
+        "Explains each load shape verifies a different property."
+      ],
+      "expected_fix_hints": [
+        "Map each business risk to a load shape.",
+        "Define pass/fail thresholds for each shape.",
+        "Schedule heavy tests on appropriate cadence, not every PR."
+      ],
+      "absent_signals": [
+        "Do not claim one expected-load test proves spike behavior.",
+        "Do not skip breakpoint/capacity characterization when ceiling is unknown.",
+        "Do not run all heavy tests on every PR without a cadence plan."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses load/average test for expected steady traffic."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses spike test for flash-sale sudden traffic increases."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses stress or breakpoint to understand capacity and failure behavior."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses soak if degradation/leaks over time matter."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps smoke tests for script sanity in CI."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains each load shape verifies a different property."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Map each business risk to a load shape."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define pass/fail thresholds for each shape."
+        },
+        {
+          "id": "c9",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Schedule heavy tests on appropriate cadence, not every PR."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim one expected-load test proves spike behavior."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip breakpoint/capacity characterization when ceiling is unknown."
+        },
+        {
+          "id": "c12",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run all heavy tests on every PR without a cadence plan."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "optimization-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A load test already identified a slow SQL query as the bottleneck. The user asks the agent to profile the query plan and optimize indexes.",
+      "context": "The performance problem has been measured; the next task is code/data optimization.",
+      "question": "Should performance-testing own this request?",
+      "expected_flags": [
+        "This is performance-engineering.",
+        "Performance-testing produced or verifies the measurement, but optimization owns profiling and fixing.",
+        "The load test should be rerun after optimization to verify the fix."
+      ],
+      "expected_fix_hints": [
+        "Route profiling/index optimization to performance-engineering.",
+        "Preserve the load test as verification after changes."
+      ],
+      "absent_signals": [
+        "Do not redesign load shapes when the request is to optimize a known bottleneck.",
+        "Do not claim the optimization works without rerunning measurement."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is performance-engineering."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Performance-testing produced or verifies the measurement, but optimization owns profiling and fixing."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The load test should be rerun after optimization to verify the fix."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route profiling/index optimization to performance-engineering."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Preserve the load test as verification after changes."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not redesign load shapes when the request is to optimize a known bottleneck."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim the optimization works without rerunning measurement."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "budget-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks what p95 latency budget and build-fail consequence should be declared for checkout.",
+      "context": "They are not asking how to execute the load test yet.",
+      "question": "Should performance-testing own this request?",
+      "expected_flags": [
+        "This is performance-budgets.",
+        "The budget declares the metric, threshold, percentile, and consequence.",
+        "Performance-testing later verifies the declared threshold under load."
+      ],
+      "expected_fix_hints": [
+        "Route threshold contract design to performance-budgets.",
+        "Return to performance-testing to design the empirical verification."
+      ],
+      "absent_signals": [
+        "Do not run a load test before deciding what pass/fail means.",
+        "Do not treat a measurement as a budget."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is performance-budgets."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The budget declares the metric, threshold, percentile, and consequence."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Performance-testing later verifies the declared threshold under load."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route threshold contract design to performance-budgets."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Return to performance-testing to design the empirical verification."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run a load test before deciding what pass/fail means."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat a measurement as a budget."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "mutation-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A QA lead asks whether the test suite catches defects and wants a mutation score for critical modules.",
+      "context": "The request is about test-suite effectiveness, not latency or throughput under load.",
+      "question": "Should performance-testing own this request?",
+      "expected_flags": [
+        "This is mutation-testing.",
+        "Mutation score measures test-suite defect detection, not system performance.",
+        "Performance-testing applies when the question is non-functional behavior under controlled load."
+      ],
+      "expected_fix_hints": [
+        "Route to mutation-testing.",
+        "Use performance-testing only if mutants concern load behavior and a load harness is needed."
+      ],
+      "absent_signals": [
+        "Do not confuse test-suite quality with system performance.",
+        "Do not use load metrics as mutation score evidence."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is mutation-testing."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Mutation score measures test-suite defect detection, not system performance."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Performance-testing applies when the question is non-functional behavior under controlled load."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to mutation-testing."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use performance-testing only if mutants concern load behavior and a load harness is needed."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not confuse test-suite quality with system performance."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use load metrics as mutation score evidence."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

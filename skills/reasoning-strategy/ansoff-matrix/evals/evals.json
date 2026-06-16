@@ -1,0 +1,142 @@
+{
+  "skill_name": "ansoff-matrix",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A subscription meal-kit company currently sells family dinner kits online in Germany. It is considering discount bundles for current subscribers, entering Austria with the same kits, launching breakfast kits for German subscribers, and acquiring a pet-food brand in Spain. Build an Ansoff Matrix.",
+      "expected_output": "The agent should define current product and market first, then classify discount bundles as market penetration, Austria with the same kits as market development, breakfast kits for German subscribers as product development, and acquiring a pet-food brand in Spain as diversification. It should name assumptions, risk drivers, evidence needs, and avoid recommending an option from quadrant labels alone.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Defines product and market baseline",
+        "Classifies all four options correctly",
+        "Names assumptions or evidence needs",
+        "Discusses strategic distance or risk",
+        "Does not treat the matrix as final recommendation"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A draft says: 'Launching a new analytics dashboard for our current customers is market development because it develops the market.' Review the classification.",
+      "expected_output": "The agent should flag the axis swap. If the customers or market are current and the dashboard is a materially new offer, the move is product development. Market development would mean taking the current product to a new market, segment, geography, channel, or use case.",
+      "type": "classification-review",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Identifies product development",
+        "Explains why market development is wrong",
+        "Defines product novelty and market novelty",
+        "Does not accept the user's label because of the word development"
+      ],
+      "substance": "mechanics",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A team asks for Ansoff, but their real question is whether supplier concentration, customer bargaining power, substitutes, entrants, and rivalry make a target market attractive. Should Ansoff own this?",
+      "expected_output": "The agent should route industry attractiveness and profit-pressure analysis to Porter's Five Forces. Ansoff can classify whether the company is entering a new market with an existing or new product, but buyer power, supplier power, substitutes, entrants, and rivalry are Five Forces mechanisms.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes profit-pressure work to Five Forces",
+        "Explains what Ansoff can still contribute",
+        "Names product-market growth direction as Ansoff's mechanism",
+        "Does not substitute Ansoff for industry-structure analysis"
+      ],
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A founder says diversification is the best growth strategy because it opens the biggest new market. Critique the reasoning with Ansoff logic.",
+      "expected_output": "The agent should explain that diversification means new product and new market, which usually increases strategic distance and learning burden. It should ask for evidence on capabilities, customer access, economics, acquisition or partnership options, downside protection, and whether lower-distance options can produce learning first. It should not reject diversification categorically or endorse it from market size alone.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Defines diversification as new product plus new market",
+        "Explains strategic distance or learning burden",
+        "Requires evidence beyond market size",
+        "Allows staged or partnered risk reduction",
+        "Does not endorse or reject diversification purely by quadrant"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "prompt": "A nonprofit currently runs after-school tutoring in one city. It can expand to more schools in the same city, bring the same program to another region, create a summer STEM camp for existing students, or launch adult job training in another region. Produce the minimum useful Ansoff structure without inventing facts.",
+      "expected_output": "The agent should map the four options to market penetration, market development, product development, and diversification respectively, while marking missing evidence such as capacity, demand, funding, partner access, staff capability, regulatory constraints, and outcomes. It should not invent region-specific facts.",
+      "type": "safe-scaffold",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Uses nonprofit-program language without forcing commercial terms",
+        "Maps all four options",
+        "Marks missing evidence",
+        "Does NOT invent region-specific facts or program outcomes",
+        "Names next validation needs"
+      ],
+      "substance": "mechanics",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A product team has three growth options left after Ansoff classification: market penetration in current SMBs, market development into enterprise, and product development for current SMB admins. What should happen next?",
+      "expected_output": "The agent should summarize what each quadrant implies, then route to downstream validation instead of declaring a winner. It can suggest PESTEL for enterprise regulatory context, Five Forces for industry attractiveness, Expected Value for quantified comparison, Playing to Win for integrated strategy choices, and experiments or evidence collection for assumptions.",
+      "type": "handoff",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Does not choose solely from quadrant labels",
+        "Names assumptions and evidence needs",
+        "Routes to at least two appropriate downstream methods",
+        "Explains the matrix is an input to decision work",
+        "Identifies possible sequencing or learning logic"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "A business unit portfolio review asks to classify units by high/low market growth and high/low relative market share into stars, cash cows, question marks, and dogs. Is this Ansoff?",
+      "expected_output": "The agent should say no. That is a portfolio allocation matrix pattern, not Ansoff's product-market growth matrix. Ansoff classifies growth options by existing/new products and existing/new markets, not by relative share and market growth of business units.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects Ansoff ownership",
+        "Names high/low market growth and relative share as portfolio matrix mechanics",
+        "Explains Ansoff uses product and market newness",
+        "Does not force business units into Ansoff quadrants"
+      ],
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

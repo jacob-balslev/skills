@@ -1,0 +1,154 @@
+{
+  "skill_name": "principled-negotiation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A SaaS vendor asks for a 25% renewal increase. The user wants to counter at 0% and hope to settle in the middle. Apply principled negotiation and identify what is missing.",
+      "expected_output": "The agent should not accept midpoint bargaining as sufficient. It should identify interests behind the price positions, request objective criteria such as market benchmarks and service levels, define the user's BATNA and reservation value, estimate the vendor's alternatives, and propose option packages such as term length, SLA, scope, payment timing, or usage commitments.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects arbitrary midpoint compromise",
+        "Converts price positions into interests",
+        "Requires objective criteria",
+        "Defines BATNA and reservation value",
+        "Proposes multiple option packages",
+        "Does NOT recommend accepting a worse-than-BATNA deal"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A job candidate says their only goal is a 15% higher salary. The company says the salary band is fixed but it can adjust start date, review timing, bonus, remote days, title, and training budget. Use principled negotiation.",
+      "expected_output": "The agent should identify the candidate's underlying interests, such as income, recognition, growth, flexibility, or risk. It should generate option packages using non-salary issues, use objective criteria such as market compensation data and role scope, define BATNA/reservation value, and avoid treating the 15% number as the only possible win.",
+      "type": "interest-options",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Converts salary position into underlying interests",
+        "Generates non-salary issue trades",
+        "Uses objective compensation or role-scope criteria",
+        "Defines BATNA and reservation value",
+        "Does NOT give legal or HR policy advice"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A founder asks for expected-value analysis to decide whether to accept an acquisition offer. The real question is how to negotiate terms with one buyer while another credible buyer may bid next month. Should principled negotiation own this?",
+      "expected_output": "Principled negotiation should own the deal-table preparation because there is a counterparty, BATNA, reservation value, objective criteria, and negotiable terms. Expected value can support valuation and uncertainty around the alternative buyer, but it should not replace the negotiation map.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes counterparty negotiation to principled negotiation",
+        "Uses expected value only as supporting valuation or uncertainty analysis",
+        "Defines BATNA as the credible alternative path",
+        "Identifies terms beyond headline price",
+        "Does NOT collapse negotiation into one-party scoring"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A team says, 'We should be nice and preserve the relationship, so let's accept the customer's requested discount.' What should the agent critique?",
+      "expected_output": "The agent should separate people from the problem. It should protect the relationship through listening and process clarity while still evaluating substance against interests, objective criteria, and BATNA. It should not equate principled negotiation with accommodation.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Separates relationship/process from substantive terms",
+        "Rejects accommodation as the meaning of principled negotiation",
+        "Uses interests and objective criteria",
+        "Compares discount to BATNA or reservation value",
+        "Does NOT tell the user to ignore relationship concerns"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A negotiation brief lists BATNA as 'ask for a better deal' and reservation value as 'get as much as possible.' What is wrong?",
+      "expected_output": "The agent should flag that the BATNA is not a no-deal alternative and the reservation value is not a threshold. It should define the actual no-agreement path, improve it if possible, translate it into the worst acceptable deal, and then estimate whether a ZOPA exists.",
+      "type": "batna-check",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Detects that asking for a better deal is not a BATNA",
+        "Defines BATNA as executable no-deal alternative",
+        "Defines reservation value as worst acceptable deal",
+        "Mentions improving BATNA",
+        "Checks ZOPA",
+        "Does NOT confuse target value with reservation value"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "prompt": "A counterparty uses an extreme anchor and says there is no room to move. Apply principled negotiation without copying hardball tactics.",
+      "expected_output": "The agent should ask what objective criteria support the anchor, separate the process issue from the substantive terms, ask what interests the position serves, test the deadline or firmness claim, compare the proposal to BATNA, and suggest option packages or information requests. It should not recommend fake deadlines, fake alternatives, or personal attacks.",
+      "type": "hard-bargaining",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Asks for objective criteria behind the anchor",
+        "Separates process issue from substance",
+        "Explores interests behind the position",
+        "Compares to BATNA",
+        "Avoids deception or fake leverage",
+        "Proposes principled next questions or packages"
+      ],
+      "absent_signals": [
+        "Do not invent a fake BATNA or fake deadline.",
+        "Do not respond to hard bargaining with personal attacks.",
+        "Do not accept the anchor without criteria or BATNA comparison."
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "A contract negotiation answer confidently states that a non-compete clause is unenforceable and recommends threatening litigation. What should the agent do instead?",
+      "expected_output": "The agent should avoid legal advice and not assert enforceability. It should frame the work as negotiation preparation, identify interests and objective criteria, recommend qualified legal review for enforceability, and propose principled options such as scope, duration, geography, compensation, or mutual release terms depending on professional advice.",
+      "type": "safety-boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Rejects unsupported legal advice",
+        "Recommends qualified legal review",
+        "Keeps negotiation preparation separate from legal conclusions",
+        "Uses interests and objective criteria",
+        "Proposes negotiable option dimensions without asserting enforceability",
+        "Does NOT recommend threats as default tactic"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}

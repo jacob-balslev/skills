@@ -1,0 +1,140 @@
+{
+  "skill_name": "visual-hierarchy",
+  "subject": "design",
+  "adjacent_concepts": [
+    "typography-system",
+    "color-system-design",
+    "layout-composition",
+    "visual-design-foundations"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define visual hierarchy in 2-3 sentences. Name the perceptual signals it uses and what it produces.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as an ordering of perceptual prominence (what the eye lands on first, second, third)",
+        "Names the signals: scale, weight, contrast, color, position, isolation",
+        "States the signals stack and can conflict",
+        "Notes the goal is to direct attention before the reader reads the words"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the principle 'hierarchy is what you suppress, not what you amplify.' Why does amplifying the important element fail?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prominence is relative, not absolute — making one thing louder by making everything louder flattens the surface",
+        "Most elements must stay quiet so a few can be loud",
+        "Amplifying everything produces noise where nothing reads as important",
+        "Hierarchy is achieved by quieting the secondary/tertiary, not just boosting the primary"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "When two elements compete for attention, why increase the difference along one signal rather than incrementing several signals slightly?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "One strong difference reads as an intentional, perceptible rank",
+        "Incrementing many dimensions slightly produces loud-against-loud, which exhausts the reader",
+        "One loud element against many quiet ones directs attention; loud-loud combinations do not",
+        "Restraint along most signals is what makes the chosen signal legible"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A dashboard feels noisy — every widget, label, and number competes for attention. How do you establish hierarchy without removing content?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Suppress secondary elements (reduce weight, contrast, or size) rather than amplifying the primary",
+        "Use isolation/whitespace and proximity grouping to separate primary from secondary information",
+        "Limit the number of loud elements; pick a single focal point per region",
+        "Use a small set of type sizes (most systems 5-7) so adjacent levels register as different"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "How does a modular type scale (a ratio applied to a base size) operationalize scale as hierarchy, and how does the ratio choice change the result?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "A single ratio applied iteratively produces step sizes that feel intentional and perceptibly distinct",
+        "A smaller ratio (e.g. 1.125) gives subtle hierarchy for content-dense interfaces",
+        "A larger ratio (e.g. 1.5) gives loud hierarchy for marketing surfaces",
+        "Too many sizes (beyond ~5-7) dilute hierarchy with too-similar steps"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the visual-hierarchy skill to choose the H1/H2/H3 typefaces and define the type-scale ratio steps for the design system. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defining the scale and selecting typefaces is typography-system's job, not visual-hierarchy's",
+        "Visual-hierarchy deploys the scale and faces as ordering signals on a given surface",
+        "Correctly distinguishes owning the prioritization-within-a-layout from owning the scale/faces themselves",
+        "May offer the in-scope part: which existing levels rank where on the surface"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A developer insists the page's reading order is correct because the DOM source order is correct, even though a huge contrasting pull-quote sits in the middle. Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Reading order is a property of the rendered page, not just the markup",
+        "The eye follows visual cues (size, contrast, isolation, position) regardless of source order",
+        "A high-contrast pull-quote will be noticed before the title even if it comes later in the DOM",
+        "Verify hierarchy by what is noticed first perceptually, not by DOM order"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What checks confirm a surface has correct visual hierarchy?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Squint test / low-resolution render reveals an unambiguous order; intended first element is first noticed",
+        "Grayscale screenshot retains the hierarchy (not over-reliant on hue)",
+        "At most one primary CTA per view; a second CTA is visibly secondary in weight or fill",
+        "Whitespace around the primary element exceeds that around its neighbors; type scale uses at most ~7 sizes"
+      ]
+    }
+  ]
+}

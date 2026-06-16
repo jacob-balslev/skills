@@ -1,0 +1,157 @@
+{
+  "skill_name": "prompt-injection-defense",
+  "subject": "Prompt-injection defense",
+  "adjacent_concepts": [
+    "direct prompt injection",
+    "indirect prompt injection",
+    "data-vs-instruction collapse",
+    "untrusted content",
+    "tool authority",
+    "exfiltration",
+    "excessive agency",
+    "jailbreaking",
+    "api security",
+    "tool-call flow"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define prompt injection for an LLM-integrated system and explain why the skill treats it as a structural system property rather than a one-off model bug.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Says untrusted content can cause the model to follow attacker-controlled directives",
+        "Explains that LLM context blends instructions and data without a reliable security boundary",
+        "Names both behavior manipulation and downstream action or data-access consequences",
+        "Rejects treating a better system prompt or blocklist as a complete fix",
+        "Frames mitigation as reducing blast radius through architecture"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model for direct injection, indirect injection, action-trigger attacks, and exfiltration in one threat model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Direct injection comes from the user-controlled prompt",
+        "Indirect injection comes from external content such as documents, web pages, RAG chunks, emails, attachments, or tool results",
+        "Action-trigger attacks make the model invoke a tool or workflow the user did not authorize",
+        "Exfiltration leaks secrets, private context, or sensitive data through tool calls or rendered output",
+        "The same data-vs-instruction collapse underlies all four"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "A team wants to add an LLM agent that reads untrusted customer emails and can also send replies. What problem does prompt-injection defense solve for this design?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Identifies email bodies and attachments as untrusted content",
+        "Says injected instructions could trigger unauthorized replies, forwarding, or data disclosure",
+        "Separates the model that reads untrusted content from execution authority or constrains tools",
+        "Requires human approval for high-impact or irreversible actions",
+        "Uses origin tracking or typed handoff so low-trust content cannot become high-authority instructions"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish prompt-injection defense from jailbreaking/model-safety, general API security, type-safety/input validation, and tool-call flow.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Jailbreaking/model-safety owns attempts to make the model produce disallowed content",
+        "General API security owns HTTP/API vulnerabilities such as SQL injection, XSS, authn, and authz",
+        "Type-safety/input validation owns shape and type correctness rather than model instruction authority",
+        "Tool-call flow owns the mechanics of calling tools and handling responses",
+        "Prompt-injection defense owns preserving security when untrusted content can influence a model with tools or private context"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify the injection surfaces a RAG-enabled agent must treat as untrusted before allowing any tool call.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "User input",
+        "Retrieved documents or chunks",
+        "Web pages and fetched remote content",
+        "Tool results",
+        "Attachments and parsed documents",
+        "Images or multimodal content",
+        "Subagent outputs"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why prompt-injection defense relies on architectural containment instead of trusting the model to never be tricked.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses a containment or blast-radius analogy",
+        "Preserves that the model can still be tricked",
+        "Explains that the surrounding system must limit consequences",
+        "Names architectural controls such as least authority, separation of duties, typed boundaries, or human approval",
+        "Does not claim the analogy removes the need for adversarial testing"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Review a browser agent that can read arbitrary web pages, see private user context, and click buttons. Name the minimum prompt-injection controls before it can perform high-impact actions.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Treats every page, embedded document, ad, and dynamically loaded content as untrusted",
+        "Limits tools or credentials available to the agent exposed to that content",
+        "Requires explicit human approval for high-risk actions",
+        "Tracks content origin/trust level and prevents low-trust content from escalating authority",
+        "Sanitizes rendered output and restricts external links/images where exfiltration is possible",
+        "Runs adversarial prompt-injection tests against the actual browser workflow"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "A teammate says a classifier and a stronger system prompt make prompt injection solved. Correct the misconception.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Says classifiers and stronger prompts can reduce risk but are not complete controls",
+        "Explains that attacks evolve through paraphrase, hidden content, multimodal content, multi-turn pressure, or indirect sources",
+        "Requires least authority or tool capability constraints",
+        "Requires human gates for irreversible or privileged actions",
+        "Requires adversarial testing and monitoring rather than a one-time prompt fix"
+      ]
+    }
+  ]
+}

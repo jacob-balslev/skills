@@ -1,0 +1,38 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-03",
+  "drift_check": {
+    "last_verified": "2026-06-13",
+    "truth_source_hashes": {
+      "https://openstax.org/books/principles-management/pages/8-3-a-firms-external-macro-environment-pestel": "763f8b4a12e3bfa2b1dbf59da44d317bd6664545d8025ff3dfb0930c1337b01e",
+      "https://www.si-labs.com/en/articles/pestle-analysis/": "17601899c40b7d4f6f4af6768e272b99bbb9b60187d5b914a5307f72b41c410e",
+      "https://doi.org/10.1016/S0024-6301(96)00095-7": "c4cc83cd44a05e01fe7c4b3b7cc905780dbc352514366783a9f1b4d38ab0123f",
+      "skills/reasoning-strategy/pestel/references/pestel-sources.md": "35dfb81d346a7e07c8f62d850c178e4a58a3c195c1fabd70334047071818b80f",
+      "skills/reasoning-strategy/pestel/references/upstream-displacement-2026-06-03.md": "c949dd8f4554d7bc82855e82d3c6e05d225e741ea4c2477412502fffb952483d"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_changed": "2026-06-03",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "last_audited": "2026-06-13",
+  "lint_verdict": "PASS",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "drift_status": "OK"
+}

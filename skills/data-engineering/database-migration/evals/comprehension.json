@@ -1,0 +1,95 @@
+{
+  "skill_name": "database-migration",
+  "subject": "Raw-SQL PostgreSQL migration safety",
+  "adjacent_concepts": [
+    "schema-evolution",
+    "indexing-strategy",
+    "transaction-isolation",
+    "connection-pooling",
+    "testing-strategy",
+    "code-review",
+    "owasp-security"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define database migration as this skill teaches it. Your answer must include migration file, direct migration connection, lock profile, deploy-compatibility window, backfill plan, verification, and rollback or restore path.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain why a live database migration is more than a SQL statement and name the primitives that make one production-safe.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why can SQL that is correct on a development database still cause a production outage? Name at least four failure modes this skill is designed to prevent.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks for a full multi-release plan to evolve an account schema, then separately asks for the exact SQL file to add one foreign key without blocking writes. Which part belongs to schema-evolution, which part belongs to database-migration, and why?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify these concerns as database-migration, schema-evolution, indexing-strategy, debugging, owasp-security, or testing-strategy: CREATE INDEX CONCURRENTLY, failed production migration root cause, RLS policy design, expand/contract lifecycle, branch rehearsal, regression test for renamed column, partial-index predicate choice.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use the bridge-while-traffic-moves analogy to explain why a migration may need temporary compatibility, batch boundaries, inspection points, and a detour or restore path.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: a migration adds request_id UUID NOT NULL DEFAULT gen_random_uuid() to a 60M-row orders table, creates a normal index, and runs through a transaction-pooled URL. Apply the skill to identify every risk and propose safer steps.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this misconception: 'The migration passed locally, so it is safe to run in production as one SQL file.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}

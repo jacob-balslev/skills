@@ -1,0 +1,50 @@
+{
+  "schema_version": 8,
+  "version": "0.1.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-16",
+  "drift_check": {
+    "last_verified": "2026-06-16"
+  },
+  "comprehension_state": "present",
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "structural_verdict": "UNVERIFIED",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-16",
+    "last_run": {
+      "at": "2026-06-16T13:27:09.763Z",
+      "operation": "panel",
+      "phase": "propose",
+      "agent": "opus",
+      "status": "completed",
+      "duration_ms": 275587,
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "source": "unavailable"
+      },
+      "line_delta": {
+        "before_lines": 267,
+        "after_lines": 292,
+        "added_lines": 40,
+        "removed_lines": 15,
+        "net_lines": 25,
+        "algorithm": "lcs"
+      },
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 1,
+      "total_duration_ms": 275587,
+      "total_tokens": 0,
+      "tokens_observed_count": 1
+    }
+  }
+}

@@ -1,0 +1,418 @@
+{
+  "skill_name": "suspense-patterns",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Boundary Placement, Parallel vs Waterfall Fetching, Suspense and Error Boundaries, useTransition/startTransition, Suspense in RSC and Next.js App Router, React 19 use hook, Common Anti-Patterns, Verification) and current React/Next.js docs (react.dev Suspense/use/useTransition, Next.js loading-ui-and-streaming, useSearchParams).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "boundary-placement",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A static Next.js dashboard has a fast header, a slow chart, a slow recommendations panel, and a Client Component search bar that calls `useSearchParams()`.",
+      "context": "The product wants initial HTML for the fast shell, independent reveal for the two slow widgets, and no full-page client-rendering bailout from search params.",
+      "question": "Place the Suspense boundaries and name the failure mode each boundary prevents.",
+      "expected_flags": [
+        "Keep the fast header outside slow widget Suspense boundaries so it can render immediately.",
+        "Give the slow chart and slow recommendations panel separate feature-level Suspense boundaries so they reveal independently.",
+        "Wrap the smallest Client subtree that calls `useSearchParams()` in Suspense to avoid bailing the whole static route into client rendering."
+      ],
+      "expected_fix_hints": [
+        "Use skeletons that preserve the chart and recommendations panel dimensions.",
+        "Start independent data dependencies as siblings or pass Promises down instead of awaiting parent data first.",
+        "Pair each loading boundary with an error boundary where failure should replace the same subtree."
+      ],
+      "absent_signals": [
+        "Do not put one root Suspense boundary around the whole dashboard.",
+        "Do not assume `useSearchParams()` is harmless in production static builds without Suspense.",
+        "Do not duplicate Suspense behavior with per-widget `isLoading` flags unless the data source is not Suspense-enabled."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep the fast header outside slow widget Suspense boundaries so it can render immediately."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Give the slow chart and slow recommendations panel separate feature-level Suspense boundaries so they reveal independently."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Wrap the smallest Client subtree that calls `useSearchParams()` in Suspense to avoid bailing the whole static route into client rendering."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use skeletons that preserve the chart and recommendations panel dimensions."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Start independent data dependencies as siblings or pass Promises down instead of awaiting parent data first."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pair each loading boundary with an error boundary where failure should replace the same subtree."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not put one root Suspense boundary around the whole dashboard."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume `useSearchParams()` is harmless in production static builds without Suspense."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not duplicate Suspense behavior with per-widget `isLoading` flags unless the data source is not Suspense-enabled."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "nextjs-loading-convention",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A route segment has a segment-local loading file, but users still see no fallback while the same segment's layout waits for runtime user data.",
+      "context": "The team assumed the segment loading file covers everything in the segment.",
+      "question": "Explain why the fallback does not cover the layout wait and propose the smallest structural fix.",
+      "expected_flags": [
+        "A segment loading file creates an implicit Suspense boundary around the page and nested children below it.",
+        "The same segment's layout, template, and error file sit outside that implicit boundary.",
+        "Runtime layout data needs to move into the page/subtree or be wrapped by an explicit Suspense boundary at the desired layout location."
+      ],
+      "expected_fix_hints": [
+        "Move the slow user-specific fetch from the layout into the page or a child subtree when the layout shell should render first.",
+        "Add an explicit Suspense boundary around the runtime layout region if the layout must own the data.",
+        "Keep route-level loading UI only for waits it actually owns."
+      ],
+      "absent_signals": [
+        "Do not claim that adding or renaming the segment loading file alone fixes layout-owned waits.",
+        "Do not move the whole application layout under one boundary.",
+        "Do not route this primarily to server-components-design unless the question is what should run as a Server Component."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A segment loading file creates an implicit Suspense boundary around the page and nested children below it."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The same segment's layout, template, and error file sit outside that implicit boundary."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Runtime layout data needs to move into the page/subtree or be wrapped by an explicit Suspense boundary at the desired layout location."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move the slow user-specific fetch from the layout into the page or a child subtree when the layout shell should render first."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add an explicit Suspense boundary around the runtime layout region if the layout must own the data."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep route-level loading UI only for waits it actually owns."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim that adding or renaming the segment loading file alone fixes layout-owned waits."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not move the whole application layout under one boundary."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route this primarily to server-components-design unless the question is what should run as a Server Component."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "waterfall-vs-parallel",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A profile page renders a ProfileHeader from `await fetchUser()`, then a child ActivityFeed that calls `await fetchActivity(userId)`. The page feels slow even though both queries are individually fast.",
+      "context": "fetchActivity only needs the userId, which is a route param already available; it does not need the full user object.",
+      "question": "Diagnose the latency and restructure the fetching.",
+      "expected_flags": [
+        "Identify a waterfall: the child's fetch only starts after the parent's await resolves, sequentializing two requests that could run together.",
+        "Kick off both independent fetches at the same level of the tree (e.g. start both Promises, then Promise.all) — or pass Promises down.",
+        "Where each section can stream independently, wrap each in its own Suspense boundary instead of awaiting both before render.",
+        "Note that tree depth correlates with waterfall risk; flat sibling fetches stream optimally."
+      ],
+      "expected_fix_hints": [
+        "Start fetchActivity from the route param in parallel with fetchUser instead of inside the awaited child.",
+        "Use Promise.all when both values are needed before render, or separate Suspense boundaries when they can reveal independently."
+      ],
+      "absent_signals": [
+        "Do not add a Suspense boundary and assume it removes the waterfall — Suspense alone does not parallelize fetches.",
+        "Do not keep the child awaiting data it could have started earlier."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identify a waterfall: the child's fetch only starts after the parent's await resolves, sequentializing two requests that could run together."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Kick off both independent fetches at the same level of the tree (e.g. start both Promises, then Promise.all) — or pass Promises down."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Where each section can stream independently, wrap each in its own Suspense boundary instead of awaiting both before render."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Note that tree depth correlates with waterfall risk; flat sibling fetches stream optimally."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Start fetchActivity from the route param in parallel with fetchUser instead of inside the awaited child."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use Promise.all when both values are needed before render, or separate Suspense boundaries when they can reveal independently."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add a Suspense boundary and assume it removes the waterfall — Suspense alone does not parallelize fetches."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the child awaiting data it could have started earlier."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "transition-flicker",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A tabbed settings panel wraps each tab's content (which suspends on a Suspense-enabled fetch) in a single Suspense boundary. Every tab click flashes the skeleton even though the previous tab was fully rendered.",
+      "context": "The team wants the previous tab to stay visible during the load and a subtle pending indicator on the active tab button.",
+      "question": "How should the agent stop the fallback flicker on tab switches?",
+      "expected_flags": [
+        "Wrap the state update that switches tabs in startTransition (via useTransition) so the update is non-urgent.",
+        "React then keeps the previous tab's committed render visible while the new tab's data loads instead of unmounting to the fallback.",
+        "Use the isPending flag from useTransition to show a subtle pending state on the tab control.",
+        "The fallback should still show on first render (no prior committed content to preserve)."
+      ],
+      "expected_fix_hints": [
+        "setTab inside startTransition(() => setTab(next)).",
+        "Drive the active-tab pending UI from isPending, not from a manual isLoading flag."
+      ],
+      "absent_signals": [
+        "Do not wrap the initial-load update in startTransition expecting it to keep (nonexistent) previous content.",
+        "Do not add a manual isLoading flag alongside the Suspense boundary to suppress the flicker."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Wrap the state update that switches tabs in startTransition (via useTransition) so the update is non-urgent."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: React then keeps the previous tab's committed render visible while the new tab's data loads instead of unmounting to the fallback."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use the isPending flag from useTransition to show a subtle pending state on the tab control."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The fallback should still show on first render (no prior committed content to preserve)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: setTab inside startTransition(() => setTab(next))."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Drive the active-tab pending UI from isPending, not from a manual isLoading flag."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not wrap the initial-load update in startTransition expecting it to keep (nonexistent) previous content."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add a manual isLoading flag alongside the Suspense boundary to suppress the flicker."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "error-boundary-pairing",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A widget that streams in via `use(dataPromise)` inside a Suspense boundary throws when the fetch rejects. The whole page crashes with an unhandled error instead of showing an error UI for just that widget.",
+      "context": "The product wants a failed widget to show an inline error message while sibling widgets keep streaming in.",
+      "question": "How should the agent make the failure recoverable without affecting siblings?",
+      "expected_flags": [
+        "Add an error boundary as a DISTINCT component from the Suspense boundary — Suspense catches suspension, the error boundary catches thrown Errors.",
+        "Nest ErrorBoundary outside Suspense for this widget so a failure replaces the loading state of that subtree cleanly.",
+        "Scope the ErrorBoundary+Suspense pair to the single widget so sibling widgets under their own boundaries keep streaming.",
+        "React has no built-in function-component ErrorBoundary (as of React 19) — use react-error-boundary or a class component; Server Component errors are caught by Next.js error.tsx."
+      ],
+      "expected_fix_hints": [
+        "Wrap the widget as <ErrorBoundary><Suspense><Widget/></Suspense></ErrorBoundary>.",
+        "Keep each widget's boundary pair independent so one failure does not unmount the others."
+      ],
+      "absent_signals": [
+        "Do not try to make the Suspense boundary itself catch the thrown error.",
+        "Do not put a single page-level error boundary that would replace all widgets on one widget's failure."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add an error boundary as a DISTINCT component from the Suspense boundary — Suspense catches suspension, the error boundary catches thrown Errors."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Nest ErrorBoundary outside Suspense for this widget so a failure replaces the loading state of that subtree cleanly."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Scope the ErrorBoundary+Suspense pair to the single widget so sibling widgets under their own boundaries keep streaming."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: React has no built-in function-component ErrorBoundary (as of React 19) — use react-error-boundary or a class component; Server Component errors are caught by Next.js error.tsx."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Wrap the widget as <ErrorBoundary><Suspense><Widget/></Suspense></ErrorBoundary>."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep each widget's boundary pair independent so one failure does not unmount the others."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not try to make the Suspense boundary itself catch the thrown error."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not put a single page-level error boundary that would replace all widgets on one widget's failure."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "ownership-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user asks whether a component should be a Server Component or Client Component, and whether the page should use SSR, SSG, or CSR.",
+      "context": "The prompt mentions loading states, but the unresolved decision is execution location and rendering strategy, not boundary placement.",
+      "question": "Should suspense-patterns own the request?",
+      "expected_flags": [
+        "The primary owners are server-components-design for Server vs Client Component placement and rendering-models for SSR/SSG/CSR strategy.",
+        "suspense-patterns becomes relevant only after the tree and rendering strategy are chosen and the loading/reveal boundaries need design.",
+        "The response should preserve the distinction between rendering strategy, server/client split, and Suspense boundary placement."
+      ],
+      "expected_fix_hints": [
+        "Route first to server-components-design or rendering-models based on the user's actual decision.",
+        "Return to suspense-patterns when deciding which subtree waits, which fallback renders, and how streaming chunks reveal.",
+        "Name Suspense as an in-tree mechanism, not the owner of the rendering-strategy choice."
+      ],
+      "absent_signals": [
+        "Do not treat every React performance or rendering question as Suspense boundary work.",
+        "Do not answer Server Component ownership with only loading-boundary advice.",
+        "Do not collapse SSR/SSG/CSR selection into Suspense placement."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The primary owners are server-components-design for Server vs Client Component placement and rendering-models for SSR/SSG/CSR strategy."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: suspense-patterns becomes relevant only after the tree and rendering strategy are chosen and the loading/reveal boundaries need design."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The response should preserve the distinction between rendering strategy, server/client split, and Suspense boundary placement."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route first to server-components-design or rendering-models based on the user's actual decision."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Return to suspense-patterns when deciding which subtree waits, which fallback renders, and how streaming chunks reveal."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Name Suspense as an in-tree mechanism, not the owner of the rendering-strategy choice."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat every React performance or rendering question as Suspense boundary work."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer Server Component ownership with only loading-boundary advice."
+        },
+        {
+          "id": "c9",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not collapse SSR/SSG/CSR selection into Suspense placement."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

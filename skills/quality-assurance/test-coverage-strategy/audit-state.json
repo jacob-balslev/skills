@@ -1,0 +1,30 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-09",
+  "drift_check": {
+    "last_verified": "2026-05-16"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-05-28",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "MIXED",
+  "lint_verdict": "PASS",
+  "comprehension_state": "present",
+  "last_changed": "2026-06-09",
+  "eval_last_run": {
+    "at": "2026-06-09T21:21:38.360Z",
+    "status": "mixed",
+    "runner": "node skill-graph/lib/audit/evaluate-skill.js --mode application",
+    "receipt": ".skill-graph/logs/eval-results/test-coverage-strategy/2026-06-09T21-21-38-355Z.json",
+    "receipt_hash": "0ae2ab0ac43d2c2962e6086999456589a8d0585e92374ce6c979a80b0c6bbb6e",
+    "model": "codex-current"
+  },
+  "eval_score": 4.33,
+  "eval_failed_ids": []
+}

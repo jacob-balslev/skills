@@ -1,0 +1,102 @@
+{
+  "skill_name": "lean-startup",
+  "subject": "Lean Startup validation methodology",
+  "adjacent_concepts": [
+    "build-measure-learn",
+    "minimum viable product",
+    "validated learning",
+    "innovation accounting",
+    "pivot",
+    "user research",
+    "research synthesis",
+    "Kano model",
+    "OKRs",
+    "Expected Value"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define Lean Startup in 2-3 sentences. Include build-measure-learn, validated learning, and the purpose of an MVP.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not define Lean Startup as simply shipping small products quickly or as ordinary agile delivery."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Lean Startup. Name the primitives and how they connect from risky assumption to pivot/persevere decision.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a Lean Startup skill exist for agents? Name the failure modes it prevents when a team wants to validate a product idea.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish Lean Startup from user-research, research-synthesis, Kano model, OKRs, positioning, Expected Value, and Playing to Win. Give a mechanism-level reason each neighbor is different.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not collapse all product discovery, feature prioritization, goal setting, positioning, strategy formulation, and valuation into Lean Startup."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place Lean Startup among strategy and product methods. What inputs feed it, what outputs should it produce, and which methods can feed or follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for Lean Startup that preserves the loop from assumption to experiment to evidence to course correction. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A team wants to build an AI meeting assistant for small law firms. They believe lawyers will pay for automatic summaries, that assistants will invite it to meetings, and that privacy concerns will not block adoption. Apply Lean Startup reasoning and produce the first experiment plan.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not recommend building the full assistant before naming the riskiest assumption, metric, threshold, sample, and ethical/privacy guardrails."
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this misconception: 'Our MVP is the smallest feature set engineering can ship this month, so if users try it we have validated the business.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not accept shipping scope as the definition of MVP or accept usage without a pre-declared learning threshold as validated learning."
+    }
+  ]
+}

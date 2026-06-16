@@ -1,0 +1,465 @@
+{
+  "skill_name": "design-system-architecture",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept of the skill, Coverage, Method, Verification, Do NOT Use When) and the Understanding fields (raw vs semantic token layering, component contracts, theming, governance, migration).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "token-taxonomy",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A component library hardcodes hex values and palette-named CSS variables (--blue-500, --gray-200) directly inside button, card, and chart components. The team now wants dark mode.",
+      "context": "There is no semantic layer; every component references raw palette names. Dark mode would require editing every component.",
+      "question": "How should the agent restructure the tokens?",
+      "expected_flags": [
+        "Introduce a semantic token layer (surface, text, primary-action, danger) that points at raw palette tokens",
+        "Components consume only semantic tokens, never raw palette names",
+        "Dark mode becomes a re-mapping of what raw values the semantic tokens resolve to, not a component rewrite",
+        "Flags that leaked palette names are the reason theming requires touching every component"
+      ],
+      "expected_fix_hints": [
+        "Define semantic tokens for product meaning and repoint components at them",
+        "Provide a light and dark resolution of the raw layer behind the same semantic names"
+      ],
+      "absent_signals": [
+        "Do not add a second set of hardcoded dark hex values inside components",
+        "Do not keep palette names inside component code"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Introduce a semantic token layer (surface, text, primary-action, danger) that points at raw palette tokens."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Components consume only semantic tokens, never raw palette names."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Dark mode becomes a re-mapping of what raw values the semantic tokens resolve to, not a component rewrite."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags that leaked palette names are the reason theming requires touching every component."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define semantic tokens for product meaning and repoint components at them."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide a light and dark resolution of the raw layer behind the same semantic names."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add a second set of hardcoded dark hex values inside components."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep palette names inside component code."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "variant-explosion",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A Button component has grown to 23 variants (primary-large-rounded, secondary-small-ghost-danger, ...) added one-by-one as designers asked for new looks. New requests keep arriving.",
+      "context": "Many variants overlap visually and only a handful map to a real, distinct use case.",
+      "question": "How should the agent respond to the variant sprawl?",
+      "expected_flags": [
+        "Variants must map to real use cases, not visual guesses",
+        "Collapse overlapping variants into orthogonal props (intent, size, shape) rather than enumerated combinations",
+        "Too many escape hatches make the system ungoverned, not flexible",
+        "Establish theming/density rules and governance before multiplying variants further"
+      ],
+      "expected_fix_hints": [
+        "Refactor enumerated variants into composable contract props",
+        "Define which combinations are sanctioned and which are forbidden"
+      ],
+      "absent_signals": [
+        "Do not keep adding one new variant per request",
+        "Do not approve variants justified only by 'a slightly different look'"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Variants must map to real use cases, not visual guesses."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Collapse overlapping variants into orthogonal props (intent, size, shape) rather than enumerated combinations."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Too many escape hatches make the system ungoverned, not flexible."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Establish theming/density rules and governance before multiplying variants further."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Refactor enumerated variants into composable contract props."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define which combinations are sanctioned and which are forbidden."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep adding one new variant per request."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not approve variants justified only by 'a slightly different look'."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "component-contract",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A shared Modal component is reused across the app, but each team adds its own focus-trap, escape-key handling, and aria attributes locally — inconsistently. Some instances are inaccessible.",
+      "context": "Accessibility is treated as a per-screen add-on rather than part of the component.",
+      "question": "How should the agent fix the Modal's design?",
+      "expected_flags": [
+        "Accessibility behavior (focus trap, escape handling, aria, focus return) belongs in the component contract, shipped once",
+        "Declare the contract: purpose, props/slots, states, accessibility behavior, composition rules",
+        "Give the component clear ownership and an API boundary so teams stop re-implementing behavior",
+        "Mark per-screen accessibility overrides as forbidden local overrides"
+      ],
+      "expected_fix_hints": [
+        "Move focus management and aria into the Modal implementation behind its contract",
+        "Document expected use and anti-use in the component docs"
+      ],
+      "absent_signals": [
+        "Do not leave accessibility to each consuming screen",
+        "Do not allow each team to re-implement modal behavior locally"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Accessibility behavior (focus trap, escape handling, aria, focus return) belongs in the component contract, shipped once."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Declare the contract: purpose, props/slots, states, accessibility behavior, composition rules."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Give the component clear ownership and an API boundary so teams stop re-implementing behavior."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Mark per-screen accessibility overrides as forbidden local overrides."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move focus management and aria into the Modal implementation behind its contract."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Document expected use and anti-use in the component docs."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave accessibility to each consuming screen."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not allow each team to re-implement modal behavior locally."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "migration-strategy",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An old design system has tokens like --color-accent that 400 files use. A new canonical token --color-primary-action should replace it, but a hard rename would break production screens overnight.",
+      "context": "The team wants to converge on canonical tokens without a risky big-bang change.",
+      "question": "How should the agent plan the token migration?",
+      "expected_flags": [
+        "Provide a migration path: alias the deprecated token to the canonical one, deprecate rather than delete",
+        "Detect drift between code usage and the canonical taxonomy",
+        "Migrate usages incrementally, verifying real screens still build without one-off styling",
+        "Mark the deprecated token with a removal plan, not an immediate removal"
+      ],
+      "expected_fix_hints": [
+        "Add a deprecation alias and migrate call sites in waves",
+        "Track remaining deprecated-token usages until zero, then remove"
+      ],
+      "absent_signals": [
+        "Do not hard-rename the token in one sweep",
+        "Do not delete the deprecated token before usages are migrated"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Provide a migration path: alias the deprecated token to the canonical one, deprecate rather than delete."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Detect drift between code usage and the canonical taxonomy."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Migrate usages incrementally, verifying real screens still build without one-off styling."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Mark the deprecated token with a removal plan, not an immediate removal."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a deprecation alias and migrate call sites in waves."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Track remaining deprecated-token usages until zero, then remove."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hard-rename the token in one sweep."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not delete the deprecated token before usages are migrated."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "governance-escape-hatch",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "To move fast, a team adds a `style` and `className` passthrough plus a `tokenOverride` prop to every system component so product squads can tweak anything inline.",
+      "context": "Within weeks, screens diverge: spacing, color, and state styling are re-decided locally despite the system existing.",
+      "question": "How should the agent evaluate the universal override props?",
+      "expected_flags": [
+        "Unbounded overrides make the system decorative — every screen re-decides locally",
+        "Define forbidden local overrides; constraints are what make the system reusable",
+        "Allow only bounded, contract-sanctioned customization (declared props), not arbitrary passthrough",
+        "Flags the override props as ungoverned flexibility, not real flexibility"
+      ],
+      "expected_fix_hints": [
+        "Replace arbitrary style/token passthrough with declared contract props",
+        "Document which customizations are sanctioned and enforce the rest as forbidden"
+      ],
+      "absent_signals": [
+        "Do not keep universal inline override props",
+        "Do not treat unconstrained escape hatches as flexibility"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Unbounded overrides make the system decorative — every screen re-decides locally."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define forbidden local overrides; constraints are what make the system reusable."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Allow only bounded, contract-sanctioned customization (declared props), not arbitrary passthrough."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags the override props as ungoverned flexibility, not real flexibility."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace arbitrary style/token passthrough with declared contract props."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Document which customizations are sanctioned and enforce the rest as forbidden."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep universal inline override props."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat unconstrained escape hatches as flexibility."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the design-system-architecture owner to decide the dashboard's section order and responsive breakpoints, and to rewrite the empty-state copy for the reports page.",
+      "context": "The team conflates 'the design system' with all design and content decisions.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Section order and breakpoints for one page are out of scope — that is layout-composition",
+        "Empty-state copy is out of scope — that is microcopy",
+        "Offer the in-scope part: which semantic tokens and component contracts those screens should consume",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand page layout to layout-composition and copy to microcopy",
+        "Provide the system vocabulary (tokens, components) the page should be built from"
+      ],
+      "absent_signals": [
+        "Do not design the page's specific layout",
+        "Do not write the empty-state copy"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Section order and breakpoints for one page are out of scope — that is layout-composition."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Empty-state copy is out of scope — that is microcopy."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: which semantic tokens and component contracts those screens should consume."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand page layout to layout-composition and copy to microcopy."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide the system vocabulary (tokens, components) the page should be built from."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the page's specific layout."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the empty-state copy."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "audit-token-drift",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "An audit of a maturing component library finds charts hardcoding status colors, three near-duplicate Card components, and a token file that no longer matches the Figma source of truth.",
+      "context": "The team wants to know what is structurally wrong, not just cosmetically.",
+      "question": "What should the agent's audit conclude and prioritize?",
+      "expected_flags": [
+        "Charts/status colors should consume semantic tokens, not hardcoded raw values",
+        "Consolidate the near-duplicate Card components behind one contract with real-use-case variants",
+        "Token drift between code and design intent should be detected and reconciled",
+        "Frame findings as token-taxonomy and contract gaps, not visual polish"
+      ],
+      "expected_fix_hints": [
+        "Repoint hardcoded chart colors at semantic status tokens",
+        "Reconcile the code token file against the design source of truth and add drift detection"
+      ],
+      "absent_signals": [
+        "Do not treat the duplicates as acceptable variety",
+        "Do not leave hardcoded raw values in chart components"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Charts/status colors should consume semantic tokens, not hardcoded raw values."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Consolidate the near-duplicate Card components behind one contract with real-use-case variants."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Token drift between code and design intent should be detected and reconciled."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Frame findings as token-taxonomy and contract gaps, not visual polish."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Repoint hardcoded chart colors at semantic status tokens."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reconcile the code token file against the design source of truth and add drift detection."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat the duplicates as acceptable variety."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave hardcoded raw values in chart components."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

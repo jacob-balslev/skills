@@ -1,0 +1,364 @@
+{
+  "skill_name": "gemini-pro",
+  "subject": "routing tasks to the Gemini Pro frontier tier vs other frontier models",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": "Grounded in the skill body (Coverage, the three PUSH-TOWARD routing signals, the escalation boundary, the Capability Sheet, the 200K pricing cliff, Strengths vs Weaknesses, Verification, Do NOT Use When) and references/model-facts.md.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "large-context-fit",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team needs to answer architecture questions that require reasoning across an entire ~600K-token codebase at once. Their current setup chunks the repo into 180K-token windows, runs a retrieval step, and stitches partial answers together, but cross-file conclusions keep coming out inconsistent.",
+      "context": "Budget allows a frontier model. The questions are genuinely cross-file (e.g. 'which call paths reach this function across the whole repo'), not single-symbol lookups.",
+      "question": "Which model should they route this to, and how should they structure the call?",
+      "expected_flags": [
+        "The dominant constraint is context size: ~600K tokens exceeds any 200K-class window, so chunk-and-retrieve is the wrong shape for cross-file reasoning",
+        "A 1M-token single-call model (Gemini Pro frontier tier) reads the whole codebase in one call and removes the chunking/stitching pipeline",
+        "Crossing 200K tokens triggers the ~2x pricing cliff on the whole request (input and output); budget for the higher tier"
+      ],
+      "expected_fix_hints": [
+        "Route to the Gemini Pro 1M-context tier and pass the full corpus in one prompt instead of chunking",
+        "Account for the >200K-prompt pricing tier in the cost estimate"
+      ],
+      "absent_signals": [
+        "Do not recommend keeping the chunk-and-retrieve pipeline for cross-file reasoning when the corpus fits a 1M window",
+        "Do not assume the larger window is automatically the best at every property without naming the constraint it actually solves (fit)"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The dominant constraint is context size: ~600K tokens exceeds any 200K-class window, so chunk-and-retrieve is the wrong shape for cross-file reasoning."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A 1M-token single-call model (Gemini Pro frontier tier) reads the whole codebase in one call and removes the chunking/stitching pipeline."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Crossing 200K tokens triggers the ~2x pricing cliff on the whole request (input and output); budget for the higher tier."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to the Gemini Pro 1M-context tier and pass the full corpus in one prompt instead of chunking."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Account for the >200K-prompt pricing tier in the cost estimate."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not recommend keeping the chunk-and-retrieve pipeline for cross-file reasoning when the corpus fits a 1M window."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the larger window is automatically the best at every property without naming the constraint it actually solves (fit)."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "capacity-vs-retrieval-quality",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A task needs to find a single contradictory clause buried in a 900K-token legal corpus with very high precision — a false negative is unacceptable. A teammate proposes the largest-context frontier model 'because it holds the most tokens, so it must be best at finding things in them.'",
+      "context": "Accuracy on the needle is the binding requirement; cost is secondary. Multiple frontier models are available.",
+      "question": "How should the agent reason about model choice here?",
+      "expected_flags": [
+        "Context capacity and long-context retrieval quality are different properties; holding the most tokens does not mean retrieving best from them",
+        "Needle-precise retrieval is a lane another frontier model leads (GPT-5 leads long-context retrieval quality), so this is an escalation/verification case",
+        "If the large-context tier is used to fit the corpus, the retrieval-quality need must be verified against the retrieval leader, not assumed"
+      ],
+      "expected_fix_hints": [
+        "Verify needle precision against the model that leads long-context retrieval quality (GPT-5), or use it for the retrieval pass",
+        "Separate the 'fit the context cheaply' decision from the 'retrieve precisely' decision"
+      ],
+      "absent_signals": [
+        "Do not equate biggest context window with best needle retrieval",
+        "Do not pick the model on token capacity alone when precision is the binding constraint"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Context capacity and long-context retrieval quality are different properties; holding the most tokens does not mean retrieving best from them."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Needle-precise retrieval is a lane another frontier model leads (GPT-5 leads long-context retrieval quality), so this is an escalation/verification case."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: If the large-context tier is used to fit the corpus, the retrieval-quality need must be verified against the retrieval leader, not assumed."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify needle precision against the model that leads long-context retrieval quality (GPT-5), or use it for the retrieval pass."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Separate the 'fit the context cheaply' decision from the 'retrieve precisely' decision."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not equate biggest context window with best needle retrieval."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the model on token capacity alone when precision is the binding constraint."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "multimodal-single-call",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "An ingestion task receives, per item, an audio recording plus several PDFs plus a few images, and must produce one combined summary. The current pipeline transcribes the audio with one service, OCRs the PDFs with another, captions the images with a third, and feeds the concatenated text to a text-only model.",
+      "context": "The preprocessing pipeline is brittle and loses cross-modal detail (e.g. tone in the audio that the transcript drops). A frontier model is acceptable.",
+      "question": "How should the agent simplify the model side of this?",
+      "expected_flags": [
+        "The dominant constraint is mixed-multimodal input: audio + PDF + image in one item",
+        "A natively multimodal frontier model (Gemini Pro tier) accepts text, image, audio, video, and PDF in a single call, removing the transcribe/OCR/caption preprocessing chain",
+        "Single-call multimodal preserves cross-modal detail the staged preprocessing pipeline drops"
+      ],
+      "expected_fix_hints": [
+        "Send the raw audio, PDFs, and images directly to a natively multimodal frontier model in one prompt",
+        "Remove the separate transcription/OCR/captioning preprocessing services"
+      ],
+      "absent_signals": [
+        "Do not keep a multi-service preprocessing chain when a native multimodal model handles all types in one call",
+        "Do not claim text-only models can take raw audio/PDF/image input natively"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The dominant constraint is mixed-multimodal input: audio + PDF + image in one item."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A natively multimodal frontier model (Gemini Pro tier) accepts text, image, audio, video, and PDF in a single call, removing the transcribe/OCR/caption preprocessing chain."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Single-call multimodal preserves cross-modal detail the staged preprocessing pipeline drops."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Send the raw audio, PDFs, and images directly to a natively multimodal frontier model in one prompt."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Remove the separate transcription/OCR/captioning preprocessing services."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep a multi-service preprocessing chain when a native multimodal model handles all types in one call."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim text-only models can take raw audio/PDF/image input natively."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "200k-pricing-cliff",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A batch job sends prompts that hover right around 210K tokens to the Gemini Pro tier. The owner is surprised the per-item cost is roughly double their estimate, which they computed using the under-200K rate.",
+      "context": "Many of the prompts could be trimmed to ~190K tokens without losing the information the task needs. The job runs at high volume.",
+      "question": "Why is the cost higher than estimated, and what should the agent do?",
+      "expected_flags": [
+        "Crossing 200K tokens reprices the WHOLE request at the higher tier (~2x), across both input and output — not just the tokens above 200K",
+        "Prompts at ~210K sit just over the cliff; trimming them under 200K avoids the doubled rate entirely",
+        "The cost estimate used the wrong tier rate for a >200K prompt"
+      ],
+      "expected_fix_hints": [
+        "Trim the prompts under 200K where feasible to stay on the cheaper tier",
+        "Re-estimate cost using the >200K-prompt rate for any prompt that genuinely needs the 1M window"
+      ],
+      "absent_signals": [
+        "Do not claim only the tokens above 200K are billed at the higher rate",
+        "Do not ignore the cliff when prompts sit just over 200K"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Crossing 200K tokens reprices the WHOLE request at the higher tier (~2x), across both input and output — not just the tokens above 200K."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prompts at ~210K sit just over the cliff; trimming them under 200K avoids the doubled rate entirely."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The cost estimate used the wrong tier rate for a >200K prompt."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Trim the prompts under 200K where feasible to stay on the cheaper tier."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-estimate cost using the >200K-prompt rate for any prompt that genuinely needs the 1M window."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim only the tokens above 200K are billed at the higher rate."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore the cliff when prompts sit just over 200K."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "wrong-lane-hardest-code",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "The whole task is the hardest kind of agentic code modification — a multi-step refactor across a large service with subtle behavior preservation requirements. The team wants to route it to the largest-context frontier model 'since the repo is big.'",
+      "context": "The repo is large but the actual working set per step is moderate; the binding difficulty is the code-modification quality, not fitting the whole repo in context.",
+      "question": "Is the largest-context model the right choice here, and why or why not?",
+      "expected_flags": [
+        "The dominant constraint is hardest agentic code-modification quality, not context fit",
+        "That is a lane Claude Opus leads (SWE-Bench Pro); 'has big context' does not beat 'best at code modification'",
+        "Route the hardest code-mod work to Opus; reserve the large-context tier for when context fit is the actual binding constraint"
+      ],
+      "expected_fix_hints": [
+        "Route the hardest agentic code-modification to Claude Opus",
+        "Choose the model by the task's dominant constraint (code-mod quality), not by repo size"
+      ],
+      "absent_signals": [
+        "Do not pick the model on context size when the binding constraint is code-modification quality",
+        "Do not assume the large-context tier leads the hardest agentic code benchmark"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The dominant constraint is hardest agentic code-modification quality, not context fit."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: That is a lane Claude Opus leads (SWE-Bench Pro); 'has big context' does not beat 'best at code modification'."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Route the hardest code-mod work to Opus; reserve the large-context tier for when context fit is the actual binding constraint."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the hardest agentic code-modification to Claude Opus."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Choose the model by the task's dominant constraint (code-mod quality), not by repo size."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the model on context size when the binding constraint is code-modification quality."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the large-context tier leads the hardest agentic code benchmark."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "cheap-bulk-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team needs to classify 50,000 short support tickets into one of eight categories. Each ticket is a few hundred tokens. They ask which model to route this to, and casually mention the total dataset is large.",
+      "context": "The work is high-volume, low-complexity per item, with tiny per-item context. Cost-per-item dominates the decision.",
+      "question": "How should the agent scope this routing request?",
+      "expected_flags": [
+        "This is cheap, high-volume classification with tiny per-item context — the cheap/fast tier (gemini-flash) owns it, not the frontier large-context tier",
+        "'Large dataset' is not 'large context per call'; per-item context is what drives tier choice",
+        "Routing this to a frontier tier pays 8-20x for capability the task never uses"
+      ],
+      "expected_fix_hints": [
+        "Route bulk classification to the cheap/fast Flash tier (see gemini-flash)",
+        "Decide the tier on per-item context and complexity, not on total dataset size"
+      ],
+      "absent_signals": [
+        "Do not recommend the Gemini Pro frontier large-context tier for cheap high-volume classification",
+        "Do not conflate total dataset size with per-call context size"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is cheap, high-volume classification with tiny per-item context — the cheap/fast tier (gemini-flash) owns it, not the frontier large-context tier."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: 'Large dataset' is not 'large context per call'; per-item context is what drives tier choice."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routing this to a frontier tier pays 8-20x for capability the task never uses."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route bulk classification to the cheap/fast Flash tier (see gemini-flash)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Decide the tier on per-item context and complexity, not on total dataset size."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not recommend the Gemini Pro frontier large-context tier for cheap high-volume classification."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not conflate total dataset size with per-call context size."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

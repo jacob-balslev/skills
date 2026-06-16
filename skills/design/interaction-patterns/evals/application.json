@@ -1,0 +1,406 @@
+{
+  "skill_name": "interaction-patterns",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept, Coverage, Method, Verification, Do NOT Use When) and current interaction-design best practices (decision-shape-driven control selection, comparison vs hiding, modal vs inline, sequence ceremony, bulk selection, keyboard alternatives).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "comparison-vs-hidden",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A pricing-plan selector uses a single dropdown listing five plans. Users complain they cannot tell which plan to pick because they have to open the dropdown, read one, close, reopen, and compare from memory.",
+      "context": "The decision genuinely requires weighing features and price across the plans.",
+      "question": "What interaction pattern should the agent recommend?",
+      "expected_flags": [
+        "The decision is 'compare' - hidden options in a dropdown defeat it",
+        "Use an always-visible comparison pattern (cards/segmented/comparison table)",
+        "Hiding options is acceptable only when comparison is not required",
+        "Keep the needed comparison context visible while choosing"
+      ],
+      "expected_fix_hints": [
+        "Replace the dropdown with visible plan cards or a comparison table + single-select",
+        "Surface differentiating attributes side by side"
+      ],
+      "absent_signals": [
+        "Do not keep comparable options hidden in a dropdown",
+        "Do not force the user to compare from memory"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The decision is 'compare' - hidden options in a dropdown defeat it."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use an always-visible comparison pattern (cards/segmented/comparison table)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Hiding options is acceptable only when comparison is not required."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep the needed comparison context visible while choosing."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace the dropdown with visible plan cards or a comparison table + single-select."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Surface differentiating attributes side by side."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep comparable options hidden in a dropdown."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not force the user to compare from memory."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "modal-vs-inline",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "Editing a cell in a data table opens a centered modal that covers the table. Users repeatedly close it to re-check neighboring rows, then reopen it, because the edit depends on the surrounding values.",
+      "context": "The edit is small and the source context (neighboring rows) matters to the decision.",
+      "question": "How should the agent change the pattern?",
+      "expected_flags": [
+        "A modal blocks the very context the user needs to decide",
+        "Use inline edit (or a non-blocking side panel) so the table stays visible",
+        "Choose the pattern from the decision: edit-in-context favors inline over modal",
+        "Define commit/cancel/escape behavior for the inline edit"
+      ],
+      "expected_fix_hints": [
+        "Switch to inline edit with explicit save/cancel, or a docked panel that keeps the table visible",
+        "Reserve modals for interactions that genuinely must block the surface"
+      ],
+      "absent_signals": [
+        "Do not keep a context-blocking modal for an in-context edit",
+        "Do not require constant open/close to compare neighbors"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A modal blocks the very context the user needs to decide."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use inline edit (or a non-blocking side panel) so the table stays visible."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Choose the pattern from the decision: edit-in-context favors inline over modal."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define commit/cancel/escape behavior for the inline edit."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Switch to inline edit with explicit save/cancel, or a docked panel that keeps the table visible."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve modals for interactions that genuinely must block the surface."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep a context-blocking modal for an in-context edit."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not require constant open/close to compare neighbors."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "sequence-ceremony",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A signup collects name, email, and password but presents them as a 3-step wizard with Next/Back buttons and a progress bar.",
+      "context": "The three fields are independent and short; there is no branching or long sequence.",
+      "question": "What should the agent recommend?",
+      "expected_flags": [
+        "A wizard adds ceremony to a task that only needed one form",
+        "Collapse to a single form for a short, non-branching set of fields",
+        "Reserve steppers/wizards for genuinely long or ordered/branching sequences",
+        "The simplest pattern keeping context visible wins"
+      ],
+      "expected_fix_hints": [
+        "Use one form with all three fields and a single submit",
+        "Keep a stepper only if steps are long, ordered, or branch"
+      ],
+      "absent_signals": [
+        "Do not wrap a 3-field form in a multi-step wizard",
+        "Do not add a progress bar to a one-screen task"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A wizard adds ceremony to a task that only needed one form."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Collapse to a single form for a short, non-branching set of fields."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reserve steppers/wizards for genuinely long or ordered/branching sequences."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The simplest pattern keeping context visible wins."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use one form with all three fields and a single submit."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep a stepper only if steps are long, ordered, or branch."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not wrap a 3-field form in a multi-step wizard."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add a progress bar to a one-screen task."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "bulk-selection",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An inbox lets users archive emails only one at a time via a per-row button. Power users archiving dozens of messages find it slow and repetitive.",
+      "context": "The action is repeated across many rows and users want to act on many at once.",
+      "question": "How should the agent design the interaction?",
+      "expected_flags": [
+        "The decision shape is 'choose many' / repeated - use multi-select with a contextual action bar",
+        "Provide select-all, range select, and clear; favor keyboard-first for repeated actions",
+        "Define invalid/partial-action, cancel, and undo behavior for the bulk action",
+        "Check the pattern under loading, empty, and permission-limited states"
+      ],
+      "expected_fix_hints": [
+        "Add row checkboxes + a bulk action bar with archive",
+        "Support shift-range select and keyboard shortcuts"
+      ],
+      "absent_signals": [
+        "Do not keep only a per-row one-at-a-time action for a repeated bulk task",
+        "Do not omit select-all / range select"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The decision shape is 'choose many' / repeated - use multi-select with a contextual action bar."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Provide select-all, range select, and clear; favor keyboard-first for repeated actions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define invalid/partial-action, cancel, and undo behavior for the bulk action."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Check the pattern under loading, empty, and permission-limited states."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add row checkboxes + a bulk action bar with archive."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Support shift-range select and keyboard shortcuts."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep only a per-row one-at-a-time action for a repeated bulk task."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not omit select-all / range select."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "gesture-alternative",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A list relies on swipe-to-delete as the only way to remove an item. Keyboard and desktop-mouse users have no way to delete, and the action is undiscoverable.",
+      "context": "The product runs on both touch and pointer/keyboard platforms.",
+      "question": "What is wrong and how should the agent fix it?",
+      "expected_flags": [
+        "A pointer/touch-only gesture must have a keyboard or explicit-control alternative",
+        "Add a visible/explicit delete control (overflow menu or button) alongside the swipe",
+        "Define escape/cancel and undo for the destructive action",
+        "Discoverability: the gesture alone is not a sufficient affordance"
+      ],
+      "expected_fix_hints": [
+        "Expose an explicit delete affordance plus keyboard support; keep swipe as an accelerator",
+        "Offer undo after delete"
+      ],
+      "absent_signals": [
+        "Do not leave swipe as the only delete path",
+        "Do not omit the keyboard/explicit alternative"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A pointer/touch-only gesture must have a keyboard or explicit-control alternative."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add a visible/explicit delete control (overflow menu or button) alongside the swipe."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define escape/cancel and undo for the destructive action."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Discoverability: the gesture alone is not a sufficient affordance."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Expose an explicit delete affordance plus keyboard support; keep swipe as an accelerator."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Offer undo after delete."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave swipe as the only delete path."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not omit the keyboard/explicit alternative."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the interaction-patterns owner to define the combobox component's props/variants/slots, audit its ARIA roles, and decide what the loading spinner looks like after selection.",
+      "context": "The team conflates pattern choice with component API design, accessibility, and feedback staging.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Component props/variants/slots/token contract are design-system-architecture / component-architecture, handed off",
+        "ARIA roles and keyboard support are a11y's domain, handed off",
+        "The post-selection loading/feedback is interaction-feedback's domain, handed off",
+        "Offer the in-scope part: confirming combobox is the right pattern for this decision (large searchable set)"
+      ],
+      "expected_fix_hints": [
+        "Route API design to design-system-architecture, accessibility to a11y, feedback to interaction-feedback",
+        "Own only the pattern-fit decision"
+      ],
+      "absent_signals": [
+        "Do not define the component API",
+        "Do not implement the ARIA wiring",
+        "Do not design the loading feedback states"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Component props/variants/slots/token contract are design-system-architecture / component-architecture, handed off."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: ARIA roles and keyboard support are a11y's domain, handed off."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The post-selection loading/feedback is interaction-feedback's domain, handed off."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: confirming combobox is the right pattern for this decision (large searchable set)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route API design to design-system-architecture, accessibility to a11y, feedback to interaction-feedback."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Own only the pattern-fit decision."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not define the component API."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not implement the ARIA wiring."
+        },
+        {
+          "id": "c9",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the loading feedback states."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

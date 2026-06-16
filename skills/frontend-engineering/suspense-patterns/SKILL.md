@@ -1,0 +1,343 @@
+---
+name: suspense-patterns
+# description: routing-facing summary of when this skill activates and what it covers.
+description: "Use when designing or reviewing React Suspense usage: where to place Suspense boundaries to control loading granularity, the difference between Suspense for data fetching and Suspense for code splitting, how Suspense interacts with Server Components for streaming HTML, how error boundaries pair with Suspense (and why they must be distinct components), the relationship between Suspense and React's transition APIs (useTransition, startTransition), and the design rules that prevent waterfall fetches, layout shift, and SEO regressions. Covers React 18+ and 19's `use` hook for unwrapping Promises in Client Components. Do NOT use for general React rendering strategy choice (use rendering-models), for the underlying hook primitives (use hooks-patterns), for streaming protocols beyond Suspense (use streaming-architecture), or for Server Component design (use server-components-design)."
+# license: SPDX-compatible license identifier for the skill content.
+license: MIT
+allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
+metadata:
+
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0017 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
+  subject: frontend-engineering
+  # public: publishability/private-data gate. Boolean.
+  # true = publishable/shareable; false = private and excluded from public export.
+  # Project anchoring is carried separately by non-empty `project[]` plus `grounding`.
+  public: true
+  # scope: free-text PRD-style statement of what the skill teaches and what it excludes.
+  # (v8 required; not an enum). Mirrors Coverage + Do NOT Use When at frontmatter level.
+  scope: "Portable React Suspense design discipline for placing loading boundaries, coordinating reveal order, pairing loading and error states, avoiding data-fetch waterfalls, deciding when transitions keep existing UI visible, and applying Next.js App Router route-segment loading conventions. Applies to React 18+ and React 19-style `use` Promise unwrapping in Client Components. Excludes general rendering-strategy choice (rendering-models), Server Component ownership decisions (server-components-design), hook primitive mechanics (hooks-patterns), and non-React streaming protocols (streaming-architecture)."
+  # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
+  # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
+  # `subject` is sufficient.
+  taxonomy_domain: engineering/frontend
+  # stability: lifecycle marker. One of:
+  # experimental (active development) / stable (production-ready) /
+  # frozen (no further changes expected) / deprecated.
+  # When `deprecated`, schema's allOf REQUIRES `superseded_by: <real-skill-name>`.
+  stability: experimental
+  # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
+  # Keep terms a user would actually type when starting a task in this skill's domain.
+  keywords: ["React Suspense","Suspense boundary","streaming HTML","loading.tsx Next.js","useTransition","startTransition","use hook React 19","error boundary with Suspense","Suspense waterfall","parallel data fetching"]
+  # triggers: explicit-match activation phrases the router fires on literally.
+  # Use when label-based routing is intended; usually keywords + examples are enough.
+  triggers: ["where should I put the Suspense boundary","why is my page waiting for the slowest query","how do I show partial loading states","Suspense vs loading.tsx","do I need useTransition here","error boundary not catching","data is waterfalling instead of parallel"]
+  # examples: 2-5 realistic user prompts the skill SHOULD activate for.
+  # Written in the user's voice. Improves retrieval recall beyond keywords alone.
+  examples: ["design a dashboard that streams three independent widgets in as their data resolves, with skeleton fallbacks for each","decide whether a tab switch should use useTransition or a top-level Suspense fallback","diagnose why a Suspense boundary is showing its fallback on every prop change","pair a Suspense boundary with an ErrorBoundary so failed fetches show an error UI while successful ones stream in"]
+  # anti_examples: near-miss prompts that should route ELSEWHERE.
+  # Pair with relations.suppresses (or legacy boundary alias) to name the confusable territory's owner.
+  anti_examples: ["choose between Server Components and Client Components (use server-components-design)","design the dependency array for a useEffect that fetches data (use hooks-patterns)","pick the streaming protocol for an LLM response (use streaming-architecture)","decide between SSR and SSG for a marketing page (use rendering-models)","design the streaming protocol itself — SSE, HTTP/2, chunked transfer-encoding (use streaming-architecture)"]
+  # relations: typed graph edges to sibling skills. Current fields:
+  # related (adjacency for browse / co-routing expansion) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins; write reason
+  #             as "I own this exclusively over X", not "use X instead") /
+  # boundary (DEPRECATED alias of suppresses, retained for unmigrated skills) /
+  # verify_with (cross-check; co-loaded as one-hop expansion) /
+  # depends_on (composition; transitive — A→B→C loads all three) /
+  # broader / narrower (SKOS-style generalization) /
+  # disjoint_with (mutual exclusion for incompatible ownership).
+  relations: "{\"related\":[\"server-components-design\",\"hooks-patterns\",\"streaming-architecture\",\"rendering-models\"],\"suppresses\":[{\"skill\":\"server-components-design\",\"reason\":\"server-components-design owns the discipline of which work runs on the server side of the RSC boundary; suspense-patterns owns the orthogonal discipline of where to place Suspense boundaries within a tree (RSC or Client).\"},{\"skill\":\"hooks-patterns\",\"reason\":\"hooks-patterns covers state, effects, and the closure model on Client Components; suspense-patterns covers the boundary-level loading-state model that operates on whole subtrees.\"}],\"verify_with\":[\"code-review\",\"rendering-models\"]}"
+
+  # === Understanding fields (when comprehension_state: present) ===
+  # mental_model: the primitives of the concept and how they relate. One paragraph.
+  mental_model: |
+    A Suspense boundary is a React component that shows fallback UI when a Suspense-enabled descendant suspends during render. Boundary placement is the central design decision: PAGE-level (one boundary near root, whole page waits for everything), FEATURE-level (one boundary per widget/section, each streams in independently), or LEAF-level (boundary close to the suspending component, each small piece has its own fallback). Pairs with an error boundary (must be distinct components -- loading fallback vs failure fallback). Composes with `useTransition` and `useDeferredValue` (changes whether updates show the boundary's fallback or keep the previous content visible) and React 19's `use` hook (lets Client Components unwrap stable Promises, including Promises passed from Server Components).
+  # purpose: the problem this concept solves and why the field exists. One paragraph.
+  purpose: |
+    Replaces local imperative loading-state plumbing (every component owns its own `isLoading` flag) with declarative boundary-based placement. The classic React loading pattern was conditional rendering: each component returned a spinner when `isLoading` was true and re-rendered when its data resolved. That pattern is local — each component decides HOW to communicate "I'm waiting" and WHERE in its render output the placeholder goes — and it does not compose (two sibling components loading in parallel produce two independent spinners with no coordinated layout). Suspense inverts the responsibility: the boundary owns the placeholder UI; the component declares "I need this data" without owning the loading state. The design discipline becomes about boundary placement, not about loading-state plumbing.
+  # concept_boundary: what this concept is NOT. Distinguishes from adjacent skills by naming
+  # the MECHANISM that differs, not just the label. Canonical replacement for top-level `boundary`.
+  concept_boundary: |
+    Distinct from error-boundary, which owns the FAILURE-state boundary mechanism (thrown Error) -- suspense-patterns owns the LOADING-state boundary mechanism for descendants that suspend during render. They pair in the canonical ErrorBoundary -> Suspense -> Component nesting but catch different signals and must be distinct components. Distinct from server-components-design, which owns the discipline of which work runs on the server side of the RSC boundary -- suspense-patterns owns the orthogonal discipline of where to place Suspense boundaries within a tree (RSC or Client). Distinct from hooks-patterns, which covers state/effects/closure model on Client Components -- suspense-patterns covers the boundary-level loading-state model that operates on whole subtrees. Distinct from rendering-models, which owns the rendering-strategy choice (SSR vs SSG vs streaming SSR vs RSC) -- suspense-patterns is one of the primitives streaming SSR and RSC compose with.
+  # analogy: one-sentence metaphor preserving the core mechanism.
+  analogy: "Suspense boundaries are to React's component tree what a restaurant's seating policy is to a multi-course meal — the policy decides whether courses arrive together (boundary around the whole meal, everyone waits for the slowest dish) or course-by-course (boundary per dish, each appears when ready). The component (the kitchen) just signals 'this course needs more time'; the boundary (the maître d') decides who waits for what and what placeholder shows in the meantime."
+  # misconception: the wrong mental model people bring; corrected explicitly.
+  misconception: |
+    The wrong mental model is that Suspense is a state-machine pattern with `isLoading`/`isReady` states a component checks. It is not. Suspense is a render-time suspension boundary for Suspense-enabled sources: the component does not own a loading flag; it reads from a framework, `lazy` import, or stable Promise read by `use`, and React shows the nearest boundary fallback while that source is unresolved. This is different from conditional rendering: the component does not check if the data is ready, and React does not detect data fetched inside Effects or event handlers. The misconception leads to "Suspense plus useState plus useEffect" patterns that replicate the old loading-flag plumbing instead of using Suspense-enabled data sources.
+---
+## Concept of the skill
+
+**What it is:** React Suspense boundary design: deciding which subtree waits, which fallback appears, and which content reveals together or progressively when code, data, or a Server Component render suspends.
+
+**Mental model:** Suspense is boundary-based coordination, not component-local `isLoading` state. A Suspense-enabled data source, `lazy` component, `use(promise)` call, or async server render suspends; the nearest Suspense boundary chooses the placeholder and reveal grouping.
+
+**Why it exists:** Loading states become brittle when every component owns its own spinner. Suspense moves the loading decision up the tree, so product hierarchy controls the loading sequence and the component that needs data can read as if the data is ready.
+
+**What it is NOT:** Not general rendering-strategy selection, not Server Component placement, not ordinary hook dependency design, not non-React streaming transport design, and not standalone error-boundary design.
+
+**Adjacent concepts:** Error boundaries, React transitions, deferred values, `React.lazy`, React 19 `use`, Server Components, streaming server rendering, Next.js route-segment loading UI, partial prerendering, selective hydration.
+
+**One-line analogy:** Suspense boundaries are theater curtains: the performer signals "not ready," and the curtain decides what the audience sees until that part of the stage is ready.
+
+**Common misconception:** Suspense does not make every async fetch suspend automatically. It only responds to Suspense-enabled sources; data fetched in an Effect or event handler still needs local state or a framework/library that integrates with Suspense.
+
+# Suspense Patterns
+
+## Coverage
+
+The discipline of placing and pairing Suspense boundaries: how a Suspense boundary catches a suspended descendant and renders a fallback, how boundary *placement* determines what waits for what, how Suspense composes with error boundaries (and why they cannot be the same component), how `useTransition`, `startTransition`, and `useDeferredValue` change the boundary's behavior on updates, how Suspense for code splitting (`React.lazy`) and Suspense for data fetching share the same boundary mechanism, and how Next.js App Router's segment-level loading file is a route-level Suspense convention. The skill covers React 18+ semantics throughout and the React 19 `use` hook that lets Client Components unwrap Promises directly.
+
+## Philosophy of the skill
+
+The classic React loading-state pattern was conditional rendering: each component owned an `isLoading` flag, returned a spinner or skeleton, and re-rendered when its data resolved. That pattern is local and imperative. It puts every component in the position of deciding *how* to communicate "I'm waiting" and *where* in its render output the placeholder goes. It does not compose; two sibling components loading in parallel produce two independent spinners with no coordinated layout.
+
+Suspense inverts the responsibility. A Suspense-enabled descendant suspends by lazy-loading code, reading a cached Promise with `use`, using a Suspense-enabled framework/library data source, or encountering unresolved async work in a server render. The Suspense boundary catches that suspension and renders a fallback for the entire subtree. The component itself only has to declare "I need this data" when it is using a Suspense-enabled source -- never "I might not have it yet." The boundary, declared once, owns the placeholder UI for everything below it. The semantics compose: nested Suspense boundaries let outer fallbacks resolve first while inner sections continue to wait.
+
+This is a different mental model than try/catch for asynchronicity. The unresolved resource is not an error -- it is a signal that "this render cannot complete yet, please show the nearest Suspense fallback and try again when the resource is ready." React reconciles the wait at the boundary; the component code reads as if the data were already there.
+
+React's own boundary is deliberately narrower than "any async work." Suspense does not detect data fetched inside an Effect or event handler, and unsupported hand-rolled data sources are not a stable API surface. Use a Suspense-enabled framework, a library that implements the convention, code splitting through `lazy`, or React's `use` API for cached Promises.
+
+The design discipline of Suspense is therefore about **boundary placement**, not about loading-state plumbing. The questions are: *what content should appear together?* (one boundary around them all) and *what content should stream in independently?* (separate boundaries around each). The boundary is a hierarchy decision in the UI, not a state machine inside a component.
+
+## Boundary Placement — The Central Design Question
+
+A Suspense boundary responds when any Suspense-enabled descendant suspends during render. The boundary's job is to define a *grouping*: "these things appear together, and either they all show or the fallback shows."
+
+Three placement strategies, each correct in different contexts:
+
+**1. Page-level boundary.** One boundary near the root. The whole page shows a fallback until everything inside resolves.
+
+```tsx
+<Suspense fallback={<PageSkeleton />}>
+  <Header />
+  <Dashboard />
+  <Footer />
+</Suspense>
+```
+
+- **Use when**: the page's value is only meaningful when complete (an onboarding flow, a checkout summary).
+- **Cost**: the slowest part of the page determines the page's perceived load time.
+
+**2. Section-level boundaries.** A boundary around each independent section.
+
+```tsx
+<Header />
+<Suspense fallback={<ChartSkeleton />}>
+  <Chart />        {/* slow query */}
+</Suspense>
+<Suspense fallback={<TableSkeleton />}>
+  <Table />        {/* faster query */}
+</Suspense>
+<Footer />
+```
+
+- **Use when**: each section is independently meaningful and can stream in separately.
+- **Cost**: more visible layout activity as sections pop in.
+
+**3. Leaf-level boundaries.** A boundary on each loading-aware component itself.
+
+```tsx
+<UserList>
+  {users.map(user => (
+    <Suspense key={user.id} fallback={<UserCardSkeleton />}>
+      <UserCard userId={user.id} />
+    </Suspense>
+  ))}
+</UserList>
+```
+
+- **Use when**: you have many parallel slow operations whose orderings don't matter.
+- **Cost**: many small skeletons, potential layout thrash.
+
+The wrong placement is usually too coarse: a single boundary near the page root waits for everything, defeating the streaming benefit. Less commonly, a boundary too fine produces a busy "many spinners" UI. The right granularity matches the page's actual visual hierarchy.
+
+## Parallel vs Waterfall Fetching
+
+Suspense alone does not prevent waterfalls. A waterfall is when fetch B starts only after fetch A resolves, sequentially, when both could have started together.
+
+```tsx
+// WATERFALL — parent awaits, then child fetches
+async function ParentBad() {
+  const a = await fetchA()
+  return <ChildBad a={a} />   // ChildBad starts fetch B only after this point
+}
+
+// PARALLEL — both fetches kicked off at the same render level
+async function ParentGood() {
+  const aPromise = fetchA()
+  const bPromise = fetchB()
+  const [a, b] = await Promise.all([aPromise, bPromise])
+  return <Child a={a} b={b} />
+}
+
+// SUSPENSE-PARALLEL — siblings under separate Suspense boundaries
+function ParentStreaming() {
+  return (
+    <>
+      <Suspense fallback={<A_Skeleton />}><A /></Suspense>
+      <Suspense fallback={<B_Skeleton />}><B /></Suspense>
+    </>
+  )
+}
+```
+
+The pattern: kick off all independent fetches at the same level of the tree, then either `await Promise.all` if you need both before rendering, or wrap each child in its own Suspense boundary if they can stream in independently. A child that fetches its own data is fine — *as long as the parent doesn't `await` something the child depends on first*. Tree depth correlates with waterfall risk; flat trees with siblings starting requests in parallel correlate with optimal streaming.
+
+## Suspense and Error Boundaries
+
+A Suspense boundary catches render-time suspension signals from Suspense-enabled sources, not thrown Errors. An error boundary catches thrown Errors, not loading-state suspension. They are different React mechanisms that solve adjacent problems and **must be different components**, but they almost always pair together.
+
+The canonical pair:
+
+```tsx
+<ErrorBoundary fallback={<ErrorUI />}>
+  <Suspense fallback={<LoadingUI />}>
+    <DataLoadingComponent />
+  </Suspense>
+</ErrorBoundary>
+```
+
+Order matters:
+
+- ErrorBoundary outside Suspense: the error UI replaces the entire group including any Suspense boundaries inside. A failed fetch shows the error UI; the loading state is no longer visible.
+- Suspense outside ErrorBoundary: while loading, the Suspense fallback shows. If the fetch fails, the Suspense fallback unmounts and the error UI takes its place inside.
+
+Most applications want ErrorBoundary on the outside so a failure replaces the loading state cleanly. Putting ErrorBoundary on the inside is appropriate when the loading state should remain visible and only a small portion of the subtree should swap to error UI.
+
+React does not ship a built-in `ErrorBoundary` for function components (as of React 19). Use `react-error-boundary` (Kent C. Dodds) or implement a class component. Server Components' errors are caught by Next.js's `error.tsx` file, which is essentially a route-scoped ErrorBoundary.
+
+## `useTransition`, `startTransition`, and "Stale" Boundaries
+
+By default, a Suspense boundary unmounts its children and shows the fallback whenever a descendant suspends during an urgent update -- even on subsequent updates (e.g., a tab switch that triggers a new Suspense-enabled fetch). This causes the "spinner flicker" anti-pattern: every interaction shows the loading state.
+
+`useTransition` (and `startTransition`) mark an update as non-urgent. React holds the previous render visible while the new render's data is loading, instead of unmounting to the fallback:
+
+```tsx
+function TabPanel({ activeTab }) {
+  return <Content tab={activeTab} />  // suspends on tab change
+}
+
+function Tabs() {
+  const [tab, setTab] = useState('a')
+  const [isPending, startTransition] = useTransition()
+  
+  return (
+    <>
+      <button onClick={() => startTransition(() => setTab('b'))}>
+        {isPending ? 'Loading…' : 'Tab B'}
+      </button>
+      <Suspense fallback={<Skeleton />}>
+        <TabPanel activeTab={tab} />
+      </Suspense>
+    </>
+  )
+}
+```
+
+On the *first* render, the Suspense fallback shows (no previous render to keep). On *subsequent* tab changes triggered through `startTransition`, the previous tab's content stays mounted while the new tab loads, and `isPending` indicates the transition is in flight. The fallback only shows when there is no prior committed render to preserve.
+
+Design rule: wrap user-initiated updates that may trigger Suspense in `startTransition` to avoid flickering fallbacks. Do not wrap initial-load updates in `startTransition`, since there is no previous content to preserve and the boundary will simply not show the fallback when you want it to.
+
+## Suspense in RSC and Next.js App Router
+
+In an RSC tree, Suspense controls streaming HTML granularity. The server flushes everything outside the boundary first, then streams in each boundary's content as it resolves:
+
+```tsx
+// Example Server Component route page
+export default async function Dashboard() {
+  return (
+    <>
+      <Header />                       {/* renders and flushes immediately */}
+      <Suspense fallback={<Skeleton />}>
+        <SlowSection />                {/* streams in when data resolves */}
+      </Suspense>
+    </>
+  )
+}
+```
+
+Next.js App Router provides a segment-local loading file as sugar for a route-level Suspense boundary. That file becomes the fallback for an implicit `<Suspense>` around the segment page and nested children below it, while the same segment's layout, template, and error file sit outside that implicit boundary. Identical semantics can be expressed with an explicit `<Suspense>` inside a layout or page when the loading state should be more granular.
+
+The interaction between RSC and Suspense is one of the biggest design wins of the App Router: server-rendered content can stream in chunks without giving up server-side rendering for the initial-paint content. The discipline of `server-components-design` (where to draw the server/client boundary) and `suspense-patterns` (where to draw the streaming boundary) compose together — they are orthogonal axes on the same tree.
+
+See `server-components-design` for the discipline of *what* runs on the server side of the RSC boundary; this skill covers *how to chunk the streaming output of that server tree*.
+
+## React 19's `use` Hook
+
+React 19 adds `use(promise)` — a hook (with relaxed rules: can be called conditionally) that unwraps a Promise during render. Inside a Suspense boundary, `use` is how Client Components participate in data-fetching Suspense without throwing manually:
+
+```tsx
+'use client'
+import { use } from 'react'
+
+function Comments({ commentsPromise }) {
+  const comments = use(commentsPromise)   // suspends until resolved
+  return <ul>{comments.map(c => <li key={c.id}>{c.text}</li>)}</ul>
+}
+
+// In a Server Component:
+export default function Post() {
+  const commentsPromise = fetchComments()    // not awaited — passed as Promise
+  return (
+    <Suspense fallback={<Spinner />}>
+      <Comments commentsPromise={commentsPromise} />
+    </Suspense>
+  )
+}
+```
+
+The Promise is created in the Server Component (which is free to start the fetch eagerly), passed across the server/client boundary, and unwrapped in the Client Component via `use`. The resolved value must be serializable between server and client. The Server Component does not block on the fetch; the Suspense boundary streams or hydrates the resolved subtree when the Promise settles.
+
+Before React 19, Client Components could not directly consume Suspense for data fetching without a library that implements the throw-a-Promise convention (React Query's Suspense mode, SWR with `suspense: true`, Relay). `use` makes the pattern first-class.
+
+## Common Anti-Patterns
+
+| Anti-pattern | Why it's wrong | Fix |
+|---|---|---|
+| One Suspense boundary near the page root | Fallback replaces the entire page even though most is fast | Move boundaries closer to the slow data, one per independent slow section |
+| Assuming Suspense catches Effect/event-handler fetches | The boundary never activates because the fetch did not suspend during render | Use a Suspense-enabled framework/library, `lazy`, or `use(promise)`; otherwise keep local loading state |
+| ErrorBoundary inside Suspense for a group-level data failure | Loading and failure states compete for ownership | Put ErrorBoundary outside Suspense when the whole group should swap from loading to error |
+| Awaiting parent data, then child fetches its own | Sequential waterfall | Kick off both fetches at the same level, pass Promises down or use Promise.all |
+| Suspense fallback shows on every interaction | Fallback flickers on updates | Wrap user-initiated updates in `startTransition` / `useTransition` |
+| Skeleton fallback that doesn't match the real content's layout | Layout shift when content arrives | Match skeleton dimensions to the real content (use same width/height/padding) |
+| Both Suspense and an `isLoading` prop in the same component | Duplicate loading-state plumbing | Pick one — Suspense throws or local state, not both |
+| Suspense around the whole application layout | Every navigation shows the page-level fallback | Place fallback at the route segment or feature level |
+| Calling `useSearchParams()` in a static Client subtree without Suspense | The route can bail out to client rendering or fail production static builds | Wrap the smallest Client subtree that reads search params in Suspense |
+| Runtime layout data with only a segment loading file | The implicit loading boundary does not cover that layout work | Move runtime data into the page/subtree or add an explicit Suspense boundary around the layout's runtime part |
+
+## Verification
+
+After applying this skill, verify:
+
+- [ ] Every slow data dependency is wrapped in a Suspense boundary co-located near the data, not at a far ancestor.
+- [ ] Sibling sections that can stream independently have their own Suspense boundaries.
+- [ ] Each Suspense boundary has a matching ErrorBoundary; their nesting order matches the desired failure-mode UI.
+- [ ] User-initiated updates that may trigger Suspense are wrapped in `startTransition` to prevent fallback flicker.
+- [ ] Skeleton fallbacks match real-content dimensions to avoid layout shift.
+- [ ] No `isLoading` flag duplicates work that the Suspense boundary already handles.
+- [ ] Parallel fetches are kicked off as siblings (not parent/child), avoiding waterfalls.
+- [ ] In Next.js App Router, the segment loading file or explicit Suspense boundary sits at the segment/subtree that owns the slow data -- not at a parent that includes fast content.
+
+## Grounding Sources
+
+- React docs — [`<Suspense>`](https://react.dev/reference/react/Suspense). The official reference for the boundary and its semantics.
+- React docs — [`useTransition`](https://react.dev/reference/react/useTransition) and [`startTransition`](https://react.dev/reference/react/startTransition). The transition APIs that prevent fallback flicker.
+- React docs — [`use`](https://react.dev/reference/react/use). The React 19 Promise-unwrapping hook for Client Components.
+- React 18 working group — [Suspense in React 18 design discussion](https://github.com/reactwg/react-18/discussions/47). The semantics and edge cases of the React 18 Suspense rewrite.
+- Next.js docs — [Loading UI and Streaming](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming) and [`loading.tsx`](https://nextjs.org/docs/app/api-reference/file-conventions/loading) conventions. The route-segment Suspense sugar.
+- Dodds, K. C. — [react-error-boundary](https://github.com/bvaughn/react-error-boundary). The de facto error-boundary library for function components.
+- React docs — [Streaming](https://react.dev/reference/react-dom/server/renderToReadableStream). Server-side streaming primitives that Suspense rides on top of.
+
+## Do NOT Use When
+
+| Instead of this skill | Use | Why |
+|---|---|---|
+| Choosing between SSR, SSG, ISR, and CSR rendering strategies | `rendering-models` | rendering-models owns the strategic decision; suspense-patterns is an in-tree mechanism that works with several of those strategies. |
+| Designing which work runs as Server Components vs Client Components | `server-components-design` | server-components-design owns the server/client tree split; suspense-patterns is orthogonal — Suspense boundaries can live in either kind of component. |
+| Hook discipline on Client Components (Rules of Hooks, useEffect, useMemo) | `hooks-patterns` | hooks-patterns covers the in-component logic primitives; Suspense operates at the tree level above hooks. |
+| Streaming protocols broader than React Suspense (SSE, WebSocket, AI streaming) | `streaming-architecture` | streaming-architecture is the general protocol concern; React Suspense streaming is one application of the broader streaming toolkit. |
+| Error-handling patterns (try/catch, error boundaries in isolation) | `code-review` and `react-error-boundary` library docs | This skill covers Suspense+ErrorBoundary *pairing*; isolated error-boundary discipline lives elsewhere. |

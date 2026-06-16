@@ -20,7 +20,7 @@
       "prompt": "Define Cognitive Load Theory in 2-3 sentences. Include intrinsic, extraneous, and germane load.",
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_application",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
       "skill_type": "concept",
       "criticality": "high",
       "expected_elements": [
@@ -37,7 +37,7 @@
       "prompt": "Explain the mental model of Cognitive Load Theory using the RAM analogy. Name what intrinsic, extraneous, and germane load map to.",
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_application",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
       "skill_type": "concept",
       "criticality": "high",
       "expected_elements": [
@@ -54,7 +54,7 @@
       "prompt": "Distinguish Cognitive Load Theory from context-management, prompt-craft, context-window, and compression. Give a mechanism-level reason for each boundary.",
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_application",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
       "skill_type": "concept",
       "criticality": "critical",
       "expected_elements": [
@@ -71,7 +71,7 @@
       "prompt": "A reviewer says, 'This skill is too long; remove the worked example.' Use Cognitive Load Theory to decide whether that is correct.",
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_application",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
       "skill_type": "concept",
       "criticality": "high",
       "expected_elements": [
@@ -88,7 +88,7 @@
       "prompt": "A dashboard widget shows 10 equally weighted metrics in one flat grid with no grouping. Apply Cognitive Load Theory and propose a fix.",
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_application",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
       "skill_type": "concept",
       "criticality": "critical",
       "expected_elements": [
@@ -105,7 +105,7 @@
       "prompt": "A teammate proposes: 'First we cut extraneous load, then we ADD germane load by inserting three extra self-explanation exercises — germane is the third load bucket, so turning it up directly should improve learning.' Using Cognitive Load Theory's modern (post-2010) reconceptualization of germane load, is that framing correct? Explain what is wrong and state the correct causal model.",
       "substance": "concept",
       "calibration": "semantic",
-      "truth_mode": "conceptual_correctness_plus_application",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
       "skill_type": "concept",
       "criticality": "critical",
       "expected_elements": [

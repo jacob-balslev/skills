@@ -1,0 +1,140 @@
+{
+  "skill_name": "design-module-composition",
+  "subject": "design",
+  "adjacent_concepts": [
+    "design-system-architecture",
+    "frontend-architecture",
+    "interaction-patterns",
+    "a11y"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define design module composition in 2-3 sentences. Name the four mainstream patterns it covers.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as shaping a reusable component's API so variation comes from composing parts, not configuration props",
+        "Names compound components (parent + named children sharing context)",
+        "Names slot/children APIs and render props / function-as-children",
+        "Names headless primitives (state and behavior exposed, markup/styling delegated)"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why is the shared context contract — not the prop signatures — described as the real API of a compound-component module?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Compound pieces share state through context (React context or framework equivalent)",
+        "The context contract is what the parent provides and the children expect",
+        "Changing the contract is a breaking change even when prop signatures stay the same",
+        "Children require the parent's context — they cannot render correctly outside it"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "What is the trade-off between a configuration (prop-heavy) API and a composition API, and how do mature systems often resolve it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prop-heavy API is fast for the common case but friction-heavy for unanticipated variants",
+        "Composition API costs more typing for the common case but absorbs variants with no friction",
+        "Every boolean prop is a decision the author imposes on every consumer; a slot defers the decision",
+        "Mature systems often offer both: a high-level summary component built on low-level composable primitives"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A Card component has 14 boolean props and keeps growing as new variants are requested. How should an agent redesign its API?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Move to a composition API (e.g. Card with Card.Header / Card.Body / Card.Footer or slots)",
+        "Reduce boolean props to single digits; let consumers compose unanticipated variants",
+        "Distinguish variants that are part of the module's identity (prop) from how a consumer uses it (slot)",
+        "Optionally keep a high-level convenience component over the composable primitives"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Explain the asChild / polymorphic pattern: what it does, what problem it solves, and what care it requires.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Lets a consumer change the rendered element while inheriting all behavior and ARIA wiring",
+        "Collapses two-level wrappers and avoids the 'button inside button' accessibility error",
+        "Requires the parent to clone or render-prop its single child carefully",
+        "Behavior and ARIA attributes must be preserved across the element swap"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the design-module-composition skill to decide which folder the OrderDetailPage lives in and which app owns it. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — that is application-level architecture (frontend-architecture)",
+        "This skill owns the composition API shape of a reusable module, not file/feature placement",
+        "Correctly distinguishes how a module exposes its parts from where modules live and which app owns a screen",
+        "Redirects to frontend-architecture"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A developer says 'composition just means adding more props so the component can do more.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Adding props is configuration, not composition — every prop is a decision imposed on every consumer",
+        "Composition exposes parts (slots, compound children, headless state) so consumers assemble unanticipated variants",
+        "Adding props makes the common case faster but every unforeseen variant a fork",
+        "Composition is about deferring decisions, not multiplying the configuration surface"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a component module is well-composed?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Primary variations are achievable by composing children, not boolean props; boolean-prop count is single digits",
+        "Compound children render outside the parent only with an explicit error (they need the parent's context)",
+        "Accessibility wiring (aria-controls, aria-expanded, focus return) is the module's responsibility, even under asChild/headless",
+        "asChild/polymorphic element swaps preserve all behavior and ARIA; the module composes into a non-obvious shape without modification"
+      ]
+    }
+  ]
+}

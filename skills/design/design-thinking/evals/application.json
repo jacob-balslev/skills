@@ -1,0 +1,394 @@
+{
+  "skill_name": "design-thinking",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept of the skill, Coverage, Philosophy of the skill, Verification, Do NOT Use When) and the canonical design-thinking literature (d.school five stages, UK Design Council Double Diamond, IDEO arc, Knapp Design Sprint).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "stage-recognition",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team has a fat folder of user-interview transcripts and a deadline. They want to start sketching screens this week because 'we've talked to enough users.'",
+      "context": "No problem statement, no synthesis artifact, and no agreed definition of what they are solving exists yet.",
+      "question": "How should the agent guide the next move?",
+      "expected_flags": [
+        "Recognizes they are post-discover but pre-define — raw data, no framed problem",
+        "Flags jumping to sketching (ideate/prototype) as stage skipping",
+        "Routes to research-synthesis (affinity mapping) then problem-framing before ideation",
+        "Names the open question: what problem is actually worth solving?"
+      ],
+      "expected_fix_hints": [
+        "Run a synthesis pass to turn transcripts into themes and insights",
+        "Write a framed problem statement before any screen sketching"
+      ],
+      "absent_signals": [
+        "Do not start sketching screens before synthesis and framing",
+        "Do not treat 'we talked to enough users' as a transition criterion"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes they are post-discover but pre-define — raw data, no framed problem."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags jumping to sketching (ideate/prototype) as stage skipping."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes to research-synthesis (affinity mapping) then problem-framing before ideation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names the open question: what problem is actually worth solving?."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run a synthesis pass to turn transcripts into themes and insights."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Write a framed problem statement before any screen sketching."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not start sketching screens before synthesis and framing."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'we talked to enough users' as a transition criterion."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "loop-back-decision",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "After a usability test, three of five participants revealed the team had framed the wrong job-to-be-done. The PM wants to ship the prototype anyway 'because we're out of runway.'",
+      "context": "The prototype tests well on the wrong problem; the findings contradict the Define-stage framing.",
+      "question": "How should the agent respond?",
+      "expected_flags": [
+        "Applies the loop-back principle — a Test finding invalidated the Define stage",
+        "Recommends an explicit decision to loop back to define rather than ship as-is",
+        "Records the loop-back rationale rather than silently dropping the contradicting finding",
+        "Names shipping despite contradicting evidence as performing the ritual, not practicing it"
+      ],
+      "expected_fix_hints": [
+        "Re-frame the problem against the new evidence, then re-ideate narrowly",
+        "Scope a minimal re-test rather than a full new arc if runway is tight"
+      ],
+      "absent_signals": [
+        "Do not ship the prototype against the contradicting findings without a recorded decision",
+        "Do not treat 'out of runway' as a reason to skip the loop-back judgment"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Applies the loop-back principle — a Test finding invalidated the Define stage."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends an explicit decision to loop back to define rather than ship as-is."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Records the loop-back rationale rather than silently dropping the contradicting finding."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names shipping despite contradicting evidence as performing the ritual, not practicing it."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-frame the problem against the new evidence, then re-ideate narrowly."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Scope a minimal re-test rather than a full new arc if runway is tight."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ship the prototype against the contradicting findings without a recorded decision."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'out of runway' as a reason to skip the loop-back judgment."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "stage-stalling",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team has run four rounds of interviews and three reframing workshops over two months and has built nothing. Each round 'raises new questions.'",
+      "context": "Leadership is frustrated; the team equates research activity with progress.",
+      "question": "How should the agent intervene?",
+      "expected_flags": [
+        "Identifies stage stalling — researching and reframing indefinitely",
+        "Names that the team is mistaking activity for progress",
+        "Recommends naming 'we have enough' and advancing to ideation/prototyping",
+        "Sets a written transition criterion so the next stage has a done condition"
+      ],
+      "expected_fix_hints": [
+        "Write the current framed problem and commit to it for one prototype cycle",
+        "Define what evidence would make further research worthwhile before running it"
+      ],
+      "absent_signals": [
+        "Do not authorize another open-ended research round without a transition criterion",
+        "Do not treat new questions alone as a reason to keep looping"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies stage stalling — researching and reframing indefinitely."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names that the team is mistaking activity for progress."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends naming 'we have enough' and advancing to ideation/prototyping."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Sets a written transition criterion so the next stage has a done condition."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Write the current framed problem and commit to it for one prototype cycle."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define what evidence would make further research worthwhile before running it."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not authorize another open-ended research round without a transition criterion."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat new questions alone as a reason to keep looping."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "stage-routing",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A vague brief arrives: 'help us figure out what to build for new homeowners.' A junior asks which design-thinking method to run first.",
+      "context": "The team is at the very start with no user evidence and no framed problem.",
+      "question": "How should the agent route the work?",
+      "expected_flags": [
+        "Locates them at the start of the arc (discover/empathize)",
+        "Routes first to user-research, not ideation or prototyping",
+        "Names the open question and the artifact each stage should produce before advancing",
+        "Plans the arc forward (research -> synthesis -> framing -> ideation) rather than picking a method at random"
+      ],
+      "expected_fix_hints": [
+        "Start with user-research to gather real homeowner evidence",
+        "Sequence synthesis and problem-framing before any concept generation"
+      ],
+      "absent_signals": [
+        "Do not jump straight to brainstorming solutions on a vague brief",
+        "Do not pick a method without naming the open question it answers"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Locates them at the start of the arc (discover/empathize)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes first to user-research, not ideation or prototyping."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names the open question and the artifact each stage should produce before advancing."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Plans the arc forward (research -> synthesis -> framing -> ideation) rather than picking a method at random."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Start with user-research to gather real homeowner evidence."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Sequence synthesis and problem-framing before any concept generation."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not jump straight to brainstorming solutions on a vague brief."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick a method without naming the open question it answers."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "format-choice",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A startup has one week before an investor demo and an untested core concept. They ask whether to run a full multi-month design process.",
+      "context": "Time is the binding constraint; the concept's core assumption is unvalidated.",
+      "question": "What format should the agent recommend?",
+      "expected_flags": [
+        "Recommends a compressed Design Sprint over a multi-month arc given the time constraint",
+        "Names the trade-off: the sprint buys speed of learning at the cost of research depth",
+        "Targets a Define-through-Test cycle in days to validate the core assumption",
+        "Notes both formats are valid; the choice follows from uncertainty and time pressure"
+      ],
+      "expected_fix_hints": [
+        "Run a 5-day sprint focused on the single riskiest assumption",
+        "Defer breadth research to after the demo if the core concept survives"
+      ],
+      "absent_signals": [
+        "Do not start a multi-month arc when a one-week sprint fits the constraint"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends a compressed Design Sprint over a multi-month arc given the time constraint."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names the trade-off: the sprint buys speed of learning at the cost of research depth."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Targets a Define-through-Test cycle in days to validate the core assumption."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes both formats are valid; the choice follows from uncertainty and time pressure."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run a 5-day sprint focused on the single riskiest assumption."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Defer breadth research to after the demo if the core concept survives."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not start a multi-month arc when a one-week sprint fits the constraint."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "An engineering lead asks the design-thinking owner to model the bounded contexts and event flows for the order-fulfillment domain, calling it 'discovery.'",
+      "context": "The word 'discovery' is overloaded; this is engineering domain modeling, not user discovery.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Recognizes this is engineering domain discovery, not human-centered discovery",
+        "Routes to event-storming / bounded-context-mapping / conceptual-modeling, not the design-thinking arc",
+        "Notes the empathy stage assumes human subjects; methods do not transfer to a system domain",
+        "Redirects rather than running the full arc out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand the domain modeling to event-storming and bounded-context-mapping",
+        "Reserve design thinking for the human-experience side if one exists"
+      ],
+      "absent_signals": [
+        "Do not run user-empathy methods on an internal system domain",
+        "Do not treat 'discovery' as automatically meaning the design-thinking arc"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes this is engineering domain discovery, not human-centered discovery."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes to event-storming / bounded-context-mapping / conceptual-modeling, not the design-thinking arc."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes the empathy stage assumes human subjects; methods do not transfer to a system domain."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirects rather than running the full arc out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand the domain modeling to event-storming and bounded-context-mapping."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve design thinking for the human-experience side if one exists."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run user-empathy methods on an internal system domain."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'discovery' as automatically meaning the design-thinking arc."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

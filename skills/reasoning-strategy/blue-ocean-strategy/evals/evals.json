@@ -1,0 +1,145 @@
+{
+  "skill_name": "blue-ocean-strategy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A team says: \"We will create a blue ocean by adding AI summaries, more integrations, and a lower starter price to our existing project management app.\" Apply Blue Ocean Strategy and identify what is missing.",
+      "expected_output": "The agent should not accept this as a blue ocean. It should ask for the current strategy canvas, factors of competition, noncustomer insight, alternatives, ERRC choices, and commercial viability. It should explain that adding features and lowering price may be ordinary competition unless it reconstructs buyer value and cost logic.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects feature-plus-price as sufficient",
+        "Requires current strategy canvas or value curve",
+        "Requires noncustomer or alternative-market insight",
+        "Requires ERRC choices",
+        "Does NOT call ordinary differentiation a blue ocean"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A restaurant concept wants to reduce menu complexity, eliminate table service, raise ingredient transparency, and create a subscription pickup ritual for office workers who currently skip lunch. Analyze the Blue Ocean logic.",
+      "expected_output": "The agent should map eliminate/reduce/raise/create choices, explain how eliminated and reduced factors may lower cost, how raised and created factors may lift buyer utility, identify office workers who skip lunch as noncustomers or edge customers, and test price, target cost, and adoption risks.",
+      "type": "errc-application",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Maps all four ERRC actions",
+        "Links eliminate/reduce to cost logic",
+        "Links raise/create to buyer utility",
+        "Identifies noncustomer demand",
+        "Tests price, cost, and adoption",
+        "Does NOT treat any ERRC grid as valid unless it changes both value and cost logic"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A founder asks for Porter's Five Forces because they want to find an uncontested market space and build an ERRC grid. Should Blue Ocean Strategy own this?",
+      "expected_output": "Blue Ocean Strategy should own the value-innovation and ERRC work. Five Forces can help diagnose current industry profit pressure, but the immediate task is reconstructing market boundaries and designing a new value curve.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes ERRC and value-innovation work to Blue Ocean Strategy",
+        "Explains Five Forces as industry-structure support",
+        "Distinguishes profit-pressure diagnosis from market-boundary reconstruction",
+        "Does NOT substitute Five Forces for Blue Ocean tools"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A Blue Ocean draft only interviews current high-spend customers and proposes premium add-ons they requested. What should the agent critique?",
+      "expected_output": "The draft is likely still improving the red ocean. The agent should critique the current-customer-only evidence, require first-, second-, and third-tier noncustomer analysis, and ask whether alternatives or utility blocks explain latent demand.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Flags current-customer-only research",
+        "Requires noncustomer tiers",
+        "Explains that premium add-ons may reinforce existing competition",
+        "Asks for alternatives or utility blocks",
+        "Does NOT treat customer requests as enough to create new demand"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A proposed value curve raises every factor above the industry standard and creates three new services. There are no eliminate or reduce choices. What is the problem?",
+      "expected_output": "The value curve likely fails the value-cost logic. The agent should explain that raise/create-only strategies can overengineer and increase cost, then require eliminate and reduce choices that fund the new curve without destroying buyer utility.",
+      "type": "fit-check",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Detects raise/create-only overengineering",
+        "Explains value-cost trade-off risk",
+        "Requires eliminate/reduce moves",
+        "Connects cost logic to commercial viability",
+        "Does NOT endorse raising all factors"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 6,
+      "prompt": "A team asks for Seven Powers to prove its new value curve is a moat. The real question is whether the ERRC grid creates new demand. Should Seven Powers own this?",
+      "expected_output": "Seven Powers should not own the Blue Ocean design question. The agent should apply Blue Ocean Strategy to test value innovation, noncustomers, buyer utility, price, cost, and adoption. Seven Powers may follow later if the team asks whether the resulting business has durable power.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Keeps new-demand design with Blue Ocean Strategy",
+        "Defines Seven Powers as durable power diagnosis",
+        "Explains that moat proof can follow after strategy design",
+        "Does NOT collapse value innovation into moat classification"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "prompt": "A Blue Ocean recommendation says: \"Target noncustomers with a simpler product.\" It does not mention price, target cost, or adoption hurdles. What should the agent do?",
+      "expected_output": "The agent should treat the recommendation as incomplete. It should specify which tier of noncustomers, what utility block is removed, what strategic price opens demand, what target cost makes the model profitable, and what adoption hurdles could block uptake.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Flags missing commercial viability checks",
+        "Requires specific noncustomer tier",
+        "Requires utility block",
+        "Requires strategic price and target cost",
+        "Requires adoption hurdle analysis",
+        "Does NOT accept vague noncustomer targeting as a complete blue ocean recommendation"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}

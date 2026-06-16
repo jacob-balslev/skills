@@ -1,0 +1,169 @@
+{
+  "skill_name": "three-horizons",
+  "subject": "Three Horizons innovation and growth portfolio analysis",
+  "adjacent_concepts": [
+    "innovation portfolio",
+    "corporate growth strategy",
+    "Horizon 1",
+    "Horizon 2",
+    "Horizon 3",
+    "current core",
+    "emerging business",
+    "future option",
+    "portfolio governance",
+    "BCG Matrix",
+    "Ansoff Matrix",
+    "Blue Ocean Strategy",
+    "OKRs",
+    "Expected Value"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define the Three Horizons framework in 2-3 sentences. Include Horizon 1, Horizon 2, Horizon 3, and the portfolio question it answers.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines Three Horizons as an innovation or growth portfolio framework",
+        "Mentions Horizon 1 as current core businesses or current performance",
+        "Mentions Horizon 2 as emerging opportunities or growth businesses",
+        "Mentions Horizon 3 as future options, experiments, or long-term growth ideas",
+        "Explains that the framework balances current performance with future growth opportunities",
+        "Does not treat the horizons as a purely sequential calendar plan"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Three Horizons. Name the primitives and show why concurrent management matters.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names a portfolio owner or portfolio boundary",
+        "Names H1, H2, and H3 as distinct maturity or strategic-role categories",
+        "Mentions evidence maturity, uncertainty, resource allocation, governance, or metrics",
+        "Explains that all three horizons require attention at the same time",
+        "Explains that initiatives may transition between horizons over time",
+        "Does not reduce the model to now/later/much-later scheduling"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a Three Horizons skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents current-core pressure from starving future growth",
+        "Prevents distant innovation theater with no evidence or learning metric",
+        "Prevents using the same metrics or governance across all innovation work",
+        "Forces classification of initiatives by strategic role or maturity",
+        "Forces resource allocation or funding visibility",
+        "Forces transition or kill/continue criteria"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish Three Horizons from BCG Matrix, Ansoff Matrix, Blue Ocean Strategy, OKRs, Expected Value, and Playing to Win. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "BCG Matrix uses market growth and relative market share for portfolio allocation",
+        "Ansoff Matrix classifies product-market growth paths",
+        "Blue Ocean Strategy redesigns value curves or market boundaries",
+        "OKRs define objectives and measurable key results",
+        "Expected Value compares quantified probability-weighted outcomes",
+        "Playing to Win makes integrated strategy choices",
+        "Three Horizons balances current core, emerging growth, and future options with horizon-specific governance and metrics"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place Three Horizons among strategy and innovation methods. What inputs feed it, what outputs should it produce, and which methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies it as innovation portfolio, growth portfolio, R&D portfolio, or corporate growth strategy",
+        "Names inputs such as initiative list, strategic ambition, current core pressure, evidence, resources, or constraints",
+        "Names outputs such as horizon classification, portfolio balance diagnosis, governance design, metrics, transition criteria, or rebalance actions",
+        "Explains that Ansoff, BCG, Expected Value, OKRs, or Playing to Win can feed or follow it",
+        "Does not classify it as macro-environment scanning, industry-structure analysis, or standalone valuation"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for Three Horizons that preserves concurrent management of current core, emerging growth, and future options. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving a farm, garden, investment portfolio, pipeline, or staged experiment system",
+        "Preserves three distinct categories of work",
+        "Preserves concurrent management",
+        "Preserves different evidence, metrics, or governance across categories",
+        "Rejects an analogy that treats horizons as a sequential calendar",
+        "Rejects an analogy that treats H3 as optional distant work"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A teammate says Three Horizons means finish Horizon 1 this year, do Horizon 2 next year, and think about Horizon 3 later. Correct the misconception and show what must be added for a real Three Horizons analysis.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "States that all three horizons must be managed concurrently",
+        "Explains that time is not the only classification criterion",
+        "Adds initiative maturity, uncertainty, evidence, resources, governance, or metrics",
+        "Explains Horizon 1 current core importance",
+        "Explains Horizon 2 emerging growth or transition role",
+        "Explains Horizon 3 future option or learning role",
+        "Names transition or kill/continue criteria"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "Novel scenario: A company has many roadmap items improving the current product, two pilots with early customer traction but no dedicated owner, and several AI ideas in a lab with no assumptions tested. Apply Three Horizons. Classify the work, identify portfolio risks, and recommend governance or rebalance actions without switching to BCG, Ansoff, OKRs, or Expected Value.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Classifies current product improvements as Horizon 1",
+        "Classifies pilots with early traction as Horizon 2",
+        "Classifies lab AI ideas with no tested assumptions as Horizon 3",
+        "Identifies Horizon 1 overweight or current-core dominance risk",
+        "Identifies Horizon 2 ownership, scale, or funding risk",
+        "Identifies Horizon 3 theater or weak-learning risk",
+        "Recommends horizon-specific governance, metrics, funding, transition criteria, or kill/continue criteria",
+        "Does not replace the analysis with BCG, Ansoff, OKRs, or Expected Value"
+      ]
+    }
+  ]
+}

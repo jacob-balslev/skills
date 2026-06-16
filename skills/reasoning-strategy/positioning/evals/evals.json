@@ -1,0 +1,144 @@
+{
+  "skill_name": "positioning",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A founder says: \"Our positioning is 'the AI operating system for work'.\" Customers currently use spreadsheets, Slack threads, and weekly meetings. Apply Dunford-style positioning and identify what is missing.",
+      "expected_output": "The agent should reject the slogan as positioning. It should start from real competitive alternatives, identify unique attributes relative to spreadsheets, Slack threads, and meetings, map those attributes to value, find who cares most, choose a market category, and only then draft messaging.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects tagline-only positioning",
+        "Uses spreadsheets, Slack, and meetings as competitive alternatives",
+        "Requires unique attributes relative to alternatives",
+        "Requires value themes",
+        "Requires best-fit customer segment",
+        "Does NOT jump straight to copywriting"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A B2B tool lists Salesforce and HubSpot as competitors because the company wants to be seen as a CRM. Sales calls show buyers are comparing it with Airtable and an internal analyst. What should the positioning analysis do?",
+      "expected_output": "The agent should use the buyer's real alternatives, not the company's desired competitor set. It should compare against Airtable and the internal analyst, then identify unique attributes and value themes that make a category choice credible.",
+      "type": "competitive-alternatives",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Prioritizes buyer-real alternatives",
+        "Rejects aspirational competitor selection",
+        "Compares unique attributes against Airtable/internal analyst",
+        "Explains that category choice follows value evidence",
+        "Does NOT force CRM category without evidence"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A team wants a new category because their product is hard to explain in existing terms. What should the positioning skill check before endorsing a new category?",
+      "expected_output": "The agent should treat new category creation as costly and risky. It should test whether existing categories or subcategories make the value clear, identify wrong expectations each category creates, and endorse a new category only if existing frames consistently hide or distort the product's value.",
+      "type": "category-choice",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Treats new category as high cost",
+        "Tests existing categories and subcategories first",
+        "Names buyer expectations created by categories",
+        "Requires evidence that existing categories mislead",
+        "Does NOT use new category as avoidance of competition"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A positioning draft says: \"We have automated workflows, predictive AI, and real-time dashboards.\" It does not state why buyers care. What should the agent critique?",
+      "expected_output": "The draft lists attributes without value. The agent should map each attribute to functional, economic, emotional, or risk value for a specific target segment, then remove attributes that do not create buyer-recognizable value.",
+      "type": "value-mapping",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Flags attributes-without-value",
+        "Maps attributes to buyer outcomes",
+        "Requires target-segment specificity",
+        "Removes unsupported differentiators",
+        "Does NOT treat features as positioning by themselves"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "prompt": "A product marketer asks for Playing to Win because they need competitive alternatives, value themes, and a market category for a launch page. Should positioning own this?",
+      "expected_output": "Positioning should own the requested work. Playing to Win can define broader strategy choices, but competitive alternatives, value themes, target-fit, and market category are positioning mechanics.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Routes competitive alternatives/value themes/category to positioning",
+        "Defines Playing to Win as broader strategy cascade",
+        "Keeps positioning as input to launch messaging",
+        "Does NOT replace positioning with the five-choice cascade"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A founder asks for Blue Ocean Strategy because they want to reposition an existing analytics tool against spreadsheets and BI dashboards. The task is to choose a category and value themes, not create new demand. Should Blue Ocean own this?",
+      "expected_output": "Positioning should own the category and value-theme work. Blue Ocean Strategy may help when reconstructing market boundaries and creating new demand, but this request is about framing differentiated value against existing alternatives.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Keeps category and value-theme work with positioning",
+        "Defines Blue Ocean as value-innovation/new-demand design",
+        "Uses existing alternatives as context",
+        "Does NOT force ERRC or strategy canvas when the task is positioning"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "prompt": "A trend memo says: \"Because generative AI is transforming everything, our market category should be AI-native revenue intelligence.\" No customer alternatives or value themes are listed. What should the agent do?",
+      "expected_output": "The agent should treat the trend layer as premature. It should first identify alternatives, unique attributes, value themes, and best-fit customers, then decide whether the AI trend creates useful urgency or just generic hype.",
+      "type": "trend-discipline",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Flags trend-before-positioning",
+        "Requires alternatives and value themes first",
+        "Tests whether trend creates urgency",
+        "Rejects generic hype",
+        "Does NOT let trend language substitute for category and value"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}

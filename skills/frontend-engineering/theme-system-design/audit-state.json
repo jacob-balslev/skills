@@ -1,0 +1,54 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-08",
+  "drift_check": {
+    "last_verified": "2026-06-08"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-11",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "drift_status": "UNKNOWN",
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-15",
+    "last_run": {
+      "at": "2026-06-15T08:46:58.213Z",
+      "operation": "panel",
+      "phase": "curate",
+      "agent": "opus",
+      "status": "completed",
+      "duration_ms": 336487,
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "source": "unavailable"
+      },
+      "line_delta": {
+        "before_lines": 105,
+        "after_lines": 158,
+        "added_lines": 80,
+        "removed_lines": 27,
+        "net_lines": 53,
+        "algorithm": "lcs"
+      },
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 27,
+      "total_duration_ms": 3156832,
+      "total_tokens": 0,
+      "tokens_observed_count": 27
+    }
+  }
+}

@@ -1,0 +1,400 @@
+{
+  "skill_name": "theme-system-design",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Verification, Do NOT Use When) and current web theming best practices (three-tier tokens, CSS custom properties, DTCG token format, pre-paint application, runtime switching).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "flat-tokens-to-tiered",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A codebase hard-codes hex values and a flat set of variables like --gray-100, --gray-900, --blue used directly in components. The team wants to add a dark theme.",
+      "context": "Components currently reference appearance directly; there is no semantic layer.",
+      "question": "How should the agent restructure the tokens to make a dark theme possible without per-component edits?",
+      "expected_flags": [
+        "Introduce a three-tier structure: reference tokens (raw values), system/semantic tokens (intent-named), component tokens",
+        "Migrate components to consume only semantic tokens (color.background.surface, color.text.primary), never raw values",
+        "Define each theme as a mapping from reference values into the system layer, scoped to :root and [data-theme=\"dark\"]",
+        "After migration, the dark theme is a new set of system-token values with no component changes"
+      ],
+      "expected_fix_hints": [
+        "Replace direct --gray-100 usage in components with semantic tokens",
+        "Keep reference tokens out of component code; map them in the system layer per theme"
+      ],
+      "absent_signals": [
+        "Do not just add a second flat set of --gray-*-dark variables and toggle them in components",
+        "Do not let components keep referencing reference/raw values"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Introduce a three-tier structure: reference tokens (raw values), system/semantic tokens (intent-named), component tokens."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Migrate components to consume only semantic tokens (color.background.surface, color.text.primary), never raw values."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define each theme as a mapping from reference values into the system layer, scoped to :root and [data-theme=\"dark\"]."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: After migration, the dark theme is a new set of system-token values with no component changes."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace direct --gray-100 usage in components with semantic tokens."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep reference tokens out of component code; map them in the system layer per theme."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not just add a second flat set of --gray-*-dark variables and toggle them in components."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let components keep referencing reference/raw values."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "theme-flash-fix",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An SSR app reads the user's saved theme from localStorage in a useEffect after mount, so users briefly see the light theme before it flips to dark on every load.",
+      "context": "The app server-renders and the team wants no flash of the wrong theme.",
+      "question": "How should the agent eliminate the theme flash?",
+      "expected_flags": [
+        "Apply the theme (class or data attribute on the document root) before first paint, not in a post-mount effect",
+        "Use a small inline script in the document head that runs before the stylesheet loads to set the theme attribute",
+        "For SSR, serialize the chosen theme into the initial HTML (e.g. via a cookie) so server output matches user preference",
+        "Persist the choice in localStorage or a cookie (cookie if SSR needs it server-side)"
+      ],
+      "expected_fix_hints": [
+        "Move theme application from useEffect to a pre-paint inline head script",
+        "Store the preference in a cookie so the server can render the right theme"
+      ],
+      "absent_signals": [
+        "Do not apply the theme only after React mounts",
+        "Do not rely on a CSS transition to 'hide' the flash"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Apply the theme (class or data attribute on the document root) before first paint, not in a post-mount effect."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use a small inline script in the document head that runs before the stylesheet loads to set the theme attribute."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: For SSR, serialize the chosen theme into the initial HTML (e.g. via a cookie) so server output matches user preference."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Persist the choice in localStorage or a cookie (cookie if SSR needs it server-side)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move theme application from useEffect to a pre-paint inline head script."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Store the preference in a cookie so the server can render the right theme."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not apply the theme only after React mounts."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on a CSS transition to 'hide' the flash."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "add-third-theme",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A product has light and dark themes and now needs a high-contrast theme. A developer proposes adding conditional logic in several components to special-case high-contrast.",
+      "context": "The token contract already has a semantic layer; components consume semantic tokens.",
+      "question": "How should the agent add the third theme?",
+      "expected_flags": [
+        "Add the third theme by providing a new set of system-token values scoped to a new selector ([data-theme=\"high-contrast\"])",
+        "No component files should be modified to support the new theme",
+        "Verify the new theme covers every semantic token the existing themes define (theme parity)",
+        "Reject per-component conditional logic as a violation of the indirection contract"
+      ],
+      "expected_fix_hints": [
+        "Author a high-contrast value map over the existing semantic tokens",
+        "Check for missing tokens so none fall back to invalid/unintended values"
+      ],
+      "absent_signals": [
+        "Do not add per-component high-contrast branches",
+        "Do not introduce raw values in components for the new theme"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add the third theme by providing a new set of system-token values scoped to a new selector ([data-theme=\"high-contrast\"])."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: No component files should be modified to support the new theme."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verify the new theme covers every semantic token the existing themes define (theme parity)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reject per-component conditional logic as a violation of the indirection contract."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Author a high-contrast value map over the existing semantic tokens."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check for missing tokens so none fall back to invalid/unintended values."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add per-component high-contrast branches."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not introduce raw values in components for the new theme."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "token-rename-safety",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team wants to rename color.background.surface to color.surface.default and assumes a find-and-replace plus a CSS fallback value will keep things working.",
+      "context": "Many components consume the token by exact name; the renamed token will be a different custom property.",
+      "question": "How should the agent handle the rename safely?",
+      "expected_flags": [
+        "Renaming or removing a system token is a breaking change requiring a deprecation cycle, not a silent swap",
+        "A missing token resolves to the CSS variable fallback (or invalid) at runtime — rarely what's wanted in production",
+        "Make the removal/rename fail loudly at build or lint time across every consumer, not silently at runtime",
+        "Adding a new token is safe; renaming/removing is the breaking case to manage"
+      ],
+      "expected_fix_hints": [
+        "Introduce the new token, migrate consumers, then deprecate and remove the old token",
+        "Add a build/lint check that errors on consumption of a removed token"
+      ],
+      "absent_signals": [
+        "Do not rely on a CSS fallback value to mask the rename",
+        "Do not assume find-and-replace covers imperative/runtime token reads"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Renaming or removing a system token is a breaking change requiring a deprecation cycle, not a silent swap."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A missing token resolves to the CSS variable fallback (or invalid) at runtime — rarely what's wanted in production."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Make the removal/rename fail loudly at build or lint time across every consumer, not silently at runtime."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Adding a new token is safe; renaming/removing is the breaking case to manage."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Introduce the new token, migrate consumers, then deprecate and remove the old token."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a build/lint check that errors on consumption of a removed token."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on a CSS fallback value to mask the rename."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume find-and-replace covers imperative/runtime token reads."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "imperative-consumer-propagation",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "After switching themes at runtime, the CSS-styled UI updates instantly but a charting library and a canvas keep rendering with the old theme colors.",
+      "context": "The chart and canvas read colors imperatively in JS, not via CSS custom properties.",
+      "question": "How should the agent make the imperative consumers respect the theme switch?",
+      "expected_flags": [
+        "Runtime switching needs a propagation step: notify components that read theme imperatively (chart libraries, canvases)",
+        "Re-read the resolved token values (e.g. getComputedStyle of the custom properties) and re-render the imperative consumers on theme change",
+        "CSS-bound UI updates automatically via cascading custom properties; imperative consumers do not",
+        "Keep a single source of truth for token values so JS reads the same values CSS does"
+      ],
+      "expected_fix_hints": [
+        "Subscribe imperative components to a theme-change event and re-render",
+        "Read token values from the CSS custom properties rather than hard-coding them in JS"
+      ],
+      "absent_signals": [
+        "Do not hard-code separate color constants in the chart/canvas code",
+        "Do not assume a CSS-only switch updates JS-driven renderers"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Runtime switching needs a propagation step: notify components that read theme imperatively (chart libraries, canvases)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Re-read the resolved token values (e.g. getComputedStyle of the custom properties) and re-render the imperative consumers on theme change."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: CSS-bound UI updates automatically via cascading custom properties; imperative consumers do not."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep a single source of truth for token values so JS reads the same values CSS does."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Subscribe imperative components to a theme-change event and re-render."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Read token values from the CSS custom properties rather than hard-coding them in JS."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hard-code separate color constants in the chart/canvas code."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume a CSS-only switch updates JS-driven renderers."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the theme-system owner to pick the exact shade of the new brand purple and to wire up prefers-color-scheme so the app auto-follows the OS dark mode.",
+      "context": "The team conflates 'theming' with all color and dark-mode work.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Choosing the exact purple / designing the palette is out of scope — route to color-system-design",
+        "prefers-color-scheme detection and OS-following behavior is out of scope — route to dark-mode-implementation",
+        "Offer the in-scope part: which semantic token the purple maps to and how the OS-driven theme plugs into the switching contract",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand value selection to color-system-design and OS detection to dark-mode-implementation",
+        "Define the semantic token and the theme-switch hook the detected preference will drive"
+      ],
+      "absent_signals": [
+        "Do not pick the brand color value",
+        "Do not implement prefers-color-scheme detection as theme-system work"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Choosing the exact purple / designing the palette is out of scope — route to color-system-design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: prefers-color-scheme detection and OS-following behavior is out of scope — route to dark-mode-implementation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: which semantic token the purple maps to and how the OS-driven theme plugs into the switching contract."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand value selection to color-system-design and OS detection to dark-mode-implementation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define the semantic token and the theme-switch hook the detected preference will drive."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the brand color value."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not implement prefers-color-scheme detection as theme-system work."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

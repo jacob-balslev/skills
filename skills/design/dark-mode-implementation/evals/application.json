@@ -1,0 +1,465 @@
+{
+  "skill_name": "dark-mode-implementation",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Verification, Do NOT Use When) and current web-platform dark-mode primitives (prefers-color-scheme, color-scheme, light-dark(), pre-paint script, <picture> media, meta theme-color, persistence with explicit-over-system).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "flash-prevention",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A React SSR app applies the persisted theme in a useEffect after hydration. Dark-mode users see a clear white flash on every cold load before the dark theme kicks in.",
+      "context": "The app is server-rendered and reads no theme on the server; the toggle writes to localStorage.",
+      "question": "How should the agent eliminate the flash?",
+      "expected_flags": [
+        "useEffect runs after first paint — too late; the light default already painted",
+        "Add a blocking inline script in <head> that reads the persisted preference and sets a class/data-attribute on <html> before stylesheets resolve",
+        "For SSR, serialize the resolved theme into the HTML response by reading a cookie on the server",
+        "Verify by throttling the network and watching the first paint"
+      ],
+      "expected_fix_hints": [
+        "Move theme resolution to a pre-paint inline <head> script",
+        "Persist via cookie so the server can serialize the theme into the initial HTML"
+      ],
+      "absent_signals": [
+        "Do not apply the theme in useEffect / after hydration",
+        "Do not leave the default light theme painting first"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: useEffect runs after first paint — too late; the light default already painted."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add a blocking inline script in <head> that reads the persisted preference and sets a class/data-attribute on <html> before stylesheets resolve."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: For SSR, serialize the resolved theme into the HTML response by reading a cookie on the server."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verify by throttling the network and watching the first paint."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move theme resolution to a pre-paint inline <head> script."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Persist via cookie so the server can serialize the theme into the initial HTML."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not apply the theme in useEffect / after hydration."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave the default light theme painting first."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "three-state-persistence",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A toggle only has a single light/dark switch. A user on a dark-OS who picked Light on the site keeps getting Dark again whenever the page reloads, because the app re-reads prefers-color-scheme each time.",
+      "context": "The product should respect both the OS and an explicit override.",
+      "question": "How should the agent fix the preference model?",
+      "expected_flags": [
+        "Offer three states: System, Light, Dark — not a single two-way switch",
+        "Persist the explicit choice (localStorage/cookie) and have it override the OS preference",
+        "System is a distinct third state that defers to prefers-color-scheme",
+        "On load, read the persisted choice first; fall back to the media query only when System (or nothing) is set"
+      ],
+      "expected_fix_hints": [
+        "Store {system|light|dark} and resolve at load with explicit-over-system precedence",
+        "Add the System option as a real choice"
+      ],
+      "absent_signals": [
+        "Do not re-derive from prefers-color-scheme when an explicit choice exists",
+        "Do not collapse System into 'no preference'"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer three states: System, Light, Dark — not a single two-way switch."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Persist the explicit choice (localStorage/cookie) and have it override the OS preference."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: System is a distinct third state that defers to prefers-color-scheme."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: On load, read the persisted choice first; fall back to the media query only when System (or nothing) is set."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Store {system|light|dark} and resolve at load with explicit-over-system precedence."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add the System option as a real choice."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not re-derive from prefers-color-scheme when an explicit choice exists."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not collapse System into 'no preference'."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "native-controls",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "Dark mode works for app content, but native form controls (checkboxes, date pickers, scrollbars) and the default page background still render light, looking out of place in dark mode.",
+      "context": "The site supports both light and dark schemes.",
+      "question": "What should the agent add?",
+      "expected_flags": [
+        "Declare the CSS color-scheme property on :root with the supported schemes (e.g. color-scheme: light dark)",
+        "color-scheme tells the user agent which schemes the page supports so native controls/scrollbars/default background render correctly",
+        "Keep it in sync with the active theme (or set both with the data-attribute approach)",
+        "This is a platform integration a CSS-only re-skin misses"
+      ],
+      "expected_fix_hints": [
+        "Add color-scheme to :root and align it with the resolved theme",
+        "Let the UA theme native controls instead of restyling each one"
+      ],
+      "absent_signals": [
+        "Do not try to hand-restyle every native control instead of using color-scheme",
+        "Do not omit color-scheme"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Declare the CSS color-scheme property on :root with the supported schemes (e.g. color-scheme: light dark)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: color-scheme tells the user agent which schemes the page supports so native controls/scrollbars/default background render correctly."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep it in sync with the active theme (or set both with the data-attribute approach)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is a platform integration a CSS-only re-skin misses."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add color-scheme to :root and align it with the resolved theme."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Let the UA theme native controls instead of restyling each one."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not try to hand-restyle every native control instead of using color-scheme."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not omit color-scheme."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "asset-variants",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "In dark mode, the company logo (a dark wordmark on a transparent background) is invisible in the header and the browser tab, and hero illustrations with white backgrounds glare against the dark page.",
+      "context": "Assets are a mix of raster PNGs, an SVG logo, and a favicon.",
+      "question": "How should the agent handle the assets?",
+      "expected_flags": [
+        "Raster brand-color images: provide dark variants via <picture> with <source media=(prefers-color-scheme: dark)> or CSS background swapping",
+        "SVG logo: use currentColor or CSS custom properties for fill/stroke so it adapts automatically",
+        "Favicon: declare a dark variant via <link rel=icon media=(prefers-color-scheme: dark)>",
+        "Dark mode is a parallel design surface — assets need real variants, not just inverted colors"
+      ],
+      "expected_fix_hints": [
+        "Author dark asset variants and wire them by media query",
+        "Make the SVG theme-aware via currentColor/custom properties"
+      ],
+      "absent_signals": [
+        "Do not leave a single light-only logo/favicon",
+        "Do not CSS-invert photos as the fix"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Raster brand-color images: provide dark variants via <picture> with <source media=(prefers-color-scheme: dark)> or CSS background swapping."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: SVG logo: use currentColor or CSS custom properties for fill/stroke so it adapts automatically."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Favicon: declare a dark variant via <link rel=icon media=(prefers-color-scheme: dark)>."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Dark mode is a parallel design surface — assets need real variants, not just inverted colors."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Author dark asset variants and wire them by media query."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Make the SVG theme-aware via currentColor/custom properties."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave a single light-only logo/favicon."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not CSS-invert photos as the fix."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "browser-chrome",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "On mobile, the browser address bar stays white in dark mode, creating a jarring light band above the dark page; the installed PWA splash also mismatches.",
+      "context": "The site supports light and dark and is installable as a PWA.",
+      "question": "What should the agent add?",
+      "expected_flags": [
+        "Add meta theme-color with paired light and dark variants via media= so the chrome matches the active theme",
+        "theme-color sets the mobile address bar color, Safari toolbar tint, and PWA splash",
+        "Keep both variants so each scheme gets the right chrome color",
+        "Note apple-mobile-web-app-status-bar-style is overridden by theme-color on supported versions"
+      ],
+      "expected_fix_hints": [
+        "Add <meta name=theme-color> with light and dark media variants",
+        "Match theme-color to the resolved theme's surface color"
+      ],
+      "absent_signals": [
+        "Do not ship a single theme-color that mismatches one scheme",
+        "Do not omit the dark variant"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add meta theme-color with paired light and dark variants via media= so the chrome matches the active theme."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: theme-color sets the mobile address bar color, Safari toolbar tint, and PWA splash."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep both variants so each scheme gets the right chrome color."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Note apple-mobile-web-app-status-bar-style is overridden by theme-color on supported versions."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add <meta name=theme-color> with light and dark media variants."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Match theme-color to the resolved theme's surface color."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ship a single theme-color that mismatches one scheme."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not omit the dark variant."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the dark-mode-implementation owner to design the actual dark color palette, pick the dark surface and text values, and verify they pass WCAG AA — and also to architect a five-brand white-label theming system.",
+      "context": "The team conflates 'dark mode' with all color and theming work.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Choosing the dark palette values and verifying their contrast is color-system-design (and a11y for the criteria), not this skill",
+        "A five-brand multi-theme architecture is theme-system-design, not the two-state dark case",
+        "Offer the in-scope part: wiring detection/persistence/flash-prevention/assets/chrome once the palette exists",
+        "Correctly redirects rather than designing colors or a multi-theme architecture"
+      ],
+      "expected_fix_hints": [
+        "Hand palette/contrast to color-system-design and the multi-theme architecture to theme-system-design",
+        "Implement the runtime switch over the resulting tokens"
+      ],
+      "absent_signals": [
+        "Do not pick the dark palette values here",
+        "Do not architect a five-theme system in this skill"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Choosing the dark palette values and verifying their contrast is color-system-design (and a11y for the criteria), not this skill."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A five-brand multi-theme architecture is theme-system-design, not the two-state dark case."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: wiring detection/persistence/flash-prevention/assets/chrome once the palette exists."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than designing colors or a multi-theme architecture."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand palette/contrast to color-system-design and the multi-theme architecture to theme-system-design."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Implement the runtime switch over the resulting tokens."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the dark palette values here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not architect a five-theme system in this skill."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "parallel-surface-polish",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "After a CSS-only dark theme, cards rely on drop shadows that disappear on the dark background, focus rings are barely visible, and chart colors that read well on white wash out on dark.",
+      "context": "The toggle and tokens already work; the dark mode just feels half-finished.",
+      "question": "How should the agent finish the dark surface?",
+      "expected_flags": [
+        "Dark mode is a parallel design surface, not a re-skin",
+        "Replace shadows with subtle borders or elevated background tints on dark",
+        "Ensure focus rings and other interactive states are visible and contrast-compliant in dark",
+        "Rework chart palettes for the dark surface; verify visually and with automated contrast testing"
+      ],
+      "expected_fix_hints": [
+        "Swap shadow strategy for elevation tints/borders in dark",
+        "Re-tune focus-ring and chart colors for the dark surface"
+      ],
+      "absent_signals": [
+        "Do not assume the same shadows/focus/chart colors work on dark",
+        "Do not treat dark as done after the color overrides"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Dark mode is a parallel design surface, not a re-skin."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replace shadows with subtle borders or elevated background tints on dark."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ensure focus rings and other interactive states are visible and contrast-compliant in dark."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Rework chart palettes for the dark surface; verify visually and with automated contrast testing."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Swap shadow strategy for elevation tints/borders in dark."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-tune focus-ring and chart colors for the dark surface."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the same shadows/focus/chart colors work on dark."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat dark as done after the color overrides."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

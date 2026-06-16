@@ -1,0 +1,459 @@
+{
+  "skill_name": "ref-patterns",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Philosophy, The Ref / State Decision, Ref Callbacks, forwardRef / ref-as-prop, useImperativeHandle, Ref Forwarding in Compound Components, Refs and the Client/Server Boundary, Common Anti-Patterns, Verification) and the React docs cited under Grounding Sources.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "ref-misused-as-state",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A developer stores the current text-input values in a useRef 'to avoid re-renders on every keystroke,' then reads ref.current during render to show a live character count. The count never updates.",
+      "context": "It is a controlled-feeling form where the count must reflect the latest input.",
+      "question": "How should the agent fix this?",
+      "expected_flags": [
+        "The value drives what is rendered (the live count) — it is STATE, so use useState",
+        "Reading ref.current during render returns stale data because refs do not trigger renders",
+        "Frames the choice as semantic (inside vs outside the render cycle), not a performance optimization",
+        "The 'avoid re-renders' perf concern was a phantom for almost all forms"
+      ],
+      "expected_fix_hints": [
+        "Replace useRef with useState for the input value",
+        "Derive the character count from the state value in render"
+      ],
+      "absent_signals": [
+        "Do not keep the value in a ref and read it during render",
+        "Do not add a forceUpdate hack to make the ref-stored value re-render"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The value drives what is rendered (the live count) — it is STATE, so use useState."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reading ref.current during render returns stale data because refs do not trigger renders."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Frames the choice as semantic (inside vs outside the render cycle), not a performance optimization."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The 'avoid re-renders' perf concern was a phantom for almost all forms."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace useRef with useState for the input value."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Derive the character count from the state value in render."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the value in a ref and read it during render."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add a forceUpdate hack to make the ref-stored value re-render."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "interval-id-in-state",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A polling component stores its setInterval id in useState and clears it on unmount. It re-renders on a cadence even when no displayed data changed.",
+      "context": "The interval id is never shown in the UI; only the fetched data is.",
+      "question": "How should the agent fix the re-render storm?",
+      "expected_flags": [
+        "The interval id is not rendered — it is a mutable instance value, so store it in useRef, not useState",
+        "useState for the id causes a pointless re-render every time it is set",
+        "Clean up the interval in the same effect (clearInterval in the cleanup)",
+        "Distinguishes the displayed data (state) from the side-effect handle (ref)"
+      ],
+      "expected_fix_hints": [
+        "Move the interval id to a useRef",
+        "Keep only the fetched data in state"
+      ],
+      "absent_signals": [
+        "Do not keep the interval id in state"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The interval id is not rendered — it is a mutable instance value, so store it in useRef, not useState."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: useState for the id causes a pointless re-render every time it is set."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Clean up the interval in the same effect (clearInterval in the cleanup)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes the displayed data (state) from the side-effect handle (ref)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move the interval id to a useRef."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep only the fetched data in state."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the interval id in state."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "compound-component-ref-forwarding",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An author builds a compound Tabs component. A consumer does <Tabs.Trigger ref={triggerRef}> and tries to focus it on mount, but triggerRef.current is null. The intermediate wrapper renders a styled <button> but drops the ref.",
+      "context": "The library is meant to support focus management and third-party DOM integration.",
+      "question": "How should the agent fix the primitive?",
+      "expected_flags": [
+        "Every layer between consumer and the underlying DOM element must forward the ref through to the <button>",
+        "Use the Radix Slot / composeRefs pattern to merge the consumer ref with the library's internal ref",
+        "On React 19 accept ref as a prop and pass it down; on React 18 use forwardRef",
+        "A compound-component primitive that does not forward refs is not finished"
+      ],
+      "expected_fix_hints": [
+        "Forward ref={composeRefs(forwardedRef, internalRef)} onto the rendered <button>",
+        "Ensure each wrapping primitive accepts and passes the ref"
+      ],
+      "absent_signals": [
+        "Do not leave the wrapper dropping the ref",
+        "Do not tell the consumer to query the DOM directly as a workaround"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Every layer between consumer and the underlying DOM element must forward the ref through to the <button>."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use the Radix Slot / composeRefs pattern to merge the consumer ref with the library's internal ref."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: On React 19 accept ref as a prop and pass it down; on React 18 use forwardRef."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A compound-component primitive that does not forward refs is not finished."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Forward ref={composeRefs(forwardedRef, internalRef)} onto the rendered <button>."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Ensure each wrapping primitive accepts and passes the ref."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave the wrapper dropping the ref."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not tell the consumer to query the DOM directly as a workaround."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "imperative-handle-overexposure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A Modal exposes its entire internal API (open, close, isOpen getter, setTitle, getChildrenCount, internalState) to the parent via useImperativeHandle. The parent reads isOpen through the handle and its UI does not stay in sync.",
+      "context": "The parent mostly needs to open and close the modal; it occasionally needs to reflect open state in its own render.",
+      "question": "How should the agent redesign the handle?",
+      "expected_flags": [
+        "Expose the minimum surface — only what the parent needs (open/close), not the whole internal API",
+        "Do not expose state-read functions; reading isOpen via a method makes the parent's render unreactive to it",
+        "If the parent must reflect open state, lift state up (isOpen prop + onOpenChange callback)",
+        "Default to props/callbacks; reserve the imperative handle for genuine escape-hatch needs"
+      ],
+      "expected_fix_hints": [
+        "Trim the handle to { open, close }",
+        "Lift isOpen into a controlled isOpen prop with onOpenChange"
+      ],
+      "absent_signals": [
+        "Do not expose the full internal API surface",
+        "Do not read state through an imperative getter"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Expose the minimum surface — only what the parent needs (open/close), not the whole internal API."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Do not expose state-read functions; reading isOpen via a method makes the parent's render unreactive to it."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: If the parent must reflect open state, lift state up (isOpen prop + onOpenChange callback)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Default to props/callbacks; reserve the imperative handle for genuine escape-hatch needs."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Trim the handle to { open, close }."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Lift isOpen into a controlled isOpen prop with onOpenChange."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not expose the full internal API surface."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not read state through an imperative getter."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "ref-across-server-boundary",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A Server Component creates a ref with useRef and passes it to a Client Component child to measure it. The build errors / the ref is never populated.",
+      "context": "The page is a React Server Components app using the App Router and 'use client' boundaries.",
+      "question": "How should the agent fix the boundary issue?",
+      "expected_flags": [
+        "Refs only work in Client Components — no useRef in a Server Component, and refs are not serializable across the 'use client' boundary",
+        "Server Components produce HTML on the server; there is no DOM node or client runtime to hold the mutable container",
+        "Move the part of the tree that needs the ref into a Client Component marked 'use client'",
+        "Notes the broader boundary mechanics belong to client-server-boundary"
+      ],
+      "expected_fix_hints": [
+        "Mark the measuring wrapper 'use client' and create the ref there",
+        "Keep the ref usage entirely in client-only space"
+      ],
+      "absent_signals": [
+        "Do not try to pass a ref as a prop from a Server Component",
+        "Do not return a ref from a Server Action"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Refs only work in Client Components — no useRef in a Server Component, and refs are not serializable across the 'use client' boundary."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Server Components produce HTML on the server; there is no DOM node or client runtime to hold the mutable container."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Move the part of the tree that needs the ref into a Client Component marked 'use client'."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes the broader boundary mechanics belong to client-server-boundary."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Mark the measuring wrapper 'use client' and create the ref there."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the ref usage entirely in client-only space."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not try to pass a ref as a prop from a Server Component."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not return a ref from a Server Action."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A teammate asks the ref-patterns owner to decide whether the checkout form's state should live in the URL, on the server, or in client state, and to set the project-wide useEffect dependency-array and custom-hook conventions.",
+      "context": "The team treats anything involving useRef, useState, or hooks as 'the ref-patterns person's job.'",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "State location/ownership (server / client UI / URL / persistent) is state-management's territory",
+        "Dependency-array discipline, Rules of Hooks, and custom-hook conventions belong to hooks-patterns",
+        "Offer the in-scope part: the ref-vs-state decision for individual mutable values and the ref family mechanics",
+        "Redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand state architecture to state-management and hook conventions to hooks-patterns",
+        "Provide the ref-or-state call for the specific mutable values in the form"
+      ],
+      "absent_signals": [
+        "Do not design the app's state-location strategy under this skill",
+        "Do not set the project's effect/dependency-array rules under this skill"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: State location/ownership (server / client UI / URL / persistent) is state-management's territory."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Dependency-array discipline, Rules of Hooks, and custom-hook conventions belong to hooks-patterns."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: the ref-vs-state decision for individual mutable values and the ref family mechanics."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand state architecture to state-management and hook conventions to hooks-patterns."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide the ref-or-state call for the specific mutable values in the form."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the app's state-location strategy under this skill."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not set the project's effect/dependency-array rules under this skill."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "react19-forwardref-migration",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A team on React 18 wants to 'modernize' by replacing all forwardRef wrappers with the React 19 ref-as-prop syntax across the codebase in one PR.",
+      "context": "The app is pinned to React 18 and will not upgrade for another quarter.",
+      "question": "How should the agent advise?",
+      "expected_flags": [
+        "Ref-as-prop is a React 19 feature — applying it on React 18 breaks (function components cannot accept a ref prop directly there)",
+        "Keep forwardRef while on React 18; migrate to ref-as-prop when React 19 is the active version",
+        "forwardRef still works on React 19 for backward compatibility; codemods exist to migrate when the time comes",
+        "Sequences the migration to the actual React version, not the desire to modernize"
+      ],
+      "expected_fix_hints": [
+        "Defer the ref-as-prop migration until React 19 ships in the app",
+        "Use the official codemod at upgrade time"
+      ],
+      "absent_signals": [
+        "Do not replace forwardRef with ref-as-prop on a React 18 codebase",
+        "Do not modernize syntax ahead of the runtime that supports it"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ref-as-prop is a React 19 feature — applying it on React 18 breaks (function components cannot accept a ref prop directly there)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep forwardRef while on React 18; migrate to ref-as-prop when React 19 is the active version."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: forwardRef still works on React 19 for backward compatibility; codemods exist to migrate when the time comes."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Sequences the migration to the actual React version, not the desire to modernize."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Defer the ref-as-prop migration until React 19 ships in the app."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use the official codemod at upgrade time."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not replace forwardRef with ref-as-prop on a React 18 codebase."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not modernize syntax ahead of the runtime that supports it."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

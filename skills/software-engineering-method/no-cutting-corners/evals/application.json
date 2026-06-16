@@ -1,0 +1,565 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "no-cutting-corners",
+  "subject": "Portable across any project, repo, or agent runtime. Consolidates five non-negotiable quality pillars — completeness,…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "constraint-awareness",
+    "methodology",
+    "prioritization",
+    "methodical",
+    "evaluation",
+    "best-practice",
+    "summarization",
+    "code-review"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Enforces five non-negotiable quality pillars that counter the shortcuts an agent takes under training pressure: complete reporting (show ALL items, never filter unilaterally), verification (no claim of works/done/exists without a tool-call receipt in the…\"",
+      "context": "The agent has access to the no-cutting-corners skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is no-cutting-corners the right skill to apply?",
+      "expected_flags": [
+        "Recognizes no-cutting-corners as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against constraint-awareness, methodology, prioritization",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the no-cutting-corners workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore no-cutting-corners",
+        "Does not route to constraint-awareness, methodology, prioritization when the no-cutting-corners scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes no-cutting-corners as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore no-cutting-corners"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Portable across any project, repo, or agent runtime. Consolidates five non-negotiable quality pillars — completeness, verification, thoroughness, enrichment, and anti-shortcut — into one enforcement reference an agent runs as a gate before any enumerated…\"",
+      "context": "The agent has access to the no-cutting-corners skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is no-cutting-corners the right skill to apply?",
+      "expected_flags": [
+        "Recognizes no-cutting-corners as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against constraint-awareness, methodology, prioritization",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the no-cutting-corners workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore no-cutting-corners",
+        "Does not route to constraint-awareness, methodology, prioritization when the no-cutting-corners scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes no-cutting-corners as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore no-cutting-corners"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Enforces five non-negotiable quality pillars that counter the shortcuts an agent takes under training pressure: complete reporting (show ALL items, never filter unilaterally), verification (no claim of works/done/exists without a tool-call receipt in the…\"",
+      "context": "The agent has access to the no-cutting-corners skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is no-cutting-corners the right skill to apply?",
+      "expected_flags": [
+        "Recognizes no-cutting-corners as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against constraint-awareness, methodology, prioritization",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the no-cutting-corners workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore no-cutting-corners",
+        "Does not route to constraint-awareness, methodology, prioritization when the no-cutting-corners scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes no-cutting-corners as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore no-cutting-corners"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"Portable across any project, repo, or agent runtime. Consolidates five non-negotiable quality pillars — completeness, verification, thoroughness, enrichment, and anti-shortcut — into one enforcement reference an agent runs as a gate before any enumerated…\"",
+      "context": "The agent has access to the no-cutting-corners skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is no-cutting-corners the right skill to apply?",
+      "expected_flags": [
+        "Recognizes no-cutting-corners as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against constraint-awareness, methodology, prioritization",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the no-cutting-corners workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore no-cutting-corners",
+        "Does not route to constraint-awareness, methodology, prioritization when the no-cutting-corners scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes no-cutting-corners as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore no-cutting-corners"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"Enforces five non-negotiable quality pillars that counter the shortcuts an agent takes under training pressure: complete reporting (show ALL items, never filter unilaterally), verification (no claim of works/done/exists without a tool-call receipt in the…\"",
+      "context": "The agent has access to the no-cutting-corners skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is no-cutting-corners the right skill to apply?",
+      "expected_flags": [
+        "Recognizes no-cutting-corners as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against constraint-awareness, methodology, prioritization",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the no-cutting-corners workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore no-cutting-corners",
+        "Does not route to constraint-awareness, methodology, prioritization when the no-cutting-corners scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes no-cutting-corners as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore no-cutting-corners"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"Portable across any project, repo, or agent runtime. Consolidates five non-negotiable quality pillars — completeness, verification, thoroughness, enrichment, and anti-shortcut — into one enforcement reference an agent runs as a gate before any enumerated…\"",
+      "context": "The agent has access to the no-cutting-corners skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is no-cutting-corners the right skill to apply?",
+      "expected_flags": [
+        "Recognizes no-cutting-corners as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against constraint-awareness, methodology, prioritization",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the no-cutting-corners workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore no-cutting-corners",
+        "Does not route to constraint-awareness, methodology, prioritization when the no-cutting-corners scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes no-cutting-corners as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore no-cutting-corners"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks for work that is near no-cutting-corners but is explicitly outside its declared scope.",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should no-cutting-corners be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside no-cutting-corners's ownership",
+        "Routes the work to constraint-awareness or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying no-cutting-corners terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply no-cutting-corners as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if no-cutting-corners has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim no-cutting-corners should own the request",
+        "Does not use no-cutting-corners's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside no-cutting-corners's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim no-cutting-corners should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use no-cutting-corners's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks for work that is near no-cutting-corners but is explicitly outside its declared scope.",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should no-cutting-corners be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside no-cutting-corners's ownership",
+        "Routes the work to constraint-awareness or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying no-cutting-corners terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply no-cutting-corners as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if no-cutting-corners has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim no-cutting-corners should own the request",
+        "Does not use no-cutting-corners's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside no-cutting-corners's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim no-cutting-corners should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use no-cutting-corners's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks for work that is near no-cutting-corners but is explicitly outside its declared scope.",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should no-cutting-corners be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside no-cutting-corners's ownership",
+        "Routes the work to constraint-awareness or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying no-cutting-corners terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply no-cutting-corners as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if no-cutting-corners has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim no-cutting-corners should own the request",
+        "Does not use no-cutting-corners's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside no-cutting-corners's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim no-cutting-corners should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use no-cutting-corners's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks for work that is near no-cutting-corners but is explicitly outside its declared scope.",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should no-cutting-corners be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside no-cutting-corners's ownership",
+        "Routes the work to constraint-awareness or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying no-cutting-corners terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply no-cutting-corners as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if no-cutting-corners has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim no-cutting-corners should own the request",
+        "Does not use no-cutting-corners's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside no-cutting-corners's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim no-cutting-corners should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use no-cutting-corners's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}

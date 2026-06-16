@@ -1,0 +1,390 @@
+{
+  "skill_name": "naming-conventions",
+  "subject": "Truthful naming of code and system artifacts",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/software-engineering-method/naming-conventions/SKILL.md",
+    "skills/software-engineering-method/naming-conventions/references/upstream-displacement-2026-06-02.md"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "verb-contract-violation",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "Code review surfaces `getInvoice(orderId)`. In addition to returning the invoice, it lazily creates and persists an invoice row when none exists and emits an analytics event.",
+      "context": "The author argues the name is fine because the function does return the invoice.",
+      "question": "Is the name appropriate, and if not, what should change?",
+      "expected_flags": [
+        "Flags that the verb `get` promises a pure, cheap, side-effect-free read, which this function violates by persisting a row and emitting an event.",
+        "Recommends a verb that implies the write, such as `ensureInvoice`, `getOrCreateInvoice`, or `createInvoiceIfMissing`.",
+        "Names the concrete risk: callers will assume `get` is safe to call repeatedly, in a loop, or outside a transaction."
+      ],
+      "expected_fix_hints": [
+        "Rename to a side-effect-signaling verb (ensure / getOrCreate / create).",
+        "If a pure read is also needed, split out a separate `findInvoice` that does not persist."
+      ],
+      "absent_signals": [
+        "Do not approve the name because it 'returns the invoice'.",
+        "Do not suggest a comment explaining the hidden side effect instead of renaming."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags that the verb `get` promises a pure, cheap, side-effect-free read, which this function violates by persisting a row and emitting an event."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends a verb that implies the write, such as `ensureInvoice`, `getOrCreateInvoice`, or `createInvoiceIfMissing`."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names the concrete risk: callers will assume `get` is safe to call repeatedly, in a loop, or outside a transaction."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rename to a side-effect-signaling verb (ensure / getOrCreate / create)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: If a pure read is also needed, split out a separate `findInvoice` that does not persist."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not approve the name because it 'returns the invoice'."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not suggest a comment explaining the hidden side effect instead of renaming."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "names-that-lie-optional-collapse",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "`getCustomer(id)` returns `Customer | undefined` when the id is missing. Call sites do `const c = getCustomer(id); c.email` and occasionally crash on undefined.",
+      "context": "The team is treating the crashes as scattered missing null checks.",
+      "question": "What naming change, if any, addresses the recurring undefined-access crashes?",
+      "expected_flags": [
+        "Identifies that `get` hides the nullable return — a caller cannot tell from the name that the function may return undefined.",
+        "Recommends renaming to `findCustomer` (convention: `find` permits a null/absent return) or `getCustomerOrThrow` (convention: `get` guarantees a value).",
+        "Frames the issue as a naming/contract bug, not only a missing null check."
+      ],
+      "expected_fix_hints": [
+        "Pick `find*` when absence is a normal outcome; pick `*OrThrow` when absence is an error.",
+        "Update all call sites in the same change."
+      ],
+      "absent_signals": [
+        "Do not treat this as purely a debugging task with no rename.",
+        "Do not keep `get` and sprinkle null checks at call sites as the primary fix."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies that `get` hides the nullable return — a caller cannot tell from the name that the function may return undefined."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends renaming to `findCustomer` (convention: `find` permits a null/absent return) or `getCustomerOrThrow` (convention: `get` guarantees a value)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Frames the issue as a naming/contract bug, not only a missing null check."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pick `find*` when absence is a normal outcome; pick `*OrThrow` when absence is an error."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Update all call sites in the same change."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat this as purely a debugging task with no rename."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep `get` and sprinkle null checks at call sites as the primary fix."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "casing-per-artifact-kind",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A developer is adding three new artifacts at once: a boolean database column for whether an order has shipped, an environment variable for the shipping API key, and a React hook that subscribes to shipment updates.",
+      "context": "The developer asks what to name each and is inclined to use camelCase everywhere for consistency.",
+      "question": "What should each artifact be named?",
+      "expected_flags": [
+        "SQL column in snake_case (e.g. `has_shipped` or `shipped_at`).",
+        "Environment variable in SCREAMING_SNAKE_CASE (e.g. `SHIPPING_API_KEY`).",
+        "React hook with the mandatory `use` prefix in camelCase (e.g. `useShipmentUpdates`).",
+        "Boolean uses a positive predicate prefix (`is` / `has`) rather than a bare noun."
+      ],
+      "expected_fix_hints": [
+        "Match casing to the artifact kind, not to a single personal preference applied everywhere."
+      ],
+      "absent_signals": [
+        "Do not apply camelCase to the SQL column or the environment variable.",
+        "Do not omit the `use` prefix on the hook."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: SQL column in snake_case (e.g. `has_shipped` or `shipped_at`)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Environment variable in SCREAMING_SNAKE_CASE (e.g. `SHIPPING_API_KEY`)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: React hook with the mandatory `use` prefix in camelCase (e.g. `useShipmentUpdates`)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Boolean uses a positive predicate prefix (`is` / `has`) rather than a bare noun."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Match casing to the artifact kind, not to a single personal preference applied everywhere."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not apply camelCase to the SQL column or the environment variable."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not omit the `use` prefix on the hook."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "rename-coordination",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A column originally named `created` now stores the ship date after a migration. The team wants to rename it to `shipped_at`. The column is referenced in ORM models, raw SQL strings, TypeScript types, and docs.",
+      "context": "One developer plans to use the IDE's rename feature and ship it.",
+      "question": "How should the rename be carried out?",
+      "expected_flags": [
+        "Update every reference — column, queries, ORM models, types, tests, and docs — in a single commit.",
+        "Use grep across the codebase, not only IDE rename, to catch dynamic and string-literal references the IDE misses.",
+        "Consider a deprecation alias if external consumers may have pinned to the old name.",
+        "Run lint and tests to catch dynamic references the grep missed."
+      ],
+      "expected_fix_hints": [
+        "Produce one diff that shows the rename and nothing else.",
+        "Update docs in the same commit — stale docs are a naming bug."
+      ],
+      "absent_signals": [
+        "Do not ship the column rename without updating all call sites.",
+        "Do not rely solely on IDE rename for a column referenced in raw SQL and string literals."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Update every reference — column, queries, ORM models, types, tests, and docs — in a single commit."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use grep across the codebase, not only IDE rename, to catch dynamic and string-literal references the IDE misses."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Consider a deprecation alias if external consumers may have pinned to the old name."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Run lint and tests to catch dynamic references the grep missed."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Produce one diff that shows the rename and nothing else."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Update docs in the same commit — stale docs are a naming bug."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ship the column rename without updating all call sites."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely solely on IDE rename for a column referenced in raw SQL and string literals."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boolean-polarity-and-sibling-consistency",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A module exposes `isInvalid` and `notReady` booleans, and the read functions `getOrders`, `loadCustomers`, and `fetchProducts` sit side by side, each doing an equivalent in-memory read.",
+      "context": "The author considers this 'just style' and not worth changing.",
+      "question": "What naming issues are present and how should they be resolved?",
+      "expected_flags": [
+        "Boolean polarity: prefer positive `isValid` / `isReady` and invert the stored value rather than `isInvalid` / `notReady`, which read backwards under negation.",
+        "Sibling inconsistency: `getOrders`, `loadCustomers`, and `fetchProducts` use three different verbs for the same kind of read — pick one verb stem so siblings match."
+      ],
+      "expected_fix_hints": [
+        "Rename to positive booleans and a single consistent read verb across the sibling functions."
+      ],
+      "absent_signals": [
+        "Do not dismiss mixed read verbs and negative booleans as harmless style."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Boolean polarity: prefer positive `isValid` / `isReady` and invert the stored value rather than `isInvalid` / `notReady`, which read backwards under negation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Sibling inconsistency: `getOrders`, `loadCustomers`, and `fetchProducts` use three different verbs for the same kind of read — pick one verb stem so siblings match."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rename to positive booleans and a single consistent read verb across the sibling functions."
+        },
+        {
+          "id": "c4",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not dismiss mixed read verbs and negative booleans as harmless style."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "refactor-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A 220-line `processOrder` function performs validation, pricing, persistence, and notification inline. The developer asks for help breaking it into smaller pieces.",
+      "context": "The function names are accurate; the problem is that the function does too much.",
+      "question": "How should the agent approach this?",
+      "expected_flags": [
+        "Recognizes this is primarily a structural refactor (extract functions), not a naming task.",
+        "Routes the work to `refactor`; naming of any extracted units is a downstream side effect, not the main job."
+      ],
+      "expected_fix_hints": [
+        "Use refactor to extract the units, then name the extracted functions by the naming rules."
+      ],
+      "absent_signals": [
+        "Do not treat this as a naming-convention task or present renaming as the primary fix.",
+        "Do not over-apply the casing/verb tables when the request is about structure."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes this is primarily a structural refactor (extract functions), not a naming task."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes the work to `refactor`; naming of any extracted units is a downstream side effect, not the main job."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use refactor to extract the units, then name the extracted functions by the naming rules."
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat this as a naming-convention task or present renaming as the primary fix."
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not over-apply the casing/verb tables when the request is about structure."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "debugging-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A boolean `userIsActive` logs `false` for users who are clearly active in the product UI. The team wants to know why.",
+      "context": "The identifier itself is accurate and positively phrased; the computed value is wrong.",
+      "question": "What is the right approach?",
+      "expected_flags": [
+        "Recognizes this is a runtime behavior bug — the value is wrong — not a naming problem; the name is fine.",
+        "Routes the work to `debugging` to find why the value is computed incorrectly."
+      ],
+      "expected_fix_hints": [
+        "Investigate the data flow that sets `userIsActive`; do not change the name."
+      ],
+      "absent_signals": [
+        "Do not propose renaming the variable as the fix.",
+        "Do not treat a correct, truthful name as the cause of a wrong runtime value."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recognizes this is a runtime behavior bug — the value is wrong — not a naming problem; the name is fine."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes the work to `debugging` to find why the value is computed incorrectly."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Investigate the data flow that sets `userIsActive`; do not change the name."
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not propose renaming the variable as the fix."
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat a correct, truthful name as the cause of a wrong runtime value."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

@@ -1,0 +1,204 @@
+{
+  "skill_name": "balanced-scorecard",
+  "subject": "Balanced Scorecard strategy execution and performance management",
+  "adjacent_concepts": [
+    "strategy map",
+    "strategic objectives",
+    "KPIs",
+    "lead and lag measures",
+    "targets",
+    "initiatives",
+    "OKRs",
+    "Playing to Win",
+    "performance budgets",
+    "BCG Matrix",
+    "SWOT/TOWS",
+    "expected value",
+    "value chain analysis"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define the Balanced Scorecard in 2-3 sentences. Include why it differs from an ordinary KPI dashboard.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines Balanced Scorecard as a strategy-execution or performance-management framework",
+        "Mentions translating strategy into objectives, measures, targets, initiatives, owners, or review cadence",
+        "Mentions multiple balanced perspectives, not only financial measures",
+        "Distinguishes it from a generic KPI dashboard or metric inventory",
+        "Explains that it supports management learning or execution review"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of a Balanced Scorecard. Name the primitives and how they relate.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Starts from strategy, mission, vision, or strategic theme",
+        "Names perspectives",
+        "Names strategic objectives",
+        "Names strategy map or causal links",
+        "Names measures or KPIs",
+        "Names baselines, targets, initiatives, owners, cadence, or review decisions",
+        "Explains that measures trace to objectives and objectives trace to strategy"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a Balanced Scorecard skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents KPI dumps",
+        "Prevents finance-only performance management",
+        "Prevents metrics without strategy linkage",
+        "Prevents objectives without measures, targets, owners, or initiatives",
+        "Prevents dashboards that do not change decisions or learning",
+        "Prevents mistaking scorecards for upstream strategy formulation or OKR-only goal-setting"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish Balanced Scorecard from Playing to Win, OKRs, performance budgets, BCG Matrix, SWOT/TOWS, expected value, and value chain analysis. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Playing to Win formulates strategy choices",
+        "OKRs set period goals with Objectives and Key Results",
+        "Performance budgets set technical/service thresholds",
+        "BCG Matrix allocates portfolio units by growth and share",
+        "SWOT/TOWS inventories factors and generates options",
+        "Expected value compares options by probabilities and payoffs",
+        "Value Chain analysis decomposes activities and linkages",
+        "Balanced Scorecard owns strategy execution through objectives, measures, targets, initiatives, and review loops"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place Balanced Scorecard among strategy methods. What inputs can feed it, what outputs should it produce, and what methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies Balanced Scorecard as strategy execution or strategic performance management",
+        "Names inputs such as mission, vision, strategy, strategic themes, stakeholder goals, or prior strategy frameworks",
+        "Names outputs such as strategy map, objectives, KPIs, targets, initiatives, owners, cadence, or review plan",
+        "Explains that OKRs, budgets, roadmaps, dashboards, or initiative plans can follow or connect",
+        "Explains that Balanced Scorecard manages execution and learning rather than selecting the original strategy"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for a Balanced Scorecard that preserves the mechanism. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving multiple gauges, instruments, or linked signals",
+        "Maps perspectives to different needed views of performance",
+        "Maps measures/targets to gauges or feedback",
+        "Maps review decisions to steering or adjustment",
+        "Rejects a bad analogy that treats it as a generic dashboard, report card, or finance-only gauge",
+        "Explains what the bad analogy loses"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A nonprofit wants to execute a five-year strategy to expand community health access. Apply Balanced Scorecard without forcing shareholder financial logic.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Adapts financial perspective to stewardship, sustainability, or resource resilience",
+        "Uses customer/stakeholder/beneficiary perspective",
+        "Includes internal process objectives",
+        "Includes organizational capacity or learning objectives",
+        "Defines objectives, measures, targets, initiatives, owners, or cadence",
+        "Avoids profit-only logic",
+        "States missing data or assumptions"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "Novel scenario: A SaaS leadership team has 80 KPIs and asks for a Balanced Scorecard. What should happen next?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Does not reproduce all 80 KPIs",
+        "Starts from strategy or strategic themes",
+        "Defines perspectives and strategic objectives",
+        "Selects a small set of meaningful measures tied to objectives",
+        "Adds baselines, targets, owners, cadence, and data sources",
+        "Names lead and lag measures or guardrails",
+        "Links initiatives and review decisions"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "application",
+      "prompt": "Novel scenario: A product team wants to cascade a company Balanced Scorecard to its own work. Explain how to cascade without copy-pasting every corporate metric.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Explains cascading as translation of strategy, not copying",
+        "Identifies parent objectives the product team can influence",
+        "Defines local objectives and measures tied to parent strategy",
+        "Keeps shared guardrails or dependencies visible",
+        "Assigns owners and cadence",
+        "Avoids personal surveillance or irrelevant inherited metrics"
+      ]
+    },
+    {
+      "id": 10,
+      "dimension": "misconception",
+      "prompt": "Correct this misconception: 'A Balanced Scorecard is just a dashboard with four categories of KPIs.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Rejects dashboard-only framing",
+        "Explains that scorecards start from strategy",
+        "Explains strategic objectives precede measures",
+        "Mentions strategy map or cause-effect hypothesis",
+        "Mentions targets, initiatives, owners, cadence, or management review",
+        "Explains that the four categories must be adapted and linked rather than used as empty boxes"
+      ]
+    }
+  ]
+}

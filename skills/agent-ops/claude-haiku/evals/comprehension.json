@@ -1,0 +1,86 @@
+{
+  "skill_name": "claude-haiku",
+  "subject": "Routing tasks to the fast/cheap model tier (Claude Haiku)",
+  "adjacent_concepts": [
+    "claude-sonnet",
+    "claude-opus",
+    "autonomous-loop-patterns",
+    "agent-engineering",
+    "tool-call-strategy"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "In 2-3 sentences, define the role of the fast/cheap tier in a model roster, including the rung just below it (a deterministic script) and the kind of work that distinguishes the two.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "What expensive failure mode does an explicit fast tier prevent, and what is the opposite failure mode of over-using it? Explain why both matter for routing.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Name the TWO distinct kinds of boundary that take a task OFF the fast tier upward, and the one boundary that takes a task below it. For the upward boundaries, be explicit that the 200K context limit is structural and separate from the reasoning-depth limit.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT conflate the structural 200K-context ceiling with the reasoning-difficulty boundary; a task can exceed 200K while being mechanically simple, and that still forces an escalation. Must NOT omit the downward boundary to a script."
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "Four tasks: (a) 'parse 5,000 incoming webhook payloads into our event shape', (b) 'review a 12-line config diff', (c) 'analyze whether a refund webhook handler has a money-rounding bug that could under-refund customers', (d) 'summarize a 400K-token document'. Assign a tier (or 'script') to each and justify, calling out which boundary triggers any escalation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT route the money-rounding correctness task to the fast tier on the grounds that it looks small, and must NOT route the 400K-token summarization to the fast tier given its 200K ceiling."
+    },
+    {
+      "id": 5,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Haiku is the cheapest model, so to cut costs you should route as much work to it as possible, including reasoning-heavy tasks.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must NOT accept that maximizing fast-tier usage minimizes cost; wrong answers on reasoning-heavy work and re-work outweigh the token saving."
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Classify each of these Haiku facts as a CAPABILITY that makes it fit for fast/cheap work or a LIMIT that forces escalation: the lowest per-token cost, the 200K context window, the missing effort parameter, the separate rate-limit pool, and the often-lower load. Explain each.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for the fast tier that captures both when it is the right tool (high-volume routine work) and the boundary where the work outgrows it, and what the analogy implies about defaulting reasoning-heavy work to it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "medium"
+    }
+  ]
+}

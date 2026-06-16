@@ -1,0 +1,35 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-11",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/bayesian-reasoning/references/bayesian-reasoning-sources.md": "64efb763c7b63802a0ed16080d20cbc147600090f114cbd498153bf2618e05b3",
+      "skills/reasoning-strategy/bayesian-reasoning/references/upstream-displacement-2026-05-26.md": "ec0ddfb8bf6a254b9ad4e107d29c40ab33ca24a7524f1cba1560e2847dfa7baa"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-05-28",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "eval_score": 4.58,
+  "eval_failed_ids": []
+}

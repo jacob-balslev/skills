@@ -1,0 +1,83 @@
+{
+  "skill_name": "cron-scheduling",
+  "subject": "Cron scheduling",
+  "adjacent_concepts": [
+    "background-jobs",
+    "observability-modeling",
+    "webhook-integration",
+    "real-time-updates",
+    "idempotency"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define cron scheduling as this skill teaches it. Your answer must include schedule expression, trigger surface, authenticated entrypoint, durable execution target, idempotency, and observability.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the alarm-clock-to-factory mental model for cron scheduling and name the reliability envelope around the trigger.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why is a cron job that runs twice or fails silently dangerous? Name the design checks this skill uses to prevent those failures.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks how to move a slow user-triggered export out of an API route and report progress. Which part belongs to background-jobs, which part would belong to cron-scheduling only if present, and why?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify these concerns as cron-scheduling, background-jobs, observability, or webhook-integration: UTC schedule, CRON_SECRET authorization, duplicate scheduled invocations, worker retry policy, heartbeat alert, incoming provider event schema.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use the alarm-clock-to-factory analogy to explain why a cron route should usually dispatch durable work rather than perform long-running logic inline.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: a Vercel Cron route runs every five minutes, performs an eight-minute sync inline, catches errors and returns 200, and has no idempotency table. Apply the skill to identify every failure mode and propose a corrected architecture.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}

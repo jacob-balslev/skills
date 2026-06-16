@@ -1,0 +1,99 @@
+{
+  "skill_name": "streaming-architecture",
+  "subject": "Streaming architecture",
+  "adjacent_concepts": [
+    "real-time-updates",
+    "api-design",
+    "background-jobs",
+    "tool-call-flow",
+    "rendering-models",
+    "event-contract-design"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define streaming architecture in 2-3 sentences. Include the five primitives and what distinguishes streaming from a single request/response.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not define streaming as merely WebSocket, SSE, or chunked HTTP."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "A service emits ordered values for several minutes. Explain the producer, stream, consumer, backpressure, and termination questions you must answer before choosing a transport.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not choose a transport before naming flow control and termination semantics."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why would a system stream values instead of materializing a complete response first? Name the benefits and the costs.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A product team asks how to show a live dashboard as fresh without interrupting users. Should streaming-architecture own the task? Explain the boundary with real-time-updates.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not route browser freshness UX to the low-level streaming primitive unless producer/backpressure/termination design is the actual question."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Compare HTTP chunked transfer, Server-Sent Events, WebSocket, gRPC streaming, WHATWG ReadableStream, and Node Readable. For each, name directionality and backpressure model at a high level.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why a stream needs a slow-consumer signal and a distinct end-of-stream marker.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "A producer emits 1000 events/sec and the browser consumes 100 events/sec. Apply the skill: what failure mode appears, and what strategies should the design consider?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not say TCP flow control alone is a complete application-level slow-consumer strategy."
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Streaming is mostly choosing SSE vs WebSocket, and if no data arrives for a while the stream is probably done.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not accept silence as termination or transport choice as the core concept."
+    }
+  ]
+}

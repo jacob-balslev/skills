@@ -1,0 +1,470 @@
+{
+  "skill_name": "connection-pooling",
+  "subject": "Database connection pooling",
+  "mode": "application",
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "pool-exhaustion-vs-query-latency",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An API's p99 latency jumps from 200ms to 4s during peak traffic. Database query logs still show most queries under 20ms, but application metrics show `pool.acquire_time_p99` above 3s and many waiting requests.",
+      "context": "The team wants to start by tuning indexes because users experience slow requests.",
+      "question": "Diagnose the likely bottleneck and recommend next checks.",
+      "expected_flags": [
+        "Identifies connection-pool contention as the likely bottleneck.",
+        "Separates pool wait time from query execution time.",
+        "Checks pool active/idle/waiting counts and database-side connection totals."
+      ],
+      "expected_fix_hints": [
+        "Measure pool.acquire_time, active, idle, and waiting metrics under peak load.",
+        "Find units of work holding connections too long or external calls inside transactions.",
+        "Use Little's Law and load tests before changing pool size."
+      ],
+      "absent_signals": [
+        "Must not start with index tuning as the primary explanation.",
+        "Must not raise pool size without checking database-side max_connections and useful concurrency.",
+        "Must not ignore leaked or long-held connections."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies connection-pool contention as the likely bottleneck."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates pool wait time from query execution time."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Checks pool active/idle/waiting counts and database-side connection totals."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Measure pool.acquire_time, active, idle, and waiting metrics under peak load."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Find units of work holding connections too long or external calls inside transactions."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use Little's Law and load tests before changing pool size."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not start with index tuning as the primary explanation."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not raise pool size without checking database-side max_connections and useful concurrency."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore leaked or long-held connections."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "pool-sizing-littles-law",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A service handles 2,000 database-using requests per second. The average time a request holds a connection is 8ms, with p95 around 20ms. There are 12 app instances and the team proposes pool size 100 per instance.",
+      "context": "The database has 16 cores and a max_connections ceiling of 500. The proposed app-side total is 1,200 before admin and background connections.",
+      "question": "How should the pool be sized or evaluated?",
+      "expected_flags": [
+        "Uses Little's Law to estimate useful concurrency from arrival rate and connection hold time.",
+        "Flags app instances multiplied by pool size can exceed database capacity.",
+        "Treats max_connections as a ceiling, not a target."
+      ],
+      "expected_fix_hints": [
+        "Start with a much smaller per-instance pool and verify pool wait under load.",
+        "Reserve database connections for admin, migrations, and background processes.",
+        "Consider a proxy pool if app instance fan-out cannot be bounded."
+      ],
+      "absent_signals": [
+        "Must not size from request rate alone.",
+        "Must not accept 100 per instance just because the database ceiling is high.",
+        "Must not ignore the database's useful concurrency."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses Little's Law to estimate useful concurrency from arrival rate and connection hold time."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags app instances multiplied by pool size can exceed database capacity."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treats max_connections as a ceiling, not a target."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Start with a much smaller per-instance pool and verify pool wait under load."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve database connections for admin, migrations, and background processes."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Consider a proxy pool if app instance fan-out cannot be bounded."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not size from request rate alone."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not accept 100 per instance just because the database ceiling is high."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore the database's useful concurrency."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "pgbouncer-transaction-mode-feature-surface",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team wants PgBouncer transaction pooling for a PostgreSQL application that uses session `SET` statements, advisory locks, LISTEN/NOTIFY, and server-side prepared statements.",
+      "context": "They expect transaction pooling to behave like session pooling with more multiplexing.",
+      "question": "What compatibility review is required before choosing the mode?",
+      "expected_flags": [
+        "Distinguishes session, transaction, and statement pooling feature surfaces.",
+        "Flags session-spanning features as incompatible or requiring refactor/workarounds under transaction pooling.",
+        "Notes PgBouncer prepared statement support depends on version/configuration."
+      ],
+      "expected_fix_hints": [
+        "Audit `SET` vs `SET LOCAL`, advisory locks, LISTEN/NOTIFY, temporary tables, WITH HOLD cursors, and prepared statements.",
+        "Use session pooling for clients that require session state.",
+        "Use transaction pooling only after incompatible session features are removed or isolated."
+      ],
+      "absent_signals": [
+        "Must not treat pooling mode as only an operations choice.",
+        "Must not say transaction pooling preserves all PostgreSQL session behavior.",
+        "Must not ignore PgBouncer version/configuration for prepared statements."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes session, transaction, and statement pooling feature surfaces."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags session-spanning features as incompatible or requiring refactor/workarounds under transaction pooling."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes PgBouncer prepared statement support depends on version/configuration."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Audit `SET` vs `SET LOCAL`, advisory locks, LISTEN/NOTIFY, temporary tables, WITH HOLD cursors, and prepared statements."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use session pooling for clients that require session state."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use transaction pooling only after incompatible session features are removed or isolated."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat pooling mode as only an operations choice."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not say transaction pooling preserves all PostgreSQL session behavior."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore PgBouncer version/configuration for prepared statements."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "idle-in-transaction-leak",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A worker starts a database transaction, calls an external API, and sometimes hangs for minutes. Pool slots stay occupied and PostgreSQL shows long `idle in transaction` sessions.",
+      "context": "The team sees fewer available connections and occasional request timeouts.",
+      "question": "What should change in code and operations?",
+      "expected_flags": [
+        "Identifies idle-in-transaction as a connection-pool and database-health failure.",
+        "Explains that open transactions hold connection slots and can block cleanup/locks.",
+        "Separates the external API call from the database transaction."
+      ],
+      "expected_fix_hints": [
+        "Move external service calls outside the transaction or narrow transaction scope.",
+        "Set idle_in_transaction_session_timeout appropriately.",
+        "Add tracing/metrics for transaction duration and connection hold time."
+      ],
+      "absent_signals": [
+        "Must not solve only by increasing pool size.",
+        "Must not leave external calls inside open transactions.",
+        "Must not ignore database-side timeout safeguards."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies idle-in-transaction as a connection-pool and database-health failure."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that open transactions hold connection slots and can block cleanup/locks."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates the external API call from the database transaction."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move external service calls outside the transaction or narrow transaction scope."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Set idle_in_transaction_session_timeout appropriately."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add tracing/metrics for transaction duration and connection hold time."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not solve only by increasing pool size."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not leave external calls inside open transactions."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore database-side timeout safeguards."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "transaction-isolation-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks whether concurrent account transfers should use read committed, repeatable read, serializable, or explicit locks to prevent double-spend anomalies.",
+      "context": "The question is about correctness of concurrent transactions, not connection acquisition or pooling mode.",
+      "question": "Should connection-pooling own this task?",
+      "expected_flags": [
+        "Routes the task to transaction-isolation.",
+        "Explains that connection-pooling may affect how long transactions hold connections but does not choose isolation semantics.",
+        "Keeps pooling relevant only for connection hold-time and pool contention caused by long transactions."
+      ],
+      "expected_fix_hints": [
+        "Use transaction-isolation for correctness semantics.",
+        "Use connection-pooling later to verify pool impact of transaction duration."
+      ],
+      "absent_signals": [
+        "Must not choose isolation levels as a pooling decision.",
+        "Must not ignore correctness anomalies."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes the task to transaction-isolation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that connection-pooling may affect how long transactions hold connections but does not choose isolation semantics."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps pooling relevant only for connection hold-time and pool contention caused by long transactions."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use transaction-isolation for correctness semantics."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use connection-pooling later to verify pool impact of transaction duration."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not choose isolation levels as a pooling decision."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore correctness anomalies."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "background-job-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A CSV export takes 20 minutes and should survive process restarts. The team asks for durable queue retry policy and persisted job status.",
+      "context": "The database connection usage of the job may matter later, but the primary request is durable execution and retries.",
+      "question": "Should connection-pooling own this task?",
+      "expected_flags": [
+        "Routes durable execution and retries to background-jobs.",
+        "Explains that connection-pooling can later size worker database pools.",
+        "Separates worker orchestration from database connection contention."
+      ],
+      "expected_fix_hints": [
+        "Use background-jobs for queue, retry, idempotency, and status persistence.",
+        "Apply connection-pooling to bound worker pool sizes and avoid connection fan-out."
+      ],
+      "absent_signals": [
+        "Must not treat pooling as a substitute for durable job execution.",
+        "Must not ignore retries and idempotency."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes durable execution and retries to background-jobs."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that connection-pooling can later size worker database pools."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates worker orchestration from database connection contention."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use background-jobs for queue, retry, idempotency, and status persistence."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Apply connection-pooling to bound worker pool sizes and avoid connection fan-out."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat pooling as a substitute for durable job execution."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore retries and idempotency."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "streaming-backpressure-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A streaming endpoint emits events faster than the browser can process them, causing in-memory event buffers to grow.",
+      "context": "The system is not contending on database connections; the issue is producer/consumer flow control for a value stream.",
+      "question": "Should connection-pooling own the primary design?",
+      "expected_flags": [
+        "Routes producer/consumer stream backpressure to streaming-architecture.",
+        "Explains that connection-pooling owns database connection wait queues, not event-stream flow control.",
+        "Keeps connection-pooling relevant only if stream producers hold database connections too long."
+      ],
+      "expected_fix_hints": [
+        "Use streaming-architecture for stream backpressure and termination.",
+        "Use connection-pooling only to ensure producers release database connections promptly."
+      ],
+      "absent_signals": [
+        "Must not conflate stream backpressure with connection-pool waiting.",
+        "Must not prescribe pool size as the primary fix."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes producer/consumer stream backpressure to streaming-architecture."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that connection-pooling owns database connection wait queues, not event-stream flow control."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps connection-pooling relevant only if stream producers hold database connections too long."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use streaming-architecture for stream backpressure and termination."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use connection-pooling only to ensure producers release database connections promptly."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not conflate stream backpressure with connection-pool waiting."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not prescribe pool size as the primary fix."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

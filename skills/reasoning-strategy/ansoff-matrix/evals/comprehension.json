@@ -1,0 +1,149 @@
+{
+  "skill_name": "ansoff-matrix",
+  "subject": "Ansoff product-market growth strategy",
+  "adjacent_concepts": [
+    "product-market matrix",
+    "market penetration",
+    "market development",
+    "product development",
+    "diversification",
+    "SWOT/TOWS",
+    "PESTEL",
+    "Porter's Five Forces",
+    "Playing to Win",
+    "Expected Value"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define the Ansoff Matrix in 2-3 sentences. Include the two axes and four growth options.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines Ansoff Matrix as a product-market growth strategy framework",
+        "Names existing vs new products",
+        "Names existing vs new markets",
+        "Names market penetration",
+        "Names market development",
+        "Names product development",
+        "Names diversification",
+        "Does not treat the quadrant label as a recommendation"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of the Ansoff Matrix. Name the primitives and how they connect from a current baseline to growth options.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names an actor or unit of analysis",
+        "Names a current product baseline",
+        "Names a current market baseline",
+        "Explains product novelty",
+        "Explains market novelty",
+        "Maps novelty combinations to four quadrants",
+        "Explains strategic distance, risk, assumptions, evidence, or sequencing"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does an Ansoff Matrix skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents vague growth language",
+        "Forces product and market baseline clarity",
+        "Prevents market development and product development mixups",
+        "Prevents quadrant labels being used as recommendations",
+        "Forces risk or strategic distance discussion",
+        "Forces assumptions, evidence needs, or downstream validation"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish the Ansoff Matrix from SWOT/TOWS, PESTEL, Porter's Five Forces, Playing to Win, Seven Powers, Blue Ocean Strategy, and Expected Value. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "SWOT/TOWS inventories internal/external factors and crosses them into options",
+        "PESTEL scans macro-environment forces",
+        "Five Forces analyzes industry profit-pressure structure",
+        "Playing to Win integrates choices into a strategy cascade",
+        "Seven Powers classifies durable advantage sources",
+        "Blue Ocean reconstructs value curves and demand",
+        "Expected Value compares options by probability and value",
+        "Ansoff classifies growth paths by product and market newness"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place the Ansoff Matrix among strategy methods. What inputs feed it, what outputs should it produce, and which methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies Ansoff as a growth strategy or product-market expansion framework",
+        "Names inputs such as current product, current market, growth objective, candidate options, or evidence",
+        "Names outputs such as quadrant classification, assumptions, strategic distance, evidence needs, risks, sequencing, or next validation",
+        "Explains it can feed SWOT/TOWS, PESTEL, Five Forces, Playing to Win, Expected Value, or valuation work",
+        "Does not classify it as portfolio share/growth allocation"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for the Ansoff Matrix that preserves the product-market distance mechanism. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving a map, distance from home base, familiar vs unfamiliar territory, or a fork in the road",
+        "Maps familiar product and familiar market to lower strategic distance",
+        "Maps new product and new market to higher learning burden",
+        "Explains that the analogy does not decide attractiveness or value",
+        "Rejects an analogy that treats the matrix as a financial score, final recommendation, or portfolio allocation grid"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A language-learning app has high retention among college students in the US. It is considering deeper student referral programs, launching the same app in Brazil, building an enterprise training product for current university partners, and buying a test-prep company for adult professionals. Apply Ansoff reasoning and state evidence needed.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Classifies student referral programs as market penetration",
+        "Classifies same app in Brazil as market development",
+        "Classifies enterprise training product for current university partners as product development if current market is university partners",
+        "Classifies buying test-prep company for adult professionals as diversification or likely diversification",
+        "Names current product and market baseline assumptions",
+        "States evidence needs for each option",
+        "Discusses strategic distance or risk",
+        "Does not choose an option solely from the quadrant label"
+      ]
+    }
+  ]
+}

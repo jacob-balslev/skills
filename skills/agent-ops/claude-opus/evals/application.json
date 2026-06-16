@@ -1,0 +1,428 @@
+{
+  "skill_name": "claude-opus",
+  "subject": "routing a task to the frontier reasoning tier (Claude Opus)",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "claude-sonnet",
+    "claude-haiku",
+    "autonomous-loop-patterns",
+    "claude-api"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "over-escalation-default",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team's agent router sends every incoming task to the most capable model 'to be safe.' The queue includes a mix of work: a few genuinely hard architecture reviews, but mostly frontmatter edits, CSV reshaping, and status polling.",
+      "context": "Production agent fleet on a metered budget; latency and per-token cost both matter; the team frames the smartest model as the low-risk default.",
+      "question": "Evaluate this routing policy and recommend what to change.",
+      "expected_flags": [
+        "Defaulting every task to the frontier tier is the wrong default — it over-pays on the majority of tasks a cheaper tier clears identically and starves budget for the genuinely hard work",
+        "Under uncertainty routing should move DOWN until a task proves it needs the ceiling, not UP",
+        "The mechanical work (frontmatter edits, CSV reshaping, polling) belongs on the fast tier or a script, not the frontier tier"
+      ],
+      "expected_fix_hints": [
+        "Make the default lane the balanced tier and escalate to the frontier tier only on a named difficulty signal",
+        "Route the mechanical/high-volume items to the fast tier or to a deterministic script"
+      ],
+      "absent_signals": [
+        "Do not endorse 'smartest model when in doubt' as a safe default",
+        "Do not claim the frontier tier adds quality on mechanical work"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Defaulting every task to the frontier tier is the wrong default — it over-pays on the majority of tasks a cheaper tier clears identically and starves budget for the genuinely hard work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Under uncertainty routing should move DOWN until a task proves it needs the ceiling, not UP."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The mechanical work (frontmatter edits, CSV reshaping, polling) belongs on the fast tier or a script, not the frontier tier."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Make the default lane the balanced tier and escalate to the frontier tier only on a named difficulty signal."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the mechanical/high-volume items to the fast tier or to a deterministic script."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not endorse 'smartest model when in doubt' as a safe default."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim the frontier tier adds quality on mechanical work."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "hard-debugging-escalation",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A payment-reconciliation job intermittently double-counts a small fraction of orders. It reproduces only under concurrent load, spans three services and two database views, and a prior single-pass attempt on a cheaper tier declared it fixed after one clean run — the bug recurred in production.",
+      "context": "The cost of a wrong reconciliation is financial; the failure is non-deterministic and multi-system.",
+      "question": "Which model tier should investigate this, and why?",
+      "expected_flags": [
+        "This is intermittent, multi-system root-cause work — a difficulty signal that earns the frontier tier",
+        "A cheaper tier's tendency to declare it fixed after one clean run is exactly the failure mode the frontier tier guards against here",
+        "High cost-of-error (financial miscalculation) reinforces escalation"
+      ],
+      "expected_fix_hints": [
+        "Route the investigation to the frontier reasoning tier",
+        "Give the full multi-service context up front so the model can hold it coherently"
+      ],
+      "absent_signals": [
+        "Do not route intermittent multi-system root-cause to a cheaper tier to save cost",
+        "Do not accept a single clean run as proof the bug is fixed"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is intermittent, multi-system root-cause work — a difficulty signal that earns the frontier tier."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A cheaper tier's tendency to declare it fixed after one clean run is exactly the failure mode the frontier tier guards against here."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: High cost-of-error (financial miscalculation) reinforces escalation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the investigation to the frontier reasoning tier."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Give the full multi-service context up front so the model can hold it coherently."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route intermittent multi-system root-cause to a cheaper tier to save cost."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept a single clean run as proof the bug is fixed."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "mechanical-misroute",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An engineer asks the frontier tier to rename a SCSS class across 8 files and update the imports, reasoning that the change touches many files so it must be a 'multi-file' task that needs the smartest model.",
+      "context": "The rename is a deterministic find-and-replace with a known target string; no judgment is required.",
+      "question": "Is the frontier tier the right executor here? Justify.",
+      "expected_flags": [
+        "Touching many files is not the same as multi-file SYNTHESIS — a deterministic bulk rename needs no reasoning ceiling",
+        "This is script-grade work; even the fast tier is unnecessary",
+        "The 'multi-file' signal that earns the frontier tier is correctness depending on holding many files in working context, not the raw file count"
+      ],
+      "expected_fix_hints": [
+        "Use a deterministic script (sed/codemod) for the rename and import update",
+        "If a model is wanted for safety review of the diff, the fast tier suffices"
+      ],
+      "absent_signals": [
+        "Do not equate high file count with a need for the frontier reasoning tier",
+        "Do not route a deterministic find-and-replace to any premium model"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Touching many files is not the same as multi-file SYNTHESIS — a deterministic bulk rename needs no reasoning ceiling."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is script-grade work; even the fast tier is unnecessary."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The 'multi-file' signal that earns the frontier tier is correctness depending on holding many files in working context, not the raw file count."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a deterministic script (sed/codemod) for the rename and import update."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: If a model is wanted for safety review of the diff, the fast tier suffices."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not equate high file count with a need for the frontier reasoning tier."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route a deterministic find-and-replace to any premium model."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "long-horizon-autonomy",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team wants an overnight agentic run that refactors a subsystem across many modules, must stay coherent over dozens of steps without human correction, and will not be reviewed until morning.",
+      "context": "No human is in the loop during the run; drift or incoherence mid-run is expensive to unwind.",
+      "question": "How should the agent be configured for this run — which tier and what effort posture?",
+      "expected_flags": [
+        "Long-horizon autonomous work that must stay coherent without human correction is a frontier-tier signal",
+        "The full task spec should be given up front in one turn so the model can plan the whole horizon",
+        "Run at high/xhigh effort — the effort ceiling the frontier tier alone provides is the point"
+      ],
+      "expected_fix_hints": [
+        "Route to the frontier tier and supply the complete spec in the first turn",
+        "Set effort to high or xhigh; consider task budgets to cap autonomous spend"
+      ],
+      "absent_signals": [
+        "Do not assume a cheaper tier will stay coherent over a long unsupervised horizon",
+        "Do not drip-feed the spec turn-by-turn for a long autonomous run"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Long-horizon autonomous work that must stay coherent without human correction is a frontier-tier signal."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The full task spec should be given up front in one turn so the model can plan the whole horizon."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Run at high/xhigh effort — the effort ceiling the frontier tier alone provides is the point."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to the frontier tier and supply the complete spec in the first turn."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Set effort to high or xhigh; consider task budgets to cap autonomous spend."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume a cheaper tier will stay coherent over a long unsupervised horizon."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not drip-feed the spec turn-by-turn for a long autonomous run."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "capability-fact-misuse",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A reviewer argues against using the frontier tier for a large multi-file task, saying 'the 1M context window makes it too expensive to feed big inputs, so send big tasks to a cheaper model to save money.'",
+      "context": "The decision rests on a pricing claim about long-context behavior on the current frontier generation.",
+      "question": "Assess the reviewer's reasoning.",
+      "expected_flags": [
+        "The wide window does not itself carry a long-context per-token premium on the current frontier generation, so 'big inputs make it too expensive' is a false premise",
+        "Routing big multi-file SYNTHESIS to a cheaper tier to save token cost risks wrong answers, the more expensive outcome",
+        "Any pricing/context claim should be verified live against the provider's docs, not asserted from memory"
+      ],
+      "expected_fix_hints": [
+        "Correct the premise: the 1M window is not itself a cost reason to avoid the frontier tier",
+        "Decide on task difficulty (does it need the reasoning ceiling), then verify the pricing fact live"
+      ],
+      "absent_signals": [
+        "Do not accept that the wide context window carries a long-context pricing premium on the current generation",
+        "Do not route hard synthesis down purely on an unverified cost claim"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The wide window does not itself carry a long-context per-token premium on the current frontier generation, so 'big inputs make it too expensive' is a false premise."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routing big multi-file SYNTHESIS to a cheaper tier to save token cost risks wrong answers, the more expensive outcome."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Any pricing/context claim should be verified live against the provider's docs, not asserted from memory."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Correct the premise: the 1M window is not itself a cost reason to avoid the frontier tier."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Decide on task difficulty (does it need the reasoning ceiling), then verify the pricing fact live."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept that the wide context window carries a long-context pricing premium on the current generation."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route hard synthesis down purely on an unverified cost claim."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "well-specified-feature-work",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A task is fully specified: add a paginated list endpoint following an existing controller pattern in the repo, with tests, against a well-understood codebase. The author wants to use the frontier tier 'because it's an important feature.'",
+      "context": "The pattern to follow already exists; the work is ordinary, well-specified implementation.",
+      "question": "Which tier fits, and what is the test for the decision?",
+      "expected_flags": [
+        "Importance is not a difficulty signal — ordinary well-specified feature work clears the balanced tier",
+        "The escalation test is 'would the balanced tier plausibly get this wrong,' and here the answer is no",
+        "Paying the frontier premium here buys nothing over the balanced tier"
+      ],
+      "expected_fix_hints": [
+        "Route to the balanced tier (claude-sonnet) for well-specified feature work plus tests",
+        "Reserve the frontier tier for a named difficulty signal, not for 'this matters'"
+      ],
+      "absent_signals": [
+        "Do not treat task importance as a reason to escalate to the frontier tier",
+        "Do not pay the frontier premium for work the balanced tier clears reliably"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Importance is not a difficulty signal — ordinary well-specified feature work clears the balanced tier."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The escalation test is 'would the balanced tier plausibly get this wrong,' and here the answer is no."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Paying the frontier premium here buys nothing over the balanced tier."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to the balanced tier (claude-sonnet) for well-specified feature work plus tests."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve the frontier tier for a named difficulty signal, not for 'this matters'."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat task importance as a reason to escalate to the frontier tier."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pay the frontier premium for work the balanced tier clears reliably."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "harness-and-api-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks two things at once: (a) design the supervisor-and-checkpoint loop topology their overnight agent will run inside, and (b) write the Anthropic Messages API request that sets the thinking config and effort for that agent. They frame both as 'Opus questions.'",
+      "context": "The loop topology and the API call syntax are separate concerns from which model tier to pick; the team folds them under the Opus label.",
+      "question": "How should the agent scope and route this request?",
+      "expected_flags": [
+        "Designing the supervisor/checkpoint loop is loop architecture (autonomous-loop-patterns), not a model-tier decision",
+        "Writing the Messages API request with thinking/effort config is call-site syntax (the claude-api reference), not the routing decision",
+        "Neither sub-question is answered by the frontier-tier routing skill; both should be redirected to their owners"
+      ],
+      "expected_fix_hints": [
+        "Route the loop-topology design to autonomous-loop-patterns",
+        "Route the API request syntax to the claude-api reference"
+      ],
+      "absent_signals": [
+        "Do not answer loop-topology design as if it were a model-tier choice",
+        "Do not write the API request syntax under the frontier-tier routing skill's lane"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Designing the supervisor/checkpoint loop is loop architecture (autonomous-loop-patterns), not a model-tier decision."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Writing the Messages API request with thinking/effort config is call-site syntax (the claude-api reference), not the routing decision."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Neither sub-question is answered by the frontier-tier routing skill; both should be redirected to their owners."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the loop-topology design to autonomous-loop-patterns."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the API request syntax to the claude-api reference."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer loop-topology design as if it were a model-tier choice."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the API request syntax under the frontier-tier routing skill's lane."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

@@ -1,0 +1,105 @@
+{
+  "skill_name": "mental-models",
+  "subject": "Mental models",
+  "adjacent_concepts": [
+    "designer model",
+    "system image",
+    "user model",
+    "gulf of execution",
+    "gulf of evaluation",
+    "model-system fit",
+    "analogy",
+    "metaphor",
+    "conceptual modeling",
+    "knowledge modeling",
+    "user research"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a mental model in 2-3 sentences and explain why it matters for systems or interfaces.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines a mental model as an internal representation of how something works",
+        "Mentions that the model is partial or selective",
+        "Explains that people use the model to predict outcomes or choose actions",
+        "Connects confusion or surprise to mismatch between the model and the real system",
+        "Avoids treating the user's model as simply user error"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the three-model frame and the two gulfs. Name each part and how it relates to interface behavior.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Names designer model",
+        "Names system image",
+        "Names user model",
+        "Explains that the interface/system image is the channel that shapes the user's model",
+        "Names gulf of execution as difficulty knowing what action to take",
+        "Names gulf of evaluation as difficulty interpreting what happened"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish mental-models from conceptual-modeling, knowledge-modeling, and user-research with a mechanism-level reason for each boundary.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "conceptual-modeling owns formal entities, attributes, relationships, schemas, or domain representations",
+        "knowledge-modeling owns representation-paradigm choice such as graphs, frames, rules, or networks",
+        "user-research owns empirical methods for eliciting or validating what users believe",
+        "mental-models owns reasoning about cognitive model-system fit",
+        "Does not send work to a non-existent teaching-patterns skill"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A product team says, 'Users keep making mistakes, so we need a tooltip.' Diagnose the misconception and give a better mental-models response.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Identifies the misconception that confusion is the user's fault",
+        "Asks what interface signal taught the wrong model",
+        "Names at least one model gap or failure mode",
+        "Chooses an intervention that changes the system image or feedback, not only documentation",
+        "Preserves the idea that the user's model came from somewhere"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Users try to drag a row to reorder a table, but the product only supports a separate 'Move' menu. Apply the mental-models skill to diagnose and propose a repair.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Identifies transfer from other table/list interfaces",
+        "Names the gulf of execution or mismatch between expected affordance and available command",
+        "Separates user model from system behavior",
+        "Suggests either implementing drag reorder or visibly signaling the Move menu pattern",
+        "Mentions feedback or discoverability so the system image teaches the real model"
+      ]
+    }
+  ]
+}

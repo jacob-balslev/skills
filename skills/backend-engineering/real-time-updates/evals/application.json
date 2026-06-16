@@ -1,0 +1,522 @@
+{
+  "skill_name": "real-time-updates",
+  "subject": "Browser-facing freshness and live UI update design",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/backend-engineering/real-time-updates/SKILL.md",
+    "skills/backend-engineering/real-time-updates/references/real-time-updates-2026-06-07.md"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "dashboard-transport-choice",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A live operations dashboard shows status counts that change every few seconds. The browser only needs server-to-browser updates and can refetch summaries by ID or version.",
+      "context": "The team asks whether to use polling, SSE, or WebSocket.",
+      "question": "How should the agent choose the transport and browser state contract?",
+      "expected_flags": [
+        "Starts with the freshness contract: acceptable age, disruption rules, and recovery behavior.",
+        "Prefers SSE or adaptive polling over WebSocket because updates are one-way.",
+        "Uses small invalidation/version messages rather than treating push as full truth by default.",
+        "Refetches or reconciles authoritative server state after update signals.",
+        "Shows timestamp, connection state, or stale indicator."
+      ],
+      "expected_fix_hints": [
+        "Use WebSocket only if the browser must send frequent low-latency messages on the same channel.",
+        "Verify hosting, proxy, browser, and runtime connection limits.",
+        "Centralize the subscription or query-cache invalidation path."
+      ],
+      "absent_signals": [
+        "Do not choose WebSocket only because the feature is called real-time.",
+        "Do not hide freshness or connection status.",
+        "Do not make every widget open its own live channel."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Starts with the freshness contract: acceptable age, disruption rules, and recovery behavior."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prefers SSE or adaptive polling over WebSocket because updates are one-way."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses small invalidation/version messages rather than treating push as full truth by default."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Refetches or reconciles authoritative server state after update signals."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Shows timestamp, connection state, or stale indicator."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use WebSocket only if the browser must send frequent low-latency messages on the same channel."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify hosting, proxy, browser, and runtime connection limits."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Centralize the subscription or query-cache invalidation path."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not choose WebSocket only because the feature is called real-time."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hide freshness or connection status."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make every widget open its own live channel."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "eventsource-catch-up",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A browser loses an EventSource connection during a deploy. It reconnects automatically, but updates may have occurred while the connection was down.",
+      "context": "A developer argues that built-in reconnect means the view is current.",
+      "question": "How should the agent respond?",
+      "expected_flags": [
+        "Says built-in reconnect is not enough to certify the view is current.",
+        "Requires last seen event ID, version, cursor, timestamp, or equivalent marker.",
+        "Requires catch-up fetch or full refetch before clearing stale status.",
+        "Shows reconnecting/stale status until authoritative state is reconciled.",
+        "Deduplicates updates that arrive through both catch-up and the live channel."
+      ],
+      "expected_fix_hints": [
+        "Persist or track the last applied version in the browser/cache.",
+        "Design server support for catch-up by ID/version/timestamp where needed.",
+        "If missed events cannot be determined, perform a full refetch."
+      ],
+      "absent_signals": [
+        "Do not assume EventSource reconnect replays every missed event.",
+        "Do not keep a Live badge during unknown freshness.",
+        "Do not clear stale state before reconciliation."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Says built-in reconnect is not enough to certify the view is current."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires last seen event ID, version, cursor, timestamp, or equivalent marker."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires catch-up fetch or full refetch before clearing stale status."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Shows reconnecting/stale status until authoritative state is reconciled."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Deduplicates updates that arrive through both catch-up and the live channel."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Persist or track the last applied version in the browser/cache."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Design server support for catch-up by ID/version/timestamp where needed."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: If missed events cannot be determined, perform a full refetch."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume EventSource reconnect replays every missed event."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep a Live badge during unknown freshness."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not clear stale state before reconciliation."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "disruptive-auto-refresh",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A table auto-refreshes as new rows arrive. While a user is editing filters and selecting rows, the table reorders and clears selection.",
+      "context": "The product still needs to communicate that new data exists.",
+      "question": "How should the agent repair the interaction?",
+      "expected_flags": [
+        "Identifies silent auto-refresh during active work as disruptive.",
+        "Uses a new-data banner or user-controlled refresh when updates would reorder or clear context.",
+        "Preserves selection, scroll, filters, and input state when auto-apply is safe.",
+        "Keeps freshness visible with timestamps, badges, or update counts.",
+        "Defines when auto-refresh is safe versus user-mediated."
+      ],
+      "expected_fix_hints": [
+        "Apply automatically only to low-disruption counters or append-only areas where position is preserved.",
+        "Separate freshness signaling from applying the update.",
+        "Verify with interaction-feedback for generic pending/error feedback if needed."
+      ],
+      "absent_signals": [
+        "Do not silently replace an active interactive view.",
+        "Do not hide that new data is waiting.",
+        "Do not treat this as a low-level stream protocol problem."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies silent auto-refresh during active work as disruptive."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses a new-data banner or user-controlled refresh when updates would reorder or clear context."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Preserves selection, scroll, filters, and input state when auto-apply is safe."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps freshness visible with timestamps, badges, or update counts."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Defines when auto-refresh is safe versus user-mediated."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Apply automatically only to low-disruption counters or append-only areas where position is preserved."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Separate freshness signaling from applying the update."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify with interaction-feedback for generic pending/error feedback if needed."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not silently replace an active interactive view."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hide that new data is waiting."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat this as a low-level stream protocol problem."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "optimistic-live-update",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user marks a notification as read in a live notification panel. The action should feel instant, but the server can reject it and other live updates may arrive at the same time.",
+      "context": "The team asks how to make the UI feel immediate without lying.",
+      "question": "What pattern should the agent apply?",
+      "expected_flags": [
+        "Allows optimistic UI because the action is reversible and low risk.",
+        "Shows pending state and keeps previous state for rollback.",
+        "Reconciles with authoritative server state after success or failure.",
+        "Handles concurrent live updates without overwriting newer server state.",
+        "Shows failure feedback and recovery."
+      ],
+      "expected_fix_hints": [
+        "Use a mutation/update mechanism that can roll back or invalidate the cache.",
+        "Treat optimistic state as provisional until confirmed.",
+        "Route generic feedback details to interaction-feedback if the task is not freshness-specific."
+      ],
+      "absent_signals": [
+        "Do not present speculative state as final.",
+        "Do not use optimistic updates for irreversible or high-stakes actions.",
+        "Do not skip server reconciliation."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Allows optimistic UI because the action is reversible and low risk."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Shows pending state and keeps previous state for rollback."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reconciles with authoritative server state after success or failure."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Handles concurrent live updates without overwriting newer server state."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Shows failure feedback and recovery."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a mutation/update mechanism that can roll back or invalidate the cache."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Treat optimistic state as provisional until confirmed."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route generic feedback details to interaction-feedback if the task is not freshness-specific."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present speculative state as final."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use optimistic updates for irreversible or high-stakes actions."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip server reconciliation."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "streaming-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "An API emits thousands of chunks over HTTP and the user asks how to model producer, stream, consumer, backpressure, framing, and termination.",
+      "context": "The task is about stream protocol semantics, not browser view freshness.",
+      "question": "Should real-time-updates own this request?",
+      "expected_flags": [
+        "This is streaming-architecture.",
+        "Low-level producer/consumer/backpressure/termination semantics are out of scope.",
+        "real-time-updates may compose only if a browser view later needs freshness UX on top."
+      ],
+      "expected_fix_hints": [
+        "Route stream protocol design to streaming-architecture.",
+        "Return to real-time-updates for dashboard stale state, reconnect status, or transport UX decisions."
+      ],
+      "absent_signals": [
+        "Do not design backpressure inside this skill.",
+        "Do not confuse SSE transport semantics with browser freshness UX."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is streaming-architecture."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Low-level producer/consumer/backpressure/termination semantics are out of scope."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: real-time-updates may compose only if a browser view later needs freshness UX on top."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route stream protocol design to streaming-architecture."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Return to real-time-updates for dashboard stale state, reconnect status, or transport UX decisions."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design backpressure inside this skill."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not confuse SSE transport semantics with browser freshness UX."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "event-contract-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks for topic names, event envelope fields, schema versions, replay rules, and compatibility rules for outbound events.",
+      "context": "No browser freshness behavior has been requested.",
+      "question": "Should real-time-updates own this request?",
+      "expected_flags": [
+        "This is event-contract-design.",
+        "Event envelope, topic naming, compatibility, and replay are out of scope for browser freshness.",
+        "real-time-updates may later consume event notifications as invalidation signals."
+      ],
+      "expected_fix_hints": [
+        "Route async event contract design to event-contract-design.",
+        "Use real-time-updates only for how a browser learns and reconciles after the event affects state."
+      ],
+      "absent_signals": [
+        "Do not define the event schema in this skill.",
+        "Do not treat browser push as the event-contract owner."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is event-contract-design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Event envelope, topic naming, compatibility, and replay are out of scope for browser freshness."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: real-time-updates may later consume event notifications as invalidation signals."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route async event contract design to event-contract-design."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use real-time-updates only for how a browser learns and reconciles after the event affects state."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not define the event schema in this skill."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat browser push as the event-contract owner."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "background-job-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A slow export needs to move out of a request handler. The user asks for queue state, retry policy, cancellation, checkpointing, and worker concurrency.",
+      "context": "The browser may later show progress, but the current task is durable execution design.",
+      "question": "Should real-time-updates own this request?",
+      "expected_flags": [
+        "This is background-jobs.",
+        "Durable execution, retries, cancellation, checkpoints, and worker concurrency are out of scope.",
+        "real-time-updates owns how the browser learns about the durable progress state after it exists."
+      ],
+      "expected_fix_hints": [
+        "Route queue design to background-jobs.",
+        "Use real-time-updates for polling/SSE/WebSocket progress visibility and stale status."
+      ],
+      "absent_signals": [
+        "Do not design worker execution under this skill.",
+        "Do not skip durable progress state and rely only on a live connection."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is background-jobs."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Durable execution, retries, cancellation, checkpoints, and worker concurrency are out of scope."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: real-time-updates owns how the browser learns about the durable progress state after it exists."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route queue design to background-jobs."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use real-time-updates for polling/SSE/WebSocket progress visibility and stale status."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design worker execution under this skill."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip durable progress state and rely only on a live connection."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

@@ -1,0 +1,578 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "lean-startup",
+  "subject": "Lean Startup validation methodology for build-measure-learn loops, MVP experiments, actionable metrics, innovation accounting, and pivot/persevere decisions under high uncertainty.",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "user-research",
+    "research-synthesis",
+    "kano-model",
+    "okrs",
+    "positioning",
+    "expected-value",
+    "bayesian-reasoning",
+    "epistemic-grounding",
+    "playing-to-win"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Use Lean Startup to design an MVP experiment for this product idea.\"",
+      "context": "The agent has access to the lean-startup skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is lean-startup the right skill to apply?",
+      "expected_flags": [
+        "Recognizes lean-startup as applicable to this request",
+        "Identifies the riskiest assumption or learning question before proposing a build",
+        "Defines the smallest ethical MVP or experiment that can produce validated learning",
+        "Pre-declares actionable metrics, cohorts, thresholds, and a pivot/persevere/stop decision rule",
+        "Names the relevant boundary against user-research, research-synthesis, kano-model, okrs, positioning, or expected-value when needed"
+      ],
+      "expected_fix_hints": [
+        "Apply the Lean Startup workflow to the concrete scenario",
+        "State the next experiment, evidence threshold, and decision rule",
+        "Call out any adjacent skill that should own research collection, synthesis, feature classification, OKRs, positioning, or valuation"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore lean-startup",
+        "Does not treat an MVP as merely the smallest shippable product",
+        "Does not substitute vanity metrics or post-hoc success criteria for validated learning",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes lean-startup as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore lean-startup"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Turn these startup assumptions into build-measure-learn loops with actionable metrics.\"",
+      "context": "The agent has access to the lean-startup skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is lean-startup the right skill to apply?",
+      "expected_flags": [
+        "Recognizes lean-startup as applicable to this request",
+        "Identifies the riskiest assumption or learning question before proposing a build",
+        "Defines the smallest ethical MVP or experiment that can produce validated learning",
+        "Pre-declares actionable metrics, cohorts, thresholds, and a pivot/persevere/stop decision rule",
+        "Names the relevant boundary against user-research, research-synthesis, kano-model, okrs, positioning, or expected-value when needed"
+      ],
+      "expected_fix_hints": [
+        "Apply the Lean Startup workflow to the concrete scenario",
+        "State the next experiment, evidence threshold, and decision rule",
+        "Call out any adjacent skill that should own research collection, synthesis, feature classification, OKRs, positioning, or valuation"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore lean-startup",
+        "Does not treat an MVP as merely the smallest shippable product",
+        "Does not substitute vanity metrics or post-hoc success criteria for validated learning",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes lean-startup as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore lean-startup"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Review this MVP plan and tell me whether it will produce validated learning.\"",
+      "context": "The agent has access to the lean-startup skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is lean-startup the right skill to apply?",
+      "expected_flags": [
+        "Recognizes lean-startup as applicable to this request",
+        "Identifies the riskiest assumption or learning question before proposing a build",
+        "Defines the smallest ethical MVP or experiment that can produce validated learning",
+        "Pre-declares actionable metrics, cohorts, thresholds, and a pivot/persevere/stop decision rule",
+        "Names the relevant boundary against user-research, research-synthesis, kano-model, okrs, positioning, or expected-value when needed"
+      ],
+      "expected_fix_hints": [
+        "Apply the Lean Startup workflow to the concrete scenario",
+        "State the next experiment, evidence threshold, and decision rule",
+        "Call out any adjacent skill that should own research collection, synthesis, feature classification, OKRs, positioning, or valuation"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore lean-startup",
+        "Does not treat an MVP as merely the smallest shippable product",
+        "Does not substitute vanity metrics or post-hoc success criteria for validated learning",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes lean-startup as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore lean-startup"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Help us decide whether to pivot or persevere after these experiment results.\"",
+      "context": "The agent has access to the lean-startup skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is lean-startup the right skill to apply?",
+      "expected_flags": [
+        "Recognizes lean-startup as applicable to this request",
+        "Identifies the riskiest assumption or learning question before proposing a build",
+        "Defines the smallest ethical MVP or experiment that can produce validated learning",
+        "Pre-declares actionable metrics, cohorts, thresholds, and a pivot/persevere/stop decision rule",
+        "Names the relevant boundary against user-research, research-synthesis, kano-model, okrs, positioning, or expected-value when needed"
+      ],
+      "expected_fix_hints": [
+        "Apply the Lean Startup workflow to the concrete scenario",
+        "State the next experiment, evidence threshold, and decision rule",
+        "Call out any adjacent skill that should own research collection, synthesis, feature classification, OKRs, positioning, or valuation"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore lean-startup",
+        "Does not treat an MVP as merely the smallest shippable product",
+        "Does not substitute vanity metrics or post-hoc success criteria for validated learning",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes lean-startup as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore lean-startup"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Create an innovation accounting plan for validating this new business model.\"",
+      "context": "The agent has access to the lean-startup skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is lean-startup the right skill to apply?",
+      "expected_flags": [
+        "Recognizes lean-startup as applicable to this request",
+        "Identifies the riskiest assumption or learning question before proposing a build",
+        "Defines the smallest ethical MVP or experiment that can produce validated learning",
+        "Pre-declares actionable metrics, cohorts, thresholds, and a pivot/persevere/stop decision rule",
+        "Names the relevant boundary against user-research, research-synthesis, kano-model, okrs, positioning, or expected-value when needed"
+      ],
+      "expected_fix_hints": [
+        "Apply the Lean Startup workflow to the concrete scenario",
+        "State the next experiment, evidence threshold, and decision rule",
+        "Call out any adjacent skill that should own research collection, synthesis, feature classification, OKRs, positioning, or valuation"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore lean-startup",
+        "Does not treat an MVP as merely the smallest shippable product",
+        "Does not substitute vanity metrics or post-hoc success criteria for validated learning",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes lean-startup as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore lean-startup"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "edge-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"We have a new internal program idea; identify the riskiest assumption and the smallest ethical test.\"",
+      "context": "The agent has access to the lean-startup skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is lean-startup the right skill to apply?",
+      "expected_flags": [
+        "Recognizes lean-startup as applicable to this request",
+        "Identifies the riskiest assumption or learning question before proposing a build",
+        "Defines the smallest ethical MVP or experiment that can produce validated learning",
+        "Pre-declares actionable metrics, cohorts, thresholds, and a pivot/persevere/stop decision rule",
+        "Names the relevant boundary against user-research, research-synthesis, kano-model, okrs, positioning, or expected-value when needed"
+      ],
+      "expected_fix_hints": [
+        "Apply the Lean Startup workflow to the concrete scenario",
+        "State the next experiment, evidence threshold, and decision rule",
+        "Call out any adjacent skill that should own research collection, synthesis, feature classification, OKRs, positioning, or valuation"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore lean-startup",
+        "Does not treat an MVP as merely the smallest shippable product",
+        "Does not substitute vanity metrics or post-hoc success criteria for validated learning",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes lean-startup as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore lean-startup"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"Plan interviews to discover what users need before we have a product concept.\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should lean-startup be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside lean-startup's primary ownership",
+        "Routes the work to user-research or names the boundary reason instead of forcing lean-startup",
+        "Preserves any secondary Lean Startup support role without suppressing user-research"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply lean-startup as the primary skill",
+        "Name user-research as the better owner for the stated task",
+        "Offer only a narrow handoff if Lean Startup has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim lean-startup should own the request",
+        "Does not use lean-startup's framework to solve an explicitly excluded problem",
+        "Does not suppress user-research"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "guard",
+          "statement": "Recognizes the request is outside lean-startup's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "guard",
+          "statement": "Does not claim lean-startup should own the request"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not use lean-startup's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Names the better owner or the boundary reason"
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Preserves any useful adjacent support role without suppressing the owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"Synthesize these interview transcripts into themes and insights.\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should lean-startup be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside lean-startup's primary ownership",
+        "Routes the work to research-synthesis or names the boundary reason instead of forcing lean-startup",
+        "Preserves any secondary Lean Startup support role without suppressing research-synthesis"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply lean-startup as the primary skill",
+        "Name research-synthesis as the better owner for the stated task",
+        "Offer only a narrow handoff if Lean Startup has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim lean-startup should own the request",
+        "Does not use lean-startup's framework to solve an explicitly excluded problem",
+        "Does not suppress research-synthesis"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "guard",
+          "statement": "Recognizes the request is outside lean-startup's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "guard",
+          "statement": "Does not claim lean-startup should own the request"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not use lean-startup's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Names the better owner or the boundary reason"
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Preserves any useful adjacent support role without suppressing the owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"Classify these roadmap items as must-be, performance, delighter, indifferent, or reverse features.\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should lean-startup be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside lean-startup's primary ownership",
+        "Routes the work to kano-model or names the boundary reason instead of forcing lean-startup",
+        "Preserves any secondary Lean Startup support role without suppressing kano-model"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply lean-startup as the primary skill",
+        "Name kano-model as the better owner for the stated task",
+        "Offer only a narrow handoff if Lean Startup has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim lean-startup should own the request",
+        "Does not use lean-startup's framework to solve an explicitly excluded problem",
+        "Does not suppress kano-model"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "guard",
+          "statement": "Recognizes the request is outside lean-startup's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "guard",
+          "statement": "Does not claim lean-startup should own the request"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not use lean-startup's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Names the better owner or the boundary reason"
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Preserves any useful adjacent support role without suppressing the owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"Turn this strategy into quarterly Objectives and Key Results.\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should lean-startup be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside lean-startup's primary ownership",
+        "Routes the work to okrs or names the boundary reason instead of forcing lean-startup",
+        "Preserves any secondary Lean Startup support role without suppressing okrs"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply lean-startup as the primary skill",
+        "Name okrs as the better owner for the stated task",
+        "Offer only a narrow handoff if Lean Startup has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim lean-startup should own the request",
+        "Does not use lean-startup's framework to solve an explicitly excluded problem",
+        "Does not suppress okrs"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "guard",
+          "statement": "Recognizes the request is outside lean-startup's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "guard",
+          "statement": "Does not claim lean-startup should own the request"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not use lean-startup's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Names the better owner or the boundary reason"
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Preserves any useful adjacent support role without suppressing the owner"
+        }
+      ]
+    }
+  ]
+}

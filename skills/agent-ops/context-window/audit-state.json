@@ -1,0 +1,56 @@
+{
+  "schema_version": 8,
+  "version": "1.1.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-05-18",
+  "drift_check": {
+    "last_verified": "2026-05-18"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-06-13",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 180,
+    "review_cadence": "quarterly"
+  },
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-13",
+    "last_run": {
+      "at": "2026-06-13T09:05:23.853Z",
+      "operation": "panel",
+      "phase": "text",
+      "agent": "gpt-5.5",
+      "status": "completed",
+      "duration_ms": 245812,
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "source": "input4.token_usage"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 30,
+      "total_duration_ms": 4636272,
+      "total_tokens": 0,
+      "tokens_observed_count": 30
+    }
+  }
+}

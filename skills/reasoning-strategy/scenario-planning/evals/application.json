@@ -1,0 +1,384 @@
+{
+  "skill_name": "scenario-planning",
+  "subject": "scenario planning for strategy under deep uncertainty",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "PESTEL",
+    "expected value",
+    "Bayesian reasoning",
+    "Three Horizons",
+    "SWOT/TOWS",
+    "Playing to Win"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "b2b-ai-regulation-scenarios",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A B2B software company must decide whether to invest in an AI-native product line. The next four years are uncertain because customer AI adoption may accelerate or stall, and data-residency regulation may harmonize or fragment.",
+      "context": "The team has interviews, a PESTEL scan, and early sales signals, but no reliable probability distribution for the future states.",
+      "question": "How should the strategy team structure their approach to this decision before committing the product roadmap?",
+      "expected_flags": [
+        "The task is scenario planning because the team faces deep uncertainty, not a single forecast.",
+        "AI adoption speed and regulation shape are candidate critical uncertainties.",
+        "The team needs several plausible future worlds rather than a probability-weighted spreadsheet.",
+        "The strategy should be stress-tested across the scenario set."
+      ],
+      "expected_fix_hints": [
+        "Frame the focal decision, horizon, stakeholders, evidence, and evidence gaps.",
+        "Build a small scenario set from the critical uncertainties and write causal narratives.",
+        "Identify robust actions, contingent actions, hedges, options, signposts, and monitoring triggers."
+      ],
+      "absent_signals": [
+        "Do not fabricate probabilities for adoption or regulation states.",
+        "Do not collapse the answer into a generic PESTEL table.",
+        "Do not choose one preferred future before stress-testing the strategy."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The task is scenario planning because the team faces deep uncertainty, not a single forecast."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: AI adoption speed and regulation shape are candidate critical uncertainties."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The team needs several plausible future worlds rather than a probability-weighted spreadsheet."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The strategy should be stress-tested across the scenario set."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Frame the focal decision, horizon, stakeholders, evidence, and evidence gaps."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Build a small scenario set from the critical uncertainties and write causal narratives."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Identify robust actions, contingent actions, hedges, options, signposts, and monitoring triggers."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not fabricate probabilities for adoption or regulation states."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not collapse the answer into a generic PESTEL table."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not choose one preferred future before stress-testing the strategy."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "expected-value-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A finance team has three investment options. Each option has an estimated payoff, downside, and probability distribution based on historical portfolio data.",
+      "context": "The user asks which option has the best probability-weighted return and downside-adjusted expected value.",
+      "question": "Should scenario-planning own this request?",
+      "expected_flags": [
+        "This is primarily expected-value or financial decision analysis, not scenario planning.",
+        "The user already has probabilities and payoffs.",
+        "Scenario planning may have generated inputs earlier, but the requested mechanism is probability-weighted comparison."
+      ],
+      "expected_fix_hints": [
+        "Route to expected-value or a valuation method.",
+        "Use scenario planning only if the probability model is not credible or if the team needs structurally different futures before quantifying options."
+      ],
+      "absent_signals": [
+        "Do not force a 2x2 scenario matrix when expected-value inputs are already defensible.",
+        "Do not claim scenario planning is always better than quantified decision analysis.",
+        "Do not ignore the user's explicit probability-weighted-return request."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily expected-value or financial decision analysis, not scenario planning."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The user already has probabilities and payoffs."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Scenario planning may have generated inputs earlier, but the requested mechanism is probability-weighted comparison."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to expected-value or a valuation method."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use scenario planning only if the probability model is not credible or if the team needs structurally different futures before quantifying options."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not force a 2x2 scenario matrix when expected-value inputs are already defensible."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim scenario planning is always better than quantified decision analysis."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore the user's explicit probability-weighted-return request."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "pestel-to-scenarios",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A market-entry team has a PESTEL scan with forty macro trends. They want to turn it into strategy-ready scenario work.",
+      "context": "The trend list includes regulation, consumer trust, exchange rates, climate disruption, supply-chain pressure, and AI adoption. The team has not prioritized by uncertainty or decision impact.",
+      "question": "What should the agent do next?",
+      "expected_flags": [
+        "The PESTEL scan is an input, not the final scenario-planning output.",
+        "The agent must separate predetermined elements from critical uncertainties.",
+        "The agent must avoid reproducing all forty trends as scenarios.",
+        "The scenario set must link to strategic implications and monitoring."
+      ],
+      "expected_fix_hints": [
+        "Prioritize drivers by impact, uncertainty, relevance, and evidence quality.",
+        "Select a small number of scenario axes or scenario logics.",
+        "Build two to four internally consistent scenarios and stress-test strategic options."
+      ],
+      "absent_signals": [
+        "Do not treat trend volume as insight.",
+        "Do not leave the result as a macro scan.",
+        "Do not pretend every trend deserves equal scenario weight."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The PESTEL scan is an input, not the final scenario-planning output."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The agent must separate predetermined elements from critical uncertainties."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The agent must avoid reproducing all forty trends as scenarios."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The scenario set must link to strategic implications and monitoring."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Prioritize drivers by impact, uncertainty, relevance, and evidence quality."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Select a small number of scenario axes or scenario logics."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Build two to four internally consistent scenarios and stress-test strategic options."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat trend volume as insight."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave the result as a macro scan."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pretend every trend deserves equal scenario weight."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "public-service-scenarios",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A public library system is planning digital-skills services for the next decade. Major uncertainties are local funding stability and community broadband access.",
+      "context": "The library cares about access, equity, partner capacity, learning outcomes, and resilience rather than profit maximization.",
+      "question": "How should scenario planning be applied?",
+      "expected_flags": [
+        "Funding stability and broadband access are candidate critical uncertainties.",
+        "The scenario set should account for public-service outcomes and affected stakeholders.",
+        "The analysis should stress-test service models and partnerships across futures.",
+        "The answer should avoid profit-only attractiveness criteria."
+      ],
+      "expected_fix_hints": [
+        "Create multiple plausible scenarios around funding and access.",
+        "Name robust actions, contingent actions, hedges, options, and research needs.",
+        "Define signposts with owners, cadence, and linked service decisions."
+      ],
+      "absent_signals": [
+        "Do not evaluate the library strategy only by revenue.",
+        "Do not invent local demand or broadband data.",
+        "Do not ignore equity, access, delivery capacity, or partner constraints."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Funding stability and broadband access are candidate critical uncertainties."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The scenario set should account for public-service outcomes and affected stakeholders."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The analysis should stress-test service models and partnerships across futures."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The answer should avoid profit-only attractiveness criteria."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Create multiple plausible scenarios around funding and access."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Name robust actions, contingent actions, hedges, options, and research needs."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define signposts with owners, cadence, and linked service decisions."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not evaluate the library strategy only by revenue."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not invent local demand or broadband data."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore equity, access, delivery capacity, or partner constraints."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "signposts-monitoring",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A board has chosen a strategy after reviewing four scenarios. It now wants a monitoring plan so it can adapt if a different future starts emerging.",
+      "context": "The scenario narratives already identify uncertainty around regulation, customer adoption, capital availability, and partner concentration.",
+      "question": "What should the monitoring plan include?",
+      "expected_flags": [
+        "Signposts must be observable indicators tied to scenario logic.",
+        "Monitoring must connect to decisions or contingent actions.",
+        "Vague watchwords are not enough."
+      ],
+      "expected_fix_hints": [
+        "Define indicator, source or collection method, direction or threshold, cadence, owner, and linked decision.",
+        "Separate robust actions from contingent actions triggered by signposts.",
+        "Set a review date or governance cadence."
+      ],
+      "absent_signals": [
+        "Do not say simply to monitor regulation, adoption, capital, and partners.",
+        "Do not omit thresholds, owners, cadence, or linked decisions.",
+        "Do not treat the scenario report as finished without monitoring."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Signposts must be observable indicators tied to scenario logic."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Monitoring must connect to decisions or contingent actions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Vague watchwords are not enough."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define indicator, source or collection method, direction or threshold, cadence, owner, and linked decision."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Separate robust actions from contingent actions triggered by signposts."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Set a review date or governance cadence."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not say simply to monitor regulation, adoption, capital, and partners."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not omit thresholds, owners, cadence, or linked decisions."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat the scenario report as finished without monitoring."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

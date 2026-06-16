@@ -1,0 +1,29 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-08",
+  "drift_check": {
+    "last_verified": "2026-06-08"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-11",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "REDUNDANT",
+  "lint_verdict": "PASS",
+  "drift_status": "UNKNOWN",
+  "last_changed": "2026-06-08",
+  "eval_last_run": {
+    "at": "2026-06-08T21:31:45.592Z",
+    "status": "pass",
+    "runner": "skill-audit-loop guardrail (bidirectional)",
+    "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/color-system-design/runs/2026-06-08T2007--merge--opus--5f56eb/color-system-design.merge-ledger.json"
+  },
+  "eval_score": 4.33,
+  "eval_failed_ids": []
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-04-18",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "scripts/skill-lint.js": "eb27e474f9281a76c892505836d8aee04cc919ffd98d653a13a2931d7e21c8ba",
+      "scripts/check-routing-config.js": "ae8c16e3b39bf5f541247fe0b4257c611d3c91946e36d58f71eaa7e37ecbd3bb",
+      "scripts/skill-graph-routing-eval.js": "3259ca11d362be856929cf07cd9b05c5f114c46402ed6dd1396f422973923679",
+      "examples/evals/lint-overlay.json": "53b1cbbd5bce3710b38a449c17cb05a707217d3ecbc0712ca6ad1c8c7b78e9ef",
+      "skills/quality-assurance/testing-strategy/SKILL.md": "d25d59e7a2ee12d6ef8903d8cb078a3a5f8dff50f21b77d9667ffa3f97a5a974"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "passing",
+  "routing_eval": "present",
+  "last_audited": "2026-05-28",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  }
+}

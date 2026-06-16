@@ -1,0 +1,400 @@
+{
+  "skill_name": "prototyping",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage — fidelity ladder, fidelity matching, learning-goal contract, sacrificial concepts; Philosophy; Verification; Do NOT Use When).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "fidelity-matching",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team wants to learn whether a new onboarding flow is understandable. A designer has scoped a two-week, fully styled, clickable high-fidelity build in Figma to test it.",
+      "context": "The underlying assumption being tested is roughly a one-week bet; visuals are not the question.",
+      "question": "How should the agent advise on fidelity and approach?",
+      "expected_flags": [
+        "Match fidelity to the question — flow understandability is answerable at low fidelity (paper sketch / rough wireframe)",
+        "Flag the two-week high-fi build as over-fidelity: construction time should be small relative to the cost of being wrong",
+        "Note high fidelity prematurely anchors stakeholders on visuals and risks the prototype becoming the product",
+        "Write the learning question and success evidence first"
+      ],
+      "expected_fix_hints": [
+        "Drop to paper/wireframe to test comprehension of the flow",
+        "Reserve clickable/high-fi for questions only it can answer (e.g. find-the-primary-action)"
+      ],
+      "absent_signals": [
+        "Do not default to the highest fidelity available",
+        "Do not skip writing the learning question"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Match fidelity to the question — flow understandability is answerable at low fidelity (paper sketch / rough wireframe)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flag the two-week high-fi build as over-fidelity: construction time should be small relative to the cost of being wrong."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Note high fidelity prematurely anchors stakeholders on visuals and risks the prototype becoming the product."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Write the learning question and success evidence first."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Drop to paper/wireframe to test comprehension of the flow."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve clickable/high-fi for questions only it can answer (e.g. find-the-primary-action)."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not default to the highest fidelity available."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not skip writing the learning question."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "wizard-of-oz",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "Before building any recommendation engine, the team wants to know whether users will trust and act on an AI-suggested product category.",
+      "context": "Building the real engine is weeks of work; the open question is human trust, not algorithmic accuracy.",
+      "question": "What prototype should the agent propose?",
+      "expected_flags": [
+        "Propose a wizard-of-oz prototype — a human secretly performs the suggestion the system will later automate",
+        "Lets the team measure trust/behavior before the engine exists",
+        "Start from the written learning question (will users trust/act on the suggestion?) and the evidence that answers it",
+        "Avoid building the engine just to test the trust question"
+      ],
+      "expected_fix_hints": [
+        "Stage a session where a person feeds 'AI' suggestions behind the interface",
+        "Define in advance what reaction counts as 'trusted' vs 'not'"
+      ],
+      "absent_signals": [
+        "Do not build the production recommendation engine to test trust",
+        "Do not run the test without a defined evidence bar"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Propose a wizard-of-oz prototype — a human secretly performs the suggestion the system will later automate."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Lets the team measure trust/behavior before the engine exists."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Start from the written learning question (will users trust/act on the suggestion?) and the evidence that answers it."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Avoid building the engine just to test the trust question."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Stage a session where a person feeds 'AI' suggestions behind the interface."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define in advance what reaction counts as 'trusted' vs 'not'."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not build the production recommendation engine to test trust."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run the test without a defined evidence bar."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "learning-goal-contract",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team books a usability session for next week and is building a clickable prototype, but when asked what they want to learn the answer is 'we just want feedback, make it look good.'",
+      "context": "No written question or success/failure definition exists yet.",
+      "question": "How should the agent proceed before construction continues?",
+      "expected_flags": [
+        "Stop and write the learning-goal contract first: one or two questions the prototype must answer",
+        "Define what evidence would count as an answer in either direction before building",
+        "Without it, the test produces ambiguous results ('let's just make it look nice')",
+        "Then pick the lowest fidelity that answers the agreed question"
+      ],
+      "expected_fix_hints": [
+        "Draft the one or two learning questions and the evidence bar",
+        "Choose fidelity from the question, not from the calendar"
+      ],
+      "absent_signals": [
+        "Do not proceed to build without a written question",
+        "Do not equate 'make it look good' with a learning goal"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Stop and write the learning-goal contract first: one or two questions the prototype must answer."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Define what evidence would count as an answer in either direction before building."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Without it, the test produces ambiguous results ('let's just make it look nice')."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Then pick the lowest fidelity that answers the agreed question."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Draft the one or two learning questions and the evidence bar."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Choose fidelity from the question, not from the calendar."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not proceed to build without a written question."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not equate 'make it look good' with a learning goal."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "disposability-discipline",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A 'high-fidelity prototype' tested well, and leadership now wants to harden that exact Figma-exported code and ship it to production to save time.",
+      "context": "The prototype was built to answer a concept question, not to be the production artifact.",
+      "question": "How should the agent respond?",
+      "expected_flags": [
+        "A prototype that ships becomes a product — that is engineering implementation, not prototyping",
+        "Prototypes are disposable by design; there should be no implicit commitment that it becomes production",
+        "Hardening throwaway prototype code into production carries quality-bar, lifecycle, and maintenance debt",
+        "Treat the prototype's learning as the output and build the production version with proper engineering"
+      ],
+      "expected_fix_hints": [
+        "Carry forward the validated decisions, not the prototype artifact",
+        "Build the ship-ready feature through engineering implementation / design-module-composition where reuse applies"
+      ],
+      "absent_signals": [
+        "Do not ship the throwaway prototype as the product",
+        "Do not treat passing a concept test as production-readiness"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A prototype that ships becomes a product — that is engineering implementation, not prototyping."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prototypes are disposable by design; there should be no implicit commitment that it becomes production."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Hardening throwaway prototype code into production carries quality-bar, lifecycle, and maintenance debt."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treat the prototype's learning as the output and build the production version with proper engineering."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Carry forward the validated decisions, not the prototype artifact."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Build the ship-ready feature through engineering implementation / design-module-composition where reuse applies."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ship the throwaway prototype as the product."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat passing a concept test as production-readiness."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A teammate asks the prototyping skill to build a polished, reusable dashboard-widget component to add to the design system library so other teams can drop it in.",
+      "context": "The request is framed as 'prototype the widget' but the intent is a durable shared component.",
+      "question": "How should the agent scope this request?",
+      "expected_flags": [
+        "Reusable, ship-and-reuse components are out of scope — that is design-module-composition",
+        "Prototyping produces disposable artifacts for learning, with a different lifecycle, quality bar, and audience",
+        "Redirect to design-module-composition rather than building a production-grade shared component",
+        "If there is an open learning question, a throwaway prototype could test it first — but the durable component itself is not prototyping"
+      ],
+      "expected_fix_hints": [
+        "Hand the durable component work to design-module-composition",
+        "Only prototype if there is an unanswered question worth a disposable test"
+      ],
+      "absent_signals": [
+        "Do not build the production design-system component under the prototyping skill",
+        "Do not treat 'add to the library' as a learning goal"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reusable, ship-and-reuse components are out of scope — that is design-module-composition."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prototyping produces disposable artifacts for learning, with a different lifecycle, quality bar, and audience."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirect to design-module-composition rather than building a production-grade shared component."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: If there is an open learning question, a throwaway prototype could test it first — but the durable component itself is not prototyping."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand the durable component work to design-module-composition."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Only prototype if there is an unanswered question worth a disposable test."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not build the production design-system component under the prototyping skill."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'add to the library' as a learning goal."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "evaluate-existing-artifact",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "The team has a live feature in production and wants to find out where users get stuck in the checkout flow.",
+      "context": "The artifact already exists and is shipped; no new concept is being explored.",
+      "question": "How should the agent handle this?",
+      "expected_flags": [
+        "No new prototype is required — there is already a real artifact to evaluate",
+        "Use usability-testing directly on the existing feature",
+        "Prototyping is for building a thing to answer a question, not for testing finished work",
+        "Redirect to usability-testing rather than rebuilding the flow as a prototype"
+      ],
+      "expected_fix_hints": [
+        "Run usability-testing on the production checkout flow",
+        "Reserve prototyping for an unbuilt concept or a redesign hypothesis"
+      ],
+      "absent_signals": [
+        "Do not build a prototype of an already-shipped flow just to test it",
+        "Do not conflate usability-testing with prototyping"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: No new prototype is required — there is already a real artifact to evaluate."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use usability-testing directly on the existing feature."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prototyping is for building a thing to answer a question, not for testing finished work."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirect to usability-testing rather than rebuilding the flow as a prototype."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run usability-testing on the production checkout flow."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve prototyping for an unbuilt concept or a redesign hypothesis."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not build a prototype of an already-shipped flow just to test it."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not conflate usability-testing with prototyping."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

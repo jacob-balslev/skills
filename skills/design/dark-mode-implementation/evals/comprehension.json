@@ -1,0 +1,140 @@
+{
+  "skill_name": "dark-mode-implementation",
+  "subject": "design",
+  "adjacent_concepts": [
+    "theme-system-design",
+    "color-system-design",
+    "a11y",
+    "frontend-architecture"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a dark mode implementation in 2-3 sentences. Name the concerns it handles.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "It is a two-state runtime switch over an already-designed palette, not a palette design task",
+        "Names the five concerns: detection, apply-before-paint, runtime propagation, asset variants, browser-chrome hints",
+        "Each concern has a defined web-platform primitive",
+        "States it consumes a palette designed elsewhere (color-system-design)"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "How does theme detection work, and why is 'System' a distinct third state rather than 'no preference saved'?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "prefers-color-scheme media query reflects the OS/browser preference (window.matchMedia)",
+        "Three user choices: System (defers to media query), Light, Dark (override)",
+        "The explicit choice is persisted (localStorage/cookie) and outranks the OS",
+        "System is a real third state the user can select, not merely the absence of a saved override"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Compare paired :root / [data-theme=dark] custom properties with the CSS light-dark() function for declaring both schemes. When does each fit?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "light-dark(a, b) declares both schemes inline and the UA picks based on color-scheme",
+        "light-dark() reduces boilerplate for simple cases and is supported in current browsers",
+        "Paired :root and [data-theme=dark] custom-property assignments remain typical for token-driven systems",
+        "color-scheme must be set for light-dark() (and native controls) to resolve correctly"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A dark-mode user sees a white flash for a moment on cold page load. What causes it and how is it fixed?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Flash-of-incorrect-theme: the browser paints the light default before the persisted dark preference is applied",
+        "Fix: a small blocking inline script in <head> reads the persisted preference and sets a class/data attribute on <html> synchronously before stylesheets resolve",
+        "SSR frameworks must serialize the resolved theme into the HTML response (often reading a cookie on the server)",
+        "Verify by throttling the network and watching the first paint"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "How do you handle color-sensitive assets — brand-color raster images, SVG illustrations, the favicon, and embedded media — across themes?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Raster images: dark variants via <picture> with <source media=(prefers-color-scheme: dark)> or CSS background swapping",
+        "SVGs: currentColor or CSS custom properties for fill/stroke so they update automatically",
+        "Favicon: a dark variant via <link rel=icon media=(prefers-color-scheme: dark)>",
+        "Embedded videos/iframes often take their own theme parameter passed via URL"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the dark-mode-implementation skill to choose the actual dark palette values and verify their contrast ratios. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — choosing the dark palette and its contrast pairings is color-system-design",
+        "This skill consumes those tokens; it owns the runtime switch, not the color decisions",
+        "Contrast-criterion verification is a11y; the palette decisions come from color-system-design",
+        "Correctly distinguishes runtime wiring from palette/contrast design"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A developer says 'dark mode is just a CSS re-skin — add a [data-theme=dark] selector and override the colors.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Dark mode is a runtime integration, not a stylesheet swap",
+        "CSS-only misses the flash-of-incorrect-theme (needs a pre-paint script or server-serialized theme)",
+        "Misses color-scheme for native controls, real dark asset variants, the favicon, and meta theme-color for mobile chrome",
+        "Dark mode is a parallel design surface — shadows, focus rings, chart palettes need rethinking; persistence with explicit-over-system"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a dark mode implementation is complete and correct?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "No flash of incorrect theme on cold load (throttle network, watch first paint)",
+        "color-scheme declared on :root so native controls render correctly; meta theme-color paired light/dark",
+        "Brand-color images and the favicon have dark variants; embedded media themed",
+        "The user's explicit choice persists across reloads; all interactive states (focus/hover/selected) visible and contrast-compliant in dark"
+      ]
+    }
+  ]
+}

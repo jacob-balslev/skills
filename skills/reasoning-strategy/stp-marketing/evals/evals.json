@@ -1,0 +1,153 @@
+{
+  "skill_name": "stp-marketing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A meal-kit company is choosing between busy parents, fitness-focused singles, and older adults cooking for one. Build a minimum useful STP analysis and do not invent facts.",
+      "expected_output": "The agent should define the market boundary and evidence gaps; profile the three segments by needs, reachability, economics, and likely barriers; choose a provisional primary target only with assumptions stated; write a target-specific positioning statement; and translate the choice into product, pricing, channel, and messaging implications without fabricating segment sizes or conversion data.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Defines market boundary and decision",
+        "Profiles all three segments",
+        "Evaluates attractiveness and fit",
+        "States assumptions and missing evidence",
+        "Chooses or conditionally chooses a primary target",
+        "Writes target-specific positioning",
+        "Names downstream implications",
+        "Avoids invented market facts"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A founder says: 'Our segment is ambitious professionals. Our target is everyone with a job. Our positioning is that we are the best productivity app.' Review the STP quality.",
+      "expected_output": "The agent should flag that the segment is vague, the target is too broad, and the positioning lacks a category, need, differentiated value, proof, and competitive alternative. It should ask for evidence about use cases, behavior, willingness to pay, reach channels, and alternatives, then propose a tighter STP structure.",
+      "type": "quality-review",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Flags vague segment criteria",
+        "Rejects everyone-with-a-job as an actionable target",
+        "Critiques generic best-productivity-app positioning",
+        "Names missing evidence",
+        "Proposes a tighter segment-target-position sequence",
+        "Does not accept the user's labels as strategy"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A user asks for STP, but their real question is which product category and differentiated value themes make an analytics tool compelling against spreadsheets and BI dashboards. The target buyer is already fixed. Should STP own this?",
+      "expected_output": "The agent should route the task to positioning because the target buyer is already fixed and the work is category, competitive alternative, and differentiated-value framing. STP may have produced the fixed target earlier, but it does not need to re-run segmentation and targeting for this prompt.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes standalone category/value-theme work to positioning",
+        "Explains that STP owns the full segment-target-position sequence",
+        "Explains that target context is already fixed",
+        "Does not force unnecessary segmentation",
+        "Names what STP can still contribute if target choice is uncertain"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A B2B cybersecurity vendor segments only by employee age and income, then targets 'millennials' for an enterprise compliance product. Critique the segmentation and suggest better bases.",
+      "expected_output": "The agent should flag that consumer demographics are weak for this B2B buying decision. It should suggest firmographic, account, industry, regulatory exposure, security maturity, technology stack, buying-center role, urgency, budget, and use-case bases, then evaluate targets by fit, reachability, economics, and competitive alternatives.",
+      "type": "b2b-segmentation",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Rejects age/income as the primary B2B basis for this case",
+        "Suggests B2B-appropriate segmentation bases",
+        "Mentions buying center or account context",
+        "Evaluates attractiveness and fit",
+        "Avoids stereotyping",
+        "Connects segmentation to targeting and positioning"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A nonprofit wants to expand a tutoring program. Possible segments are recent immigrants learning the local school system, rural students without nearby tutors, and students preparing for high-stakes exams. Apply STP without using profit as the only attractiveness criterion.",
+      "expected_output": "The agent should adapt STP to mission context: segment by beneficiary need, access, delivery model, funding fit, urgency, measurable outcomes, and capacity; choose a primary target with mission and feasibility tradeoffs; write a positioning statement for funders/partners or beneficiaries as appropriate; and name validation needs.",
+      "type": "nonprofit-adaptation",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Uses mission fit and beneficiary need, not profit alone",
+        "Profiles all three segments",
+        "Considers reachability and delivery capacity",
+        "Chooses or conditionally chooses a target",
+        "Writes positioning for the relevant audience",
+        "Names validation or evidence gaps",
+        "Does not fabricate beneficiary counts"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A team has already chosen mid-market agencies as the primary target. They ask what should happen after STP before campaign execution.",
+      "expected_output": "The agent should summarize that STP should hand off to marketing mix, campaign, sales, product, pricing, channel, and research work. It should specify implications for agency-specific features, pricing/packaging, channels, proof points, sales qualification, onboarding, and validation, rather than re-opening segmentation unless evidence contradicts the target choice.",
+      "type": "handoff",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Recognizes STP target choice is already set",
+        "Hands off to marketing mix or campaign execution",
+        "Names product, pricing, channel, sales, promotion, and research implications",
+        "Avoids unnecessary re-segmentation",
+        "States when to revisit STP"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "prompt": "A healthcare app proposes targeting people based on inferred anxiety from browsing behavior. Review the STP ethics and privacy boundary.",
+      "expected_output": "The agent should flag sensitive-health inference and privacy risk. It should require lawful basis, consent or safer aggregate research, non-discrimination review, clear user benefit, and replacement with need/context-based segmentation where possible. It should not provide exploitative targeting advice.",
+      "type": "privacy-ethics",
+      "grounding": "principle",
+      "difficulty": "advanced",
+      "expectations": [
+        "Flags sensitive health inference",
+        "Names privacy and ethics risk",
+        "Requires lawful and consent-aware evidence",
+        "Suggests safer segmentation bases such as stated needs or aggregate contexts",
+        "Rejects exploitative targeting",
+        "Keeps strategy useful without using unsafe personal data"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}

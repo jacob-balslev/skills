@@ -1,0 +1,456 @@
+{
+  "skill_name": "okrs",
+  "subject": "Objectives and Key Results goal-setting",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/reasoning-strategy/okrs/SKILL.md",
+    "skills/reasoning-strategy/okrs/references/okrs-sources.md"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "task-list-repair",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A product team proposes an OKR where the Objective is 'Improve onboarding' and the Key Results are 'launch a checklist', 'publish docs', and 'run five interviews'.",
+      "context": "The team has a quarterly planning period and wants a usable OKR, but no baseline metrics are supplied.",
+      "question": "How should the agent diagnose and repair this OKR?",
+      "expected_flags": [
+        "The Objective is too vague to create clear focus.",
+        "The proposed Key Results are activities or outputs, not outcome evidence.",
+        "The agent should ask for or label missing baselines before inventing targets.",
+        "Better Key Results measure activation, time-to-value, completion quality, support burden, retention, or validated learning."
+      ],
+      "expected_fix_hints": [
+        "Rewrite the Objective as a concrete outcome state.",
+        "Convert each activity into a measurable Key Result with baseline, target, date, owner, and evidence source.",
+        "Keep launches or interviews as initiatives unless they are externally verifiable outcomes."
+      ],
+      "absent_signals": [
+        "Do not present the launch checklist as a strong Key Result by itself.",
+        "Do not fabricate exact baselines or targets without labeling assumptions."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The Objective is too vague to create clear focus."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The proposed Key Results are activities or outputs, not outcome evidence."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The agent should ask for or label missing baselines before inventing targets."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Better Key Results measure activation, time-to-value, completion quality, support burden, retention, or validated learning."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rewrite the Objective as a concrete outcome state."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Convert each activity into a measurable Key Result with baseline, target, date, owner, and evidence source."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep launches or interviews as initiatives unless they are externally verifiable outcomes."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present the launch checklist as a strong Key Result by itself."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not fabricate exact baselines or targets without labeling assumptions."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "strategy-boundary",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A founder asks for OKRs but has not chosen the company's winning aspiration, where to play, or how to win.",
+      "context": "The request is framed as quarterly planning, but the upstream strategy is missing.",
+      "question": "Should the agent write OKRs immediately?",
+      "expected_flags": [
+        "OKRs execute strategy; they do not replace strategy formulation.",
+        "The agent should request the strategic source or route upstream to strategy formulation.",
+        "If it proceeds, inferred strategic assumptions must be labeled."
+      ],
+      "expected_fix_hints": [
+        "Use a strategy framework such as Playing to Win before OKRs when direction is absent.",
+        "After strategy exists, convert the chosen priority into a small OKR set."
+      ],
+      "absent_signals": [
+        "Do not invent strategy and present it as confirmed.",
+        "Do not call OKRs the strategy itself."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: OKRs execute strategy; they do not replace strategy formulation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The agent should request the strategic source or route upstream to strategy formulation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: If it proceeds, inferred strategic assumptions must be labeled."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a strategy framework such as Playing to Win before OKRs when direction is absent."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: After strategy exists, convert the chosen priority into a small OKR set."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not invent strategy and present it as confirmed."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not call OKRs the strategy itself."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "measurement-completeness",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A Key Result says only 'Increase activation'.",
+      "context": "No baseline, target, date, owner, or evidence source is listed.",
+      "question": "What must be added before this is a gradeable Key Result?",
+      "expected_flags": [
+        "A direction-only metric is not yet gradeable.",
+        "A Key Result needs a baseline and target.",
+        "A Key Result needs a date or planning period.",
+        "A Key Result needs an evidence source and owner."
+      ],
+      "expected_fix_hints": [
+        "Rewrite as 'Increase activation from X to Y by date Z, source: system/report, owner: N'.",
+        "If X or Y are unknown, require discovery before finalizing."
+      ],
+      "absent_signals": [
+        "Do not accept 'increase activation' as complete.",
+        "Do not confuse a metric name with a Key Result."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A direction-only metric is not yet gradeable."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A Key Result needs a baseline and target."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A Key Result needs a date or planning period."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A Key Result needs an evidence source and owner."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rewrite as 'Increase activation from X to Y by date Z, source: system/report, owner: N'."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: If X or Y are unknown, require discovery before finalizing."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept 'increase activation' as complete."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not confuse a metric name with a Key Result."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "compensation-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A manager asks the agent to design annual bonus criteria and individual performance-review ratings.",
+      "context": "The request mentions performance reviews and compensation, not strategy-execution goals for a period.",
+      "question": "Should the OKRs skill own this request?",
+      "expected_flags": [
+        "Direct compensation and performance evaluation are outside OKR ownership.",
+        "Using OKR scores for compensation can encourage sandbagging and reduce learning honesty.",
+        "The agent should recommend a performance-management process rather than OKR design."
+      ],
+      "expected_fix_hints": [
+        "State that OKRs can inform context but should not be the direct bonus formula.",
+        "Separate committed work expectations from aspirational OKR learning."
+      ],
+      "absent_signals": [
+        "Do not optimize OKRs for bonus negotiation.",
+        "Do not turn individual ratings into OKRs."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Direct compensation and performance evaluation are outside OKR ownership."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Using OKR scores for compensation can encourage sandbagging and reduce learning honesty."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The agent should recommend a performance-management process rather than OKR design."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: State that OKRs can inform context but should not be the direct bonus formula."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Separate committed work expectations from aspirational OKR learning."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not optimize OKRs for bonus negotiation."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not turn individual ratings into OKRs."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "focus-overload",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team proposes 9 Objectives and 41 Key Results for one quarter.",
+      "context": "The team says the list is comprehensive and ensures every planned activity has visibility.",
+      "question": "How should the OKR skill respond?",
+      "expected_flags": [
+        "Flags diffusion of focus.",
+        "Explains that OKRs force trade-offs rather than inventory all work.",
+        "Recommends reducing to the few outcomes that matter most.",
+        "Separates lower-value goals into initiatives, backlog, or KPI monitoring."
+      ],
+      "expected_fix_hints": [
+        "Group or drop lower-value goals.",
+        "Keep the final Objective/Key Result set small enough to review.",
+        "Preserve dependencies and risks without turning them into OKRs."
+      ],
+      "absent_signals": [
+        "Do not accept the large set as better because it is comprehensive.",
+        "Do not turn every task into a Key Result."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags diffusion of focus."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that OKRs force trade-offs rather than inventory all work."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends reducing to the few outcomes that matter most."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates lower-value goals into initiatives, backlog, or KPI monitoring."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Group or drop lower-value goals."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the final Objective/Key Result set small enough to review."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Preserve dependencies and risks without turning them into OKRs."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept the large set as better because it is comprehensive."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not turn every task into a Key Result."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "kpi-dashboard-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A COO asks for ongoing operational health metrics such as uptime, gross margin, churn, and support response time.",
+      "context": "The request is for a continuously monitored dashboard, not a period-specific change goal.",
+      "question": "Should OKRs own this request?",
+      "expected_flags": [
+        "Routes ongoing business-as-usual monitoring to KPI dashboard or scorecard work.",
+        "Explains that OKRs can target a change in one metric for a period.",
+        "Does not turn every operational metric into a Key Result."
+      ],
+      "expected_fix_hints": [
+        "Build or request a KPI dashboard for health monitoring.",
+        "Use OKRs only for selected improvement priorities with baselines and targets."
+      ],
+      "absent_signals": [
+        "Do not create an OKR for every KPI.",
+        "Do not confuse ongoing health monitoring with a quarterly goal contract."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes ongoing business-as-usual monitoring to KPI dashboard or scorecard work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that OKRs can target a change in one metric for a period."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Does not turn every operational metric into a Key Result."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Build or request a KPI dashboard for health monitoring."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use OKRs only for selected improvement priorities with baselines and targets."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not create an OKR for every KPI."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not confuse ongoing health monitoring with a quarterly goal contract."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "expected-value-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A leader asks which of three uncertain bets to choose using expected upside, probability, and downside risk.",
+      "context": "The request is option selection under uncertainty, not goal-setting for the chosen direction.",
+      "question": "Should OKRs own this request?",
+      "expected_flags": [
+        "Routes the decision to expected-value or another decision-analysis method.",
+        "Explains that OKRs can follow once the chosen bet becomes a period goal.",
+        "Separates choosing the bet from defining success evidence for execution."
+      ],
+      "expected_fix_hints": [
+        "Use expected-value to compare options.",
+        "Use OKRs later to state the selected bet as an Objective with measurable Key Results."
+      ],
+      "absent_signals": [
+        "Do not use OKRs to choose among uncertain options.",
+        "Do not hide probability or downside risk inside Key Result wording."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes the decision to expected-value or another decision-analysis method."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that OKRs can follow once the chosen bet becomes a period goal."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates choosing the bet from defining success evidence for execution."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use expected-value to compare options."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use OKRs later to state the selected bet as an Objective with measurable Key Results."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use OKRs to choose among uncertain options."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hide probability or downside risk inside Key Result wording."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

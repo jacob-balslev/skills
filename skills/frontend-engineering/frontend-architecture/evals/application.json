@@ -1,0 +1,465 @@
+{
+  "skill_name": "frontend-architecture",
+  "subject": "frontend-architecture",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Verification, Do NOT Use When): import-direction enforcement, the three component layers, server-vs-client state separation, feature-folder removability, and the import-graph-over-folder-tree principle.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "import-boundary-violation",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A reviewer notices a shared `<DataTable>` in shared/ now imports `useOrdersStore` from features/orders/ to show a default sort. The team says it's convenient and only one line.",
+      "context": "The codebase has shared/, features/orders/, and features/billing/ folders but no import linter. Several features are growing.",
+      "question": "How should the agent respond to this import?",
+      "expected_flags": [
+        "Flags the import as an architecture violation: shared/ must not depend on features/ (a back-edge)",
+        "Explains it breaks the one-way dependency graph regardless of how tidy the folders are",
+        "Recommends configuring an ESLint import-boundary rule that fails CI on shared→features imports",
+        "Proposes making the default sort a prop passed in by the consumer, keeping the primitive feature-agnostic"
+      ],
+      "expected_fix_hints": [
+        "Pass sort config as a prop from the feature, not by reaching into the feature store from shared/",
+        "Add an import-boundary linter and a CI gate"
+      ],
+      "absent_signals": [
+        "Do not approve the import because it is 'only one line'",
+        "Do not leave the boundary unenforced"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags the import as an architecture violation: shared/ must not depend on features/ (a back-edge)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains it breaks the one-way dependency graph regardless of how tidy the folders are."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends configuring an ESLint import-boundary rule that fails CI on shared→features imports."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Proposes making the default sort a prop passed in by the consumer, keeping the primitive feature-agnostic."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pass sort config as a prop from the feature, not by reaching into the feature store from shared/."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add an import-boundary linter and a CI gate."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not approve the import because it is 'only one line'."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave the boundary unenforced."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "server-client-state-mix",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An app keeps API-fetched orders, the open/closed state of a modal, and the current theme all in one global Redux store. Users report stale order data after edits, and the team is adding more manual cache-busting logic.",
+      "context": "The bugs look like rendering bugs but are really stale cached data; the team keeps patching individual screens.",
+      "question": "How should the agent restructure the state?",
+      "expected_flags": [
+        "Identifies server state and client state mixed in one store as the root cause of cache-invalidation bugs",
+        "Move server data to a dedicated fetch/cache/revalidate tool (query library) as the single mechanism",
+        "Keep only genuinely cross-cutting UI state (theme) in global client state; modal open/closed is component-local",
+        "Notes the bugs present as rendering bugs but are cache problems"
+      ],
+      "expected_fix_hints": [
+        "Adopt one server-state library for fetching/caching/revalidation",
+        "Demote ephemeral UI state to component-local; reserve global store for cross-cutting concerns"
+      ],
+      "absent_signals": [
+        "Do not add more manual cache-busting to the global store",
+        "Do not keep server and client state co-located in one store"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies server state and client state mixed in one store as the root cause of cache-invalidation bugs."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Move server data to a dedicated fetch/cache/revalidate tool (query library) as the single mechanism."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep only genuinely cross-cutting UI state (theme) in global client state; modal open/closed is component-local."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes the bugs present as rendering bugs but are cache problems."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Adopt one server-state library for fetching/caching/revalidation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Demote ephemeral UI state to component-local; reserve global store for cross-cutting concerns."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add more manual cache-busting to the global store."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep server and client state co-located in one store."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "component-placement",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A developer built a `<ConfirmDialog>` that wraps shared primitives but also calls the billing API to cancel a subscription, and wants to put it in shared/ 'so other features can reuse it.'",
+      "context": "The team wants reuse but the component owns a billing-specific mutation.",
+      "question": "Where should this component live and why?",
+      "expected_flags": [
+        "This is a connected component (it owns data mutation), not a shared primitive or composed component",
+        "Placing it in shared/ creates a back-edge from shared/ into the billing feature",
+        "Keep the connected dialog inside features/billing/; extract only the data-free presentational shell to shared/ for reuse",
+        "Distinguishes the three layers: primitive/composed (shareable) vs connected (feature-owned)"
+      ],
+      "expected_fix_hints": [
+        "Split into a shared presentational ConfirmDialog (props-only) + a billing-owned connected wrapper",
+        "Keep the API call in the feature, pass an onConfirm callback into the shell"
+      ],
+      "absent_signals": [
+        "Do not put a data-mutating component in shared/",
+        "Do not justify the placement by 'reuse' alone"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is a connected component (it owns data mutation), not a shared primitive or composed component."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Placing it in shared/ creates a back-edge from shared/ into the billing feature."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep the connected dialog inside features/billing/; extract only the data-free presentational shell to shared/ for reuse."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes the three layers: primitive/composed (shareable) vs connected (feature-owned)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Split into a shared presentational ConfirmDialog (props-only) + a billing-owned connected wrapper."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the API call in the feature, pass an onConfirm callback into the shell."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not put a data-mutating component in shared/."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not justify the placement by 'reuse' alone."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "feature-removability",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "Product wants to remove the deprecated 'referrals' feature. The engineer finds that deleting features/referrals/ breaks imports scattered across features/dashboard/, features/settings/, and shared/utils/.",
+      "context": "The team wants to know whether the architecture is healthy and how to make features removable in future.",
+      "question": "What does this reveal and how should the agent guide the cleanup and the structural fix?",
+      "expected_flags": [
+        "Cross-feature imports into referrals mean the architecture lacks one-way isolation — feature A imports feature B",
+        "A healthy feature folder can be removed without touching code outside it except a single registration point",
+        "Recommends an import-boundary rule forbidding feature→feature imports going forward",
+        "Cleanup: invert the dependencies (shared abstractions or events) before deleting"
+      ],
+      "expected_fix_hints": [
+        "Move genuinely shared helpers out of the feature into shared/, then remove the feature",
+        "Add a lint rule banning feature-to-feature imports; route cross-feature needs through a registration point"
+      ],
+      "absent_signals": [
+        "Do not leave feature-to-feature imports as acceptable",
+        "Do not treat the breakage as merely a mechanical delete problem"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cross-feature imports into referrals mean the architecture lacks one-way isolation — feature A imports feature B."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A healthy feature folder can be removed without touching code outside it except a single registration point."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends an import-boundary rule forbidding feature→feature imports going forward."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cleanup: invert the dependencies (shared abstractions or events) before deleting."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move genuinely shared helpers out of the feature into shared/, then remove the feature."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a lint rule banning feature-to-feature imports; route cross-feature needs through a registration point."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave feature-to-feature imports as acceptable."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat the breakage as merely a mechanical delete problem."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "state-shape-rerender",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A dashboard stores all entities in one nested object; every small mutation re-renders the whole tree, and a price update in one widget re-renders five unrelated widgets.",
+      "context": "The team can't explain the re-renders and wants a more predictable shape.",
+      "question": "How should the agent reshape the state?",
+      "expected_flags": [
+        "Names the four state-shape axes (location, normalization, derivation, ownership) as the levers",
+        "Recommends entity-keyed normalization so a single entity update doesn't invalidate unrelated subtrees",
+        "Notes the shape determines what re-renders and what stays consistent",
+        "Re-render counts on a representative interaction should be measurable and explainable"
+      ],
+      "expected_fix_hints": [
+        "Normalize to entity-keyed state; select narrowly per consumer",
+        "Compute derived values at read time rather than storing duplicated copies"
+      ],
+      "absent_signals": [
+        "Do not keep a single deeply-nested object that re-renders globally",
+        "Do not leave re-render behavior unexplained"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names the four state-shape axes (location, normalization, derivation, ownership) as the levers."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends entity-keyed normalization so a single entity update doesn't invalidate unrelated subtrees."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes the shape determines what re-renders and what stays consistent."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Re-render counts on a representative interaction should be measurable and explainable."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Normalize to entity-keyed state; select narrowly per consumer."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Compute derived values at read time rather than storing duplicated copies."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep a single deeply-nested object that re-renders globally."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave re-render behavior unexplained."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "framework-tactic-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the frontend-architecture owner to decide whether the team should migrate from Webpack to Vite and whether to adopt Tailwind instead of CSS-in-JS, framing both as 'architecture decisions.'",
+      "context": "The team conflates build-tool and styling-tactic choices with structural architecture.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Build-tool migration (Webpack→Vite) is a framework/tactic decision — this skill is framework-neutral",
+        "Tailwind vs CSS-in-JS is a styling-tactic decision, not module/dependency/state structure",
+        "Offers the in-scope part if relevant: how module boundaries and import direction stay stable across either choice",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Route the build-tool and styling choices to framework-specific evaluation",
+        "Keep the architecture (boundaries, layering, state ownership) invariant under the tool choice"
+      ],
+      "absent_signals": [
+        "Do not present a Webpack/Vite or Tailwind/CSS-in-JS pick as the architecture decision",
+        "Do not answer the out-of-scope tactic questions as if structural"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Build-tool migration (Webpack→Vite) is a framework/tactic decision — this skill is framework-neutral."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Tailwind vs CSS-in-JS is a styling-tactic decision, not module/dependency/state structure."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offers the in-scope part if relevant: how module boundaries and import direction stay stable across either choice."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the build-tool and styling choices to framework-specific evaluation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the architecture (boundaries, layering, state ownership) invariant under the tool choice."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present a Webpack/Vite or Tailwind/CSS-in-JS pick as the architecture decision."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer the out-of-scope tactic questions as if structural."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "folder-tidy-misconception",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A team proudly presents a deeply categorized folder tree (components/atoms, components/molecules, components/organisms, hooks, services, utils) as proof the frontend is well-architected, but dependency-cruiser shows cycles between organisms and services.",
+      "context": "Leadership treats the tidy tree as the architecture review passing.",
+      "question": "How should the agent assess this?",
+      "expected_flags": [
+        "A tidy folder tree is not the architecture; the import graph is",
+        "The reported cycles between organisms and services are the real architectural problem",
+        "Recommends breaking the cycles and enforcing one-way direction with a boundary linter in CI",
+        "Cohesion and enforced direction matter more than the categorization depth"
+      ],
+      "expected_fix_hints": [
+        "Resolve the dependency cycles (invert one direction or extract a shared abstraction)",
+        "Gate CI on the import-boundary linter, not on folder tidiness"
+      ],
+      "absent_signals": [
+        "Do not accept the tidy tree as evidence of sound architecture",
+        "Do not ignore the dependency cycles"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A tidy folder tree is not the architecture; the import graph is."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The reported cycles between organisms and services are the real architectural problem."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends breaking the cycles and enforcing one-way direction with a boundary linter in CI."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cohesion and enforced direction matter more than the categorization depth."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Resolve the dependency cycles (invert one direction or extract a shared abstraction)."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Gate CI on the import-boundary linter, not on folder tidiness."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept the tidy tree as evidence of sound architecture."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore the dependency cycles."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

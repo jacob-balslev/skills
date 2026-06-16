@@ -1,0 +1,272 @@
+{
+  "skill_name": "stp-marketing",
+  "subject": "STP marketing strategy",
+  "adjacent_concepts": [
+    "market segmentation",
+    "target market selection",
+    "positioning",
+    "marketing mix",
+    "PESTEL",
+    "Porter's Five Forces",
+    "Blue Ocean Strategy",
+    "Ansoff Matrix",
+    "AIDA",
+    "research synthesis",
+    "epistemic grounding"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define STP marketing in 2-3 sentences. Include what segmentation, targeting, and positioning each do.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines STP as segmentation, targeting, and positioning",
+        "Explains segmentation divides a market into meaningful groups",
+        "Explains targeting selects one or more attractive and reachable groups",
+        "Explains positioning frames the offer for the chosen target relative to alternatives",
+        "Does not treat STP as copywriting or a final campaign by itself"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of STP marketing. Name the primitives and how the stages constrain one another.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names a defined market or buyer/user population",
+        "Names segmentation bases or criteria",
+        "Names segment profiles or evidence",
+        "Names target attractiveness and fit",
+        "Names competitive frame or alternative",
+        "Names differentiated value or positioning statement",
+        "Explains that segmentation constrains targeting and targeting constrains positioning"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does an STP marketing skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents generic everyone-is-the-target marketing",
+        "Prevents invented personas or segment labels without evidence",
+        "Prevents target choices based only on preference",
+        "Prevents positioning before target selection",
+        "Prevents marketing-mix tactics before strategy choices",
+        "Forces evidence gaps, validation needs, and downstream implications"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish STP marketing from standalone positioning, PESTEL, Porter's Five Forces, Blue Ocean Strategy, marketing mix, and AIDA. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Positioning alone owns category, value-theme, or statement work after target context exists",
+        "PESTEL scans external macro forces",
+        "Five Forces analyzes industry profit-pressure structure",
+        "Blue Ocean Strategy reconstructs value curves and creates new demand",
+        "Marketing mix designs tactical Product, Price, Place, Promotion, People, Process, or Physical evidence",
+        "AIDA structures copy or campaign messaging",
+        "STP owns the connected segment-to-target-to-position sequence"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place STP among marketing and strategy methods. What inputs feed it, what outputs should it produce, and which methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies STP as an upstream marketing strategy or go-to-market choice method",
+        "Names inputs such as market research, customer evidence, product/offer context, market boundary, and competitive alternatives",
+        "Names outputs such as segment profiles, target choice, positioning statement, implications, and validation needs",
+        "Explains marketing mix, campaign work, product decisions, channel strategy, sales focus, or AIDA can follow",
+        "Explains PESTEL, Five Forces, user research, or research synthesis can feed it"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for STP that preserves the segment-to-target-to-position mechanism. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving choosing whom to serve before writing a message or offer",
+        "Maps segmentation to separating groups",
+        "Maps targeting to choosing focus",
+        "Maps positioning to stating differentiated value for that focus",
+        "Rejects an analogy that treats STP as a slogan, persona-only exercise, or broad market scan",
+        "Explains what the bad analogy loses"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A project-management SaaS can serve freelancers, agencies, and regulated enterprise teams. Freelancers want low price and simplicity, agencies want client reporting and collaboration, and enterprise teams want audit trails and integrations. Apply STP reasoning and state what evidence is missing.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Identifies at least three candidate segments",
+        "Profiles segment needs or jobs",
+        "Evaluates attractiveness and fit rather than choosing by preference only",
+        "Chooses or conditionally recommends a primary target",
+        "Provides a positioning statement or positioning logic for the chosen target",
+        "Names implications for product, pricing, channel, sales, or messaging",
+        "Names missing evidence such as segment size, willingness to pay, acquisition cost, competitive alternatives, compliance needs, retention, or channel access",
+        "Does not claim the STP analysis proves the whole go-to-market strategy without validation"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "Novel scenario: A healthcare app proposes targeting people based on inferred anxiety from browsing behavior. Apply STP's ethics and privacy boundary and say what a safer segmentation approach would require.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Flags inferred anxiety as sensitive health or mental-health data",
+        "Names privacy, consent, lawful-basis, or discrimination risk",
+        "Rejects exploitative or hidden targeting advice",
+        "Suggests safer bases such as stated needs, opt-in contexts, aggregate research, or non-sensitive behavior",
+        "Requires clear user benefit and compliance review",
+        "Keeps the STP sequence useful without relying on unsafe personal inference"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "application",
+      "prompt": "Novel scenario: A founder has no market data and asks for STP for a new home-inventory app. They list possible users as renters, homeowners, insurance claimants, and estate organizers. Produce the minimum useful STP scaffold without inventing facts.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Marks the evidence as sparse or assumption-heavy",
+        "Profiles candidate segments without inventing sizes, willingness to pay, or channel behavior",
+        "Names evidence needed for each segment",
+        "Uses conditional or provisional target logic",
+        "Avoids fabricated personas",
+        "States validation steps before committing to positioning"
+      ]
+    },
+    {
+      "id": 10,
+      "dimension": "application",
+      "prompt": "Novel scenario: A public library wants to launch digital-skills workshops for older adults, job seekers, small-business owners, or teens. Apply STP without using profit as the only attractiveness criterion.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Adapts target attractiveness to mission fit and beneficiary need",
+        "Considers delivery capacity, access barriers, funding, outcomes, and partner reach",
+        "Profiles all or several candidate segments",
+        "Chooses or conditionally chooses a primary target",
+        "Writes positioning for the relevant audience such as beneficiaries, funders, or partners",
+        "Names missing evidence without fabricating demand data"
+      ]
+    },
+    {
+      "id": 11,
+      "dimension": "application",
+      "prompt": "Novel scenario: A local bookkeeping SaaS has interviews from three possible segments but no quantified market data. Use the skill's output template shape: decision, market boundary, evidence used, evidence missing, segmentation, targeting, positioning, implications, and monitoring triggers.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Uses the requested output-template sections",
+        "Separates evidence used from evidence missing",
+        "Profiles segments without inventing market size or willingness to pay",
+        "Chooses or conditionally chooses a target based on attractiveness and fit",
+        "Writes positioning with target, need, category or frame, differentiated value, proof, and alternative",
+        "Names implications and monitoring triggers"
+      ]
+    },
+    {
+      "id": 12,
+      "dimension": "application",
+      "prompt": "Novel scenario: A draft STP analysis names three segments: price-sensitive buyers, expert users, and compliance teams. Test the segment quality using the skill's criteria before choosing a target.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Uses measurable or evidence/proxy checks",
+        "Uses substantial or value-relevant checks",
+        "Uses accessible or reachable-channel checks",
+        "Uses differentiable/responsive checks",
+        "Uses actionable checks",
+        "Uses safe/fair or privacy/ethics checks",
+        "Does not choose a target before testing segment quality"
+      ]
+    },
+    {
+      "id": 13,
+      "dimension": "application",
+      "prompt": "Novel scenario: A team presents its own STP table as proof that agencies are the best target segment, but the table contains only invented segment names, guessed pains, and no external or interview evidence. Review the analysis.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Flags the STP table as a scaffold or hypothesis, not research evidence",
+        "Rejects target selection based on invented segment labels or guessed pains",
+        "Names evidence needed before choosing the target",
+        "Recommends validation through interviews, market data, usage data, channel tests, or comparable evidence",
+        "Keeps any target recommendation conditional until evidence is collected"
+      ]
+    },
+    {
+      "id": 14,
+      "dimension": "application",
+      "prompt": "Novel scenario: A team wants to add a perceptual map to an STP recommendation for three competing collaboration tools, but they have no evidence about which attributes the target segment values. Decide whether and how to use the map.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Explains that perceptual-map axes must reflect attributes the target segment values",
+        "Rejects using a perceptual map as decoration when evidence is absent",
+        "Names candidate evidence sources for choosing axes",
+        "If using the map conditionally, plots alternatives against evidence-backed axes",
+        "Connects any open position back to the positioning statement and target choice"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-01",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/kano-model/references/kano-model-sources.md": "5475489cb775d47510d5cbffcc1d709f49cc59a920e59ac9cb7d750a7804a811",
+      "skills/reasoning-strategy/kano-model/references/upstream-displacement-2026-06-01.md": "37d2a0d5618b633ade01432772c1ff1cb785980b64cf2b8d0967c218b154ded5"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_audited": "2026-06-01",
+  "last_changed": "2026-06-01",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "drift_status": "EXTERNAL_UNHASHED",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  }
+}

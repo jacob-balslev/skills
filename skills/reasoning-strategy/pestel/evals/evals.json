@@ -1,0 +1,148 @@
+{
+  "skill_name": "pestel",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A B2B SaaS company wants to enter a new country. The prompt mentions election uncertainty, rising interest rates, growing remote-work norms, a new cloud region, stricter privacy law, and drought-related energy volatility. Build a PESTEL scan.",
+      "expected_output": "The agent should define country, segment, and time horizon; classify election uncertainty as political, interest rates as economic, remote-work norms as social, the cloud region as technological, privacy law as legal, and energy volatility as environmental. It should attach evidence needs, rate impact/likelihood/uncertainty, and convert signals into opportunities, threats, assumptions, and monitoring triggers rather than recommending entry from PESTEL alone.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Defines scope, geography, and time horizon",
+        "Correctly classifies all six external forces",
+        "Names evidence needs or source dates",
+        "Converts signals into implications",
+        "Does not treat the PESTEL table as final strategy"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A founder lists 'strong brand' as political, 'weak analytics' as technological, 'low cash' as economic, and 'slow approvals' as legal in a PESTEL table. Review the classification.",
+      "expected_output": "The agent should flag that strong brand, weak analytics, low cash, and slow approvals are internal factors unless the prompt supplies external evidence. They belong in internal capability analysis or SWOT/TOWS, not PESTEL. The agent should ask for external macro evidence such as policy shifts, economic data, social trends, technology infrastructure, environmental constraints, and enforceable legal requirements.",
+      "type": "classification-review",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Identifies internal factors",
+        "Moves internal factors out of PESTEL",
+        "Asks for external macro evidence",
+        "Does not blindly accept the user's category labels",
+        "Routes internal factor work to SWOT/TOWS or capability analysis"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A team asks for PESTEL, but their real question is whether supplier concentration, buyer power, threat of substitutes, new entrants, and rivalry make an industry attractive. Should PESTEL own this?",
+      "expected_output": "The agent should route the industry profit-pressure question to Porter's Five Forces. PESTEL can supply macro context, such as regulation or economic trends affecting the industry, but buyer power, supplier power, entrants, substitutes, and rivalry are Five Forces mechanisms.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes buyer/supplier/entrant/substitute/rivalry analysis to Five Forces",
+        "Explains PESTEL as macro context",
+        "Names at least one macro factor that could still feed the analysis",
+        "Does not substitute PESTEL for industry-structure diagnosis"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A PESTEL draft says: 'AI will change everything, regulation is increasing, customers want sustainability, and the economy is uncertain. Therefore launch now.' Critique it.",
+      "expected_output": "The agent should critique the draft as unsourced, geography-free, time-horizon-free, and prematurely recommending. It should ask for source dates, jurisdiction, market segment, evidence quality, impact, likelihood, uncertainty, and implications. It should convert signals into assumptions or monitoring triggers before any launch recommendation.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Flags vague macro claims",
+        "Requires geography or jurisdiction",
+        "Requires time horizon",
+        "Requires evidence and source dates",
+        "Separates scan output from final recommendation",
+        "Adds assumptions or monitoring triggers",
+        "Does not recommend launch from vague macro trends alone"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "prompt": "A company has a PESTEL scan showing a new subsidy, falling consumer spending, aging customers, a mature automation platform, emissions reporting pressure, and pending safety rules. What should happen next?",
+      "expected_output": "The agent should summarize the material opportunities, threats, assumptions, and monitoring triggers, then route to downstream methods. It might feed opportunities/threats into SWOT/TOWS, test industry attractiveness with Five Forces, compare options with Expected Value after outcomes are modeled, or use Playing to Win for strategy choices. It should not call the PESTEL scan the finished strategy.",
+      "type": "handoff",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Synthesizes opportunities and threats",
+        "Names assumptions or monitoring triggers",
+        "Routes to an appropriate downstream method",
+        "Explains that PESTEL is an input to strategy work",
+        "Does not recommend a final strategy without additional method/evidence"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A user asks for the legal and political parts of a PESTEL scan for a medical device launch. Explain how to separate the two.",
+      "expected_output": "The agent should separate political factors such as policy priorities, public funding, elections, government stability, trade stance, and regulator posture from legal factors such as enforceable statutes, approvals, safety rules, privacy duties, labeling requirements, liability, and compliance deadlines. It should note overlap while keeping primary classification clear.",
+      "type": "category-boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Defines political factors as policy direction or public power",
+        "Defines legal factors as enforceable requirements or exposure",
+        "Acknowledges overlap without collapsing categories",
+        "Uses medical-device-relevant examples",
+        "Requires jurisdiction-specific evidence",
+        "Does not collapse policy direction and enforceable legal duties into one bucket"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "prompt": "A nonprofit wants a quick PESTEL scan for expanding a food program into a rural region. Produce the minimum useful structure without inventing facts.",
+      "expected_output": "The agent should provide a scoped PESTEL template or sparse analysis that asks for public funding and policy, food prices and transport costs, demographics and food insecurity patterns, digital access or logistics technology, weather and climate risks, and food-safety or nonprofit compliance rules. It should mark missing evidence and avoid fabricating region-specific facts.",
+      "type": "safe-scaffold",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Provides all six categories",
+        "Uses rural food-program-relevant prompts",
+        "Marks missing evidence",
+        "Avoids invented facts",
+        "Names next evidence or monitoring needs",
+        "Does not fabricate region-specific political, economic, social, technological, environmental, or legal facts"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}

@@ -1,0 +1,465 @@
+{
+  "skill_name": "ideation",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Verification, Do NOT Use When) and established ideation practice (divergent/convergent separation, forced quantity, criteria-first convergence, facilitation mechanics).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "judge-while-generating",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A product team starts a brainstorm and, after the third idea, immediately begins debating feasibility and cost of each idea as it is proposed. After 30 minutes they have five ideas, all conservative.",
+      "context": "The session is meant to widen the solution space for an ambiguous new feature.",
+      "question": "How should the agent restructure the session?",
+      "expected_flags": [
+        "Separate generation from judgment — stop evaluating ideas as they arrive",
+        "Run a silent, time-boxed divergent round first (no feedback, no feasibility debate)",
+        "Force quantity to push past the obvious first ideas and the safe middle",
+        "Defer all evaluation to a distinct convergent phase"
+      ],
+      "expected_fix_hints": [
+        "Use a Crazy 8s or brainwriting round with a strict timer and a no-judgment rule",
+        "Move feasibility/cost discussion into the convergent phase only"
+      ],
+      "absent_signals": [
+        "Do not keep evaluating each idea as it is generated",
+        "Do not accept the five conservative ideas as a finished set"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separate generation from judgment — stop evaluating ideas as they arrive."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Run a silent, time-boxed divergent round first (no feedback, no feasibility debate)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Force quantity to push past the obvious first ideas and the safe middle."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Defer all evaluation to a distinct convergent phase."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a Crazy 8s or brainwriting round with a strict timer and a no-judgment rule."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move feasibility/cost discussion into the convergent phase only."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep evaluating each idea as it is generated."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept the five conservative ideas as a finished set."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "criteria-after-vote",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "After a divergent round the facilitator runs dot voting, then constructs the selection rationale afterward to explain why the most-voted concept won.",
+      "context": "The team wants a defensible decision they can present to stakeholders.",
+      "question": "What is wrong with this convergence, and how should it be fixed?",
+      "expected_flags": [
+        "Selection criteria must be named in writing BEFORE voting, not retrofitted",
+        "Retrofitting criteria makes the choice political rather than defensible",
+        "Run a criteria-first convergent method (NUF test, weighted matrix) so votes apply explicit criteria",
+        "The current process rationalizes the popular vote instead of evaluating against agreed criteria"
+      ],
+      "expected_fix_hints": [
+        "Define and post the selection criteria before any voting begins",
+        "Score concepts against the criteria (weighted matrix / NUF) rather than raw popularity"
+      ],
+      "absent_signals": [
+        "Do not build the rationale after the vote to justify the winner",
+        "Do not let raw vote count substitute for explicit criteria"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Selection criteria must be named in writing BEFORE voting, not retrofitted."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Retrofitting criteria makes the choice political rather than defensible."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Run a criteria-first convergent method (NUF test, weighted matrix) so votes apply explicit criteria."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The current process rationalizes the popular vote instead of evaluating against agreed criteria."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define and post the selection criteria before any voting begins."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Score concepts against the criteria (weighted matrix / NUF) rather than raw popularity."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not build the rationale after the vote to justify the winner."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let raw vote count substitute for explicit criteria."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "convergence-too-narrow",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team converged on three 'winning' concepts, but on inspection all three are minor variations of the same dashboard layout idea.",
+      "context": "The next stage is prototyping and they want distinct directions to learn from.",
+      "question": "How should the agent diagnose and respond?",
+      "expected_flags": [
+        "The divergent round failed to spread — three near-identical concepts signal compressed range",
+        "Selected concepts should be materially different from each other",
+        "Re-run or extend the divergent round with forced quantity / worst-possible-idea to break fixation",
+        "Aim for at least one uncomfortable or unfamiliar concept among the selection"
+      ],
+      "expected_fix_hints": [
+        "Add a SCAMPER or analogous-inspiration round to widen the field",
+        "Re-converge requiring the winners to be distinct directions"
+      ],
+      "absent_signals": [
+        "Do not accept three variations of one idea as a diverse set",
+        "Do not proceed to prototyping with only one real direction"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The divergent round failed to spread — three near-identical concepts signal compressed range."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Selected concepts should be materially different from each other."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Re-run or extend the divergent round with forced quantity / worst-possible-idea to break fixation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Aim for at least one uncomfortable or unfamiliar concept among the selection."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a SCAMPER or analogous-inspiration round to widen the field."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-converge requiring the winners to be distinct directions."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept three variations of one idea as a diverse set."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not proceed to prototyping with only one real direction."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "fixation-break",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team is stuck — every idea returns to the same notification-based solution they have always built, and they cannot see alternatives.",
+      "context": "Leadership wants genuinely novel directions explored.",
+      "question": "What technique should the agent introduce and why?",
+      "expected_flags": [
+        "Use a worst-possible-idea round to disinhibit and reveal hidden assumptions/norms",
+        "Worst-possible-idea exposes which norms were holding the design back",
+        "Apply SCAMPER (substitute/combine/reverse) to the fixated solution to force variants",
+        "Force quantity to push past the habitual solution into less-trodden territory"
+      ],
+      "expected_fix_hints": [
+        "Run worst-possible-idea, then invert the bad ideas into constraints to challenge",
+        "Use analogous inspiration from other domains to break the single-solution pattern"
+      ],
+      "absent_signals": [
+        "Do not keep refining the same notification solution",
+        "Do not treat solution fixation as resolved by one more brainstorm of the same shape"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use a worst-possible-idea round to disinhibit and reveal hidden assumptions/norms."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Worst-possible-idea exposes which norms were holding the design back."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Apply SCAMPER (substitute/combine/reverse) to the fixated solution to force variants."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Force quantity to push past the habitual solution into less-trodden territory."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run worst-possible-idea, then invert the bad ideas into constraints to challenge."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use analogous inspiration from other domains to break the single-solution pattern."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep refining the same notification solution."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat solution fixation as resolved by one more brainstorm of the same shape."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "unframed-problem",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A stakeholder says 'let's brainstorm ideas to make the product better' with no specific problem or how-might-we statement defined.",
+      "context": "The team is eager to start generating concepts immediately.",
+      "question": "How should the agent respond before running an ideation session?",
+      "expected_flags": [
+        "The problem has not been framed — ideating on a fuzzy brief produces a fuzzy concept set",
+        "Return to problem-framing first to shape a specific how-might-we statement",
+        "Ideation operates on a well-framed problem; framing is a prerequisite, not part of ideation",
+        "Only after framing should the divergent round begin"
+      ],
+      "expected_fix_hints": [
+        "Run problem-framing to produce a concrete how-might-we before generating concepts",
+        "Anchor the divergent round to the framed problem statement"
+      ],
+      "absent_signals": [
+        "Do not start generating concepts against an undefined brief",
+        "Do not treat 'make the product better' as a framed problem"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The problem has not been framed — ideating on a fuzzy brief produces a fuzzy concept set."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Return to problem-framing first to shape a specific how-might-we statement."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ideation operates on a well-framed problem; framing is a prerequisite, not part of ideation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Only after framing should the divergent round begin."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run problem-framing to produce a concrete how-might-we before generating concepts."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Anchor the divergent round to the framed problem statement."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not start generating concepts against an undefined brief."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'make the product better' as a framed problem."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the ideation owner to decide whether to fund the selected concept for next quarter and to write the production code for it.",
+      "context": "The team conflates 'ideation' with the whole product-decision and build pipeline.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Funding/go-no-go is out of scope — that is a separate investment-decision process",
+        "Writing production code is out of scope — that is implementation",
+        "Offer the in-scope part: generating concept variants and converging on a defensible subset",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand the funding decision to an investment-decision process and the build to implementation",
+        "Provide the converged concepts and the questions each would answer next (prototyping)"
+      ],
+      "absent_signals": [
+        "Do not make the budget/investment decision",
+        "Do not write the production code"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Funding/go-no-go is out of scope — that is a separate investment-decision process."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Writing production code is out of scope — that is implementation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: generating concept variants and converging on a defensible subset."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand the funding decision to an investment-decision process and the build to implementation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide the converged concepts and the questions each would answer next (prototyping)."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make the budget/investment decision."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the production code."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "well-specified-comparison",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team must choose between two already-specified, well-understood vendor integrations and asks to run a full ideation workshop to decide.",
+      "context": "Both options are fully scoped; there is no creative field to widen.",
+      "question": "How should the agent respond to the request for a full ideation session?",
+      "expected_flags": [
+        "Full ideation is overhead here — the decision is between two well-understood, already-specified options",
+        "A simple comparison (criteria-based) is sufficient, not a divergent/convergent workshop",
+        "Ideation is for widening a creative field, not picking between two fixed options",
+        "Recommend a lightweight weighted comparison instead of a workshop"
+      ],
+      "expected_fix_hints": [
+        "Use a short weighted decision matrix on the two known options",
+        "Skip the divergent round; there is no field to spread"
+      ],
+      "absent_signals": [
+        "Do not run a full Crazy 8s / divergent round for a two-option comparison",
+        "Do not manufacture extra options just to justify a workshop"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Full ideation is overhead here — the decision is between two well-understood, already-specified options."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A simple comparison (criteria-based) is sufficient, not a divergent/convergent workshop."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ideation is for widening a creative field, not picking between two fixed options."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommend a lightweight weighted comparison instead of a workshop."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a short weighted decision matrix on the two known options."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Skip the divergent round; there is no field to spread."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run a full Crazy 8s / divergent round for a two-option comparison."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not manufacture extra options just to justify a workshop."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

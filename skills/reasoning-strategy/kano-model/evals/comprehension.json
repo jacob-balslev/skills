@@ -1,0 +1,140 @@
+{
+  "skill_name": "kano-model",
+  "subject": "Kano Model feature classification",
+  "adjacent_concepts": [
+    "must-be quality",
+    "one-dimensional quality",
+    "attractive quality",
+    "indifferent quality",
+    "reverse quality",
+    "questionable quality",
+    "feature prioritization",
+    "user research",
+    "positioning",
+    "expected value"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define the Kano model in 2-3 sentences. Include what it classifies and name at least four response categories.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines Kano as a customer-satisfaction / feature-classification model",
+        "Explains that it compares satisfaction when a feature is present versus absent",
+        "Names must-be or basic quality",
+        "Names performance or one-dimensional quality",
+        "Names attractive or delighter quality",
+        "Names indifferent, reverse, or questionable quality"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Kano analysis. Name the primitives and how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names customer segment or persona",
+        "Names candidate feature or capability",
+        "Names functional and dysfunctional questions",
+        "Names satisfaction and dissatisfaction responses",
+        "Explains classification by response pattern",
+        "Explains that categories guide prioritization differently"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a Kano-model skill exist for agents? Name the decision failures it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents treating all requested features as equally valuable",
+        "Prevents ranking delighters before unmet basics",
+        "Prevents mistaking absence of complaints for satisfaction",
+        "Prevents using simple yes/no preference questions as Kano evidence",
+        "Prevents assuming one segment's category applies to every segment"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish Kano analysis from prioritization, user research, positioning, expected value, and methodology. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Prioritization scores or ranks work across criteria",
+        "User research gathers and synthesizes customer evidence",
+        "Positioning chooses market context and differentiated value",
+        "Expected value compares probability-weighted outcomes",
+        "Methodology owns broad process design",
+        "Kano classifies customer satisfaction response patterns to feature presence and absence"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place the Kano model among product strategy and research methods. What upstream inputs feed it, and what downstream outputs can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies it as a customer-needs / product-prioritization / quality model",
+        "Names upstream inputs such as segment definition, feature hypotheses, interviews, surveys, or usage evidence",
+        "Names downstream outputs such as feature categories, must-be gaps, performance trade-offs, delighter candidates, or roadmap input",
+        "Explains it can feed but not replace ranking, sizing, and strategy decisions"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for the Kano model that preserves the different satisfaction curves. Then name one bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving different kinds of levers, controls, shelves, or signals",
+        "Maps must-be to preventing dissatisfaction",
+        "Maps performance to proportional satisfaction",
+        "Maps attractive to surprise upside",
+        "Rejects an analogy that treats all features as points on one linear score"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A team says users ask for export CSV, dark mode, faster search, animated confetti, and fewer signup fields. Apply Kano reasoning by diagnosing what evidence is missing and how the categories might change the roadmap.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Does not classify the features from names alone",
+        "Requires segment-specific functional and dysfunctional evidence",
+        "Recognizes export CSV or fewer signup fields could be must-be for some segments",
+        "Recognizes faster search may be performance quality",
+        "Recognizes dark mode or confetti could be attractive, indifferent, or reverse depending on segment",
+        "Recommends fixing unmet basics before relying on delighters"
+      ]
+    }
+  ]
+}

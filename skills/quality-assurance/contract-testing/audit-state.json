@@ -1,0 +1,40 @@
+{
+  "schema_version": 8,
+  "version": "1.0.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-09",
+  "drift_check": {
+    "last_verified": "2026-06-13",
+    "truth_source_hashes": {
+      "https://martinfowler.com/articles/consumerDrivenContracts.html": "2627d7fb3d288aff6ec8c9d233c82ec79b012e7f780d92c965df4128b13ee19d",
+      "https://docs.pact.io/implementation_guides/javascript/docs/provider": "19a8d8afe71066e51ae1dd6ce93fda7334fc53eb694f6c141912a84ce7332eb6",
+      "https://docs.pact.io/pact_broker": "d9bc29b8234542fefdc93bb005ba6626d914ec815b15fe89c5cf1ea327ffe8db",
+      "https://docs.pact.io/pact_broker/can_i_deploy": "af3fbd908450d609875913d09aa35d0fb8175049da9d38272eb6e7bed356957b",
+      "https://docs.spring.io/spring-cloud-contract/docs/current/reference/html/index.html": "efc3354c763acb59ea56a9d69a78974d0cafe59cbc16c4d5e3afcd464ee2788b",
+      "https://docs.specmatic.io/contract_driven_development/contract_testing": "49d1bb77c783cbd5407c362374544c9cd417db363dba1bedc0804588d24b2088",
+      "skills/quality-assurance/contract-testing/references/upstream-displacement-2026-06-09.md": "08d10dd09a4f0021dcde7a6b0cca9f2ab2909191caee280054bb18b5e35e455e"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-13",
+  "last_changed": "2026-06-09",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "PROVISIONAL",
+  "application_verdict": "PROVISIONAL",
+  "lint_verdict": "PASS",
+  "drift_status": "EXTERNAL_UNHASHED",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 180,
+    "review_cadence": "quarterly"
+  }
+}

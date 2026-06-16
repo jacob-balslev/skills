@@ -1,0 +1,465 @@
+{
+  "skill_name": "generative-ui",
+  "subject": "generative-ui",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, the three load-bearing contracts, Generation Mechanisms Compared, Component Palette Design, the two render substrates, the render pipeline, streaming discipline, the interaction loop, the hosted-widget data channel, Verification, Do NOT Use When).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "generation-constraint-choice",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An assistant emits UI specs as free-form JSON via a 'please respond with JSON' prompt, then JSON.parse + try/catch + retry. In production ~6% of turns hit a retry loop because the model omits required fields or invents prop shapes.",
+      "context": "The provider supports both structured outputs and strict tool calling; the team thinks 'we already validate, so we're fine.'",
+      "question": "How should the agent fix the generation-constraint contract?",
+      "expected_flags": [
+        "Free-form JSON + post-validation is prototype-grade, not a production render contract; valid JSON is not schema adherence",
+        "Switch to provider-native structured output or strict/schema-enforced tool calling (grammar-constrained decoding)",
+        "This forces every emission to be a valid schema instance, eliminating the retry loops",
+        "Keep app-side validation as defense-in-depth, but the constraint must be enforced at decode"
+      ],
+      "expected_fix_hints": [
+        "Adopt OpenAI Structured Outputs / Gemini response schema / Anthropic strict tool use for the palette",
+        "Treat the component schema as the response_format / tool argument schema"
+      ],
+      "absent_signals": [
+        "Do not keep best-effort JSON + retry as the production mechanism",
+        "Do not treat post-validation alone as sufficient"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Free-form JSON + post-validation is prototype-grade, not a production render contract; valid JSON is not schema adherence."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Switch to provider-native structured output or strict/schema-enforced tool calling (grammar-constrained decoding)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This forces every emission to be a valid schema instance, eliminating the retry loops."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep app-side validation as defense-in-depth, but the constraint must be enforced at decode."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Adopt OpenAI Structured Outputs / Gemini response schema / Anthropic strict tool use for the palette."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Treat the component schema as the response_format / tool argument schema."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep best-effort JSON + retry as the production mechanism."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat post-validation alone as sufficient."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "render-without-validation",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A render pipeline maps the model's emitted spec straight to components and passes spec.props through, including an image `src` and a link `href`, trusting that 'the schema already validated it.'",
+      "context": "Specs can be influenced by retrieved/attacker-controlled content the model summarized.",
+      "question": "What is wrong and how should the agent harden the pipeline?",
+      "expected_flags": [
+        "Schema validity describes structure, not acceptable content — it does not authorize rendering",
+        "Per-component safety policy is missing: origin allowlist for image URLs, link/target sanitization, content-length caps, finite recursion depth",
+        "The model's emission alone authorizes nothing; the pipeline must validate props independently and apply safety policy before invoking a component",
+        "Notes the threat surface includes rendering attacker-influenced output (read with prompt-injection-defense)"
+      ],
+      "expected_fix_hints": [
+        "Add the safety-policy step: allowlist image origins, sanitize hrefs, bound lengths, cap nesting depth",
+        "Validate props against the component's runtime schema as defense in depth"
+      ],
+      "absent_signals": [
+        "Do not treat schema validity as authorization to render",
+        "Do not pass model-supplied URLs/HTML straight into the DOM"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Schema validity describes structure, not acceptable content — it does not authorize rendering."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Per-component safety policy is missing: origin allowlist for image URLs, link/target sanitization, content-length caps, finite recursion depth."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The model's emission alone authorizes nothing; the pipeline must validate props independently and apply safety policy before invoking a component."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes the threat surface includes rendering attacker-influenced output (read with prompt-injection-defense)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add the safety-policy step: allowlist image origins, sanitize hrefs, bound lengths, cap nesting depth."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Validate props against the component's runtime schema as defense in depth."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat schema validity as authorization to render."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pass model-supplied URLs/HTML straight into the DOM."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "substrate-selection",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team building inside a ChatGPT-Apps-style host wants to ship a rich interactive map widget with third-party JS, and is hand-rolling a typed-component registry that maps a 'map' spec to their own React component — then asking how to let the model inject custom map JS.",
+      "context": "The widget needs third-party/interactive code the host does not fully trust; the team is mixing substrates.",
+      "question": "Which render substrate fits, and how should safety be framed?",
+      "expected_flags": [
+        "For rich/interactive third-party code, the sandboxed-iframe substrate fits (MCP Apps / OpenAI Apps SDK / MCP-UI), not a typed-component tree",
+        "Safety comes from isolation + host mediation: the iframe can't reach parent DOM/cookies/storage; the host enforces CSP/domain policy and proxies tool calls",
+        "The HTML resource is DEVELOPER-authored once; the model never writes the map JS — it emits a tool call selecting the resource + data",
+        "Explicitly name the substrate and its safety basis (restriction vs isolation); do not let the model inject custom JS"
+      ],
+      "expected_fix_hints": [
+        "Author the map UI as a ui:// resource rendered in a sandboxed iframe with a host-controlled CSP/domain allowlist",
+        "Feed model data over the postMessage/JSON-RPC bridge; proxy any tool calls through host authorization"
+      ],
+      "absent_signals": [
+        "Do not let the model author/inject the map JS",
+        "Do not assume host sandboxing removes the need for schema, CSP, origin, and action policy"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: For rich/interactive third-party code, the sandboxed-iframe substrate fits (MCP Apps / OpenAI Apps SDK / MCP-UI), not a typed-component tree."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Safety comes from isolation + host mediation: the iframe can't reach parent DOM/cookies/storage; the host enforces CSP/domain policy and proxies tool calls."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The HTML resource is DEVELOPER-authored once; the model never writes the map JS — it emits a tool call selecting the resource + data."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explicitly name the substrate and its safety basis (restriction vs isolation); do not let the model inject custom JS."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Author the map UI as a ui:// resource rendered in a sandboxed iframe with a host-controlled CSP/domain allowlist."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Feed model data over the postMessage/JSON-RPC bridge; proxy any tool calls through host authorization."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let the model author/inject the map JS."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume host sandboxing removes the need for schema, CSP, origin, and action policy."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "streaming-discipline",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "To reduce latency, a chat UI renders components incrementally from partial tool-argument deltas, mounting interactive buttons as soon as the discriminator is known — before the full spec validates.",
+      "context": "Some specs include a destructive 'confirm cancel' action whose guard fields arrive late in the stream.",
+      "question": "What is the risk and what discipline should the agent enforce?",
+      "expected_flags": [
+        "Partial output is a latency affordance, not a render authorization",
+        "A partial spec may drive only visibly-provisional UI (skeleton/optimistic shell); it must be visibly non-final",
+        "Final/interactive/side-effecting components mount only after the full spec passes the same schema+props+safety validation",
+        "Never wire interaction to a provisional render; mounting a destructive action before its guard fields exist is the danger"
+      ],
+      "expected_fix_hints": [
+        "Render skeletons off the discriminator; commit the interactive render only after completed validation",
+        "Wire buttons/inputs live only post-validation"
+      ],
+      "absent_signals": [
+        "Do not mount interactive/side-effecting components off half-parsed deltas",
+        "Do not treat partial deltas as final authority"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Partial output is a latency affordance, not a render authorization."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A partial spec may drive only visibly-provisional UI (skeleton/optimistic shell); it must be visibly non-final."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Final/interactive/side-effecting components mount only after the full spec passes the same schema+props+safety validation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Never wire interaction to a provisional render; mounting a destructive action before its guard fields exist is the danger."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Render skeletons off the discriminator; commit the interactive render only after completed validation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Wire buttons/inputs live only post-validation."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not mount interactive/side-effecting components off half-parsed deltas."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat partial deltas as final authority."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "destructive-click",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A model-rendered card has a 'Delete account' button whose onClick directly calls the delete API. The team reasons 'the user clicked it, so it's authorized.'",
+      "context": "The card content can be influenced by summarized untrusted input.",
+      "question": "How should the agent redesign the action handling?",
+      "expected_flags": [
+        "A click is a user signal, not authorization for a destructive operation",
+        "The click should produce a structured event the model reasons about; the destructive effect is a SEPARATE tool call gated by user identity",
+        "Route capability delegation through the host with user consent (MCP Apps / Apps SDK), with normal authorization, idempotency, and audit controls",
+        "Auto-executing destructive actions on a rendered-component click is a prompt-injection-defense failure waiting to happen"
+      ],
+      "expected_fix_hints": [
+        "Replace direct onClick→API with an emitted typed event → model/tool turn → user-identity-gated tool call",
+        "Add a gated-action HITL state (confirmation) before the destructive effect"
+      ],
+      "absent_signals": [
+        "Do not auto-execute the delete from the click",
+        "Do not treat the click as authorization"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A click is a user signal, not authorization for a destructive operation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The click should produce a structured event the model reasons about; the destructive effect is a SEPARATE tool call gated by user identity."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Route capability delegation through the host with user consent (MCP Apps / Apps SDK), with normal authorization, idempotency, and audit controls."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Auto-executing destructive actions on a rendered-component click is a prompt-injection-defense failure waiting to happen."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace direct onClick→API with an emitted typed event → model/tool turn → user-identity-gated tool call."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a gated-action HITL state (confirmation) before the destructive effect."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not auto-execute the delete from the click."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat the click as authorization."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "hosted-widget-data-channel",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A hosted-widget search tool stuffs the entire 5,000-row result set plus pagination cursors into the tool result that the model reads, then complains about token cost and the model getting steered by bulk data.",
+      "context": "Building on the OpenAI Apps SDK / MCP Apps data-channel shape (structuredContent / content / _meta).",
+      "question": "How should the agent split the tool-result data?",
+      "expected_flags": [
+        "Put render-only / bulk / untrusted data the model should not see or pay tokens for in `_meta` (component-only, never enters model context)",
+        "Put only what the model must reason about next turn in `structuredContent`/`content`",
+        "_meta keeps the large payload out of the context window and keeps untrusted bulk data from steering the model",
+        "Still protect _meta per the component's threat model (it is visible to the component/browser) and keep the host's per-widget CSP/domain allowlist"
+      ],
+      "expected_fix_hints": [
+        "Move the full result set + cursors into _meta; surface a summary the model reasons about in structuredContent",
+        "Enforce the per-widget domain/CSP allowlist on the resource"
+      ],
+      "absent_signals": [
+        "Do not push bulk render-only data into the model-visible channels",
+        "Do not assume host sandboxing removes the need for the channel split"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Put render-only / bulk / untrusted data the model should not see or pay tokens for in `_meta` (component-only, never enters model context)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Put only what the model must reason about next turn in `structuredContent`/`content`."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: _meta keeps the large payload out of the context window and keeps untrusted bulk data from steering the model."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Still protect _meta per the component's threat model (it is visible to the component/browser) and keep the host's per-widget CSP/domain allowlist."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move the full result set + cursors into _meta; surface a summary the model reasons about in structuredContent."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Enforce the per-widget domain/CSP allowlist on the resource."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not push bulk render-only data into the model-visible channels."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume host sandboxing removes the need for the channel split."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "wrong-pattern-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team has a single, known, repeated checkout flow with fixed steps and wants to make it 'generative UI' by having the model decide the layout of each step on every load. They also ask the agent to design the HTTP API endpoint shape for the orders resource as part of this.",
+      "context": "The workflow is fixed and repeated; the endpoint design is a separate concern the team folds in.",
+      "question": "How should the agent scope this request?",
+      "expected_flags": [
+        "For known, repeated workflows, traditional UI design is the better fit — generative UI is for open-ended assistant responses where the right presentation varies per question",
+        "Making a fixed checkout 'generative' adds nondeterminism and risk for no benefit",
+        "Designing the HTTP endpoint shape is api-design, not this skill (this skill owns the model→renderer schema, a different actor pair)",
+        "Correctly redirects both rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Keep the fixed checkout as deterministic traditional UI",
+        "Route the orders endpoint design to api-design"
+      ],
+      "absent_signals": [
+        "Do not recommend generative UI for the fixed repeated workflow",
+        "Do not design the HTTP API endpoint as if it were the generative-UI schema"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: For known, repeated workflows, traditional UI design is the better fit — generative UI is for open-ended assistant responses where the right presentation varies per question."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Making a fixed checkout 'generative' adds nondeterminism and risk for no benefit."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Designing the HTTP endpoint shape is api-design, not this skill (this skill owns the model→renderer schema, a different actor pair)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects both rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the fixed checkout as deterministic traditional UI."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the orders endpoint design to api-design."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not recommend generative UI for the fixed repeated workflow."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the HTTP API endpoint as if it were the generative-UI schema."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

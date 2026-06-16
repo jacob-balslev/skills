@@ -1,0 +1,465 @@
+{
+  "skill_name": "color-system-design",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Philosophy of the skill, Verification, Do NOT Use When) and current color-system best practices (OKLCH/LCH perceptual uniformity, WCAG 2.1 / APCA contrast, semantic tokens, light/dark parity, color-vision-deficiency safety).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "build-color-scale",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team is starting a design system. A designer hand-picked a 10-step gray scale by eye in HSL by stepping lightness in even 10% increments; the mid-tones look bunched and the light end looks washed out.",
+      "context": "The product needs even, predictable scales for borders, surfaces, and text across many components.",
+      "question": "How should the agent build the scale?",
+      "expected_flags": [
+        "Generate the scale in OKLCH/LCH, not HSL — equal HSL lightness steps are perceptually uneven",
+        "Equal step indices should have equal lightness within ~±2 L units",
+        "Anchor the brand/seed at a defined step and derive the rest by rule rather than eyeballing",
+        "Export to sRGB or display-p3 with fallbacks"
+      ],
+      "expected_fix_hints": [
+        "Regenerate the scale programmatically in oklch() with even L steps",
+        "Map each step to a numbered token (50..900)"
+      ],
+      "absent_signals": [
+        "Do not keep hand-tuning HSL lightness percentages",
+        "Do not eyeball individual mid-tones to fix the bunching"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Generate the scale in OKLCH/LCH, not HSL — equal HSL lightness steps are perceptually uneven."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Equal step indices should have equal lightness within ~±2 L units."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Anchor the brand/seed at a defined step and derive the rest by rule rather than eyeballing."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Export to sRGB or display-p3 with fallbacks."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Regenerate the scale programmatically in oklch() with even L steps."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Map each step to a numbered token (50..900)."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep hand-tuning HSL lightness percentages."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not eyeball individual mid-tones to fix the bunching."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "contrast-audit",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A palette uses a #9CA3AF gray for secondary text on a white surface and a brand-blue button label in #FFFFFF on a #4DA3FF background. Accessibility QA reports several pairings feel hard to read.",
+      "context": "The product must meet WCAG 2.1 AA and the team wants a token-level fix, not per-page patches.",
+      "question": "How should the agent audit and fix the contrast?",
+      "expected_flags": [
+        "Compute WCAG 2.1 contrast ratios for each text/background pair against the AA floor (4.5:1 normal, 3:1 large)",
+        "Both example pairs likely fail AA for normal text; darken the gray / deepen the button background or shift label",
+        "Fix at the semantic-token level so the correction propagates everywhere",
+        "Add an automated AA check in CI over the token combinations"
+      ],
+      "expected_fix_hints": [
+        "Adjust the palette step the failing semantic token resolves to",
+        "Add a CI contrast gate over token pairings"
+      ],
+      "absent_signals": [
+        "Do not fix only the one reported screen",
+        "Do not rely on visual judgment instead of computing the ratio"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Compute WCAG 2.1 contrast ratios for each text/background pair against the AA floor (4.5:1 normal, 3:1 large)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Both example pairs likely fail AA for normal text; darken the gray / deepen the button background or shift label."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Fix at the semantic-token level so the correction propagates everywhere."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add an automated AA check in CI over the token combinations."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Adjust the palette step the failing semantic token resolves to."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a CI contrast gate over token pairings."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not fix only the one reported screen."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on visual judgment instead of computing the ratio."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "semantic-token-naming",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "Component code references colors directly as gray-50, gray-900, red-700, and blue-600. The brand is about to refresh its red and shift its blue, and the team fears a large code change.",
+      "context": "The system must survive a brand refresh and support a future dark theme.",
+      "question": "What should the agent recommend?",
+      "expected_flags": [
+        "Introduce a semantic-token layer named by intent (background-surface, text-primary, danger-emphasis, accent)",
+        "Components consume semantic tokens; only the per-theme mapping resolves them to palette values",
+        "A brand red shift then changes the mapping, not component code",
+        "Names by intent / contrast pair, never by appearance"
+      ],
+      "expected_fix_hints": [
+        "Define semantic tokens and repoint component references to them",
+        "Keep the raw palette as the value vocabulary behind the mapping"
+      ],
+      "absent_signals": [
+        "Do not keep appearance-named colors in component code",
+        "Do not hardcode the new brand red in every component"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Introduce a semantic-token layer named by intent (background-surface, text-primary, danger-emphasis, accent)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Components consume semantic tokens; only the per-theme mapping resolves them to palette values."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A brand red shift then changes the mapping, not component code."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names by intent / contrast pair, never by appearance."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define semantic tokens and repoint component references to them."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the raw palette as the value vocabulary behind the mapping."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep appearance-named colors in component code."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hardcode the new brand red in every component."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "light-dark-parity",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team is adding a dark theme. Several semantic tokens (border-subtle, text-muted) exist only in the light theme map; the dark theme falls back to undefined or inherits light values, producing invisible borders and low-contrast muted text.",
+      "context": "The color system already has a light theme and uses semantic tokens.",
+      "question": "How should the agent ensure parity?",
+      "expected_flags": [
+        "Every semantic token must exist in both themes — no token is light-only or dark-only",
+        "Each token's dark resolution must meet the same contrast requirement against its dark surface",
+        "The same component token resolves to different palette values per theme (e.g. text near-black on light, near-white on dark)",
+        "Verify all interactive-state colors (focus, hover, selected) are visible and AA-compliant in dark"
+      ],
+      "expected_fix_hints": [
+        "Fill in the missing dark-theme mappings for every semantic token",
+        "Re-run the contrast check against dark surfaces"
+      ],
+      "absent_signals": [
+        "Do not let dark inherit light token values",
+        "Do not leave any semantic token unmapped in a theme"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Every semantic token must exist in both themes — no token is light-only or dark-only."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Each token's dark resolution must meet the same contrast requirement against its dark surface."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The same component token resolves to different palette values per theme (e.g. text near-black on light, near-white on dark)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verify all interactive-state colors (focus, hover, selected) are visible and AA-compliant in dark."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Fill in the missing dark-theme mappings for every semantic token."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-run the contrast check against dark surfaces."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let dark inherit light token values."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave any semantic token unmapped in a theme."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "color-vision-deficiency",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A status system shows success/error/warning purely by color: a green dot vs a red dot vs an amber dot, with no other differentiator. A user reports they cannot tell the states apart.",
+      "context": "The product serves a broad audience and must be accessible.",
+      "question": "How should the agent fix the state encoding?",
+      "expected_flags": [
+        "Color must not be the only signal — ~8% of men have color vision deficiency",
+        "Pair each state with an icon and/or text label in addition to color",
+        "Preview the palette under simulated protanopia, deuteranopia, tritanopia and confirm distinctions survive",
+        "Keep the semantic intent tokens (success/danger/warning) but add a redundant channel"
+      ],
+      "expected_fix_hints": [
+        "Add distinct icons and/or text to each status",
+        "Run a color-blindness simulation pass over the states"
+      ],
+      "absent_signals": [
+        "Do not rely on hue alone to distinguish states",
+        "Do not just pick 'more different' colors as the only fix"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Color must not be the only signal — ~8% of men have color vision deficiency."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Pair each state with an icon and/or text label in addition to color."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Preview the palette under simulated protanopia, deuteranopia, tritanopia and confirm distinctions survive."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep the semantic intent tokens (success/danger/warning) but add a redundant channel."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add distinct icons and/or text to each status."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run a color-blindness simulation pass over the states."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on hue alone to distinguish states."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not just pick 'more different' colors as the only fix."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the color-system-design owner to implement the dark-mode toggle UI, persist the choice in localStorage, and kill the white flash that dark-mode users see on load.",
+      "context": "The team conflates 'color' with all theme-related work.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "The toggle UI, persistence, and flash-of-incorrect-theme fix are out of scope — that is dark-mode-implementation",
+        "Offer the in-scope part: the contrast-correct dark palette and the semantic-token dark mappings",
+        "May note theme-system-design owns the token resolution architecture",
+        "Correctly redirects rather than building the runtime mechanics"
+      ],
+      "expected_fix_hints": [
+        "Hand the runtime switch/persistence/flash work to dark-mode-implementation",
+        "Deliver the dark-theme token mappings that the switch will consume"
+      ],
+      "absent_signals": [
+        "Do not implement the prefers-color-scheme detection or localStorage persistence here",
+        "Do not write the inline anti-flash script"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The toggle UI, persistence, and flash-of-incorrect-theme fix are out of scope — that is dark-mode-implementation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: the contrast-correct dark palette and the semantic-token dark mappings."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: May note theme-system-design owns the token resolution architecture."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than building the runtime mechanics."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand the runtime switch/persistence/flash work to dark-mode-implementation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Deliver the dark-theme token mappings that the switch will consume."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not implement the prefers-color-scheme detection or localStorage persistence here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the inline anti-flash script."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "p3-gamut",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A brand wants a vivid green accent that looks dull in the product; the chosen sRGB green is at the edge of the sRGB gamut and cannot get more saturated.",
+      "context": "Most of the audience uses modern displays that support display-p3.",
+      "question": "How should the agent deliver the more saturated color safely?",
+      "expected_flags": [
+        "display-p3 allows more saturated colors than sRGB in the green/red regions",
+        "Deliver the p3 color via a p3 color function or color-gamut: p3 declaration",
+        "Provide an sRGB fallback so sRGB-only displays still render correctly",
+        "Keep the value behind a semantic token so consumers don't hardcode it"
+      ],
+      "expected_fix_hints": [
+        "Declare the accent in oklch()/p3 with an sRGB fallback",
+        "Route it through the accent semantic token"
+      ],
+      "absent_signals": [
+        "Do not ship a p3 color with no sRGB fallback",
+        "Do not assume sRGB can reach the desired saturation"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: display-p3 allows more saturated colors than sRGB in the green/red regions."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Deliver the p3 color via a p3 color function or color-gamut: p3 declaration."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Provide an sRGB fallback so sRGB-only displays still render correctly."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep the value behind a semantic token so consumers don't hardcode it."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Declare the accent in oklch()/p3 with an sRGB fallback."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route it through the accent semantic token."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ship a p3 color with no sRGB fallback."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume sRGB can reach the desired saturation."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

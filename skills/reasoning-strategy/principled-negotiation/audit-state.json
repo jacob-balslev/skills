@@ -1,0 +1,37 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-05-31",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/principled-negotiation/references/principled-negotiation-sources.md": "6d20878869a2ac16e2eefc2d54778122928fefa394f504c63b73ed6219dded19",
+      "skills/reasoning-strategy/principled-negotiation/references/upstream-displacement-2026-05-31.md": "7485bd2819a4d145659cb03d197fa4002c6f24cb89775ae4e99b33c298f949e4"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-05-31",
+  "last_changed": "2026-05-31",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "drift_status": "EXTERNAL_UNHASHED",
+  "eval_score": 4.38,
+  "eval_failed_ids": [],
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  }
+}

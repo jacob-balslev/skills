@@ -1,0 +1,172 @@
+{
+  "skill_name": "component-architecture",
+  "subject": "Reusable UI component-library architecture",
+  "adjacent_concepts": [
+    "design-module-composition",
+    "design-system-architecture",
+    "visual-design-foundations",
+    "color-system-design",
+    "form-ux-architecture",
+    "state-management",
+    "a11y",
+    "frontend-architecture"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define component architecture for a reusable UI library in 2-3 sentences. Include layer, API surface, state contract, and theming separation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines the subject as structuring reusable UI components across products, themes, or teams",
+        "Mentions primitives, composites, and product-specific assemblies",
+        "Mentions API surface such as props, slots, events, refs, render functions, or compound parts",
+        "Mentions controlled, uncontrolled, or hybrid state contracts",
+        "Mentions headless/styled or behavior/presentation separation"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of component architecture. Name at least 8 primitives and how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "At least 8 of: primitive, composite, product assembly, prop, slot, compound part, callback, render prop, ref, imperative handle, controlled value, default value, token binding, headless behavior, styled wrapper",
+        "Explains dependency direction from assemblies to composites to primitives",
+        "Explains API surface as public contract",
+        "Explains state contract as consumer-owned, component-owned, or hybrid",
+        "Explains theming separation as behavior and visual treatment evolving independently"
+      ],
+      "absent_signals": [
+        "Must not confuse component architecture with app-wide state management"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill exist for agents working in component-heavy codebases? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents treating a design system as a flat pile of widgets",
+        "Prevents primitives from depending on product-specific assemblies",
+        "Prevents visual language being hardcoded into reusable behavior",
+        "Prevents uncontrolled API growth through many independent props",
+        "Prevents implicit state ownership that breaks consumers",
+        "Prevents accessibility being retrofitted outside the primitive layer"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish component architecture from design-module-composition, design-system-architecture, color-system-design, form-ux-architecture, state-management, and a11y. Give a mechanism-level reason each neighbor differs.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "design-module-composition wires a single product's modules or regions",
+        "design-system-architecture owns tokens, governance, documentation, distribution, and system meta-structure",
+        "color-system-design owns palette, contrast, semantic color, and color tokens",
+        "form-ux-architecture owns validation, submission, grouping, and error experience",
+        "state-management owns state location across app/client/server/URL/persistence",
+        "a11y audits accessibility behavior and conformance",
+        "component architecture owns reusable component layers, API surface, state contracts, and behavior/presentation split"
+      ],
+      "absent_signals": [
+        "Must not claim component-architecture owns token or governance decisions"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify a Button, Dialog, FormField, DataTable, SettingsPanel, and CheckoutForm into primitive, composite, or product-specific assembly. Explain dependency direction.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Button and Dialog primitive/root parts can be primitives when they provide base behavior",
+        "FormField and DataTable are usually composites",
+        "SettingsPanel and CheckoutForm are product-specific assemblies",
+        "Dependencies flow from assemblies to composites to primitives",
+        "Primitives must not import product-specific assemblies or visual decisions that prevent reuse",
+        "Mentions that some components can shift layer based on responsibility and reuse scope"
+      ],
+      "absent_signals": [
+        "Must not classify CheckoutForm or other product assemblies as a primitive"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for component architecture that preserves API contract, dependency direction, and behavior/presentation separation. Then name one bad analogy.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses API design, building-system, or layered-platform analogy",
+        "Maps component props/slots/events to public contract",
+        "Maps dependency direction to lower-level parts supporting higher-level assemblies",
+        "Maps headless/styled split to stable behavior versus replaceable presentation",
+        "Rejects a bad analogy that treats components as a grab bag or image catalog"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A reusable SearchBox component has 18 mostly independent props, hardcoded brand colors, internal-only value state, and product-specific analytics. Diagnose the component architecture problems and propose a repair path.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Flags prop explosion and considers composition, slots, or compound parts",
+        "Moves hardcoded brand colors to styled layer or tokens",
+        "Makes state contract explicit as controlled, uncontrolled, or hybrid",
+        "Separates product-specific analytics into assembly/adapters/callbacks",
+        "Preserves accessibility in primitive behavior",
+        "Explains migration/deprecation for changed API"
+      ],
+      "absent_signals": [
+        "Must not recommend adding boolean props for structural variations"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'A design system is just a folder of components; if a component needs flexibility, add another prop.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Corrects design system as tokens/foundations/components/distribution/governance rather than a component pile",
+        "Explains component architecture as primitives/composites/assemblies with dependency direction",
+        "Warns against independent prop multiplication",
+        "Recommends composition, slots, compound components, or render functions for open variation",
+        "Requires explicit API and state contracts"
+      ],
+      "absent_signals": [
+        "Must not state that a flat pile of components constitutes a design system"
+      ]
+    }
+  ]
+}

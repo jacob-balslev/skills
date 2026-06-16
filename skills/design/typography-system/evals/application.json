@@ -1,0 +1,447 @@
+{
+  "skill_name": "typography-system",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, Verification, Do NOT Use When) and current web typography best practices (WOFF2 subsetting, font-display, variable fonts, metrics-matched fallbacks, CLS).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "build-type-scale",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A product team is starting a design system and asks for a type scale. A designer has hand-picked 11 sizes (12, 13, 14, 15, 16, 18, 20, 24, 30, 36, 48px) by eye.",
+      "context": "The UI is content-dense (dashboards and tables) and must stay readable from caption to page title.",
+      "question": "How should the agent define the type scale?",
+      "expected_flags": [
+        "Derives steps from a single ratio (e.g. 1.2 or 1.25) applied to a base size, not hand-picked sizes",
+        "Recommends ~5-9 steps; flags 11 near-identical sizes as diluting adjacent distinction",
+        "Maps each step to a semantic token (caption, body, heading, display)",
+        "Notes a denser ratio (1.125-1.2) suits content-dense UIs"
+      ],
+      "expected_fix_hints": [
+        "Pick a base (16px) and a ratio; generate steps programmatically",
+        "Collapse near-duplicate sizes into distinct, perceptible steps"
+      ],
+      "absent_signals": [
+        "Do not keep hand-picking individual sizes",
+        "Do not add more steps to cover every observed size"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Derives steps from a single ratio (e.g. 1.2 or 1.25) applied to a base size, not hand-picked sizes."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends ~5-9 steps; flags 11 near-identical sizes as diluting adjacent distinction."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Maps each step to a semantic token (caption, body, heading, display)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes a denser ratio (1.125-1.2) suits content-dense UIs."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pick a base (16px) and a ratio; generate steps programmatically."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Collapse near-duplicate sizes into distinct, perceptible steps."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep hand-picking individual sizes."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add more steps to cover every observed size."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "web-font-cls",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A marketing site loads two custom web fonts as WOFF via <link> to Google Fonts with default settings. Lighthouse flags CLS 0.28, much of it attributed to font swap, and slow LCP.",
+      "context": "The team can self-host or keep Google Fonts; they want CLS under 0.1.",
+      "question": "How should the agent fix the font delivery?",
+      "expected_flags": [
+        "Switch to WOFF2 and subset to the languages/glyphs actually used",
+        "Add a metrics-matched fallback @font-face (size-adjust, ascent/descent/line-gap-override) to remove swap-induced shift",
+        "Use font-display: swap and preload the most-used font files",
+        "Targets CLS < 0.1 and verifies on a representative page"
+      ],
+      "expected_fix_hints": [
+        "Self-host subset WOFF2 or use the Google Fonts subset API plus a tuned fallback face",
+        "preload + crossorigin on the primary font files"
+      ],
+      "absent_signals": [
+        "Do not leave font-display at the default (block) causing invisible text",
+        "Do not ship full unsubset font files"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Switch to WOFF2 and subset to the languages/glyphs actually used."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add a metrics-matched fallback @font-face (size-adjust, ascent/descent/line-gap-override) to remove swap-induced shift."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use font-display: swap and preload the most-used font files."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Targets CLS < 0.1 and verifies on a representative page."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Self-host subset WOFF2 or use the Google Fonts subset API plus a tuned fallback face."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: preload + crossorigin on the primary font files."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave font-display at the default (block) causing invisible text."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ship full unsubset font files."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "variable-font-decision",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A design system ships 6 separate WOFF2 files for one family (regular, medium, semibold, bold, plus italics) and the team wants more weights for emphasis.",
+      "context": "Bundle size and request count are a concern; the family is available as a variable font.",
+      "question": "What should the agent recommend?",
+      "expected_flags": [
+        "Adopt the variable font: one file delivers the weight axis (wght 100-900)",
+        "Reduces HTTP requests and lets weight be a continuous decision",
+        "Access via numeric font-weight / font-variation-settings, not separate files",
+        "Keep only the axes/instances actually used to control file size"
+      ],
+      "expected_fix_hints": [
+        "Replace the 6 static files with one variable WOFF2",
+        "Expose semantic weight tokens mapped to numeric weights"
+      ],
+      "absent_signals": [
+        "Do not keep adding one static file per new weight"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Adopt the variable font: one file delivers the weight axis (wght 100-900)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reduces HTTP requests and lets weight be a continuous decision."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Access via numeric font-weight / font-variation-settings, not separate files."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keep only the axes/instances actually used to control file size."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace the 6 static files with one variable WOFF2."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Expose semantic weight tokens mapped to numeric weights."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep adding one static file per new weight."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "measure-and-line-height",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An article template renders body text full-width on desktop (~140 characters per line) with line-height 1.2; readers report fatigue and losing their place between lines.",
+      "context": "The template is responsive and uses a single body token.",
+      "question": "How should the agent adjust typography?",
+      "expected_flags": [
+        "Constrain measure to ~45-75 characters per line (max-width on the text container)",
+        "Raise body line-height to ~1.4-1.6",
+        "Notes line-height and measure are coupled — long measure needs taller line-height",
+        "Verify on actual rendered lines across common viewports, not assumed"
+      ],
+      "expected_fix_hints": [
+        "Set a max-width in ch or rem on the prose container",
+        "Tune the body line-height token"
+      ],
+      "absent_signals": [
+        "Do not keep full-width body measure",
+        "Do not leave display-tight line-height on long body copy"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Constrain measure to ~45-75 characters per line (max-width on the text container)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Raise body line-height to ~1.4-1.6."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes line-height and measure are coupled — long measure needs taller line-height."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verify on actual rendered lines across common viewports, not assumed."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Set a max-width in ch or rem on the prose container."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Tune the body line-height token."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep full-width body measure."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave display-tight line-height on long body copy."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "typeface-count-restraint",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A brand refresh proposes five typefaces: a display serif, a body sans, a 'quote' script, a 'data' mono, and a second sans 'for variety.'",
+      "context": "The product spans web and email; rendering consistency across OSes matters.",
+      "question": "How should the agent respond to the proposed type palette?",
+      "expected_flags": [
+        "Recommend at most three faces (display, text, optional mono), each justified by a use the others cannot serve",
+        "Challenge the 'second sans for variety' and the script as unjustified cost",
+        "Names the costs: bandwidth, hierarchy clarity, cross-OS rendering consistency",
+        "Hierarchy/variety should come from the scale/weights, not more faces"
+      ],
+      "expected_fix_hints": [
+        "Collapse to display + text (+ mono if data UI needs it)",
+        "Achieve variety via weight and scale, not extra families"
+      ],
+      "absent_signals": [
+        "Do not approve five faces",
+        "Do not justify a face by 'variety' alone"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommend at most three faces (display, text, optional mono), each justified by a use the others cannot serve."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Challenge the 'second sans for variety' and the script as unjustified cost."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names the costs: bandwidth, hierarchy clarity, cross-OS rendering consistency."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Hierarchy/variety should come from the scale/weights, not more faces."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Collapse to display + text (+ mono if data UI needs it)."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Achieve variety via weight and scale, not extra families."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not approve five faces."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not justify a face by 'variety' alone."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the typography-system owner to write the hero headline copy and decide which color the primary button should be.",
+      "context": "The team conflates 'typography' with all text and visual decisions.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Headline copy is out of scope — that is copywriting/microcopy, not the type system",
+        "Button color is out of scope — color-system-design / visual-design-foundations",
+        "Offer the in-scope part: which type token/face/size the headline should use",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand copy to microcopy and color to color-system-design",
+        "Provide the semantic type token for the headline"
+      ],
+      "absent_signals": [
+        "Do not write the headline copy",
+        "Do not pick the brand color"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Headline copy is out of scope — that is copywriting/microcopy, not the type system."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Button color is out of scope — color-system-design / visual-design-foundations."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: which type token/face/size the headline should use."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand copy to microcopy and color to color-system-design."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide the semantic type token for the headline."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the headline copy."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the brand color."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "vertical-rhythm",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "Headings and body in a docs site use arbitrary margins (17px, 23px, 11px) and line-heights, and the page feels visually 'jittery.'",
+      "context": "The team wants a consistent vertical rhythm.",
+      "question": "How should the agent establish rhythm?",
+      "expected_flags": [
+        "Snap line-heights and margins to a baseline grid (typically a 4px or 8px subgrid)",
+        "Headings and body share a consistent vertical rhythm",
+        "Derive spacing from the rhythm unit rather than arbitrary pixel values"
+      ],
+      "expected_fix_hints": [
+        "Define a baseline unit and express margins/line-heights as multiples",
+        "Replace arbitrary margins with rhythm-derived spacing tokens"
+      ],
+      "absent_signals": [
+        "Do not keep arbitrary per-element margins"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Snap line-heights and margins to a baseline grid (typically a 4px or 8px subgrid)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Headings and body share a consistent vertical rhythm."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Derive spacing from the rhythm unit rather than arbitrary pixel values."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define a baseline unit and express margins/line-heights as multiples."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace arbitrary margins with rhythm-derived spacing tokens."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep arbitrary per-element margins."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

@@ -1,0 +1,154 @@
+{
+  "skill_name": "real-time-updates",
+  "subject": "Browser-facing freshness and live UI update design",
+  "adjacent_concepts": [
+    "streaming-architecture",
+    "event-contract-design",
+    "background-jobs",
+    "cron-scheduling",
+    "interaction-feedback",
+    "client-server-boundary"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define real-time update design in 2-3 sentences. Include browser freshness, stale-data signaling, transport choice, and authoritative state reconciliation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names browser-facing freshness after initial render",
+        "Mentions stale-data indicators, timestamps, or connection state",
+        "Treats polling, SSE, and WebSocket as transport choices after the freshness contract",
+        "Mentions catch-up, refetch, cache invalidation, or authoritative server reconciliation",
+        "Avoids treating a push payload as necessarily complete source-of-truth state"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model for real-time updates. Name at least seven primitives and show how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "At least seven of: source of change, freshness contract, delivery channel, browser cache/view state, stale indicator, connection state, last seen ID/version/cursor/timestamp, catch-up fetch, subscription owner, user disruption rule, rollback/reconciliation",
+        "Explains the freshness contract precedes transport choice",
+        "Explains update delivery invalidates or refreshes browser state",
+        "Explains reconnect is incomplete without missed-update recovery",
+        "Explains user control when updates would disrupt active work"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill exist? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents page-load-only views from pretending stale data is current",
+        "Prevents choosing WebSocket only because a feature is called real-time",
+        "Prevents live badges without a timestamp or connection evidence",
+        "Prevents reconnect without catch-up",
+        "Prevents duplicate component-local polling loops",
+        "Prevents silent refresh that disrupts selection, filtering, scrolling, or typing"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish real-time-updates from streaming-architecture, event-contract-design, background-jobs, cron-scheduling, interaction-feedback, and client-server-boundary.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "streaming-architecture owns producer/stream/consumer/backpressure/termination protocol design",
+        "event-contract-design owns event envelopes, topics, replay, compatibility, and producer/consumer ownership",
+        "background-jobs owns durable worker execution, retries, progress records, and cancellation",
+        "cron-scheduling owns recurring trigger timing and missed-run behavior",
+        "interaction-feedback owns generic loading, pending, error, retry, undo, and success feedback",
+        "client-server-boundary owns serialization and trust across server/client runtime edges",
+        "real-time-updates owns browser freshness, stale claims, transport choice, catch-up, and cache/view reconciliation"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify adaptive polling, Server-Sent Events, and bidirectional sockets. When should each be chosen?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Adaptive polling fits latest-state views where seconds of delay are acceptable or persistent connections are unavailable",
+        "SSE fits one-way server-to-browser updates such as dashboards, progress, feeds, and notifications",
+        "Bidirectional sockets fit frequent low-latency browser-to-server and server-to-browser messages over the same live channel",
+        "Transport choice checks hosting/proxy/runtime limits",
+        "All choices still require stale-state and recovery behavior"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "application",
+      "prompt": "Novel scenario: A dashboard has five widgets, each polling the same endpoint every five seconds even when hidden. It also shows a Live badge after the network has failed. Diagnose and repair the design.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Flags duplicated component-local polling as a subscription ownership problem",
+        "Centralizes polling or cache subscription per resource",
+        "Adapts or pauses polling based on tab visibility and activity",
+        "Removes or downgrades unsupported Live claim",
+        "Shows last successful update time, connection state, stale warning, retry, or equivalent"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'EventSource reconnects automatically, so an SSE dashboard cannot miss updates and no catch-up logic is needed.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Acknowledges EventSource has reconnect behavior",
+        "Rejects automatic reconnect as proof of lossless missed-update replay",
+        "Requires last event ID, version, cursor, timestamp, or full refetch",
+        "Requires stale/reconnecting status until authoritative state is reconciled",
+        "Mentions deduplication when catch-up and live events overlap"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for real-time update design that preserves source of change, delivery channel, browser view state, freshness claim, and catch-up after interruption. Then name one bad analogy.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses newsroom ticker, package tracking board, control-room status board, or equivalent",
+        "Maps source of change to upstream event/state",
+        "Maps delivery channel to wire/subscription/polling path",
+        "Maps freshness claim to timestamp, live/offline state, or stale badge",
+        "Maps catch-up to checking the official ledger after interruption",
+        "Rejects a bad analogy that treats transport choice alone as the design"
+      ]
+    }
+  ]
+}

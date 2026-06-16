@@ -1,0 +1,20 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-08",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/agent-ops/gemini-pro/references/model-facts.md": "11e3efec50de4de092ab52455d23f3c9b234395f20febbd0d8160b8a90220fdd"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-11",
+  "lint_verdict": "PASS",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS"
+}

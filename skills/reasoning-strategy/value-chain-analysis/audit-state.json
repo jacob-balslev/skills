@@ -1,0 +1,233 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-11",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/value-chain-analysis/references/value-chain-analysis-sources.md": "83cb32dc8957c61c0933e6fec269ced38dc0a566888bf7b9884db9a499131c53",
+      "skills/reasoning-strategy/value-chain-analysis/references/upstream-displacement-2026-06-07.md": "2acfc843f72d3e3937884d643a0acf43c9193740826c4606faac7e82af0ead83"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_changed": "2026-06-11",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "last_audited": "2026-06-13",
+  "lint_verdict": "PASS",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "UNVERIFIED",
+  "eval_score": 3.96,
+  "eval_failed_ids": [],
+  "model_run_coverage": {
+    "schema_version": 1,
+    "updated_at": "2026-06-11T14:45:23.509Z",
+    "registry_version": "2026-06-10",
+    "models": {
+      "opus": {
+        "model": "opus",
+        "provider": "anthropic",
+        "backend": "claude",
+        "tier": "mandatory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T14:45:23.509Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "mandatory",
+            "status": "skipped",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "skipped",
+              "claim": "skipped",
+              "propose": "skipped",
+              "cross_review": "not_applicable",
+              "revise": "not_applicable",
+              "curate": "not_applicable",
+              "verify": "not_applicable",
+              "evaluate": "skipped",
+              "apply": "not_applicable",
+              "record": "not_applicable"
+            },
+            "failure_reason": "single-frontier-degraded",
+            "failure_detail": "single_frontier:opus_budget_exhausted",
+            "certifying": false,
+            "regrade_required": true,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/value-chain-analysis/runs/2026-06-11T1428--merge--codex--5db484/value-chain-analysis.merge-ledger.json"
+          }
+        }
+      },
+      "codex-current": {
+        "model": "codex-current",
+        "provider": "openai",
+        "backend": "codex",
+        "tier": "mandatory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T14:45:23.509Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "mandatory",
+            "status": "degraded",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "completed",
+              "evaluate": "skipped",
+              "apply": "completed",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": true,
+            "failure_reason": "non-certifying-run",
+            "failure_detail": "degraded-single-frontier:single_frontier:opus_budget_exhausted; non-converged:round-budget(2)",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/value-chain-analysis/runs/2026-06-11T1428--merge--codex--5db484/value-chain-analysis.merge-ledger.json"
+          }
+        }
+      },
+      "gemini": {
+        "model": "gemini",
+        "provider": "google",
+        "backend": "gemini",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T14:45:23.509Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/value-chain-analysis/runs/2026-06-11T1428--merge--codex--5db484/value-chain-analysis.merge-ledger.json"
+          }
+        }
+      },
+      "deepseek-flash": {
+        "model": "deepseek-flash",
+        "provider": "opencode",
+        "backend": "opencode",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T14:45:23.509Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/value-chain-analysis/runs/2026-06-11T1428--merge--codex--5db484/value-chain-analysis.merge-ledger.json"
+          }
+        }
+      },
+      "mimo": {
+        "model": "mimo",
+        "provider": "opencode",
+        "backend": "opencode",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T14:45:23.509Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/value-chain-analysis/runs/2026-06-11T1428--merge--codex--5db484/value-chain-analysis.merge-ledger.json"
+          }
+        }
+      },
+      "gemini-flash": {
+        "model": "gemini-flash",
+        "provider": "google",
+        "backend": "gemini",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-11T14:45:23.509Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/value-chain-analysis/runs/2026-06-11T1428--merge--codex--5db484/value-chain-analysis.merge-ledger.json"
+          }
+        }
+      }
+    }
+  }
+}

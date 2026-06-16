@@ -1,0 +1,547 @@
+{
+  "skill_name": "prompt-injection-defense",
+  "subject": "Prompt-injection defense for LLM-integrated systems",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/ai-engineering/prompt-injection-defense/SKILL.md",
+    "skills/ai-engineering/prompt-injection-defense/references/prompt-injection-defense-2026-06-07.md"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "rag-indirect-injection",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A support assistant retrieves customer-authored help-center pages. One page includes hidden text instructing the model to ignore developer instructions, reveal the system prompt, and call a CRM export tool.",
+      "context": "The assistant can read private customer history and has tools for CRM search, export, and email drafting.",
+      "question": "How should the agent redesign the system before shipping the RAG workflow?",
+      "expected_flags": [
+        "Treat retrieved pages as untrusted content even if they come from the app's own corpus.",
+        "Identify this as indirect prompt injection through RAG/resource control.",
+        "Prevent retrieved content from reaching high-authority tools without policy checks.",
+        "Constrain or remove export authority from the model exposed to untrusted content.",
+        "Use origin/trust labels and typed handoff for retrieved chunks.",
+        "Require human approval or deterministic policy for high-risk exports.",
+        "Do not claim that a stronger system prompt or blocklist solves the class."
+      ],
+      "expected_fix_hints": [
+        "Separate retrieval/summarization from privileged execution.",
+        "Let deterministic code compare proposed actions against the original user intent.",
+        "Add adversarial tests with hidden, obfuscated, and multimodal injection carriers."
+      ],
+      "absent_signals": [
+        "Do not give retrieved text authority to modify developer instructions.",
+        "Do not expose private data export tools to the same model turn that ingests untrusted content.",
+        "Do not rely solely on filtering phrases such as 'ignore previous instructions'."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treat retrieved pages as untrusted content even if they come from the app's own corpus."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identify this as indirect prompt injection through RAG/resource control."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prevent retrieved content from reaching high-authority tools without policy checks."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Constrain or remove export authority from the model exposed to untrusted content."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use origin/trust labels and typed handoff for retrieved chunks."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Require human approval or deterministic policy for high-risk exports."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Do not claim that a stronger system prompt or blocklist solves the class."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Separate retrieval/summarization from privileged execution."
+        },
+        {
+          "id": "c9",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Let deterministic code compare proposed actions against the original user intent."
+        },
+        {
+          "id": "c10",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add adversarial tests with hidden, obfuscated, and multimodal injection carriers."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not give retrieved text authority to modify developer instructions."
+        },
+        {
+          "id": "c12",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not expose private data export tools to the same model turn that ingests untrusted content."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "email-agent-action-trigger",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An email assistant reads inbound attachments and can send replies, forward messages, and create billing tickets. A forwarded PDF contains instructions to email all invoices to an attacker-controlled address.",
+      "context": "The user asked only for a summary of the attachment.",
+      "question": "What controls should the agent require before allowing actions?",
+      "expected_flags": [
+        "Classifies the PDF and email body as untrusted content.",
+        "Separates the user's original intent from instructions found inside the attachment.",
+        "Blocks or requires human approval for sending, forwarding, billing, or other high-impact actions.",
+        "Limits the untrusted-content reader to low-impact tools.",
+        "Ensures confirmation text is not generated solely from compromised model output.",
+        "Logs and tests the injection path."
+      ],
+      "expected_fix_hints": [
+        "Use planning/execution separation or a quarantined reader with typed output.",
+        "Apply least-privilege credentials and tool scopes.",
+        "Ask the user to confirm only a truthful summary of the proposed external action."
+      ],
+      "absent_signals": [
+        "Do not treat attachments from a trusted user as inherently trusted.",
+        "Do not execute the forwarding request because it appears in the document.",
+        "Do not make the approval dialog itself attacker-controlled."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Classifies the PDF and email body as untrusted content."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates the user's original intent from instructions found inside the attachment."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Blocks or requires human approval for sending, forwarding, billing, or other high-impact actions."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Limits the untrusted-content reader to low-impact tools."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ensures confirmation text is not generated solely from compromised model output."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Logs and tests the injection path."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use planning/execution separation or a quarantined reader with typed output."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Apply least-privilege credentials and tool scopes."
+        },
+        {
+          "id": "c9",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Ask the user to confirm only a truthful summary of the proposed external action."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat attachments from a trusted user as inherently trusted."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not execute the forwarding request because it appears in the document."
+        },
+        {
+          "id": "c12",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make the approval dialog itself attacker-controlled."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "markdown-image-exfiltration",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A chat UI renders model output as Markdown. Untrusted website text tells the model to include a transparent image whose URL query string contains the user's private account note.",
+      "context": "The model can see the private note while answering a browsing question.",
+      "question": "How should the system prevent data exfiltration through rendered output?",
+      "expected_flags": [
+        "Identifies rendered Markdown image/link targets as an exfiltration channel.",
+        "Treats model output as untrusted until sanitized by the rendering pipeline.",
+        "Restricts external image and link origins with an allowlist or Content Security Policy.",
+        "Blocks sensitive data from being embedded in outbound URLs.",
+        "Separates private context from untrusted browsing content where possible."
+      ],
+      "expected_fix_hints": [
+        "Sanitize URLs and image tags in code, not by asking the model to behave.",
+        "Apply output screening for suspicious exfiltration markup.",
+        "Test with hand-written and corpus-derived markdown exfiltration prompts."
+      ],
+      "absent_signals": [
+        "Do not trust the model's generated Markdown.",
+        "Do not depend on users noticing the image request.",
+        "Do not treat output filtering as the only control for tool-capable agents."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies rendered Markdown image/link targets as an exfiltration channel."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treats model output as untrusted until sanitized by the rendering pipeline."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Restricts external image and link origins with an allowlist or Content Security Policy."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Blocks sensitive data from being embedded in outbound URLs."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates private context from untrusted browsing content where possible."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Sanitize URLs and image tags in code, not by asking the model to behave."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Apply output screening for suspicious exfiltration markup."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Test with hand-written and corpus-derived markdown exfiltration prompts."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not trust the model's generated Markdown."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not depend on users noticing the image request."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat output filtering as the only control for tool-capable agents."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "dual-llm-boundary",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A product team proposes a dual-LLM architecture where a quarantined model reads web pages and a privileged model can call purchasing and account-management tools.",
+      "context": "The team wants to know whether this pattern is enough by itself.",
+      "question": "How should the agent evaluate and strengthen the design?",
+      "expected_flags": [
+        "Affirms that the quarantined reader must have no high-impact tool authority.",
+        "Requires the channel between models to be typed, narrow, and validated by code.",
+        "Warns that typed summaries can still carry adversarial content if the schema is too broad.",
+        "Requires the privileged execution layer to enforce policy independently of model persuasion.",
+        "Keeps human approval for irreversible or privileged actions.",
+        "Tests the specific schema and tools against adversarial pages."
+      ],
+      "expected_fix_hints": [
+        "Reduce the typed handoff to labels, citations, allowed action candidates, or bounded fields.",
+        "Use deterministic policy checks before tool calls.",
+        "Monitor approval/refusal rates and failed tool attempts."
+      ],
+      "absent_signals": [
+        "Do not say dual-LLM automatically solves prompt injection.",
+        "Do not let the privileged model see raw untrusted web text.",
+        "Do not derive execution permissions from the quarantined model's prose."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Affirms that the quarantined reader must have no high-impact tool authority."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires the channel between models to be typed, narrow, and validated by code."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Warns that typed summaries can still carry adversarial content if the schema is too broad."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires the privileged execution layer to enforce policy independently of model persuasion."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps human approval for irreversible or privileged actions."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Tests the specific schema and tools against adversarial pages."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reduce the typed handoff to labels, citations, allowed action candidates, or bounded fields."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use deterministic policy checks before tool calls."
+        },
+        {
+          "id": "c9",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Monitor approval/refusal rates and failed tool attempts."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not say dual-LLM automatically solves prompt injection."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let the privileged model see raw untrusted web text."
+        },
+        {
+          "id": "c12",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not derive execution permissions from the quarantined model's prose."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "tool-call-schema-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "The user asks for the JSON shape and validation rules for a calendar tool's `create_event` parameters.",
+      "context": "The request is about parameter schema, required fields, enum values, and tool error handling.",
+      "question": "Should prompt-injection-defense own this request?",
+      "expected_flags": [
+        "This is primarily tool-call-flow and API design work.",
+        "Prompt-injection-defense may review security implications only if untrusted content can influence tool authority.",
+        "Parameter shape alone is not the prompt-injection threat model."
+      ],
+      "expected_fix_hints": [
+        "Route schema mechanics to tool-call-flow and api-design.",
+        "Add a later prompt-injection review if the tool acts on untrusted content."
+      ],
+      "absent_signals": [
+        "Do not replace tool schema design with security philosophy.",
+        "Do not claim structured output alone prevents semantic compromise."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily tool-call-flow and API design work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prompt-injection-defense may review security implications only if untrusted content can influence tool authority."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Parameter shape alone is not the prompt-injection threat model."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route schema mechanics to tool-call-flow and api-design."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a later prompt-injection review if the tool acts on untrusted content."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not replace tool schema design with security philosophy."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim structured output alone prevents semantic compromise."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "prompt-writing-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A teammate asks for a reusable system prompt that tells a model to follow developer instructions and ignore irrelevant user text.",
+      "context": "No untrusted-content surface, tool authority, private context, or exfiltration path is being analyzed.",
+      "question": "Should prompt-injection-defense own this request?",
+      "expected_flags": [
+        "This is prompt-craft when the work is reusable prompt wording.",
+        "Prompt wording can be one weak layer but is not the complete security control.",
+        "Prompt-injection-defense should activate only when the task evaluates untrusted content and consequences."
+      ],
+      "expected_fix_hints": [
+        "Route prompt wording to prompt-craft.",
+        "Escalate to prompt-injection-defense if the prompt will guard privileged tools or private data."
+      ],
+      "absent_signals": [
+        "Do not present a system prompt as sufficient prompt-injection mitigation.",
+        "Do not ignore the absence of a concrete threat surface."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is prompt-craft when the work is reusable prompt wording."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prompt wording can be one weak layer but is not the complete security control."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prompt-injection-defense should activate only when the task evaluates untrusted content and consequences."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route prompt wording to prompt-craft."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Escalate to prompt-injection-defense if the prompt will guard privileged tools or private data."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present a system prompt as sufficient prompt-injection mitigation."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore the absence of a concrete threat surface."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "eval-design-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "The user asks for an eval rubric and judge prompts to measure jailbreak refusal behavior across several models.",
+      "context": "The requested deliverable is an evaluation design, not a system defense design.",
+      "question": "Should prompt-injection-defense own this request?",
+      "expected_flags": [
+        "This is primarily eval-driven-development or guardrails work.",
+        "Jailbreak refusal behavior is adjacent but not the same as agent action/exfiltration risk.",
+        "Prompt-injection-defense can contribute threat cases if the eval concerns untrusted content controlling tools."
+      ],
+      "expected_fix_hints": [
+        "Use eval-driven-development for rubric structure and judge calibration.",
+        "Use guardrails for refusal-policy boundaries.",
+        "Add prompt-injection cases only when evaluating LLM-integrated system behavior."
+      ],
+      "absent_signals": [
+        "Do not certify application safety from refusal evals alone.",
+        "Do not conflate jailbreak policy bypass with indirect prompt injection in a tool-capable system."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is primarily eval-driven-development or guardrails work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Jailbreak refusal behavior is adjacent but not the same as agent action/exfiltration risk."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Prompt-injection-defense can contribute threat cases if the eval concerns untrusted content controlling tools."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use eval-driven-development for rubric structure and judge calibration."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use guardrails for refusal-policy boundaries."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add prompt-injection cases only when evaluating LLM-integrated system behavior."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not certify application safety from refusal evals alone."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not conflate jailbreak policy bypass with indirect prompt injection in a tool-capable system."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

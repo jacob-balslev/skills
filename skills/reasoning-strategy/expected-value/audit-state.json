@@ -1,0 +1,35 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-05-27",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/expected-value/references/expected-value-sources.md": "06c13a11c9ee43cce442d9d4fc079054c1fbbab4ca2fbcb0a0e244d4ac19a2e7",
+      "skills/reasoning-strategy/expected-value/references/upstream-displacement-2026-05-27.md": "6408903a99d80484f747b4d275ea634199f191322f1fb18d5352603f10ffde67"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_audited": "2026-05-28",
+  "last_changed": "2026-05-27",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "drift_status": "UNKNOWN",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  }
+}

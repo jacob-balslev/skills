@@ -123,12 +123,18 @@ function collectFilesToScan(cliArgs) {
     // Explicit file list from CLI
     return cliArgs.map(f => path.resolve(f));
   }
-  // Default: only SKILL.md files, matching the scope of hooks/pre-push (line 134).
-  // Governance/meta files (CONTRIBUTING.md, SECURITY.md, README.md, CODE_OF_CONDUCT.md)
-  // legitimately reference pattern strings in their explanatory/instructional prose and
-  // are intentionally excluded from the privacy gate. The gate exists to protect skill
-  // content — not docs about the gate.
-  return findFiles(repoRoot, name => name === 'SKILL.md');
+  // Default: per-skill CONTENT artifacts — SKILL.md bodies AND the sibling
+  // audit-state.json / evals JSON sidecars. The sidecars carry eval receipts whose
+  // absolute paths leaked /Users/... into the public repo (SKI-736); scanning
+  // SKILL.md alone left that whole class ungated. Governance/meta files
+  // (CONTRIBUTING.md, SECURITY.md, README.md, CODE_OF_CONDUCT.md) legitimately
+  // reference pattern strings in their explanatory prose and stay intentionally
+  // excluded — the gate protects skill content, not docs about the gate.
+  return findFiles(repoRoot, name =>
+    name === 'SKILL.md' ||
+    name === 'audit-state.json' ||
+    name === 'comprehension.json' ||
+    name === 'application.json');
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────

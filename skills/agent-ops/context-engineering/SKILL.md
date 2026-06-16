@@ -1,28 +1,32 @@
 ---
 name: context-engineering
+# description: routing-facing summary of when this skill activates and what it covers.
 description: "Use when designing what information reaches an LLM agent before it reasons — system prompt, persistent memory, always-loaded rules, injected skills, and the user prompt — or when diagnosing why an agent produced a wrong answer despite a clear instruction. Covers the four context failure modes (missing, stale, wrong, overwhelming), the five-layer context stack, four context quality metrics (injection precision and recall, utilization, freshness), the Frequent Intentional Compaction (FIC) protocol, subagent delegation for context-heavy work, and the failure-mode decision tree. Do NOT use for prompt wording (use `prompt-craft`), authoring a new SKILL.md (use `skill-scaffold`), or deciding which skill the router activates for a given query (use `skill-router`)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime and portability notes for this skill.
 compatibility:
   notes: "Provider-agnostic; principles apply across Claude, GPT, Gemini, and open-weight models. Layer mapping varies by harness (Claude Code, OpenCode, Cursor, Continue, Aider) but the five-layer abstraction holds."
 allowed-tools: Read Grep Bash Edit
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
   # version: skill content version (semver). Bumped when the instructional content changes.
 
 
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: agent-ops
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # scope: free-text PRD-style statement of what the skill teaches and where it deploys
   # (v8 required; not an enum). Positive scope + portability/grounding + explicit exclusions.
   scope: "Designing what information reaches an LLM agent before it reasons — system prompt, persistent memory, always-loaded rules, injected skills, and user prompt — and diagnosing wrong answers despite clear instructions. Covers the four context failure modes (missing, stale, wrong, overwhelming), the five-layer context stack, four context-quality metrics (injection precision/recall, utilization, freshness), the Frequent Intentional Compaction protocol, subagent delegation for context-heavy work, and the failure-mode decision tree. Portable across any agent runtime; principle-grounded, not repo-bound. Excludes prompt wording (prompt-craft), authoring a new SKILL.md (skill-scaffold), and which skill the router activates (skill-router)."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
@@ -50,23 +54,21 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"context engineering\",\"context failure\",\"agent context\",\"context quality\",\"context design\",\"missing context\",\"stale context\",\"wrong context\",\"overwhelming context\",\"context window\"]"
+  keywords: ["context engineering","context failure","agent context","context quality","context design","missing context","stale context","wrong context","overwhelming context","context window"]
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
-  examples: "[\"the agent ignored the instruction and used the wrong query helper — was the right skill loaded?\",\"we keep getting generic answers from the agent even though the skill has the answer — what's wrong?\",\"I want to design which skills get injected for which prompts — where do I start?\",\"the agent's quality drops in long sessions — when should I compact?\",\"diagnose this agent failure: it had the file open but produced wrong output anyway\",\"we have 200 skills and the agent picks the wrong ones — fix the injection\",\"should I read this 5K-line file directly or delegate to a subagent?\",\"audit our context pipeline — what's loaded when, and is any of it stale?\"]"
+  examples: ["the agent ignored the instruction and used the wrong query helper — was the right skill loaded?","we keep getting generic answers from the agent even though the skill has the answer — what's wrong?","I want to design which skills get injected for which prompts — where do I start?","the agent's quality drops in long sessions — when should I compact?","diagnose this agent failure: it had the file open but produced wrong output anyway","we have 200 skills and the agent picks the wrong ones — fix the injection","should I read this 5K-line file directly or delegate to a subagent?","audit our context pipeline — what's loaded when, and is any of it stale?"]
   # anti_examples: near-miss prompts that should route ELSEWHERE.
-  # Pair with relations.boundary to indicate the confusable territory's owner.
-  anti_examples: "[\"improve this prompt's wording to get better outputs\",\"scaffold a new SKILL.md for our team's deploy procedure\",\"the router picked the wrong skill for this query — debug it\",\"review this AI-generated PR for correctness\",\"write a doc explaining our agent system to a new joiner\",\"investigate why production crashed at 3am\"]"
+  # Pair with relations.suppresses to indicate the confusable territory's owner.
+  anti_examples: ["improve this prompt's wording to get better outputs","scaffold a new SKILL.md for our team's deploy procedure","the router picked the wrong skill for this query — debug it","review this AI-generated PR for correctness","write a doc explaining our agent system to a new joiner","investigate why production crashed at 3am"]
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"boundary\":[{\"skill\":\"prompt-craft\",\"reason\":\"prompt-craft writes the wording of one instruction; context-engineering shapes the entire surrounding payload (rules, memory, skills, file reads) that the prompt sits inside\"},{\"skill\":\"skill-scaffold\",\"reason\":\"skill-scaffold authors the structure of a single SKILL.md file; context-engineering decides which skills should exist, get loaded, and reach the model in the first place\"},{\"skill\":\"skill-router\",\"reason\":\"skill-router is the runtime mechanism that selects skills for a query; context-engineering is the design discipline behind the entire context stack the router operates within\"}],\"related\":[\"prompt-craft\",\"skill-router\"],\"verify_with\":[\"code-review\"]}"
-  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # grounding: required when non-empty `project[]`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
   grounding: "{\"subject_matter\":\"Context engineering for LLM agents\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents\",\"https://platform.claude.com/docs/en/build-with-claude/context-windows\",\"https://platform.claude.com/cookbook/tool-use-context-engineering-context-engineering-tools\",\"https://www.ibm.com/think/topics/context-engineering\",\"https://arxiv.org/abs/2510.26493\"],\"failure_modes\":[\"context_window_treated_as_unlimited\",\"prompt_wording_treated_as_context_design\",\"retrieval_dump_replaces_selection\",\"tool_results_accumulate_without_clearing\",\"stale_memory_overrides_current_evidence\"],\"evidence_priority\":\"equal\"}"
@@ -85,7 +87,7 @@ metadata:
   purpose: "This skill exists because many agent failures look like reasoning failures but come from a bad informational environment: the right fact was absent, stale memory won over current evidence, irrelevant retrieval buried the signal, or raw tool output accumulated after its value expired. It gives teams a way to design and debug the context pipeline instead of endlessly rewriting prompts."
   # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
   # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
-  boundary: "This skill does not write the wording of a single prompt, author a new SKILL.md, or decide the router result for one query. It also does not promise that context engineering fixes every model error. Use it when the failure or design question concerns what information reaches the model, how it is structured, when it is refreshed, and what should be withheld, summarized, delegated, or cleared."
+  concept_boundary: "This skill does not write the wording of a single prompt, author a new SKILL.md, or decide the router result for one query. It also does not promise that context engineering fixes every model error. Use it when the failure or design question concerns what information reaches the model, how it is structured, when it is refreshed, and what should be withheld, summarized, delegated, or cleared."
   # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Context engineering is like packing a surgical tray: success depends less on owning every possible instrument and more on putting the right clean tools in the right order before the operation starts."
   # misconception: the wrong mental model people bring; corrected explicitly.
@@ -94,9 +96,8 @@ metadata:
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v6
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/context-engineering/SKILL.md
+  skill_graph_canonical_skill: skills/agent-ops/context-engineering/SKILL.md
   # === Health Block (written by the audit loop, not hand-authored) ===
   # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
   #
@@ -109,9 +110,16 @@ metadata:
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
+relations:
+  related: ["prompt-craft","skill-router","context-window","tool-call-strategy","agent-engineering"]
+  suppresses: ["skill-router","skill-scaffold"]
+  verify_with: ["code-review","epistemic-grounding"]
 ---
-
 # Context Engineering
+
+## Concept of the skill
+
+Context engineering is the discipline of compiling the smallest sufficient, highest-signal working set for an LLM at each step: instructions, memory, retrieved facts, tool outputs, examples, conversation history, and task metadata.
 
 ## Coverage
 
@@ -125,8 +133,7 @@ metadata:
 - Debugging decision tree: how to diagnose any agent failure by walking from missing-context through overwhelming-context before blaming the model
 - The verification checklist: gates a context-engineering review must pass before declaring the pipeline healthy
 
-## Philosophy
-
+## Philosophy of the skill
 The model is a reasoning engine that reasons over whatever is in its context window. If the context is wrong, the reasoning is correct but the conclusion is wrong. This means most agent failures are context failures, not model failures.
 
 Without this discipline, teams blame the model for mistakes caused by missing keywords, stale skill content, or an overwhelmed window. Context engineering provides the diagnostic framework to identify *why* an agent produced a wrong answer and the design principles to prevent recurrence. It treats the context window as a deliberate design surface — not a dumping ground — so that the model's native reasoning produces the correct output without heroic prompting.
@@ -229,11 +236,11 @@ The agent has too much information. The signal is diluted by noise; the model's 
 
 **Diagnostic question:** "Did the agent have so much context that it couldn't focus on the right information?"
 
-**Prevention:** measure injection precision. If more than 30% of injected skills are irrelevant to the task, the injection system needs tuning.
+**Prevention:** measure injection precision. Treat "more than roughly 30% irrelevant injections" as a local tuning alarm, not a universal law; calibrate the threshold against the workspace's router, task mix, and cost of false positives.
 
 ## Context Quality Metrics
 
-Four metrics measure the health of a context engineering system. Track these over time to identify systemic issues.
+Four metrics measure the health of a context engineering system. The bands below are starting heuristics for a local trend dashboard, not externally standardized thresholds. Calibrate them against known-good and known-bad task runs before using them as gates.
 
 ### Injection Precision
 
@@ -301,7 +308,7 @@ Freshness Score = (skills with drift_check inside window / total injected skills
 
 FIC is a proactive context-management strategy. Instead of waiting for the window to fill and reacting with an emergency compact, plan compaction points into the workflow.
 
-**Target utilization:** 40–60% of the context window during steady-state work.
+**Target utilization:** use 40-60% of the context window during steady-state work as an initial heuristic, then adjust based on observed answer quality, tool-output volume, and compaction loss.
 
 **When to compact:** at natural breakpoints, not when forced by pressure.
 
@@ -409,7 +416,7 @@ Use this checklist when designing a new skill, debugging a failure, or auditing 
 - [ ] Skills involved in any failure now have keywords that match how users actually phrased the request
 - [ ] Skill content cites specific files and line numbers, not generic advice
 - [ ] `drift_check.last_verified` is inside the lifecycle window for every active skill
-- [ ] No two skills give contradictory advice on the same topic (`relations.boundary` is honest about ownership)
+- [ ] No two skills give contradictory advice on the same topic (`relations.suppresses` is honest about ownership)
 - [ ] Context utilization is tracked at task breakpoints; FIC fires at natural boundaries
 - [ ] Injection precision is above 80% (most injected skills are actually consulted)
 - [ ] Injection recall is above 90% (most needed skills are injected)

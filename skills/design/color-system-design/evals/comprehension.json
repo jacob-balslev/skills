@@ -1,0 +1,141 @@
+{
+  "skill_name": "color-system-design",
+  "subject": "design",
+  "adjacent_concepts": [
+    "theme-system-design",
+    "dark-mode-implementation",
+    "visual-design-foundations",
+    "typography-system",
+    "a11y"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a color system in 2-3 sentences. Name its layers and what each layer is for.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Three layers: a palette of raw values (per-hue scales), semantic tokens named by purpose, and a per-theme mapping",
+        "The palette is the vocabulary; semantic tokens are the contract components consume; the mapping is what changes between themes",
+        "Names intent-based token examples (background-surface, text-primary, danger-emphasis)",
+        "Mentions the two binding constraints: perceptual-uniform scale construction and a contrast floor"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why must color scales be generated in OKLCH or LCH rather than sRGB or HSL?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "sRGB and HSL are perceptually non-uniform — equal numeric lightness steps produce unequal perceived changes",
+        "Names cliffs around yellow and teal as a symptom",
+        "OKLCH and CIELAB are perceptually uniform — equal L steps look equal regardless of hue",
+        "This makes them the correct space for generating evenly-stepped scales"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "What contrast standards govern text legibility, what are the WCAG 2.1 AA thresholds, and how does APCA differ?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "WCAG 2.1 contrast ratio is computed from relative luminance",
+        "AA thresholds: 4.5:1 normal text, 3:1 large text (18pt+ or 14pt+ bold); AAA is 7:1 normal",
+        "APCA (WCAG 3 working draft) uses a perceptual model with Lc thresholds (e.g. 60 Lc body, 75 Lc small)",
+        "WCAG 2.1 remains the legally referenced standard in most jurisdictions; tooling can compute both"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "How do you build a 10-step scale from a brand seed color and keep it perceptually even?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Anchor the brand color at a specific scale step (e.g. step 600) and generate the rest rather than hand-tuning",
+        "Generate in OKLCH/LCH so equal step indices have equal lightness (within ~±2 L units)",
+        "Export to sRGB or display-p3 with fallbacks for sRGB-only displays",
+        "Each step is derived by rule, not eyeballed individually"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "How do semantic tokens let one token serve both a light and a dark theme while staying accessible?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A semantic token (e.g. text-primary) resolves to a different palette value per theme via the mapping layer",
+        "Example: near-black (L~0.15) on light, near-white (L~0.96) on dark — same component token",
+        "Both resolutions meet the same contrast requirement against their respective backgrounds",
+        "Tokens are named by intent / contrast pair (text-on-surface), never by appearance (text-dark-gray)"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the color-system-design skill to implement the prefers-color-scheme media query, persist the user's toggle, and prevent the theme flash on load. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — that is dark-mode-implementation (runtime detection, persistence, flash prevention, asset swapping)",
+        "color-system-design owns the palette and the contrast-correct token pairings the dark theme consumes",
+        "Correctly distinguishes owning what the colors ARE from owning how they are switched at runtime",
+        "May note theme-system-design owns token distribution/resolution architecture"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'a color system is just a nice set of swatches — any pleasant palette is a system.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The swatches are the cheap part; the system is the perceptually-uniform scale generation, the intent-named semantic layer, and the contrast contract",
+        "A palette built by eye in sRGB/HSL gives uneven scales and silent contrast failures",
+        "Naming tokens by appearance in component code makes every brand refresh and theme a rewrite",
+        "Color as the only state signal excludes ~8% of men with color vision deficiency — pair with icon/text"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a color system is implemented correctly?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Every text/background pair meets WCAG 2.1 AA, checked automatically in CI against token combinations",
+        "Scales generated in OKLCH/LCH; equal step indices within ±2 L units",
+        "Semantic tokens named by intent, not appearance, in component code",
+        "Every semantic token exists in both light and dark themes; color is never the sole state signal; palette previewed under protanopia/deuteranopia/tritanopia"
+      ]
+    }
+  ]
+}

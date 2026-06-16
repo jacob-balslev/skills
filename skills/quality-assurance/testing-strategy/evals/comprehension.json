@@ -1,0 +1,96 @@
+{
+  "skill_name": "testing-strategy",
+  "subject": "test-scope and test-level selection",
+  "adjacent_concepts": [
+    "test-coverage-strategy",
+    "integration-test-design",
+    "contract-testing",
+    "e2e-test-design",
+    "debugging",
+    "refactor",
+    "performance-engineering",
+    "code-review"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define testing strategy as this skill teaches it. Your answer must include behavior or regression target, failure risk, coupling boundary, cheapest honest test level, expected failure signal, and maintenance cost.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain why test level should be selected by risk and observable behavior rather than by the file type being edited.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill warn against optimizing for coverage percentage alone? Name at least three ways a suite can look thorough while still missing production regressions.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A user asks, 'My existing test started failing after yesterday's edit; what broke?' Should testing-strategy own the request? Name the better owner and explain when testing-strategy should re-enter afterward.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify these concerns as testing-strategy, test-coverage-strategy, integration-test-design, contract-testing, e2e-test-design, debugging, refactor, or performance-engineering: choosing whether a webhook needs a contract test, fixture setup for an integration test, root-causing a failing test, one critical checkout browser journey, deciding whether uncovered code needs a test, preserving behavior during code restructuring, latency regression under load.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use the sensor-placement analogy to explain why a useful test should observe the failure point directly, avoid noisy locations, and justify its maintenance cost.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: a production bug duplicated invoices only when the same webhook event was delivered twice through the handler. The fix adds idempotency by event id. Apply the skill to choose the regression target and the test level, and explain why a pure unit test may be insufficient.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this misconception: 'Coverage dropped after the refactor, so we should add a test for every uncovered line.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}

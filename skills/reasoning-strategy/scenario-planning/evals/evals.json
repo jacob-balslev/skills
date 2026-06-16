@@ -1,0 +1,158 @@
+{
+  "skill_name": "scenario-planning",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A consumer fintech is deciding whether to launch a budgeting product in a new country. The next five years are uncertain because regulation may become open-data-friendly or restrictive, and household disposable income may recover or stagnate. Build a minimum useful scenario-planning analysis and do not invent facts.",
+      "expected_output": "The agent should frame the focal decision, time horizon, scope, evidence and evidence gaps; use regulation and disposable-income trajectory as candidate critical uncertainties; sketch four plausible scenarios; name implications for launch, partnerships, compliance, pricing, product scope, and go/no-go timing; identify robust actions, contingent moves, hedges or options; and define signposts without fabricating market data.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Frames focal decision and horizon",
+        "Identifies critical uncertainties",
+        "Creates distinct scenarios",
+        "States evidence gaps and assumptions",
+        "Stress-tests strategy choices",
+        "Names robust and contingent actions",
+        "Defines signposts",
+        "Avoids invented facts"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A strategy memo includes three futures labeled best case, base case, and worst case, all based on the same revenue forecast. Review whether this is scenario planning.",
+      "expected_output": "The agent should say this is weak forecasting or sensitivity framing rather than robust scenario planning. It should explain that useful scenarios need distinct causal logics based on critical uncertainties, internal consistency, neutral names, and decision implications, then propose how to rebuild the set from high-impact uncertainties.",
+      "type": "quality-review",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects best/base/worst as sufficient scenario planning",
+        "Explains the single forecast-axis problem",
+        "Requires critical uncertainties",
+        "Requires distinct causal narratives",
+        "Requires decision implications",
+        "Recommends repair steps"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A user asks for scenario planning, but gives credible probabilities and cash-flow impacts for three options and asks which option has the best probability-weighted return. Should scenario-planning own this?",
+      "expected_output": "The agent should route the primary task to expected-value because the user has probabilities and payoffs and asks for probability-weighted return. It can note scenario planning may have generated the possible worlds earlier, but the current mechanism is expected-value comparison rather than deep-uncertainty scenario construction.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes primary task to expected-value",
+        "Explains that probabilities and payoffs are available",
+        "Explains scenario planning is for deeper uncertainty and stress-testing",
+        "Names a limited supporting role for scenarios if useful",
+        "Does not force a scenario matrix unnecessarily"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "A city transit agency is planning service changes for 2035. Uncertainties include remote-work persistence and climate-related disruption. Apply scenario planning with public-service outcomes.",
+      "expected_output": "The agent should frame the agency decision, horizon, stakeholders, and evidence gaps; use remote-work persistence and climate disruption as candidate uncertainties; create multiple scenarios; discuss rider access, equity, resilience, budget, infrastructure, and service reliability; identify no-regret actions, contingencies, hedges, and signposts; and avoid treating fare revenue as the only criterion.",
+      "type": "public-policy-adaptation",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Frames public-service decision and horizon",
+        "Uses relevant critical uncertainties",
+        "Creates multiple plausible scenarios",
+        "Considers stakeholders and equity",
+        "Stress-tests service or infrastructure choices",
+        "Names robust actions and contingencies",
+        "Defines signposts",
+        "Avoids profit-only evaluation"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 5,
+      "prompt": "A team has a PESTEL scan with 40 trends. They ask you to use it for scenario planning. What should happen next?",
+      "expected_output": "The agent should not reproduce all 40 trends as scenarios. It should prioritize the trends by impact, uncertainty, relevance, and evidence quality; separate predetermined elements from critical uncertainties; choose a small number of uncertainty axes or scenario logics; build two to four internally consistent scenarios; and link them to strategy implications and monitoring.",
+      "type": "handoff-from-pestel",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Uses PESTEL as input rather than final output",
+        "Prioritizes by impact and uncertainty",
+        "Separates predetermined elements from critical uncertainties",
+        "Selects scenario axes or logics",
+        "Builds a small scenario set",
+        "Links scenarios to implications and monitoring",
+        "Does not turn trend volume into insight"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A founder wants to create scenario narratives for a robotics market but has only a few anecdotes and no reliable market data. Produce a useful but honest answer.",
+      "expected_output": "The agent should create a sparse scenario scaffold, mark anecdotes as weak evidence, list evidence gaps, avoid claiming market sizes or adoption rates, suggest driver research, define provisional uncertainties, and recommend signposts or research steps before making major bets.",
+      "type": "evidence-discipline",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Marks evidence as weak",
+        "Avoids invented data",
+        "Creates a provisional scaffold only",
+        "Names evidence gaps",
+        "Suggests research steps",
+        "Defines provisional uncertainties",
+        "Avoids overconfident strategic recommendations"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 7,
+      "prompt": "A board has already chosen a strategy and wants to know what to monitor so they can adapt if a different future emerges. Use scenario-planning signposts.",
+      "expected_output": "The agent should derive signposts from the scenario logics, name observable indicators, sources, thresholds or directional triggers, cadence, owners, and decisions that change. It should distinguish signposts from vague trends and connect monitoring to robust or contingent actions.",
+      "type": "signposts-monitoring",
+      "grounding": "principle",
+      "difficulty": "advanced",
+      "expectations": [
+        "Derives signposts from scenario logics",
+        "Names observable indicators",
+        "Names source or collection method",
+        "Includes thresholds or directionality",
+        "Includes cadence and owner",
+        "Links signposts to decisions or contingent actions",
+        "Rejects vague monitoring language"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    }
+  ]
+}

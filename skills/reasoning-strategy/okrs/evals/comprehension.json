@@ -1,0 +1,153 @@
+{
+  "skill_name": "okrs",
+  "subject": "Objectives and Key Results goal-setting",
+  "adjacent_concepts": [
+    "Playing to Win",
+    "prioritization",
+    "KPIs",
+    "project planning",
+    "performance evaluation",
+    "stretch goals",
+    "strategy execution",
+    "Balanced Scorecard"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define OKRs in 2-3 sentences. Include Objectives, Key Results, measurable outcomes, and the planning/review period.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Expands OKR as Objectives and Key Results",
+        "Defines Objectives as qualitative outcome states",
+        "Defines Key Results as measurable evidence of progress or success",
+        "Mentions a defined planning or review period",
+        "Does not define OKRs as a task list"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of OKRs. Name at least 6 primitives and describe how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "At least 6 of: Objective, Key Result, owner, baseline, target, evidence source, planning period, check-in cadence, score, retrospective learning",
+        "Explains that Objectives name what matters",
+        "Explains that Key Results prove progress toward the Objective",
+        "Explains that review/scoring turns progress into learning",
+        "Explains that OKRs connect strategy to execution"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this OKR skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents vague aspirational goals",
+        "Prevents task-list Key Results",
+        "Prevents KPI inventory without focus",
+        "Prevents too many goals diffusing attention",
+        "Prevents compensation-review confusion",
+        "Prevents missing baselines, targets, or evidence sources"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish OKRs from Playing to Win, prioritization, KPIs, project planning, and performance evaluation. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Playing to Win formulates strategy choices before execution goals",
+        "Prioritization ranks a queue of work",
+        "KPIs monitor ongoing operational health",
+        "Project planning assigns tasks, dependencies, and dates",
+        "Performance evaluation judges individual performance or compensation",
+        "OKRs set measurable outcome goals for a period"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place OKRs among strategy and management frameworks. What upstream inputs can feed them, and what downstream outputs can follow them?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies OKRs as goal-setting or strategy-execution methodology",
+        "Names upstream inputs such as strategy cascade, annual priorities, product strategy, customer evidence, or constraints",
+        "Names downstream outputs such as initiatives, project plans, check-ins, scoring, and retrospectives",
+        "Keeps OKRs distinct from Balanced Scorecard/KPI monitoring and task planning"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for OKRs that preserves Objectives as direction and Key Results as measurable evidence. Then name one bad analogy and explain what it gets wrong.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving compass and mile markers, destination and dashboard, or similar direction-plus-evidence structure",
+        "Maps Objective to direction or destination",
+        "Maps Key Results to measurable progress evidence",
+        "Rejects a bad analogy that treats OKRs as a checklist, wish list, or compensation scorecard"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A team proposes this OKR: Objective: Improve onboarding. Key Results: launch checklist, run interviews, write help docs. Diagnose what is wrong and propose a better next analysis step.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Flags the Objective as vague or under-specified",
+        "Flags Key Results as tasks or outputs",
+        "Asks for baseline metrics and desired outcome",
+        "Rewrites toward measurable onboarding outcomes such as activation, time-to-value, completion, support burden, or retention",
+        "Requires evidence source and review cadence",
+        "Labels assumptions rather than inventing certainty"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Key Results are the initiatives we promise to complete this quarter, and OKR scores should directly drive bonuses.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Corrects Key Results as measurable evidence, not initiative lists",
+        "Separates initiatives/tasks from outcome Key Results",
+        "Warns against direct compensation linkage",
+        "Names sandbagging or learning-integrity risk",
+        "Distinguishes aspirational and committed OKR scoring expectations"
+      ]
+    }
+  ]
+}

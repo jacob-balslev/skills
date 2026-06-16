@@ -1,0 +1,144 @@
+{
+  "skill_name": "generative-ui",
+  "subject": "generative-ui",
+  "adjacent_concepts": [
+    "tool-call-flow",
+    "rendering-models",
+    "client-server-boundary",
+    "prompt-injection-defense",
+    "api-design",
+    "type-safety",
+    "design-system-architecture"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define generative UI in 2-3 sentences. What does the model actually emit, and which three contracts must hold for the pattern to work?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The model emits, as structured output constrained by a typed schema, a specification of a UI component/sub-tree the application renders",
+        "Not a chat response, not a tool call asking for execution, not raw markup — a typed instance of a component-vocabulary schema plus data",
+        "Names the three contracts: component schema, generation constraint, render pipeline",
+        "Application owns rendering/interaction/visual design; model owns which components to compose with what data"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the two legitimate render substrates and the source of safety in each.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Typed-component-tree: safety by RESTRICTION — model can only name components in the published vocabulary; no HTML executes",
+        "Sandboxed-iframe: safety by ISOLATION + host mediation — developer-authored HTML/JS runs in a sandbox that can't reach parent DOM/cookies/storage, fed model data over a postMessage/JSON-RPC bridge",
+        "Shared invariant: the model never authors raw HTML injected into the host DOM",
+        "Names canonical examples (A2UI / bespoke registries for typed-tree; MCP Apps / OpenAI Apps SDK / MCP-UI for iframe)"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Why must the generation constraint be provider-native structured output or strict tool calling rather than best-effort function calls or free-form JSON with post-validation?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Valid JSON is not schema adherence; best-effort calls can omit required fields or invent argument shapes",
+        "Provider-native structured output / strict tool calling forces the emission to be a valid schema instance (grammar-constrained decoding)",
+        "Free-form + post-validation and non-strict calls produce retry loops and production variance/flake",
+        "These weaker mechanisms are prototype-grade, not a reliable render contract"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "Walk through what the typed-component render pipeline does with a schema-validated spec, and explain why schema validity alone does not authorize rendering.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Parse + schema validation, normalize/migrate, component lookup, props validation, safety policy, accessibility/fallback, recursive render, interaction wiring, telemetry",
+        "Schema describes structure; per-component safety policy describes acceptable content (origin allowlists, link sanitization, length caps, recursion-depth limits)",
+        "A spec naming an unshipped component is a routing error, not permission to render arbitrary content",
+        "The model's emission alone authorizes nothing; the pipeline (restriction) does"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Design the interaction loop for an interactive generative-UI component. What five definitions does every interactive component need, and how are destructive actions handled?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Instance identity (stable component_id) so multi-component responses disambiguate which instance the user acted on",
+        "Action shape (a typed event), history encoding (a user-role turn — tool_result or app-defined block; there is NO standard provider ui_event content type, or a ui/ postMessage in MCP Apps)",
+        "Side-effect policy and state-update rule",
+        "A click is a user signal, not authorization; destructive actions are separate tool calls gated by user identity, never auto-executed from the click"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate wants to use the generative-ui skill to decide whether the page should be CSR, SSR, or RSC, and to design the protocol cycle of the underlying tool calls. Are those in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Page-level rendering taxonomy (CSR/SSR/SSG/RSC/streaming) is rendering-models — this skill operates inside any of those",
+        "The tool-call protocol cycle is tool-call-flow — this skill owns the model→spec→component pipeline, which composes with it",
+        "Treats RSC/AG-UI streaming as transport, not as the concept",
+        "Correctly redirects both while noting they compose, not conflict"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A developer says 'generative UI means the model writes HTML/JSX and the page renders it directly.' Correct the mental model, and also correct the opposite over-correction.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Model-emits-unsandboxed-HTML-into-the-host-DOM is a different, dangerous pattern — not this",
+        "The opposite over-correction (generative UI must NEVER execute any HTML) is also wrong — sandboxed-iframe substrates execute developer-authored HTML in isolation (MCP Apps, OpenAI Apps SDK, MCP-UI)",
+        "Both substrates are legitimate; they differ in where safety comes from (restriction vs isolation+host mediation)",
+        "Invariant in both: the model never authors raw HTML injected into the host DOM — it authors a typed selection plus data"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a generative-UI implementation is safe and well-formed?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Palette is a published typed discriminated union with semantic names, bounded/shallow props, a version, and provider schema-compatibility CI tests",
+        "Generation is provider-native structured output or strict tool calling; partial/streamed specs drive only visibly-provisional UI; final render waits for completed validation",
+        "Render substrate is explicitly chosen and its safety basis named; per-component safety policy (or iframe sandbox + host CSP/domain policy) enforced; every spec validated before any component is invoked",
+        "Interaction: stable per-instance id, action shape, history encoding, side-effect policy gating destructive actions, no auto-execute on click",
+        "Hosted-widget data-channel split correct (structuredContent/content visible to model vs component-only _meta); raw chain-of-thought never piped into the UI; accessibility owned by component implementations / embedded app"
+      ]
+    }
+  ]
+}

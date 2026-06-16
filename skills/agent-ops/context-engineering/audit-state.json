@@ -6,7 +6,7 @@
   "drift_check": {
     "last_verified": "2026-05-18"
   },
-  "eval_artifacts": "planned",
+  "eval_artifacts": "present",
   "eval_state": "unverified",
   "routing_eval": "absent",
   "last_audited": "2026-06-01",
@@ -25,5 +25,32 @@
   "lifecycle": {
     "stale_after_days": 90,
     "review_cadence": "quarterly"
+  },
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-13",
+    "last_run": {
+      "at": "2026-06-13T09:11:17.773Z",
+      "operation": "panel",
+      "phase": "text",
+      "agent": "gpt-5.5",
+      "status": "completed",
+      "duration_ms": 217492,
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "source": "input4.token_usage"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 30,
+      "total_duration_ms": 4991805,
+      "total_tokens": 0,
+      "tokens_observed_count": 30
+    }
   }
 }

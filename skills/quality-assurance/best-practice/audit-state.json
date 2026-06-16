@@ -7,7 +7,7 @@
     "last_verified": "2026-06-01",
     "truth_source_hashes": {}
   },
-  "eval_artifacts": "none",
+  "eval_artifacts": "present",
   "eval_state": "unverified",
   "routing_eval": "absent",
   "last_audited": "2026-06-01",
@@ -25,5 +25,6 @@
   "lifecycle": {
     "stale_after_days": 180,
     "review_cadence": "quarterly"
-  }
+  },
+  "last_changed": "2026-06-11"
 }

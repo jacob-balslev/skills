@@ -1,0 +1,146 @@
+{
+  "skill_name": "swot-tows",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A nonprofit has strong local trust, limited grant-writing capacity, a new city funding program, and a competing national organization entering the region. Build a SWOT/TOWS response.",
+      "expected_output": "The agent should classify local trust as a strength, grant-writing capacity as a weakness, city funding as an opportunity, and the national entrant as a threat. It should create options such as using local trust to pursue city funding (SO), partnering or hiring grant help to pursue funding despite weakness (WO), using local trust to defend relationships against the entrant (ST), and reducing dependency on grant writing or avoiding overextension while the entrant pressures the region (WT). It should name evidence gaps and next validation.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Correctly separates internal and external factors",
+        "Creates crossed TOWS options rather than only a SWOT list",
+        "Attaches evidence gaps or assumptions",
+        "Does not treat the SWOT table as final strategy",
+        "Names a next validation or decision method"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A founder lists 'AI trend' as a strength, 'low cash' as a threat, 'brand reputation' as an opportunity, and 'slow release process' as a weakness. Review the SWOT classification.",
+      "expected_output": "The agent should flag classification problems. AI trend is external and likely an opportunity or threat depending on context, not an internal strength unless the company controls a specific AI capability. Low cash is internal and therefore a weakness, not an external threat. Brand reputation is usually an internal strength if the company owns it, not an opportunity. Slow release process is an internal weakness. The agent should rewrite the factors with evidence and scope.",
+      "type": "classification-review",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Identifies AI trend as external",
+        "Identifies low cash as internal weakness",
+        "Identifies brand reputation as likely internal strength",
+        "Identifies slow release process as internal weakness",
+        "Requires context and evidence before final labels",
+        "Does not blindly accept the user's quadrant labels"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "We already have a SWOT list for a product. Strength: fast implementation. Weakness: weak analytics. Opportunity: customers need compliance reporting this quarter. Threat: enterprise competitors are bundling reporting. Turn it into TOWS options.",
+      "expected_output": "The agent should generate SO options such as using fast implementation to ship compliance reporting quickly, WO options such as using customer compliance demand to justify analytics investment or a partner integration, ST options such as using implementation speed to counter bundled competitor offerings before they mature, and WT options such as limiting scope, validating reporting demand, or avoiding analytics-heavy promises until capability improves. It should cite crossed factors and identify assumptions.",
+      "type": "tows-generation",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Creates SO option from strength and opportunity",
+        "Creates WO option from weakness and opportunity",
+        "Creates ST option from strength and threat",
+        "Creates WT option from weakness and threat",
+        "Cites the factors behind each option",
+        "Names assumptions and evidence needed"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 4,
+      "prompt": "A team asks for SWOT, but the real question is whether an industry is attractive given buyer power, supplier power, rivalry, substitutes, and entrants. What should the agent do?",
+      "expected_output": "The agent should explain that the requested mechanism is Porter's Five Forces, not SWOT/TOWS. It can mention that SWOT may later summarize internal/external implications, but industry attractiveness and profit-pressure diagnosis require Five Forces. It should not force the five forces into SWOT quadrants.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes industry attractiveness to Five Forces",
+        "Keeps SWOT/TOWS as factor inventory and option generation",
+        "Does not force buyer/supplier/entrant/substitute/rivalry analysis into SWOT labels",
+        "Explains the mechanism-level boundary"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "prompt": "A planning document contains twenty strengths, twenty weaknesses, fifteen opportunities, and ten threats, all unsupported. Improve it using SWOT/TOWS discipline.",
+      "expected_output": "The agent should avoid treating the large list as useful by default. It should require scope, evidence, confidence, and decision relevance; prune or rank factors; mark assumptions; and only cross the most important factors into TOWS options. It should recommend evidence collection for unsupported factors and not produce a giant combinatorial matrix.",
+      "type": "evidence-quality",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Rejects unsupported laundry lists as sufficient analysis",
+        "Requires evidence and confidence labels",
+        "Prioritizes decision-relevant factors",
+        "Avoids crossing every factor with every other factor",
+        "Creates a manageable set of strategic options",
+        "Names evidence collection or validation next steps"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A CEO asks whether SWOT/TOWS proves that option A is better than option B. Option A has 60% chance of $1M upside and 40% chance of $300k loss; option B has 90% chance of $250k upside and 10% chance of $100k loss.",
+      "expected_output": "The agent should say SWOT/TOWS does not prove the better quantified option. Since probabilities and payoffs are supplied, expected value or expected utility is the right next method. SWOT/TOWS could document strategic factors around each option, but the comparison should use probability-weighted value plus downside constraints.",
+      "type": "quantitative-boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Does not use SWOT/TOWS as the deciding method",
+        "Routes quantified probability/payoff comparison to expected value",
+        "Explains SWOT/TOWS can feed context but not replace the calculation",
+        "Mentions downside constraints or risk exposure"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "A product strategy memo includes SWOT quadrants and says, 'Therefore our strategy is to win enterprise customers.' Review the reasoning.",
+      "expected_output": "The agent should flag that the conclusion is under-supported. A SWOT table can suggest options but does not itself define an integrated strategy. The agent should ask which factors lead to that customer choice, generate TOWS options if missing, and then recommend a strategy-choice framework such as Playing to Win or evidence validation before committing.",
+      "type": "strategy-overclaim",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Flags overclaim from SWOT table to final strategy",
+        "Requires factor-to-option reasoning",
+        "Suggests TOWS if actions are missing",
+        "Routes integrated choices to Playing to Win or similar strategy-choice work",
+        "Names evidence gaps before commitment"
+      ],
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    }
+  ]
+}

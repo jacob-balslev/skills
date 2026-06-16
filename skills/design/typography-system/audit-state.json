@@ -1,0 +1,55 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-08",
+  "drift_check": {
+    "last_verified": "2026-05-12"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "comprehension_state": "present",
+  "last_audited": "2026-06-13",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "REDUNDANT",
+  "lint_verdict": "PASS",
+  "drift_status": "UNKNOWN",
+  "eval_score": 4.58,
+  "eval_failed_ids": [],
+  "eval_last_run": {
+    "at": "2026-06-08T18:21:37.393Z",
+    "status": "fail",
+    "runner": "node skill-graph/lib/audit/evaluate-skill.js --mode application",
+    "receipt": ".skill-graph/logs/eval-results/typography-system/2026-06-08T18-21-37-392Z.json"
+  },
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-13",
+    "last_run": {
+      "at": "2026-06-13T16:17:18.182Z",
+      "operation": "panel",
+      "phase": "propose",
+      "agent": "opus",
+      "status": "failed",
+      "duration_ms": 53036,
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "source": "unavailable"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 27,
+      "total_duration_ms": 3765485,
+      "total_tokens": 0,
+      "tokens_observed_count": 27
+    }
+  }
+}

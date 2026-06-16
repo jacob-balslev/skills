@@ -1,0 +1,465 @@
+{
+  "skill_name": "journey-mapping",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept of the skill, Coverage, Philosophy, Verification, Do NOT Use When) and canonical journey-mapping practice (customer journey map, emotional curve / moments of truth, service blueprint with line of visibility and back-stage, current vs future state, research grounding).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "screen-list-mistaken-for-journey",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team kicks off a 'checkout journey map' by listing the five checkout screens in order and labeling each with the UI action that happens on it.",
+      "context": "They believe the ordered screen list is the journey map and are ready to start redesigning screens.",
+      "question": "How should the agent respond?",
+      "expected_flags": [
+        "Flags the screen list as a task flow, not a journey map",
+        "Notes the missing emotional curve, cross-channel/time span, and back-stage layer",
+        "Adds user-perspective stages and lanes for actions, thoughts, and feelings",
+        "Insists on grounding pain points in research and naming opportunity areas at specific stages"
+      ],
+      "expected_fix_hints": [
+        "Reframe stages from the user's perspective and add an emotional curve",
+        "Identify moments of truth and back-stage dependencies before redesigning screens"
+      ],
+      "absent_signals": [
+        "Do not accept the bare screen list as a journey map",
+        "Do not jump to per-screen redesign without the experience arc"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags the screen list as a task flow, not a journey map."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes the missing emotional curve, cross-channel/time span, and back-stage layer."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Adds user-perspective stages and lanes for actions, thoughts, and feelings."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Insists on grounding pain points in research and naming opportunity areas at specific stages."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reframe stages from the user's perspective and add an emotional curve."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Identify moments of truth and back-stage dependencies before redesigning screens."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept the bare screen list as a journey map."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not jump to per-screen redesign without the experience arc."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "saas-onboarding-churn",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A SaaS product loses many customers during a multi-day onboarding that spans automated email, the web app, and a human customer-success call. Leadership wants to know where to invest.",
+      "context": "Churn is concentrated but the team cannot agree on which step causes it.",
+      "question": "How should the agent map this to locate the moment of truth?",
+      "expected_flags": [
+        "Lays onboarding out as stages over multiple days and across the three channels",
+        "Plots an emotional curve to locate the trough where churn is decided",
+        "Adds a service-blueprint back-stage layer (CS rep, systems, support processes) below the line of visibility",
+        "Grounds the trough in evidence (support logs, interviews) and names opportunity areas there"
+      ],
+      "expected_fix_hints": [
+        "Build a cross-channel timeline with actions/thoughts/feelings lanes",
+        "Add the back-stage layer for the moments that depend on hidden handoffs"
+      ],
+      "absent_signals": [
+        "Do not optimize a single screen in isolation",
+        "Do not assert the cause without research grounding"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Lays onboarding out as stages over multiple days and across the three channels."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Plots an emotional curve to locate the trough where churn is decided."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Adds a service-blueprint back-stage layer (CS rep, systems, support processes) below the line of visibility."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Grounds the trough in evidence (support logs, interviews) and names opportunity areas there."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Build a cross-channel timeline with actions/thoughts/feelings lanes."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add the back-stage layer for the moments that depend on hidden handoffs."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not optimize a single screen in isolation."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assert the cause without research grounding."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "happy-path-map",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A stakeholder shares a future-state journey map where every stage has a positive verb ('delighted', 'empowered') and the emotional curve is a smooth upward wave with no dips.",
+      "context": "No research was cited; the map was drafted in a single workshop from intuition.",
+      "question": "How should the agent critique and improve the map?",
+      "expected_flags": [
+        "Identifies the anodyne happy-path failure mode — it describes hopes, not research",
+        "Requires real lows in the emotional curve; a curve with no dips omits the hard parts",
+        "Demands each pain point/trough cite a research source",
+        "Names specific opportunity areas at the troughs rather than generic praise"
+      ],
+      "expected_fix_hints": [
+        "Ground the map in synthesis output before treating it as decision-ready",
+        "Re-plot the curve from evidence, exposing the troughs"
+      ],
+      "absent_signals": [
+        "Do not accept an all-positive curve as credible",
+        "Do not treat an unresearched map as a redesign brief"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies the anodyne happy-path failure mode — it describes hopes, not research."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires real lows in the emotional curve; a curve with no dips omits the hard parts."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Demands each pain point/trough cite a research source."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names specific opportunity areas at the troughs rather than generic praise."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Ground the map in synthesis output before treating it as decision-ready."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-plot the curve from evidence, exposing the troughs."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept an all-positive curve as credible."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat an unresearched map as a redesign brief."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "service-blueprint-handoff",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A retail experience lets a customer return an online order to a physical store. Returns frequently fail at the counter even though every screen and email looks fine in isolation.",
+      "context": "The failure seems to live in handoffs between the web system, the warehouse, and the in-store POS that the customer never sees.",
+      "question": "What kind of map should the agent build and why?",
+      "expected_flags": [
+        "Chooses a service blueprint because the failure lives in back-stage handoffs",
+        "Draws the line of visibility explicitly, separating front-stage from back-stage",
+        "Includes both human and system actors in the back-stage steps (web system, warehouse, POS)",
+        "Maps the cross-channel experience over time (online → physical store)"
+      ],
+      "expected_fix_hints": [
+        "Extend the journey map downward into back-stage and support processes",
+        "Locate the handoff that breaks and name it as an opportunity area"
+      ],
+      "absent_signals": [
+        "Do not stop at the front-stage screens and emails",
+        "Do not draw a system architecture diagram in place of the experience map"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Chooses a service blueprint because the failure lives in back-stage handoffs."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Draws the line of visibility explicitly, separating front-stage from back-stage."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Includes both human and system actors in the back-stage steps (web system, warehouse, POS)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Maps the cross-channel experience over time (online → physical store)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Extend the journey map downward into back-stage and support processes."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Locate the handoff that breaks and name it as an opportunity area."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not stop at the front-stage screens and emails."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not draw a system architecture diagram in place of the experience map."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "scope-and-granularity",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "An exec asks for 'one journey map of the whole product' to align the leadership team, while a designer wants a detailed map to drive a specific onboarding redesign.",
+      "context": "The team has time and budget for one mapping effort, not two.",
+      "question": "How should the agent scope the map(s)?",
+      "expected_flags": [
+        "Matches granularity to the decision the map will inform",
+        "A board-level alignment map is intentionally coarser than a redesign brief",
+        "Recommends distinct artifacts/zoom levels for distinct decisions rather than one map serving both",
+        "Distinguishes current-state (document reality, surface pain) from future-state (propose redesign, align stakeholders)"
+      ],
+      "expected_fix_hints": [
+        "Produce a coarse lifecycle map for alignment and a zoomed-in moment-of-truth map for the redesign",
+        "Pick scope (single transaction vs lifecycle vs one moment) per decision"
+      ],
+      "absent_signals": [
+        "Do not force one granularity to serve two different decisions",
+        "Do not default to maximum detail regardless of the decision"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Matches granularity to the decision the map will inform."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A board-level alignment map is intentionally coarser than a redesign brief."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends distinct artifacts/zoom levels for distinct decisions rather than one map serving both."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes current-state (document reality, surface pain) from future-state (propose redesign, align stakeholders)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Produce a coarse lifecycle map for alignment and a zoomed-in moment-of-truth map for the redesign."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pick scope (single transaction vs lifecycle vs one moment) per decision."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not force one granularity to serve two different decisions."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not default to maximum detail regardless of the decision."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the journey-mapping owner to (a) decompose the steps inside the file-upload modal, (b) draw the microservice call graph for the checkout API, and (c) define the site's top-level navigation structure.",
+      "context": "The team treats 'journey mapping' as the home for all flow, system, and structure diagrams.",
+      "question": "How should the agent scope these requests?",
+      "expected_flags": [
+        "Single-modal step decomposition is out of scope — that is task-analysis",
+        "A microservice call graph is system topology, not human experience — an engineering artifact, not a journey map",
+        "Top-level navigation structure is out of scope — that is information-architecture",
+        "Offers the in-scope part: the cross-channel experience arc, emotional curve, and back-stage where relevant"
+      ],
+      "expected_fix_hints": [
+        "Redirect modal steps to task-analysis, the call graph to engineering/architecture, and nav structure to information-architecture",
+        "Deliver the experience-over-time map for the parts that are genuinely journeys"
+      ],
+      "absent_signals": [
+        "Do not decompose the upload modal here",
+        "Do not draw the microservice topology or the navigation tree as a journey map"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Single-modal step decomposition is out of scope — that is task-analysis."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A microservice call graph is system topology, not human experience — an engineering artifact, not a journey map."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Top-level navigation structure is out of scope — that is information-architecture."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offers the in-scope part: the cross-channel experience arc, emotional curve, and back-stage where relevant."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Redirect modal steps to task-analysis, the call graph to engineering/architecture, and nav structure to information-architecture."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Deliver the experience-over-time map for the parts that are genuinely journeys."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not decompose the upload modal here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not draw the microservice topology or the navigation tree as a journey map."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "unresearched-map",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A team wants to build a journey map for a new audience segment they have never interviewed, planning to fill the actions/thoughts/feelings lanes from team assumptions.",
+      "context": "No qualitative research exists yet for this segment, but the deadline is tight.",
+      "question": "How should the agent proceed?",
+      "expected_flags": [
+        "States that an unresearched journey map is fiction",
+        "Recommends running user-research and research-synthesis first",
+        "Refuses to present an assumption-filled map as decision-ready",
+        "Notes that map credibility comes from grounding in synthesis output"
+      ],
+      "expected_fix_hints": [
+        "Sequence research → synthesis → map rather than assumption → map",
+        "If a draft is needed, mark every assumed element as unvalidated pending research"
+      ],
+      "absent_signals": [
+        "Do not fill the lanes from team intuition and call it grounded",
+        "Do not treat the assumption-based map as a redesign brief"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: States that an unresearched journey map is fiction."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends running user-research and research-synthesis first."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Refuses to present an assumption-filled map as decision-ready."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes that map credibility comes from grounding in synthesis output."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Sequence research → synthesis → map rather than assumption → map."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: If a draft is needed, mark every assumed element as unvalidated pending research."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not fill the lanes from team intuition and call it grounded."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat the assumption-based map as a redesign brief."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

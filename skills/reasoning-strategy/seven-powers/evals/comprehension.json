@@ -1,0 +1,100 @@
+{
+  "skill_name": "seven-powers",
+  "subject": "Hamilton Helmer's Seven Powers",
+  "adjacent_concepts": [
+    "porters-five-forces",
+    "playing-to-win",
+    "blue-ocean-strategy",
+    "vrio",
+    "swot-tows",
+    "expected-value",
+    "prioritization"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define Seven Powers in 2-3 sentences. Name all seven powers and explain what the framework diagnoses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not define Seven Powers as generic SWOT, industry attractiveness, or any attractive business trait."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Seven Powers. Include benefit, barrier, persistence, rival imitation, firm-level economics, timing/phase, and false positives.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not accept a power claim without both benefit and barrier."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill exist for agents? Name the moat-claim failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish Seven Powers from Porter's Five Forces, Playing to Win, Blue Ocean Strategy, VRIO, and SWOT/TOWS. Give a mechanism-level reason each neighbor is different.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not collapse all strategy frameworks into a single moat checklist."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place the seven powers into a practical taxonomy by mechanism, timing/phase, and common false-positive risk.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for Seven Powers that preserves benefit plus barrier. Then name one bad analogy and explain what it gets wrong.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "A developer platform says it has Power because it has many users, a plugin ecosystem, high migration cost, and a faster internal release process. Apply Seven Powers by identifying candidate powers, testing benefit and barrier, labeling false positives, and naming strategy implications.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not accept many users alone as network economies or fast releases alone as process power."
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'The company is growing fast in a large market and has loyal users, so it clearly has a moat.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not treat growth, market size, loyalty, or awareness as proven Power without a benefit-plus-barrier mechanism."
+    }
+  ]
+}

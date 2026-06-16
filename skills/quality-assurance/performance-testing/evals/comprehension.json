@@ -1,0 +1,158 @@
+{
+  "skill_name": "performance-testing",
+  "subject": "Controlled-load performance testing",
+  "adjacent_concepts": [
+    "performance-engineering",
+    "performance-budgets",
+    "observability-modeling",
+    "error-tracking",
+    "testing-strategy",
+    "integration-test-design",
+    "e2e-test-design",
+    "mutation-testing"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define performance testing in 2-3 sentences. Include controlled load, non-functional properties, SLO thresholds, and how it differs from functional correctness testing.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Measures non-functional properties such as latency, throughput, error rate, resource use, or saturation",
+        "Runs the system under controlled load",
+        "Verifies against explicit SLO or threshold targets",
+        "Distinguishes from functional tests that check correct output",
+        "Mentions offline/controlled measurement rather than production observability"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of performance testing. Name at least 8 primitives and explain how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "At least 8 of: load profile, workload mix, latency percentile, throughput, error rate, resource utilization, saturation, SLO, threshold, environment fidelity, load generator, coordinated omission, duration",
+        "Explains workload plus load shape produces measured metrics",
+        "Explains SLO thresholds turn measurements into pass/fail verdicts",
+        "Explains environment fidelity determines what the result actually certifies",
+        "Explains percentiles expose tail behavior that averages hide"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill exist? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents intuition-based claims that a system is fast enough",
+        "Prevents measurements without SLO verdicts",
+        "Prevents average-latency acceptance criteria",
+        "Prevents testing an unrealistic workload or environment",
+        "Prevents missing leak/degradation failures that require soak tests",
+        "Prevents confusing optimization work with measurement work"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish performance testing from performance engineering, performance budgets, observability, testing strategy, integration/e2e tests, and mutation testing.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "performance-engineering profiles and optimizes slow paths",
+        "performance-budgets declares thresholds and consequences",
+        "observability measures production runtime behavior",
+        "testing-strategy chooses the overall mix and cadence of test levels",
+        "integration/e2e tests own correctness across seams or user journeys",
+        "mutation-testing measures whether the test suite catches defects",
+        "performance-testing owns controlled-load measurement and verification"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify smoke, load, stress, spike, soak, and breakpoint tests. What does each verify?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Smoke verifies the script/system functions under tiny load",
+        "Load/average verifies SLO at expected traffic",
+        "Stress verifies behavior beyond expected capacity and graceful failure",
+        "Spike verifies sudden load increase, elasticity, and recovery",
+        "Soak verifies leaks and degradation over time",
+        "Breakpoint gradually increases to failure to quantify capacity ceiling"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for performance testing that preserves controlled load, instrumentation, SLO verdicts, and failure-mode discovery. Then name one bad analogy.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses bridge/load-bearing, stress rig, or capacity inspection analogy",
+        "Maps known load to traffic profile",
+        "Maps instrumentation to latency/resource/error metrics",
+        "Maps SLOs to pass/fail acceptance",
+        "Rejects a bad analogy that treats a single happy-path request or average as enough"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A team reports average latency of 80ms from a staging load test, but p99 is 4s, the workload is all reads, and production has mixed reads/writes and larger data. Diagnose the test quality and repair it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects average latency as acceptance criterion",
+        "Uses p95/p99 thresholds tied to SLOs",
+        "Flags unrealistic workload mix",
+        "Flags environment/data fidelity gap",
+        "Requires error rate, throughput, resource, and saturation metrics",
+        "Does not certify production readiness from the reported test"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'The load test passed because average latency was good and the server handled the requested RPS for five minutes.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Corrects average latency to percentile/distribution acceptance",
+        "Requires explicit SLO thresholds",
+        "Mentions duration and load shape must match the failure mode",
+        "Mentions error rate and resource/saturation metrics",
+        "Warns five minutes cannot reveal soak/leak issues",
+        "Mentions generator/coordinated omission concerns when relevant"
+      ]
+    }
+  ]
+}

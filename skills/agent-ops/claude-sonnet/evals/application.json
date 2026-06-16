@@ -1,0 +1,428 @@
+{
+  "skill_name": "claude-sonnet",
+  "subject": "routing a task to the balanced implementation tier (Claude Sonnet)",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "claude-opus",
+    "claude-haiku",
+    "autonomous-loop-patterns",
+    "claude-api"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "default-lane-recognition",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An engineer has a well-specified bug fix in an understood codebase plus its unit tests, and asks whether to use the frontier tier 'to be sure it's done right' or the cheapest tier 'to keep it cheap.'",
+      "context": "The work is ordinary, well-specified implementation; the engineer frames it as a binary between most-capable and cheapest.",
+      "question": "Which tier fits, and on what reasoning?",
+      "expected_flags": [
+        "Well-specified feature/bug work plus tests is the balanced tier's default lane, not a frontier-vs-fast binary",
+        "There is no named difficulty signal that earns the frontier tier here",
+        "The fast tier under-serves genuine multi-step implementation work"
+      ],
+      "expected_fix_hints": [
+        "Route to the balanced tier (claude-sonnet) as the default for this work",
+        "Set effort explicitly to tune the cost/latency/quality balance if needed"
+      ],
+      "absent_signals": [
+        "Do not escalate to the frontier tier for ordinary well-specified implementation",
+        "Do not drop genuine multi-step coding to the fast tier to save money"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Well-specified feature/bug work plus tests is the balanced tier's default lane, not a frontier-vs-fast binary."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: There is no named difficulty signal that earns the frontier tier here."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The fast tier under-serves genuine multi-step implementation work."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to the balanced tier (claude-sonnet) as the default for this work."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Set effort explicitly to tune the cost/latency/quality balance if needed."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not escalate to the frontier tier for ordinary well-specified implementation."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not drop genuine multi-step coding to the fast tier to save money."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "1m-context-billing-caveat",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A cost-conscious team needs to process a task that genuinely requires the full 1M-context window. They plan to use the balanced tier instead of the frontier tier 'because the balanced tier is always cheaper,' running on a flat-rate MAX-style subscription.",
+      "context": "Cost discipline is the explicit goal; the runner is a subscription where the frontier tier's 1M-context mode is entitlement-included but the balanced tier's 1M-context mode routes to per-token API billing.",
+      "question": "Is the cost reasoning sound? What should they check?",
+      "expected_flags": [
+        "'The balanced tier is always cheaper' has a real exception at the 1M-context tier on subscription runners",
+        "On such a runner the balanced tier's 1M-context mode can route to metered per-token billing while the frontier tier's 1M-context is entitlement-included",
+        "Which tier is entitlement-included for the full window must be checked before assuming the balanced tier is cheaper"
+      ],
+      "expected_fix_hints": [
+        "Check which tier is entitlement-included for the 1M window on this specific runner before choosing",
+        "If the frontier tier is the entitlement-included option for the full window, it may be the cheaper choice here"
+      ],
+      "absent_signals": [
+        "Do not assume the balanced tier is cheaper for 1M-context work on a subscription runner without checking entitlement",
+        "Do not treat 'balanced is always cheaper' as exception-free"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: 'The balanced tier is always cheaper' has a real exception at the 1M-context tier on subscription runners."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: On such a runner the balanced tier's 1M-context mode can route to metered per-token billing while the frontier tier's 1M-context is entitlement-included."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Which tier is entitlement-included for the full window must be checked before assuming the balanced tier is cheaper."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check which tier is entitlement-included for the 1M window on this specific runner before choosing."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: If the frontier tier is the entitlement-included option for the full window, it may be the cheaper choice here."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the balanced tier is cheaper for 1M-context work on a subscription runner without checking entitlement."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'balanced is always cheaper' as exception-free."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "escalation-on-hardness",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A task starts as 'refactor this module' but turns out to require designing a new cross-service boundary and reasoning about an intermittent race condition. The author keeps it on the balanced tier because 'it's still just code.'",
+      "context": "The work has crossed from implementation into architecture and hard multi-system debugging mid-task.",
+      "question": "Should this stay on the balanced tier? Explain the boundary.",
+      "expected_flags": [
+        "Architecture/boundary design and intermittent race-condition debugging are difficulty signals that earn the frontier tier",
+        "The escalation upward is triggered by task hardness, which is present here",
+        "Staying on the balanced tier risks the harder reasoning the frontier tier's ceiling and effort settings provide"
+      ],
+      "expected_fix_hints": [
+        "Escalate the boundary-design and race-condition work to the frontier tier (claude-opus)",
+        "Keep routine implementation on the balanced tier; move only the hard sub-tasks up"
+      ],
+      "absent_signals": [
+        "Do not keep architecture/intermittent-debugging work on the balanced tier just because it is 'still code'",
+        "Do not treat the escalation-up trigger (hardness) as the same as the drop-down trigger (mechanical)"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Architecture/boundary design and intermittent race-condition debugging are difficulty signals that earn the frontier tier."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The escalation upward is triggered by task hardness, which is present here."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Staying on the balanced tier risks the harder reasoning the frontier tier's ceiling and effort settings provide."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Escalate the boundary-design and race-condition work to the frontier tier (claude-opus)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep routine implementation on the balanced tier; move only the hard sub-tasks up."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep architecture/intermittent-debugging work on the balanced tier just because it is 'still code'."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat the escalation-up trigger (hardness) as the same as the drop-down trigger (mechanical)."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "de-escalation-on-mechanical",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A batch job needs to convert 50,000 webhook payloads into a target schema, one cheap structured-output call each. The team uses the balanced tier for all of them because it is 'the default.'",
+      "context": "The work is high-volume, mechanical, latency- and cost-dominated slot-filling against a fixed schema.",
+      "question": "Is the balanced tier the right home for this? Where should it go?",
+      "expected_flags": [
+        "High-volume mechanical slot-filling is a drop-down signal — the balanced tier is wasted on it",
+        "The drop-down trigger (mechanical/high-volume) is distinct from keeping work on the default lane",
+        "Per-call cost and latency dominate at this volume, favoring the fast tier or a script"
+      ],
+      "expected_fix_hints": [
+        "Route the bulk conversion to the fast tier (claude-haiku) or a deterministic script",
+        "Reserve the balanced tier for genuine multi-step implementation"
+      ],
+      "absent_signals": [
+        "Do not keep high-volume mechanical conversion on the balanced tier merely because it is the default",
+        "Do not treat 'default lane' as 'all work regardless of mechanical signal'"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: High-volume mechanical slot-filling is a drop-down signal — the balanced tier is wasted on it."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The drop-down trigger (mechanical/high-volume) is distinct from keeping work on the default lane."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Per-call cost and latency dominate at this volume, favoring the fast tier or a script."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the bulk conversion to the fast tier (claude-haiku) or a deterministic script."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve the balanced tier for genuine multi-step implementation."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep high-volume mechanical conversion on the balanced tier merely because it is the default."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'default lane' as 'all work regardless of mechanical signal'."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "output-ceiling-awareness",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A task on the balanced tier needs to emit a single very large generated artifact in one response and the author assumes the same output ceiling as the frontier tier.",
+      "context": "The decision rests on a max-output capability fact that differs between the balanced and frontier tiers.",
+      "question": "What capability constraint applies, and how should it be handled?",
+      "expected_flags": [
+        "The balanced tier's max output ceiling is smaller than the frontier tier's, so a very large single output may not fit",
+        "Large generations must stream, and above the ceiling the work may need a different tier or chunking",
+        "The exact ceiling should be read live rather than assumed equal to the frontier tier"
+      ],
+      "expected_fix_hints": [
+        "Stream large outputs and chunk if the single-response ceiling is exceeded",
+        "Verify the current max-output number live; escalate or split if the artifact exceeds it"
+      ],
+      "absent_signals": [
+        "Do not assume the balanced tier shares the frontier tier's max-output ceiling",
+        "Do not quote a fixed output ceiling from memory without verifying live"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The balanced tier's max output ceiling is smaller than the frontier tier's, so a very large single output may not fit."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Large generations must stream, and above the ceiling the work may need a different tier or chunking."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The exact ceiling should be read live rather than assumed equal to the frontier tier."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Stream large outputs and chunk if the single-response ceiling is exceeded."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify the current max-output number live; escalate or split if the artifact exceeds it."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the balanced tier shares the frontier tier's max-output ceiling."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not quote a fixed output ceiling from memory without verifying live."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "agentic-coding-default",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A well-specified agentic coding workflow (multi-step tool use against an understood repo) needs a model. The team debates between the frontier and fast tiers and overlooks the middle.",
+      "context": "The workflow is well-specified multi-step coding — neither novel architecture nor mechanical slot-filling.",
+      "question": "Which tier should run this workflow?",
+      "expected_flags": [
+        "Well-specified agentic coding/tool-use is the balanced tier's lane",
+        "Skipping the middle tier in a frontier-vs-fast debate is the exact gap the default lane fills",
+        "Effort can be set explicitly to balance cost/latency/quality on the balanced tier"
+      ],
+      "expected_fix_hints": [
+        "Route the workflow to the balanced tier (claude-sonnet)",
+        "Tune effort explicitly rather than escalating or dropping tiers"
+      ],
+      "absent_signals": [
+        "Do not force a frontier-vs-fast choice that ignores the balanced default lane",
+        "Do not escalate well-specified agentic coding without a difficulty signal"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Well-specified agentic coding/tool-use is the balanced tier's lane."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Skipping the middle tier in a frontier-vs-fast debate is the exact gap the default lane fills."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Effort can be set explicitly to balance cost/latency/quality on the balanced tier."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the workflow to the balanced tier (claude-sonnet)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Tune effort explicitly rather than escalating or dropping tiers."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not force a frontier-vs-fast choice that ignores the balanced default lane."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not escalate well-specified agentic coding without a difficulty signal."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "harness-and-loop-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks how to design the resumable supervisor loop their balanced-tier agent will run inside, and how to write the API request that sets the thinking config — calling both 'Sonnet questions.'",
+      "context": "Loop topology and API call syntax are separate concerns from which model tier to pick; the team folds them under the Sonnet label.",
+      "question": "How should the agent scope and route this request?",
+      "expected_flags": [
+        "Designing the resumable supervisor loop is loop architecture (autonomous-loop-patterns), not a model-tier decision",
+        "Writing the API request with thinking config is call-site syntax (the claude-api reference), not the routing decision",
+        "Neither sub-question is answered by the balanced-tier routing skill; both should be redirected"
+      ],
+      "expected_fix_hints": [
+        "Route the loop-topology design to autonomous-loop-patterns",
+        "Route the API request syntax to the claude-api reference"
+      ],
+      "absent_signals": [
+        "Do not answer loop-topology design as if it were a model-tier choice",
+        "Do not write the API request syntax under the balanced-tier routing skill's lane"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Designing the resumable supervisor loop is loop architecture (autonomous-loop-patterns), not a model-tier decision."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Writing the API request with thinking config is call-site syntax (the claude-api reference), not the routing decision."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Neither sub-question is answered by the balanced-tier routing skill; both should be redirected."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the loop-topology design to autonomous-loop-patterns."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the API request syntax to the claude-api reference."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer loop-topology design as if it were a model-tier choice."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the API request syntax under the balanced-tier routing skill's lane."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

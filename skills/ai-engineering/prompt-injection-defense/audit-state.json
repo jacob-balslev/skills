@@ -1,0 +1,75 @@
+{
+  "schema_version": 8,
+  "version": "1.0.1",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-07",
+  "drift_check": {
+    "last_verified": "2026-06-13",
+    "truth_source_hashes": {
+      "https://genai.owasp.org/llmrisk/llm01-prompt-injection/": "9aaab6a98d7831e02639b228b4daf1ac74b36f5473528ffa09ad076c772a9c49",
+      "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html": "d4ff635b98c6f195e1706811131716f717bc64fd1ec2b72ec3ded07da8564e93",
+      "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks": "880ff6fb99311f5ea5cef3dc3202b4e30f75d2f1122778e595e5b132755f4465",
+      "https://csrc.nist.gov/pubs/ai/100/2/e2025/final": "a244f97ce86785a9bde46615ffbb1dbcbfa61d92c5d1556d41d4259354cbbadb",
+      "https://www.ncsc.gov.uk/blog-post/prompt-injection-is-not-sql-injection": "265ca76e29386695588a726b2085c699922178f79375b0e8d4b9e8ec7221665c",
+      "https://arxiv.org/abs/2302.12173": "03106dd1038645558b64199e64bb5d51cd0f3b381e32bd10cf62e42c300d52c6",
+      "skills/ai-engineering/prompt-injection-defense/references/prompt-injection-defense-2026-06-07.md": "f348a6ba78b5da1e852550f5d2a4f21e4161b6a44756cf022b2daa69289985a2"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_audited": "2026-06-13",
+  "last_changed": "2026-06-07",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "MIXED",
+  "lint_verdict": "PASS",
+  "drift_status": "EXTERNAL_UNHASHED",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 90,
+    "review_cadence": "quarterly"
+  },
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-13",
+    "last_run": {
+      "at": "2026-06-13T05:21:57.161Z",
+      "operation": "evaluate",
+      "phase": "grader",
+      "agent": "gpt-5.5",
+      "status": "completed",
+      "duration_ms": 40434,
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "source": "unavailable"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 379,
+      "total_duration_ms": 10761509,
+      "total_tokens": 0,
+      "tokens_observed_count": 379
+    }
+  },
+  "eval_last_run": {
+    "at": "2026-06-13T05:21:57.171Z",
+    "status": "mixed",
+    "runner": "node skill-graph/lib/audit/evaluate-skill.js --mode application",
+    "receipt": ".skill-graph/logs/eval-results/prompt-injection-defense/2026-06-13T05-21-57-166Z.json",
+    "receipt_hash": "3362d8e2fff15639a3426b8c0c23ab578db5d2e420dafe98e61074d159d97c8b",
+    "model": "gpt-5.5"
+  }
+}

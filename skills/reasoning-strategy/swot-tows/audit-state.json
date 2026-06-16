@@ -1,0 +1,34 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-08",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/swot-tows/references/swot-tows-sources.md": "ceacfca9b1a8d6aae23974ac1488054524388b61595ecbd7b93da98b369b26bc",
+      "skills/reasoning-strategy/swot-tows/references/upstream-displacement-2026-06-02.md": "7679a9323680efa6ed711733dbdd525023b82d70d95ef3105ccb4c1193982268"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_changed": "2026-06-08",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "last_audited": "2026-06-08",
+  "lint_verdict": "PASS",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "PROVISIONAL",
+  "application_verdict": "PROVISIONAL"
+}

@@ -1,0 +1,99 @@
+{
+  "skill_name": "test-coverage-strategy",
+  "subject": "strategic code-coverage interpretation",
+  "adjacent_concepts": [
+    "testing-strategy",
+    "mutation-testing",
+    "test-driven-development",
+    "test-doubles-design",
+    "eval-driven-development",
+    "performance-testing"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define test-coverage strategy as this skill teaches it. Your answer must distinguish structural reach from behavioral verification and explain why coverage is a diagnostic signal rather than a quality target.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "principle_grounded",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain Marick's floor-vs-ceiling distinction for coverage. Include why uncovered code is strong evidence of missing tests while covered code is weak evidence of good tests.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "principle_grounded",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not claim that high coverage proves the suite verifies behavior."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does this skill warn against using 100% line coverage as a blanket build gate? Name at least three Goodhart-style failure modes the policy can create.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not say the answer is simply to lower the number without changing the policy design."
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A team asks whether a webhook fix should be covered by a unit test, integration test, or contract test. Should test-coverage-strategy own the primary decision? Name the better owner and explain when coverage strategy re-enters.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not route primary test-level selection to test-coverage-strategy; the correct primary owner is testing-strategy."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify these coverage concerns by criterion or companion signal: function, line, branch, condition, MC/DC, path, mutation testing, denominator hygiene. Concerns: an untouched function, a line never executed, an untaken else branch, a short-circuited access-check sub-expression, aviation Level A decision independence, loop path explosion, tests that reach code but would not catch a defect, a sudden coverage jump after excluding files.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use the cell-phone coverage-map analogy from the skill to explain why a green coverage report is not the same thing as a working test suite.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "principle_grounded",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: an AI agent adds tests that raise line coverage from 61% to 92%, but most tests only call functions and assert that the return value is not null. Apply the skill to decide how to interpret the coverage rise and what evidence to require before accepting the tests.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not accept the coverage rise as quality evidence without behavioral oracle review."
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this misconception: 'If a module has 100% line coverage, it is fully tested, so mutation testing or assertion review is unnecessary.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "principle_grounded",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not equate covered with tested."
+    }
+  ]
+}

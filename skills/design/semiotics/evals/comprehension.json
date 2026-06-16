@@ -1,0 +1,147 @@
+{
+  "skill_name": "semiotics",
+  "subject": "design",
+  "adjacent_concepts": [
+    "microcopy",
+    "visual-design-foundations",
+    "a11y",
+    "semantics",
+    "semantic-relations",
+    "linguistics"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define semiotics for interface design in 2-3 sentences. Distinguish signifier from signified and name the foundational models the skill draws on.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Defines semiotics as the analysis/design of multi-channel sign systems, not aesthetic taste",
+        "Signifier = the perceivable form (icon, color, shape, position, word); signified = the concept/state/action/judgment it points to",
+        "Names the models: Peirce (icon/index/symbol), Saussure (signifier/signified), Barthes (denotation/connotation/myth), Norman (affordance)",
+        "States the goal is coherent intended meaning so users do not have to infer"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Use Peirce, Saussure, Barthes, and Norman to analyze a warning badge that combines a triangle icon, yellow color, and the word 'Review'.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies the triangle/icon channel via icon/index/symbol reasoning",
+        "Separates each signifier (triangle, yellow, the word) from its signified",
+        "Separates literal denotation (caution) from connotation/judgment (attention needed, possibly error)",
+        "Uses signifier/affordance language for the action expectation the badge creates",
+        "Checks whether all three channels point to the same intended state"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "When should an abstract or unfamiliar icon be paired with text, and when can a symbol stand alone? Explain the tradeoff using the icon/index/symbol distinction.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Symbols are arbitrary conventions — efficient once learned, opaque before",
+        "Abstract/unfamiliar icons need text pairing until the convention is learned",
+        "Strong existing convention (or a clear iconic resemblance) can carry an icon alone",
+        "Names the tradeoff: discoverability/clarity for first-time users vs. fluency/density for experts"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A product team says users misread a dashboard because green means both 'revenue went up' and 'costs went up'. Diagnose the semiotic problem and prescribe the fix.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Identifies a denotation/connotation conflict — direction of change vs. business judgment",
+        "Explains that green connotes 'good' so a cost increase reads as positive",
+        "Notes color is already communicating whether intended or not",
+        "Recommends pairing color with text, icon, shape, or another sign channel (never color alone)",
+        "Frames the fix as preserving trust and reducing misread inference"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Audit a disabled button that only becomes pale gray but still has hover styling and sits in the primary-action position of a dialog. What is wrong and how should it be fixed?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Identifies a weak/conflicting anti-affordance — greying alone is too subtle",
+        "Notes hover styling and primary placement still signify actionability",
+        "Recommends a strong anti-affordance: remove interactive signifiers, change cursor, reduce perceived affordance",
+        "Notes color alone is not a sufficient state signal",
+        "Checks that text/icon/shape/state cues all agree the element is unavailable"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate routes 'draft the exact wording for this disabled-button tooltip' and 'pick the hex value for the warning badge' to the semiotics skill. Are these in scope? Distinguish semiotics from microcopy, visual-design-foundations, a11y, and semantics.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Neither is in scope: wording is microcopy, the hex value is visual-design-foundations/a11y",
+        "Semiotics owns the sign-system reasoning (what the sign should communicate), not the words or the craft values",
+        "a11y owns contrast/non-color-alternative compliance; semantics owns single-identifier meaning encoding",
+        "Offers the in-scope part: whether the chosen signs coherently signal 'unavailable' / 'warning'"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A designer says icon confusion is just subjective taste and users will learn the icon over time. Correct the misconception.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Rejects 'sign-system failures are merely taste' — every element communicates whether intended or not",
+        "Explains ambiguous icons impose inference cost and erode trust (sign drift compounds)",
+        "Notes only a few icons are widely recognized without labels; icon polysemy is the most common failure",
+        "Recommends text pairing, convention alignment, or testing rather than assuming meaning emerges automatically"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a surface's sign system is coherent after applying this skill?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "No signifier points to multiple unintended signifieds within the same system context",
+        "Important meanings are not encoded through color alone",
+        "Interactive vs. non-interactive states have distinct affordance signals",
+        "Icon metaphors are coherent, learnable, and consistent across surfaces",
+        "Direction (denotation) and judgment (connotation) are separated in metric/financial UI",
+        "Code-facing signs (function/variable/endpoint names) are not vague signifier failures"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,332 @@
+{
+  "skill_name": "debugging",
+  "subject": "failure reproduction and root-cause isolation",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": [
+    "skills/skills/software-engineering-method/debugging/SKILL.md",
+    "skill-graph/examples/evals/debugging.json"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "ci-only-failure",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A test passes locally but fails in CI after a dependency bump.",
+      "context": "The failure log shows a timezone-sensitive assertion, but the changed dependency is unrelated at first glance.",
+      "question": "What should the agent do before proposing a code fix?",
+      "expected_flags": [
+        "Requires reproducing or simulating the CI-only failure before patching.",
+        "Captures evidence at the moment of failure, including environment differences.",
+        "Separates symptom from root cause before choosing a fix."
+      ],
+      "expected_fix_hints": [
+        "Compare local and CI environment variables, timezone, dependency lockfile, and test seed.",
+        "Run the failing test with CI-like settings.",
+        "Verify the eventual fix against the same failure path and add a regression test."
+      ],
+      "absent_signals": [
+        "Do not patch the assertion only because the error message mentions time.",
+        "Do not declare the dependency bump guilty without evidence."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires reproducing or simulating the CI-only failure before patching."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Captures evidence at the moment of failure, including environment differences."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Separates symptom from root cause before choosing a fix."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Compare local and CI environment variables, timezone, dependency lockfile, and test seed."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run the failing test with CI-like settings."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify the eventual fix against the same failure path and add a regression test."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not patch the assertion only because the error message mentions time."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not declare the dependency bump guilty without evidence."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "intermittent-runtime-bug",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A webhook handler intermittently double-processes the same event in production.",
+      "context": "Logs show duplicate order updates, but retries and concurrent workers are both plausible causes.",
+      "question": "How should debugging structure the investigation?",
+      "expected_flags": [
+        "Starts with deterministic reproduction or enough instrumentation to make the failure observable.",
+        "Narrows scope by bisection across retry handling, idempotency checks, and worker concurrency.",
+        "Requires the hypothesis to explain all evidence before implementing the fix."
+      ],
+      "expected_fix_hints": [
+        "Add event-id correlation logging at the idempotency boundary.",
+        "Test duplicate delivery and concurrent processing separately.",
+        "Verify with fix-applied and fix-reverted runs."
+      ],
+      "absent_signals": [
+        "Do not add a broad catch-all lock without proving the race.",
+        "Do not stop at 'webhooks retry sometimes' if concurrency evidence remains unexplained."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Starts with deterministic reproduction or enough instrumentation to make the failure observable."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Narrows scope by bisection across retry handling, idempotency checks, and worker concurrency."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires the hypothesis to explain all evidence before implementing the fix."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add event-id correlation logging at the idempotency boundary."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Test duplicate delivery and concurrent processing separately."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify with fix-applied and fix-reverted runs."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add a broad catch-all lock without proving the race."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not stop at 'webhooks retry sometimes' if concurrency evidence remains unexplained."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "behavior-preserving-refactor-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user says: 'Refactor this 600-line function while the test suite is green.'",
+      "context": "No observed failure exists; the goal is readability and maintainability.",
+      "question": "Should debugging own this request?",
+      "expected_flags": [
+        "The request belongs to refactor, not debugging.",
+        "Debugging activates when behavior is broken or evidence contradicts expectations.",
+        "Green tests and behavior preservation indicate structural cleanup, not failure isolation."
+      ],
+      "expected_fix_hints": [
+        "Route to refactor.",
+        "Use tests as a safety net, not as a debugging reproduction."
+      ],
+      "absent_signals": [
+        "Do not invent a failure just to use the debugging workflow.",
+        "Do not require root-cause isolation for a known-green cleanup."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The request belongs to refactor, not debugging."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Debugging activates when behavior is broken or evidence contradicts expectations."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Green tests and behavior preservation indicate structural cleanup, not failure isolation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to refactor."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use tests as a safety net, not as a debugging reproduction."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not invent a failure just to use the debugging workflow."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not require root-cause isolation for a known-green cleanup."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "data-dependent-regression",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A monthly revenue report is correct for most stores but wrong for one store after a migration. The user suspects the new aggregation query, but raw rows and a legacy report disagree only for orders with partial refunds.",
+      "context": "The failure is observable and data-dependent. A debugging answer should preserve evidence, isolate the minimal failing slice, and avoid rewriting the whole reporting pipeline first.",
+      "question": "How should the agent debug this before patching?",
+      "expected_flags": [
+        "Builds a minimal reproduction around the affected store, month, and partial-refund rows.",
+        "Compares raw rows, intermediate views, and final aggregation to locate where the discrepancy enters.",
+        "Requires the hypothesis to explain why unaffected stores and non-refunded orders still match."
+      ],
+      "expected_fix_hints": [
+        "Extract a fixture or query slice containing one matching order, one partially refunded order, and one unaffected control order.",
+        "Bisect the data flow from raw import through migration transform to report aggregation.",
+        "Verify the fix against the failing slice and a control slice."
+      ],
+      "absent_signals": [
+        "Do not patch the final report formula before locating the layer where the error appears.",
+        "Do not blame the migration solely because it is recent."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Builds a minimal reproduction around the affected store, month, and partial-refund rows."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Compares raw rows, intermediate views, and final aggregation to locate where the discrepancy enters."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires the hypothesis to explain why unaffected stores and non-refunded orders still match."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Extract a fixture or query slice containing one matching order, one partially refunded order, and one unaffected control order."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Bisect the data flow from raw import through migration transform to report aggregation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify the fix against the failing slice and a control slice."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not patch the final report formula before locating the layer where the error appears."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not blame the migration solely because it is recent."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "configuration-red-herring",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A feature works in staging but fails in production with the same commit SHA. The production logs show 403 responses from a third-party API, while staging uses a separate credential.",
+      "context": "The user asks for a code fix. The evidence points to an environment or credential boundary, but the agent must still verify before closing the issue.",
+      "question": "What debugging path should the agent follow?",
+      "expected_flags": [
+        "Treats environment/configuration difference as a leading hypothesis because the commit is identical.",
+        "Verifies credential scope, API account permissions, and request shape before editing code.",
+        "Keeps the production failure observable with safe redaction of sensitive values."
+      ],
+      "expected_fix_hints": [
+        "Compare staging and production configuration names, permission scopes, and third-party account IDs without exposing secret values.",
+        "Reproduce the API call with the production request shape through an approved safe path.",
+        "Patch code only if request construction differs or error handling is genuinely wrong."
+      ],
+      "absent_signals": [
+        "Do not log or print secret tokens while comparing environments.",
+        "Do not change application logic before checking whether the production credential lacks required scope."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treats environment/configuration difference as a leading hypothesis because the commit is identical."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verifies credential scope, API account permissions, and request shape before editing code."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps the production failure observable with safe redaction of sensitive values."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Compare staging and production configuration names, permission scopes, and third-party account IDs without exposing secret values."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reproduce the API call with the production request shape through an approved safe path."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Patch code only if request construction differs or error handling is genuinely wrong."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not log or print secret tokens while comparing environments."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not change application logic before checking whether the production credential lacks required scope."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

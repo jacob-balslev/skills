@@ -1,0 +1,158 @@
+{
+  "skill_name": "skill-evolution",
+  "subject": "Skill evolution",
+  "adjacent_concepts": [
+    "skill audit loop",
+    "audit",
+    "improve",
+    "evaluate",
+    "evolve",
+    "audit-state.json",
+    "Karpathy keep-or-revert",
+    "priority queue",
+    "checkpoint",
+    "skill scaffold"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define skill evolution in Skill Graph and distinguish it from auditing one known skill.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "expected_elements": [
+        "Defines skill evolution as the corpus-level evolve operation or walker",
+        "Mentions analyzing a skill library and triaging a priority queue",
+        "Mentions bounded execution and verification/checkpointing",
+        "Distinguishes from a single-skill audit",
+        "Names audit-state.json as the audit/eval/provenance state surface"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the primitives in the evolve loop: corpus, SKILL.md, audit-state.json, analyzer, triage, executor, verification, and checkpoint.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "expected_elements": [
+        "SKILL.md contains teaching/routing content",
+        "audit-state.json contains Audit Status and eval/provenance state",
+        "Analyzer creates a priority queue",
+        "Triage bounds the selected work",
+        "Executor runs allowed actions",
+        "Verification keeps or reverts",
+        "Checkpoints allow resume"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a large skill corpus need evolve instead of relying on people to manually audit whichever skill they touch?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "expected_elements": [
+        "Skills drift over time",
+        "Manual touch-based maintenance leaves unvisited skills stale",
+        "Priority ordering revisits risky or central skills first",
+        "Keep-or-revert prevents accepted regressions",
+        "Checkpoints/failure budgets make long runs manageable"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish skill-evolution from graph-audit, skill-scaffold, evaluation, eval-driven-development, and skill-router.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "expected_elements": [
+        "graph-audit owns static checks for one skill or manifest surface",
+        "skill-scaffold owns creating initial skill shape",
+        "evaluation owns scoring methodology and verdict interpretation",
+        "eval-driven-development owns changing systems under eval suites",
+        "skill-router owns selecting the right skill for a user request",
+        "skill-evolution owns walking the corpus by maintenance priority"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify the four audit-loop operations by unit of work and write surface: audit, improve, evaluate, and evolve.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "expected_elements": [
+        "audit inspects one skill and writes audit-state/evidence",
+        "improve edits one bounded skill or asset and keeps or reverts",
+        "evaluate runs eval suites and writes sidecar verdicts/scores/receipts",
+        "evolve walks a priority queue across the corpus",
+        "evolve writes through the operations/actions it invokes"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why evolve is a dispatcher/queue rather than one more single-skill checker.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses a corpus-wide queue or dispatcher analogy",
+        "Shows it chooses the next item by priority",
+        "Shows one bounded action at a time",
+        "Shows verification and logging before moving on",
+        "Does not imply every item follows an identical hard-coded path"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "You need to run the top five skill maintenance items in a standalone repo, stop if failures pile up, and resume later if interrupted. Which evolve flags and checks matter?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "expected_elements": [
+        "Uses skill-graph evolve rather than raw workspace scripts",
+        "Passes workspace-root and skills-dir for standalone use",
+        "Uses top 5 or equivalent bounded queue size",
+        "Uses failure-budget",
+        "Mentions resume/checkpoint behavior",
+        "Checks exit codes or help contract"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "A teammate says evolve simply runs audit -> improve -> evaluate and writes Health Block fields to SKILL.md frontmatter. Correct the misconception.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects the oversimplified hard-coded sequence as the whole current implementation",
+        "Names analyze, triage, execute, verify, checkpoint as current operating model",
+        "Says Audit Status state lives in audit-state.json",
+        "Separates SKILL.md instructional content from sidecar state",
+        "Mentions that evolve composes operations/actions across a corpus"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,459 @@
+{
+  "skill_name": "mobile-responsive-ux",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Mobile Use Case Hierarchy, Touch Target Specifications, Thumb Zone Map, Implementation Patterns, Anti-Patterns, Verification, Do NOT Use When) and platform touch guidance (Apple HIG 44pt, Material 48dp, WCAG 2.2 SC 2.5.8/2.5.5).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "desktop-table-to-mobile",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team makes their orders dashboard 'mobile responsive' by shrinking the existing 8-column data table and enabling horizontal scroll on phones. Users complain they can't find columns and keep losing their place.",
+      "context": "The phone view is the primary surface for on-the-go staff checking order status; the desktop view stays for analysis.",
+      "question": "How should the agent redesign the mobile orders view?",
+      "expected_flags": [
+        "Replace the horizontal-scroll table with a card-based layout (3-4 priority fields per card)",
+        "Put the most important data — order number and status — at the top of each card",
+        "Tap a card to navigate to the full detail view (progressive disclosure)",
+        "Flags horizontal-scroll tables as an anti-pattern users do not discover"
+      ],
+      "expected_fix_hints": [
+        "Render order rows as cards below the 640px breakpoint",
+        "Show order #, status, channel, revenue/margin; defer the rest to detail"
+      ],
+      "absent_signals": [
+        "Do not keep the 8-column table with horizontal scroll as the mobile experience",
+        "Do not just reduce font size to fit more columns"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replace the horizontal-scroll table with a card-based layout (3-4 priority fields per card)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Put the most important data — order number and status — at the top of each card."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Tap a card to navigate to the full detail view (progressive disclosure)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags horizontal-scroll tables as an anti-pattern users do not discover."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Render order rows as cards below the 640px breakpoint."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Show order #, status, channel, revenue/margin; defer the rest to detail."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the 8-column table with horizontal scroll as the mobile experience."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not just reduce font size to fit more columns."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "touch-target-sizing",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A mobile dashboard packs row-action icons (16px), filter chips, and a dropdown trigger tightly together. QA reports frequent mis-taps and accidental deletes.",
+      "context": "The product is used one-handed on phones, often while walking.",
+      "question": "How should the agent fix the controls?",
+      "expected_flags": [
+        "Give every recurring interactive control at least a 44 x 44 CSS px hit area (mobile ergonomic floor)",
+        "Extend a 16px icon's tap area with padding rather than enlarging the glyph",
+        "Add spacing so adjacent targets are not crowded",
+        "Notes WCAG 2.2 AA requires at least 24 x 24 CSS px; 44 is the stronger mobile floor"
+      ],
+      "expected_fix_hints": [
+        "Wrap icons in an inline-flex button with padding to reach 44x44",
+        "Require confirmation on destructive actions (do not delete on a single mis-tap)"
+      ],
+      "absent_signals": [
+        "Do not leave 16px icons as the tap target",
+        "Do not rely on visual size alone — the hit region is what matters"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Give every recurring interactive control at least a 44 x 44 CSS px hit area (mobile ergonomic floor)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Extend a 16px icon's tap area with padding rather than enlarging the glyph."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add spacing so adjacent targets are not crowded."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes WCAG 2.2 AA requires at least 24 x 24 CSS px; 44 is the stronger mobile floor."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Wrap icons in an inline-flex button with padding to reach 44x44."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Require confirmation on destructive actions (do not delete on a single mis-tap)."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave 16px icons as the tap target."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on visual size alone — the hit region is what matters."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "thumb-zone-placement",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A mobile form places its primary 'Save' button fixed at the very top of the screen next to the page title; the rest of the form scrolls below it.",
+      "context": "Users complete the form one-handed and must stretch to reach the top.",
+      "question": "How should the agent place the primary action?",
+      "expected_flags": [
+        "Move the primary action (Save) into the bottom 50% natural thumb zone",
+        "Reserve the top 20% (hard-to-reach) for rarely-used or destructive actions, or a menu",
+        "Consider a bottom-fixed action bar so Save stays reachable while scrolling",
+        "Ties placement to one-handed reach, not visual convention"
+      ],
+      "expected_fix_hints": [
+        "Pin the primary CTA to a bottom action bar in the natural zone",
+        "Keep secondary actions in the middle zone"
+      ],
+      "absent_signals": [
+        "Do not keep the primary CTA at the top of the screen"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Move the primary action (Save) into the bottom 50% natural thumb zone."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reserve the top 20% (hard-to-reach) for rarely-used or destructive actions, or a menu."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Consider a bottom-fixed action bar so Save stays reachable while scrolling."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Ties placement to one-handed reach, not visual convention."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pin the primary CTA to a bottom action bar in the natural zone."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep secondary actions in the middle zone."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the primary CTA at the top of the screen."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "hover-and-modal-on-touch",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A dashboard exposes row actions only on hover and opens filters in a centered desktop modal. On phones the actions are unreachable and the modal's tiny close button is hard to tap.",
+      "context": "Touch devices have no hover state; the modal obscures most of the small viewport.",
+      "question": "How should the agent adapt these interactions for mobile?",
+      "expected_flags": [
+        "Replace hover-only row actions with a visible touch alternative (swipe paired with a tap-accessible button)",
+        "Replace the desktop modal with a bottom sheet (peek/half/full heights, drag handle, clear close)",
+        "Every hover interaction must have a touch equivalent",
+        "Bottom sheet sits in reachable space with adequate touch targets"
+      ],
+      "expected_fix_hints": [
+        "Use a bottom sheet for the filter UI",
+        "Add inline or swipe-revealed actions with button counterparts"
+      ],
+      "absent_signals": [
+        "Do not keep hover-only actions on touch",
+        "Do not reuse the centered desktop modal on phones"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replace hover-only row actions with a visible touch alternative (swipe paired with a tap-accessible button)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replace the desktop modal with a bottom sheet (peek/half/full heights, drag handle, clear close)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Every hover interaction must have a touch equivalent."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Bottom sheet sits in reachable space with adequate touch targets."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a bottom sheet for the filter UI."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add inline or swipe-revealed actions with button counterparts."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep hover-only actions on touch."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not reuse the centered desktop modal on phones."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "mobile-input-and-kpi",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A mobile dashboard shows four KPI cards stacked 1-up (one per row) wasting vertical space, and its currency/quantity inputs default to a full alphanumeric keyboard.",
+      "context": "Users glance at KPIs first and occasionally enter a quantity or amount.",
+      "question": "How should the agent improve the KPI layout and inputs?",
+      "expected_flags": [
+        "Use a 2-up KPI layout below 640px (never 1-up — it wastes vertical space)",
+        "Large primary number with a smaller comparison line; tap to drill down",
+        "Use mobile-appropriate input types: inputmode='decimal' for currency, type='tel' for phone, native pickers for dates",
+        "Charts belong in their own section, not inside a KPI card on mobile"
+      ],
+      "expected_fix_hints": [
+        "Switch KPI grid to 2 columns at the mobile breakpoint",
+        "Set correct inputmode/type per field to trigger the right keyboard"
+      ],
+      "absent_signals": [
+        "Do not stack KPI cards 1-up",
+        "Do not leave numeric fields on the default alphanumeric keyboard"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use a 2-up KPI layout below 640px (never 1-up — it wastes vertical space)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Large primary number with a smaller comparison line; tap to drill down."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use mobile-appropriate input types: inputmode='decimal' for currency, type='tel' for phone, native pickers for dates."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Charts belong in their own section, not inside a KPI card on mobile."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Switch KPI grid to 2 columns at the mobile breakpoint."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Set correct inputmode/type per field to trigger the right keyboard."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not stack KPI cards 1-up."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave numeric fields on the default alphanumeric keyboard."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the mobile-responsive-ux owner to run a full WCAG 2.2 accessibility audit (ARIA roles, keyboard tab order, screen-reader announcements, contrast ratios) and to define the global responsive grid tracks for every breakpoint across the app.",
+      "context": "The team conflates 'mobile UX' with all accessibility and all responsive layout work.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "The WCAG audit breadth (ARIA, keyboard, screen reader, contrast) is a11y's territory, not this skill's",
+        "Global responsive grid tracks across all breakpoints belong to layout-composition",
+        "Offer the in-scope part: mobile touch ergonomics, target-size floor, thumb-zone placement, mobile interaction patterns",
+        "Redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand the compliance audit to a11y and the cross-breakpoint grid to layout-composition",
+        "Deliver the mobile-specific ergonomics review this skill owns"
+      ],
+      "absent_signals": [
+        "Do not run a full WCAG audit under this skill",
+        "Do not design the global grid system under this skill"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The WCAG audit breadth (ARIA, keyboard, screen reader, contrast) is a11y's territory, not this skill's."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Global responsive grid tracks across all breakpoints belong to layout-composition."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: mobile touch ergonomics, target-size floor, thumb-zone placement, mobile interaction patterns."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand the compliance audit to a11y and the cross-breakpoint grid to layout-composition."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Deliver the mobile-specific ergonomics review this skill owns."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not run a full WCAG audit under this skill."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the global grid system under this skill."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "pull-to-refresh-and-gestures",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A mobile order list uses swipe-left as the only way to archive an item and fires a refresh fetch every time the user drags anywhere on the page, sometimes mid-load.",
+      "context": "Users expect a familiar pull-to-refresh and a discoverable way to archive.",
+      "question": "How should the agent fix the gestures?",
+      "expected_flags": [
+        "Provide a visible tap alternative for archive — never gesture-only",
+        "Trigger pull-to-refresh only when scrolled to the top, with a visible pull indicator",
+        "Disable refresh during an active load to prevent double-fetch",
+        "Swipe needs a natural distance/velocity threshold and confirmation for destructive actions"
+      ],
+      "expected_fix_hints": [
+        "Add a visible archive button alongside the swipe action",
+        "Gate pull-to-refresh on scrollTop === 0 and a loading flag"
+      ],
+      "absent_signals": [
+        "Do not make swipe the only path to an action",
+        "Do not fire refresh on arbitrary drags or during loading"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Provide a visible tap alternative for archive — never gesture-only."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Trigger pull-to-refresh only when scrolled to the top, with a visible pull indicator."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Disable refresh during an active load to prevent double-fetch."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Swipe needs a natural distance/velocity threshold and confirmation for destructive actions."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a visible archive button alongside the swipe action."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Gate pull-to-refresh on scrollTop === 0 and a loading flag."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make swipe the only path to an action."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not fire refresh on arbitrary drags or during loading."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

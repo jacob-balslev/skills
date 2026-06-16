@@ -1,0 +1,99 @@
+{
+  "skill_name": "replication-patterns",
+  "subject": "Database replication patterns",
+  "adjacent_concepts": [
+    "sharding-strategy",
+    "cap-theorem-tradeoffs",
+    "acid-fundamentals",
+    "transaction-isolation",
+    "query-optimization",
+    "indexing-strategy"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define database replication in 2-3 sentences. Include the three foundational topologies and what property replication is trying to provide.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not define replication as horizontal partitioning or backups."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "A service has one write region and three read regions. Explain the primitives you would choose among when designing its replication model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not say that async read replicas automatically provide fresh reads or zero-RPO failover."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why would a team replicate a database instead of running one durable node? Name the benefits and the costs the application must handle.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A team says, 'We need to split tenants across multiple database nodes because one node cannot hold all writes.' Should this skill own the decision? Explain the boundary with sharding-strategy.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not route horizontal partitioning to replication-patterns; sharding-strategy owns splitting different data across nodes."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Compare single-leader, multi-leader, and leaderless/quorum replication. For each, name the write path and the main operational risk.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why replication needs explicit rules for who writes, how replicas catch up, and how failover avoids split brain.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "A user writes a profile change, then immediately refreshes and sometimes sees the old value because reads go to any replica. Apply the skill: what is the likely cause and what mitigations should be considered?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not suggest query tuning as the primary fix; the problem is read-after-write consistency under replication lag."
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Replication means our database is safe, so we do not need backups and failover can be automatic.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not accept replication as a substitute for backups or heuristic failover as inherently safe."
+    }
+  ]
+}

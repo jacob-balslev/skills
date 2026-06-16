@@ -1,0 +1,158 @@
+{
+  "skill_name": "interaction-feedback",
+  "subject": "design",
+  "adjacent_concepts": [
+    "interaction-patterns",
+    "microcopy",
+    "a11y",
+    "state-machine-modeling",
+    "performance-engineering"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define interaction feedback in 2-3 sentences. Name the four decisions that settle any feedback design.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as the observable signals a UI gives back across the whole lifetime of an action or state change",
+        "Names duration class (instant/short/medium/long/background/unknown)",
+        "Names the feedback surface (inline/button/skeleton/banner/toast/progress/modal/job history)",
+        "Names the transitions and retained control (cancel/retry/undo/leave-and-return)",
+        "Names the optimism/honesty decision (show result before confirmation; rollback when wrong)"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why is feedback modeled as a sequence of states across an action's lifecycle rather than a single loading indicator?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "An action moves through idle, pending, partial, success, failure, retrying, cancelled, undoable",
+        "Each state needs its own observable signal and control set",
+        "A single spinner only covers the pending moment and silently fails on errors/long/optimistic cases",
+        "Feedback is a staged contract, not one decoration"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "What does optimistic UI buy you, and what debt does it create?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Removes perceived latency by showing the expected result before server confirmation",
+        "Creates a debt: must define rollback behavior when the server rejects",
+        "Must define conflict behavior when optimistic and server state disagree",
+        "An optimistic update with no rollback is a UI that lies"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A user clicks Export and the job takes about 30 seconds. What feedback should the UI provide at each stage?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Immediate acknowledgement on click (button/inline pending state)",
+        "Classifies it as long work needing progress and/or a way to background it",
+        "Offers leave-and-return / job history so the user is not trapped watching",
+        "Confirms on completion (and notifies if backgrounded); persists a recoverable error on failure"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "An autosave succeeds silently and a delete shows a brief 'Deleted' toast. What feedback improvements would you make?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Autosave needs a quiet but visible 'saved' confirmation and a visible 'failed to save' recovery, not pure silence",
+        "Destructive delete should offer undo within a window rather than only a fleeting toast",
+        "Success signals should be visible without being noisy or interrupting",
+        "Errors must persist long enough to read and act on"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the interaction-feedback skill to make sure the 'Saved' status is announced to screen readers and to rewrite the error toast text. In scope or not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The announcement mechanics (live regions/SR timing) are a11y's domain, handed off",
+        "The error wording is microcopy's domain, handed off",
+        "Interaction-feedback owns the requirement that there IS a confirmation and a persistent error, and their timing/placement/persistence",
+        "Correctly separates the feedback design from the words and the announcement plumbing"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Someone says 'we just need to add a spinner to fix the feedback.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A spinner only covers the pending frame; it is not the whole feedback story",
+        "Names the failures: spinner with no timeout hiding a silent failure, optimistic update with no rollback, success too loud/brief, error flashed and gone",
+        "Feedback is a staged contract across the lifecycle: acknowledge, communicate honestly, confirm without noise, persist with recovery on failure"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a feedback design is correct?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Every async action has an immediate observable response",
+        "Long work has progress, backgrounding, or return-later behavior",
+        "Optimistic updates define rollback and conflict behavior",
+        "Errors persist long enough to read and recover from; retry/cancel/undo exist when relevant",
+        "Announcement and wording are verified by a11y and microcopy"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "application",
+      "prompt": "Why is feedback design treated as a separate concern from performance optimization?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "A fast system still needs confirmation; a slow system still needs staged, honest truth",
+        "Feedback manages the perception of time, not the time itself",
+        "Conflating them leads to skipping feedback ('it's fast enough') or using a spinner instead of an honest progress story",
+        "Reducing latency is performance-engineering's job, not feedback design's"
+      ]
+    }
+  ]
+}

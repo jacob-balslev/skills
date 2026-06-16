@@ -1,0 +1,143 @@
+{
+  "skill_name": "swot-tows",
+  "subject": "SWOT and TOWS situational analysis",
+  "adjacent_concepts": [
+    "SWOT analysis",
+    "TOWS matrix",
+    "situational analysis",
+    "strategic options",
+    "Porter's Five Forces",
+    "Seven Powers",
+    "Blue Ocean Strategy",
+    "Playing to Win",
+    "OKRs",
+    "Expected Value"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define SWOT/TOWS in 2-3 sentences. Include what SWOT inventories and what TOWS adds.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines SWOT as strengths, weaknesses, opportunities, and threats",
+        "Explains strengths and weaknesses are internal",
+        "Explains opportunities and threats are external",
+        "Explains TOWS crosses factors into strategy options",
+        "Names at least two of SO, WO, ST, or WT option types"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of SWOT/TOWS. Name the primitives and how they connect.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names decision context or planning question",
+        "Names internal factors",
+        "Names external factors",
+        "Names evidence or confidence",
+        "Explains SWOT as inventory",
+        "Explains TOWS as crossing factors into options"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a SWOT/TOWS skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents stopping at a four-box list",
+        "Prevents mixing internal and external factors",
+        "Prevents unsupported factor assertions",
+        "Prevents treating SWOT as finished strategy",
+        "Forces conversion into strategic options or next validation"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish SWOT/TOWS from Porter's Five Forces, Seven Powers, Blue Ocean Strategy, Playing to Win, OKRs, and Expected Value. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Five Forces analyzes industry profit-pressure structure",
+        "Seven Powers classifies durable advantage sources",
+        "Blue Ocean Strategy reconstructs value curves and demand",
+        "Playing to Win integrates strategy choices into a cascade",
+        "OKRs translate chosen strategy into execution goals and measures",
+        "Expected Value compares quantified outcomes by probability and value",
+        "SWOT/TOWS inventories internal/external factors and crosses them into options"
+      ],
+      "negative_expectation": "Must not treat SWOT/TOWS as the owner for industry structure, durable advantage, value-curve redesign, strategy cascades, OKR execution, or probability-weighted option comparison."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place SWOT/TOWS among strategy methods. What inputs feed it, and what downstream methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies it as situational analysis or strategy option generation",
+        "Names inputs such as internal capability evidence, external market evidence, stakeholder perspective, or planning context",
+        "Names outputs such as prioritized factors, SO/WO/ST/WT options, hypotheses, risks, or next validation",
+        "Explains it can feed but not replace strategy choice, valuation, OKRs, or deeper competitive analysis"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for SWOT/TOWS that preserves the inventory-to-option mechanism. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving sorting, inventory, pairing, building, or mapping",
+        "Maps SWOT to factor inventory",
+        "Maps TOWS to pairing or crossing factors into moves",
+        "Rejects an analogy that treats SWOT as a final score or finished strategy",
+        "Explains why the bad analogy loses the action-generation step"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A small B2B SaaS has strong domain expertise, weak onboarding, a new regulation creating demand, and a well-funded entrant. Apply SWOT/TOWS reasoning and state what evidence is missing.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Classifies domain expertise as internal strength",
+        "Classifies weak onboarding as internal weakness",
+        "Classifies regulation-created demand as external opportunity",
+        "Classifies well-funded entrant as external threat",
+        "Generates at least one SO, WO, ST, or WT option from crossed factors",
+        "Marks evidence gaps such as customer demand proof, onboarding metrics, competitor capability, cost, or regulatory timing",
+        "Does not claim the SWOT proves the best strategy without further validation"
+      ],
+      "negative_expectation": "Must not present the SWOT/TOWS output as proof of the best strategy or omit the evidence needed to choose among generated options."
+    }
+  ]
+}

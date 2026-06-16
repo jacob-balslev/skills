@@ -1,0 +1,100 @@
+{
+  "skill_name": "connection-pooling",
+  "subject": "Database connection pooling",
+  "adjacent_concepts": [
+    "query-optimization",
+    "indexing-strategy",
+    "replication-patterns",
+    "sharding-strategy",
+    "transaction-isolation",
+    "background-jobs",
+    "streaming-architecture"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define database connection pooling in 2-3 sentences. Include why connections are expensive and why a pool is bounded.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "negative_expectation": "Must not define connection pooling as query optimization or replica routing."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "A service has many app instances and one database. Explain the primitives you would inspect when diagnosing connection-pool contention.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not look only at query latency; pool wait time and database-side connection totals matter."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why is increasing `max_connections` or application pool size not a default fix for connection errors?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "A team has one SQL query with bad plan shape and high execution time, but no pool wait. Should connection-pooling own the fix? Explain the boundary with query-optimization.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not route slow query-plan work to connection-pooling."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Compare application-level pools and proxy-level pools, then compare PgBouncer session, transaction, and statement pooling modes.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why a pool can be too small and also too large, and why more connections do not make each query faster.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium"
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "A request latency spike has normal query latency but high `pool.acquire_time_p99` and many waiting requests. Apply the skill: what is the likely issue and what evidence should be gathered?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not diagnose this as a slow query without acknowledging pool exhaustion."
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'We should set each app instance pool to 100 because the database allows 1000 connections and more connections mean more throughput.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "negative_expectation": "Must not treat max_connections as a target or pool size as request-rate capacity."
+    }
+  ]
+}

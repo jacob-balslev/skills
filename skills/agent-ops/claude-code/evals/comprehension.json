@@ -1,0 +1,98 @@
+{
+  "skill_name": "claude-code",
+  "subject": "Selecting and scoping work for the Claude Code agent harness",
+  "adjacent_concepts": [
+    "codex",
+    "gpt-5-5",
+    "claude-api",
+    "autonomous-loop-patterns",
+    "agent-eval-design"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define what Claude Code is in 2-3 sentences, and explain why it is a distinct choice from 'using Claude'. Your answer must separate the harness from the model it runs.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "negative_expectation": "Must NOT define Claude Code as the Claude model, the Anthropic API/SDK, or a generic agent framework you assemble yourself."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "A teammate says 'Claude Code is just a nicer way to call Opus.' Correct the mental model: what does the harness contribute that the model alone does not, and why does that distinction matter when choosing a harness?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "negative_expectation": "Must not reduce the harness to a UI/wrapper; must name host-gated tools, hooks, subagents, plan mode, or context budget as the harness's contribution."
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "You must run a high-stakes migration across an unfamiliar 1M-token codebase, fan out independent file analyses in parallel, and gate every destructive edit behind a confirmation. Which Claude Code capabilities map to each of those three needs, and what is the order you would lean on them?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must not propose a single undifferentiated 'just run the agent' answer; must map plan mode (or hooks) to gating, subagents to fan-out, and 1M context to the large codebase."
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "For each task, say whether `claude-code` is the right skill or name the skill that owns it: (a) 'write Python that calls the Messages API', (b) 'should GPT-5 or Opus do this review', (c) 'pick the resumable-session GPT harness', (d) 'design a supervised resumable agent loop'.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must route (a) to claude-api, (b) to gpt-5-5, (c) to codex, (d) to autonomous-loop-patterns — must NOT claim claude-code owns model routing or SDK coding."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place these into a 'which layer do I reach for' taxonomy and justify each: hooks, subagents, skills, plan mode, background tasks, MCP. For a need like 'run X automatically before every tool call', which one is correct and which would be a mistake?",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Claude Code is always the best harness for any coding task because it runs the strongest model.' What is wrong with the reasoning, and give a concrete task where a different harness is the better choice and why?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "negative_expectation": "Must reject 'strongest model ⇒ best harness' as the wrong axis; must name a real counterexample (e.g. Codex leads Terminal-Bench 2.0 / pure terminal-command iteration, or OpenCode for a non-Anthropic model lane)."
+    },
+    {
+      "id": 7,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why choosing a harness and choosing a model are two separate decisions, and why optimizing one for the other's strength is a mistake.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "medium"
+    },
+    {
+      "id": 8,
+      "dimension": "purpose",
+      "prompt": "Why does a frontier model need a harness like Claude Code at all to operate a codebase safely? Name at least three things the harness provides that a bare model API call cannot.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "procedure",
+      "criticality": "high"
+    }
+  ]
+}

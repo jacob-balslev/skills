@@ -1,0 +1,157 @@
+{
+  "skill_name": "schema-evolution",
+  "subject": "Schema evolution",
+  "adjacent_concepts": [
+    "expand contract",
+    "parallel change",
+    "zero-downtime migration",
+    "backwards compatibility",
+    "forwards compatibility",
+    "dual write",
+    "dual read",
+    "database migration",
+    "data modeling",
+    "indexing strategy"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define schema evolution as distinct from executing one database migration, and name the compatibility problem it solves.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Defines schema evolution as changing a database schema over time while deployed code keeps working",
+        "Distinguishes sequencing discipline from one migration's SQL mechanics",
+        "Names schema/code desynchronization as the core danger",
+        "Mentions backwards and forwards compatibility across intermediate states",
+        "Uses expand/migrate/contract or parallel change as the governing pattern"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain expand, migrate, and contract for a column rename, including rollback expectations at each phase.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Expand adds the new column while preserving the old column",
+        "Migrate dual-writes, backfills, dual-reads or falls back, then switches reads",
+        "Contract drops the old column only after all code/data has moved",
+        "Rollback is preserved during expand/migrate by keeping the old shape",
+        "Contract is irreversible or materially harder because old data/shape is removed"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "A team wants to avoid maintenance windows while changing a live database schema. What does schema evolution require beyond writing migration files?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Plans deploy ordering across schema and code changes",
+        "Maintains a compatibility envelope for old/new code and old/new schema",
+        "Uses additive expansion before destructive cleanup",
+        "Includes backfill and verification/observability before switching reads or contracting",
+        "Defines rollback behavior before irreversible steps"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish schema-evolution from database-migration, data-modeling, indexing-strategy, query-optimization, and sharding-strategy.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "database-migration owns executing one migration safely",
+        "data-modeling owns target schema design at a point in time",
+        "indexing-strategy owns which indexes should exist",
+        "query-optimization owns retrieval performance for queries",
+        "sharding-strategy owns distributing data across partitions or nodes",
+        "schema-evolution owns the safe path between schema states"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify common schema changes by whether they are single-step additive, require expand/contract, or need special online DDL handling.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Add nullable column or new table is usually additive/single-step safe",
+        "Rename/drop column or table requires expand/contract",
+        "Type changes usually require new column, conversion backfill, and switch-over",
+        "NOT NULL, foreign-key, check, and unique constraints need validation-safe patterns",
+        "Indexes in production need concurrent or online creation/drop where the database supports it",
+        "Backfills should be batched and resumable"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Use an analogy to explain why contract must wait until every deployed code path and data row has migrated.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses a live-system analogy where the old path remains until the new path is proven",
+        "Preserves the three-phase structure of expand, migrate, contract",
+        "Explains why removing the old path early causes an incident",
+        "Mentions evidence/observation before removal",
+        "Does not imply contract is reversible after deletion"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Design a safe plan to add a required `account_id` foreign key to a large live table that currently has nulls and active writes.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Adds nullable column first or otherwise avoids immediate blocking validation",
+        "Backfills existing rows in batches with resumability",
+        "Updates code to write the new column for new rows",
+        "Adds/validates constraints using NOT VALID + VALIDATE or database-equivalent safe pattern",
+        "Verifies no nulls/violations before setting NOT NULL or enforcing full constraint",
+        "Keeps rollback viable until the contract/tightening step is accepted"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "misconception",
+      "prompt": "A teammate says a column rename is just one `ALTER TABLE RENAME COLUMN` because the app deploy will happen right after. Correct the misconception.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects one-step rename for a deployed live system",
+        "Explains that old and new code versions may overlap during rollout or rollback",
+        "Recommends add-new-column plus dual-write/backfill/read switch before dropping old",
+        "Requires observation that all deployed code has stopped using the old column",
+        "Names premature contract as the incident-causing step"
+      ]
+    }
+  ]
+}

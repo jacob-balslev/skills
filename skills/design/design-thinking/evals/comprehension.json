@@ -1,0 +1,142 @@
+{
+  "skill_name": "design-thinking",
+  "subject": "design",
+  "adjacent_concepts": [
+    "problem-framing",
+    "ideation",
+    "prototyping",
+    "usability-testing",
+    "event-storming"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define design thinking as a meta-skill in 2-3 sentences. Name its stages and the four capabilities it adds on top of them.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Frames it as a meta-skill orchestrating a full human-centered design arc, not a single method",
+        "Names the five-stage arc (discover/empathize, define, ideate, prototype, test) or an equivalent canonical framing",
+        "Names the four capabilities: stage recognition, stage routing, transition criteria, loop-back governance",
+        "States it routes work to stage-specific sibling skills rather than performing each stage itself"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does the skill describe the stages as 'a map of open questions' rather than a checklist to run once?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Each stage exists to answer a specific open question, not to tick a box",
+        "The real work is locating which question is currently open and choosing the stage that addresses it",
+        "Treating it as a one-pass procedure causes stage skipping and refusal to loop back",
+        "The same arc renders under many canonical labels (d.school, Double Diamond, Design Sprint) that agree on the shape"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Contrast a multi-week project arc with a compressed Design Sprint. What is the trade-off and when is each appropriate?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "A Design Sprint (Knapp / Google Ventures) runs a full Define-through-Test cycle in ~five days",
+        "The sprint format trades depth of research for speed of learning",
+        "A multi-week arc allows deeper empathy and synthesis at the cost of calendar time",
+        "Both have valid uses; the choice depends on uncertainty and time pressure"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A team has finished user interviews but has done no synthesis. Which stage are they in, what is the open question, and what comes next?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "They are between discover/empathize and define — raw data exists but no framed problem",
+        "The open question is 'what is actually the problem worth solving?'",
+        "Next move is research-synthesis (affinity mapping, sense-making) then problem-framing",
+        "Warns against jumping to ideation or prototyping before synthesis"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A usability test produced three findings that contradict the team's problem framing. How should design thinking guide the response?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Invokes the non-linearity / loop-back principle — a Test finding can invalidate the Define stage",
+        "The team should explicitly decide to loop back to define rather than ship the prototype as-is",
+        "The loop-back decision and rationale should be recorded, not silently dropped",
+        "Pressing forward despite contradicting evidence is performing the ritual without practicing it"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks design-thinking to run a single crazy-8s round on one how-might-we statement. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — that is single-stage execution inside the ideate stage",
+        "Route directly to the ideation skill rather than invoking the meta-skill",
+        "Distinguishes orchestrating the arc from performing one stage's method",
+        "The meta-skill recognizes and routes; it does not run the technique itself"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'design thinking is just the five-step empathize-define-ideate-prototype-test recipe — run it once and ship.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The arc is non-linear by design; later stages routinely send you back to earlier ones",
+        "Refusing to loop back when a test breaks the framing is the ritual without the practice",
+        "The real content is knowing which question is open, what evidence advances it, and when to loop back",
+        "A one-pass recipe causes stage skipping (no framing/research) and unchanged beliefs"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a team is actually practicing design thinking rather than performing it?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "The team can name the current stage and the specific open question it answers",
+        "Each transition has a written evidence criterion, not just a calendar date",
+        "Loop-back decisions are made explicitly and the rationale recorded",
+        "Human centrality is preserved — the user is not replaced by a stakeholder proxy",
+        "The team can articulate what they no longer believe that they believed before the arc"
+      ]
+    }
+  ]
+}

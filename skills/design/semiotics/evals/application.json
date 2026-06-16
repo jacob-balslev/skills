@@ -1,0 +1,465 @@
+{
+  "skill_name": "semiotics",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Foundations, Visual Semiotics, Iconography, Affordance Theory, Code and API Semiotics, Semiotic-Coherence Audit, Verification, Do NOT Use When) and the Understanding fields (denotation vs connotation, never-color-alone, icon polysemy, anti-affordance, signifier failure in naming).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "denotation-connotation-conflict",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A finance dashboard renders every metric delta with a green up-arrow and a red down-arrow. For Cost of Goods Sold, a 30% rise shows a green up-arrow; stakeholders read it as a win and miss a margin problem.",
+      "context": "The arrow + color system is reused across revenue, costs, refunds, and churn.",
+      "question": "What is the semiotic failure and how should the agent fix it?",
+      "expected_flags": [
+        "Identifies a denotation/connotation conflict: up-arrow = direction (increase), green = judgment (good)",
+        "An increase in costs is denotationally up but connotationally bad",
+        "Recommends decoupling direction from judgment — color/label by whether the change is good for the business, not by arrow direction",
+        "Pairs the signal with text or an explicit good/bad indicator (never color alone)"
+      ],
+      "expected_fix_hints": [
+        "Map color to business judgment (good=green, bad=red) independent of the arrow's direction",
+        "Add a textual or shape cue so direction and judgment are separable"
+      ],
+      "absent_signals": [
+        "Do not keep tying green to 'up' regardless of metric meaning",
+        "Do not treat this as a palette/hex-tuning problem"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies a denotation/connotation conflict: up-arrow = direction (increase), green = judgment (good)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: An increase in costs is denotationally up but connotationally bad."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends decoupling direction from judgment — color/label by whether the change is good for the business, not by arrow direction."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Pairs the signal with text or an explicit good/bad indicator (never color alone)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Map color to business judgment (good=green, bad=red) independent of the arrow's direction."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a textual or shape cue so direction and judgment are separable."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep tying green to 'up' regardless of metric meaning."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat this as a palette/hex-tuning problem."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "icon-polysemy",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A product uses a gear icon for 'Settings' in the top nav, for 'Preferences' inside a panel, and for 'Build configuration' in a developer view. Support tickets show users open the wrong screen.",
+      "context": "The team frames it as a copywriting inconsistency and wants better labels.",
+      "question": "How should the agent diagnose and resolve this?",
+      "expected_flags": [
+        "Names icon polysemy — one signifier (gear) pointing to multiple signifieds",
+        "It is a sign-system conflict, not merely a naming/wording issue",
+        "Recommends: one concept = one icon across the product, or distinct icons per concept",
+        "Where the icon must stay, pair it with text until the convention is unambiguous"
+      ],
+      "expected_fix_hints": [
+        "Assign distinct icons (or icon+label pairs) to settings vs preferences vs build config",
+        "Establish a consistency rule: same concept = same icon everywhere"
+      ],
+      "absent_signals": [
+        "Do not solve this purely by relabeling while keeping the same icon for all three",
+        "Do not defer to microcopy as the owning concern"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names icon polysemy — one signifier (gear) pointing to multiple signifieds."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: It is a sign-system conflict, not merely a naming/wording issue."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends: one concept = one icon across the product, or distinct icons per concept."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Where the icon must stay, pair it with text until the convention is unambiguous."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Assign distinct icons (or icon+label pairs) to settings vs preferences vs build config."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Establish a consistency rule: same concept = same icon everywhere."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not solve this purely by relabeling while keeping the same icon for all three."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not defer to microcopy as the owning concern."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "anti-affordance",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A submit button in its disabled state only drops to a slightly paler shade, keeps its hover lift animation, and stays in the primary-CTA position. Users keep clicking it and report the form is 'frozen'.",
+      "context": "The disabled state is set with a single opacity change.",
+      "question": "Which sign rule is failing and what should change?",
+      "expected_flags": [
+        "Perceived affordance still signals 'interactive' — the anti-affordance is too weak",
+        "Hover animation and primary placement are signifiers of actionability that contradict the disabled reality",
+        "Color/opacity alone is not a sufficient state signal",
+        "Recommends a strong anti-affordance: remove hover, change cursor, visibly de-rank the control"
+      ],
+      "expected_fix_hints": [
+        "Strip interactive signifiers (hover, pointer cursor) from the disabled state",
+        "Add an explicit cue (helper text or visible reason) for why it is unavailable"
+      ],
+      "absent_signals": [
+        "Do not rely on a paler color as the only disabled signal",
+        "Do not keep hover/active styling on a non-interactive control"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Perceived affordance still signals 'interactive' — the anti-affordance is too weak."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Hover animation and primary placement are signifiers of actionability that contradict the disabled reality."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Color/opacity alone is not a sufficient state signal."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends a strong anti-affordance: remove hover, change cursor, visibly de-rank the control."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Strip interactive signifiers (hover, pointer cursor) from the disabled state."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add an explicit cue (helper text or visible reason) for why it is unavailable."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rely on a paler color as the only disabled signal."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep hover/active styling on a non-interactive control."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "code-api-signifier",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A code review surfaces a server function named processData(rows) that actually deduplicates and reconciles ledger entries. The author says the name is fine because the implementation is correct.",
+      "context": "The reviewer is asked whether this is a real problem or a style nitpick.",
+      "question": "How should the agent evaluate the name from a sign-system perspective?",
+      "expected_flags": [
+        "processData() is a signifier failure even though the implementation works",
+        "The reader must open the function to learn its meaning — the inference cost a good sign eliminates",
+        "Recommends a name whose signifier points to the actual signified (e.g. reconcileLedgerEntries)",
+        "Notes the same one-signifier-one-signified rule applies to code as to visual signs"
+      ],
+      "expected_fix_hints": [
+        "Rename to communicate the resource and action (dedupe + reconcile ledger entries)",
+        "Apply the rule consistently across function, variable, and endpoint names"
+      ],
+      "absent_signals": [
+        "Do not dismiss naming as pure style with no sign cost",
+        "Do not require opening the body to understand intent"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: processData() is a signifier failure even though the implementation works."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The reader must open the function to learn its meaning — the inference cost a good sign eliminates."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends a name whose signifier points to the actual signified (e.g. reconcileLedgerEntries)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes the same one-signifier-one-signified rule applies to code as to visual signs."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rename to communicate the resource and action (dedupe + reconcile ledger entries)."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Apply the rule consistently across function, variable, and endpoint names."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not dismiss naming as pure style with no sign cost."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not require opening the body to understand intent."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "obsolete-metaphor",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A new mobile app uses a floppy-disk icon (no label) for 'Save' and a mailbox-with-flag icon for 'Send'. User testing with under-25 users shows many cannot identify either action.",
+      "context": "The team wants to keep icons label-free for a clean look.",
+      "question": "How should the agent advise on these icons?",
+      "expected_flags": [
+        "Flags obsolete metaphor — the floppy-disk referent is dead for part of the audience",
+        "Cultural/generational collision: the metaphor fails outside one group's assumptions",
+        "Recommends pairing the icon with text until/unless the convention is reliably learned",
+        "Notes abstract marks do not automatically gain meaning with exposure"
+      ],
+      "expected_fix_hints": [
+        "Pair save/send icons with text labels",
+        "Prefer a more legible metaphor or rely on platform-standard conventions"
+      ],
+      "absent_signals": [
+        "Do not keep label-free icons on the assumption users will 'just learn' them"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags obsolete metaphor — the floppy-disk referent is dead for part of the audience."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cultural/generational collision: the metaphor fails outside one group's assumptions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends pairing the icon with text until/unless the convention is reliably learned."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes abstract marks do not automatically gain meaning with exposure."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pair save/send icons with text labels."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Prefer a more legible metaphor or rely on platform-standard conventions."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep label-free icons on the assumption users will 'just learn' them."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM brings four asks to the semiotics owner: (a) decide the exact tooltip wording for a disabled control, (b) pick the brand's primary blue hex, (c) confirm the badge meets WCAG contrast, and (d) decide whether the alert icon coherently signals 'destructive'.",
+      "context": "The team conflates 'how it looks and reads' with 'what it signifies'.",
+      "question": "How should the agent scope these requests?",
+      "expected_flags": [
+        "(a) wording is out of scope — microcopy",
+        "(b) hex/palette value is out of scope — visual-design-foundations",
+        "(c) contrast compliance is out of scope — a11y",
+        "(d) is in scope — whether the alert icon's sign coherently signals 'destructive'",
+        "Redirects (a)-(c) to the owning skills rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand wording to microcopy, hex to visual-design-foundations, contrast to a11y",
+        "Take only the sign-coherence question and answer it"
+      ],
+      "absent_signals": [
+        "Do not write the tooltip copy",
+        "Do not pick the hex value or run the contrast math"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: (a) wording is out of scope — microcopy."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: (b) hex/palette value is out of scope — visual-design-foundations."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: (c) contrast compliance is out of scope — a11y."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: (d) is in scope — whether the alert icon's sign coherently signals 'destructive'."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Redirects (a)-(c) to the owning skills rather than answering out of lane."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand wording to microcopy, hex to visual-design-foundations, contrast to a11y."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Take only the sign-coherence question and answer it."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the tooltip copy."
+        },
+        {
+          "id": "c9",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not pick the hex value or run the contrast math."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "color-only-state",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A status table encodes record health purely by row background hue: pale green = healthy, pale red = failing, with no icon or text. A color-blind operator reports they cannot tell rows apart.",
+      "context": "The team wants to keep the table visually minimal.",
+      "question": "How should the agent fix the status encoding?",
+      "expected_flags": [
+        "Flags color-only state signaling — hue is the sole meaningful channel",
+        "Names the never-color-alone rule (hue is unreliable for color-blind users)",
+        "Recommends pairing color with an icon, text, or shape signal",
+        "Frames it as a sign-system fix that also improves accessibility (informs a11y, does not own it)"
+      ],
+      "expected_fix_hints": [
+        "Add a status icon and/or text label alongside the color",
+        "Keep color as a reinforcing, not the sole, channel"
+      ],
+      "absent_signals": [
+        "Do not keep hue as the only status signal",
+        "Do not treat this as solely a contrast-ratio fix"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags color-only state signaling — hue is the sole meaningful channel."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names the never-color-alone rule (hue is unreliable for color-blind users)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends pairing color with an icon, text, or shape signal."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Frames it as a sign-system fix that also improves accessibility (informs a11y, does not own it)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a status icon and/or text label alongside the color."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep color as a reinforcing, not the sole, channel."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep hue as the only status signal."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat this as solely a contrast-ratio fix."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

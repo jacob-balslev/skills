@@ -1,0 +1,429 @@
+{
+  "skill_name": "claude-code",
+  "subject": "choosing and scoping work for the Claude Code agent harness",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "codex",
+    "gpt-5-5",
+    "claude-opus",
+    "autonomous-loop-patterns",
+    "claude-api"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "harness-vs-model-conflation",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team says 'we picked Claude Code, so the model question is settled' and stops there, then later wonders why a GPT-strength task underperformed inside the harness.",
+      "context": "They treated harness choice and model choice as one decision.",
+      "question": "What is the error in this reasoning?",
+      "expected_flags": [
+        "Harness choice and model choice are two orthogonal decisions — which body runs the task vs which brain runs inside it",
+        "Picking the harness does not settle the model question, and vice versa",
+        "Conflating them leads to expecting a model strength the harness does not own"
+      ],
+      "expected_fix_hints": [
+        "Separate the harness decision (this skill) from the model-routing decision (gpt-5-5)",
+        "Choose the harness on the capability it owns, then route the model question independently"
+      ],
+      "absent_signals": [
+        "Do not claim choosing the harness settles which model should run",
+        "Do not attribute a model strength to the harness itself"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Harness choice and model choice are two orthogonal decisions — which body runs the task vs which brain runs inside it."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Picking the harness does not settle the model question, and vice versa."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Conflating them leads to expecting a model strength the harness does not own."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Separate the harness decision (this skill) from the model-routing decision (gpt-5-5)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Choose the harness on the capability it owns, then route the model question independently."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim choosing the harness settles which model should run."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not attribute a model strength to the harness itself."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "extensibility-layer-selection",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An engineer wants the agent to always run a security check before any file write, and is unsure whether to encode this as a skill, a subagent, or something else.",
+      "context": "The requirement is deterministic 'always do X before tool Y' automation, not on-demand knowledge.",
+      "question": "Which Claude Code layer fits, and why?",
+      "expected_flags": [
+        "Deterministic 'always before/after a tool' automation is a hook (PreToolUse), not a skill or subagent",
+        "A skill is on-demand expertise loaded when relevant, not a guaranteed pre-action gate",
+        "A subagent is for isolated parallel context, not a lifecycle gate"
+      ],
+      "expected_fix_hints": [
+        "Implement the pre-write security check as a PreToolUse hook",
+        "Reserve skills for recurring domain knowledge and subagents for fan-out/isolation"
+      ],
+      "absent_signals": [
+        "Do not encode a guaranteed pre-action security gate as a skill",
+        "Do not reach for a subagent for deterministic lifecycle automation"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Deterministic 'always before/after a tool' automation is a hook (PreToolUse), not a skill or subagent."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A skill is on-demand expertise loaded when relevant, not a guaranteed pre-action gate."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A subagent is for isolated parallel context, not a lifecycle gate."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Implement the pre-write security check as a PreToolUse hook."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve skills for recurring domain knowledge and subagents for fan-out/isolation."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not encode a guaranteed pre-action security gate as a skill."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not reach for a subagent for deterministic lifecycle automation."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "rival-harness-terminal-bench",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "The task is heavy terminal-command planning and iteration where the rival GPT-running harness leads the terminal benchmark. The team defaults to Claude Code 'because we like Opus.'",
+      "context": "The differentiator that matters for this task is terminal-command leadership, which a rival harness owns.",
+      "question": "Is Claude Code automatically the right harness here? Justify.",
+      "expected_flags": [
+        "When a rival harness's differentiator (terminal-command leadership) is the point of the task, route there",
+        "Model preference (liking Opus) is not a reason to pick the harness for a task the rival is better at",
+        "A harness skill should route work away from itself when a rival owns the relevant strength"
+      ],
+      "expected_fix_hints": [
+        "Route the terminal-command-iteration task to the rival harness (codex)",
+        "Decide harness on the differentiator the task needs, not on model preference"
+      ],
+      "absent_signals": [
+        "Do not default to Claude Code purely on model preference when a rival leads the task's differentiator",
+        "Do not claim Claude Code is the right harness for every task"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: When a rival harness's differentiator (terminal-command leadership) is the point of the task, route there."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Model preference (liking Opus) is not a reason to pick the harness for a task the rival is better at."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A harness skill should route work away from itself when a rival owns the relevant strength."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the terminal-command-iteration task to the rival harness (codex)."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Decide harness on the differentiator the task needs, not on model preference."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not default to Claude Code purely on model preference when a rival leads the task's differentiator."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim Claude Code is the right harness for every task."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "non-anthropic-model-lane",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A workflow must run a non-Anthropic model in one of its lanes. The team plans to do it inside Claude Code 'since it has the best extensibility stack.'",
+      "context": "Claude Code is Anthropic-first and does not natively route to non-Anthropic models the way a provider-agnostic harness does.",
+      "question": "Will Claude Code serve this lane? What fits instead?",
+      "expected_flags": [
+        "Claude Code is Anthropic-first and does not natively route to non-Anthropic models",
+        "A non-Anthropic-model lane needs a provider-agnostic harness (e.g. OpenCode) regardless of native extensibility",
+        "Extensibility strength does not substitute for the missing provider-agnostic routing"
+      ],
+      "expected_fix_hints": [
+        "Use a provider-agnostic harness (OpenCode) for the non-Anthropic-model lane",
+        "Keep Claude Code for the Anthropic-model work where its stack pays off"
+      ],
+      "absent_signals": [
+        "Do not assume Claude Code natively routes non-Anthropic models",
+        "Do not let extensibility strength override the provider-routing requirement"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Claude Code is Anthropic-first and does not natively route to non-Anthropic models."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A non-Anthropic-model lane needs a provider-agnostic harness (e.g. OpenCode) regardless of native extensibility."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Extensibility strength does not substitute for the missing provider-agnostic routing."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use a provider-agnostic harness (OpenCode) for the non-Anthropic-model lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep Claude Code for the Anthropic-model work where its stack pays off."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume Claude Code natively routes non-Anthropic models."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let extensibility strength override the provider-routing requirement."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "stale-capability-claim",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A decision rests on 'Claude Code has exactly 25 hook points and these effort tiers,' quoted from a months-old note, without checking current docs.",
+      "context": "The harness ships features fast, so version-specific capability claims (hook count, effort tiers, flags) age quickly.",
+      "question": "Is it safe to decide on that quoted capability detail? What should happen first?",
+      "expected_flags": [
+        "Version-specific capability claims (hook count, effort tiers, flags) go stale fast on this harness",
+        "A decision should not rest on a memorized/old capability number without verification",
+        "Current Claude Code docs are the source of truth for perishable capability details"
+      ],
+      "expected_fix_hints": [
+        "Verify the hook count / effort tiers / flags against current Claude Code docs before relying on them",
+        "Treat version-specific capability claims as perishable, not fixed facts"
+      ],
+      "absent_signals": [
+        "Do not decide on a months-old capability number without checking current docs",
+        "Do not quote a hook count or flag from memory as a current fact"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Version-specific capability claims (hook count, effort tiers, flags) go stale fast on this harness."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A decision should not rest on a memorized/old capability number without verification."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Current Claude Code docs are the source of truth for perishable capability details."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify the hook count / effort tiers / flags against current Claude Code docs before relying on them."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Treat version-specific capability claims as perishable, not fixed facts."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not decide on a months-old capability number without checking current docs."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not quote a hook count or flag from memory as a current fact."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "background-commit-caveat",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A team plans to dispatch commit-deliverable work to background subagents in this workspace and assume the commit will land reliably.",
+      "context": "Background-dispatched subagents have had unreliable git-commit permission propagation in this workspace.",
+      "question": "What watch-out applies, and how should commit-deliverable work be dispatched?",
+      "expected_flags": [
+        "Background-dispatched subagents have had unreliable git-commit permission propagation in this workspace",
+        "Commit-deliverable work risks silently falling back to analysis when dispatched in background",
+        "Foreground dispatch (or central orchestrator commit) is the safe pattern for a commit deliverable"
+      ],
+      "expected_fix_hints": [
+        "Dispatch commit-deliverable subagents in foreground, or have the orchestrator commit centrally",
+        "Reserve background dispatch for read-only / fire-and-collect work"
+      ],
+      "absent_signals": [
+        "Do not assume a background subagent's git commit will land reliably in this workspace",
+        "Do not dispatch a commit-deliverable task background-only and treat the commit as guaranteed"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Background-dispatched subagents have had unreliable git-commit permission propagation in this workspace."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Commit-deliverable work risks silently falling back to analysis when dispatched in background."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Foreground dispatch (or central orchestrator commit) is the safe pattern for a commit deliverable."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Dispatch commit-deliverable subagents in foreground, or have the orchestrator commit centrally."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve background dispatch for read-only / fire-and-collect work."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume a background subagent's git commit will land reliably in this workspace."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not dispatch a commit-deliverable task background-only and treat the commit as guaranteed."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "api-and-loop-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks how to write the Anthropic Messages API call that streams tool use, and how to design a generic resumable supervised agent loop — framing both as 'Claude Code questions.'",
+      "context": "SDK/API coding and generic loop topology are separate concerns from harness selection; the team folds them under the Claude Code label.",
+      "question": "How should the agent scope and route this request?",
+      "expected_flags": [
+        "Writing the Messages API call is application code (claude-api), not a harness-selection decision",
+        "Designing a generic resumable supervised loop is loop topology (autonomous-loop-patterns), below any specific harness",
+        "Neither sub-question is answered by the harness-selection skill; both should be redirected"
+      ],
+      "expected_fix_hints": [
+        "Route the Messages API coding to the claude-api reference",
+        "Route the generic loop-topology design to autonomous-loop-patterns"
+      ],
+      "absent_signals": [
+        "Do not answer SDK/API coding as if it were a harness-selection decision",
+        "Do not design generic loop topology under the harness-selection skill's lane"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Writing the Messages API call is application code (claude-api), not a harness-selection decision."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Designing a generic resumable supervised loop is loop topology (autonomous-loop-patterns), below any specific harness."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Neither sub-question is answered by the harness-selection skill; both should be redirected."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the Messages API coding to the claude-api reference."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the generic loop-topology design to autonomous-loop-patterns."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer SDK/API coding as if it were a harness-selection decision."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design generic loop topology under the harness-selection skill's lane."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

@@ -1,0 +1,562 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "transaction-isolation",
+  "subject": "Use when reasoning about the I in ACID — the isolation level a database provides between concurrent transactions: the…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "cap-theorem-tradeoffs",
+    "entity-relationship-modeling",
+    "query-optimization",
+    "indexing-strategy",
+    "replication-patterns"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"choose an isolation level for a workload that has concurrent balance-decrement operations\"",
+      "context": "The agent has access to the transaction-isolation skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is transaction-isolation the right skill to apply?",
+      "expected_flags": [
+        "Recognizes transaction-isolation as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against cap-theorem-tradeoffs, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the transaction-isolation workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore transaction-isolation",
+        "Does not route to cap-theorem-tradeoffs, entity-relationship-modeling when the transaction-isolation scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes transaction-isolation as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore transaction-isolation"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"diagnose a data-correctness bug caused by an anomaly the chosen isolation level permits\"",
+      "context": "The agent has access to the transaction-isolation skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is transaction-isolation the right skill to apply?",
+      "expected_flags": [
+        "Recognizes transaction-isolation as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against cap-theorem-tradeoffs, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the transaction-isolation workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore transaction-isolation",
+        "Does not route to cap-theorem-tradeoffs, entity-relationship-modeling when the transaction-isolation scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes transaction-isolation as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore transaction-isolation"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"explain the difference between snapshot isolation and full serializability\"",
+      "context": "The agent has access to the transaction-isolation skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is transaction-isolation the right skill to apply?",
+      "expected_flags": [
+        "Recognizes transaction-isolation as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against cap-theorem-tradeoffs, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the transaction-isolation workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore transaction-isolation",
+        "Does not route to cap-theorem-tradeoffs, entity-relationship-modeling when the transaction-isolation scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes transaction-isolation as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore transaction-isolation"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"decide whether to use SELECT FOR UPDATE or upgrade isolation level\"",
+      "context": "The agent has access to the transaction-isolation skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is transaction-isolation the right skill to apply?",
+      "expected_flags": [
+        "Recognizes transaction-isolation as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against cap-theorem-tradeoffs, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the transaction-isolation workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore transaction-isolation",
+        "Does not route to cap-theorem-tradeoffs, entity-relationship-modeling when the transaction-isolation scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes transaction-isolation as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore transaction-isolation"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"choose an isolation level for a workload that has concurrent balance-decrement operations\"",
+      "context": "The agent has access to the transaction-isolation skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is transaction-isolation the right skill to apply?",
+      "expected_flags": [
+        "Recognizes transaction-isolation as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against cap-theorem-tradeoffs, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the transaction-isolation workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore transaction-isolation",
+        "Does not route to cap-theorem-tradeoffs, entity-relationship-modeling when the transaction-isolation scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes transaction-isolation as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore transaction-isolation"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"diagnose a data-correctness bug caused by an anomaly the chosen isolation level permits\"",
+      "context": "The agent has access to the transaction-isolation skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is transaction-isolation the right skill to apply?",
+      "expected_flags": [
+        "Recognizes transaction-isolation as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against cap-theorem-tradeoffs, entity-relationship-modeling",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the transaction-isolation workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore transaction-isolation",
+        "Does not route to cap-theorem-tradeoffs, entity-relationship-modeling when the transaction-isolation scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes transaction-isolation as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore transaction-isolation"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"explain the four ACID properties as a broad database primer\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should transaction-isolation be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside transaction-isolation's ownership",
+        "Asks for the missing broader ACID owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying transaction-isolation terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply transaction-isolation as the primary skill",
+        "Name the boundary reason or the missing broader ACID owner",
+        "Offer only a narrow handoff if transaction-isolation has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim transaction-isolation should own the request",
+        "Does not use transaction-isolation's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside transaction-isolation's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the boundary reason or the missing broader ACID owner"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim transaction-isolation should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use transaction-isolation's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"reason about distributed-replica consistency under partition (use cap-theorem-tradeoffs)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should transaction-isolation be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside transaction-isolation's ownership",
+        "Asks for the missing broader ACID owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying transaction-isolation terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply transaction-isolation as the primary skill",
+        "Name the boundary reason or the missing broader ACID owner",
+        "Offer only a narrow handoff if transaction-isolation has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim transaction-isolation should own the request",
+        "Does not use transaction-isolation's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside transaction-isolation's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the boundary reason or the missing broader ACID owner"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim transaction-isolation should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use transaction-isolation's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"tune a slow query (use query-optimization)\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should transaction-isolation be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside transaction-isolation's ownership",
+        "Asks for the missing broader ACID owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying transaction-isolation terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply transaction-isolation as the primary skill",
+        "Name the boundary reason or the missing broader ACID owner",
+        "Offer only a narrow handoff if transaction-isolation has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim transaction-isolation should own the request",
+        "Does not use transaction-isolation's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside transaction-isolation's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the boundary reason or the missing broader ACID owner"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim transaction-isolation should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use transaction-isolation's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"explain the four ACID properties as a broad database primer\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should transaction-isolation be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside transaction-isolation's ownership",
+        "Asks for the missing broader ACID owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying transaction-isolation terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply transaction-isolation as the primary skill",
+        "Name the boundary reason or the missing broader ACID owner",
+        "Offer only a narrow handoff if transaction-isolation has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim transaction-isolation should own the request",
+        "Does not use transaction-isolation's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside transaction-isolation's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the boundary reason or the missing broader ACID owner"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim transaction-isolation should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use transaction-isolation's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}

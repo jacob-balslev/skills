@@ -1,0 +1,149 @@
+{
+  "skill_name": "vrio",
+  "subject": "VRIO resource-based competitive advantage analysis",
+  "adjacent_concepts": [
+    "resource-based view",
+    "VRIN",
+    "strategic resources",
+    "capabilities",
+    "valuable",
+    "rare",
+    "costly to imitate",
+    "organized to capture value",
+    "sustained competitive advantage",
+    "Seven Powers",
+    "Porter's Five Forces",
+    "SWOT/TOWS"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define VRIO in 2-3 sentences. Include all four tests and the kind of strategic question it answers.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines VRIO as a resource-based strategy or competitive advantage framework",
+        "Names Valuable",
+        "Names Rare",
+        "Names costly to Imitate or inimitable",
+        "Names Organized or organization to capture value",
+        "Explains it evaluates resources or capabilities",
+        "Connects passing all four tests to sustained competitive advantage"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of VRIO. Name the primitives and describe how the sequential tests determine the competitive implication.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names a resource or capability as the unit of analysis",
+        "Explains the relevant competitive context",
+        "Describes value as the first test",
+        "Describes rarity as dependent on the resource being valuable",
+        "Describes imitation cost as dependent on value and rarity",
+        "Describes organization as the ability to capture value",
+        "Maps failed gates to disadvantage, parity, temporary advantage, under-exploited advantage, or sustained advantage"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a VRIO skill exist for agents? Name the common failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents ordinary strengths being mislabeled as moats",
+        "Forces precise resource or capability definition",
+        "Forces value evidence tied to opportunities, threats, cost, revenue, risk, speed, quality, or options",
+        "Forces rarity comparison against competitors",
+        "Forces imitation-cost mechanism",
+        "Forces organization-to-capture-value analysis",
+        "Prevents final strategy claims from a flattering checklist"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish VRIO from Porter's Five Forces, SWOT/TOWS, Seven Powers, BCG Matrix, Ansoff Matrix, Playing to Win, and Expected Value. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Porter's Five Forces analyzes external industry profit-pressure structure",
+        "SWOT/TOWS inventories internal/external factors and crosses them into options",
+        "Seven Powers classifies durable power-source categories",
+        "BCG Matrix allocates among portfolio units by market growth and relative market share",
+        "Ansoff Matrix classifies product-market growth paths",
+        "Playing to Win integrates strategic choices into a cascade",
+        "Expected Value compares options by probability and value",
+        "VRIO tests internal resources and capabilities for sustained advantage"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place VRIO among strategy methods. What inputs feed it, what outputs should it produce, and which methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies VRIO as resource-based view or internal competitive advantage analysis",
+        "Names inputs such as resource inventory, capability inventory, competitor comparison, or value evidence",
+        "Names outputs such as competitive implication, organization gap, protection priority, development action, or evidence gaps",
+        "Explains that Five Forces, SWOT/TOWS, Seven Powers, Playing to Win, Expected Value, BCG, or Ansoff can feed or follow it",
+        "Does not classify VRIO as an external industry analysis or portfolio allocation matrix"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for VRIO that preserves the sequential resource-test mechanism. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving gates, checkpoints, filters, or tests",
+        "Preserves the order of value, rarity, imitation cost, and organization",
+        "Explains that a failed early gate changes the implication",
+        "Rejects an analogy that treats VRIO as a list of strengths",
+        "Rejects an analogy that makes VRIO an external market attractiveness tool"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A company claims four advantages. A generic CRM setup improves sales execution but every competitor has one. A proprietary dataset improves pricing and only two rivals have comparable depth, but it could be replicated within a year. A trusted supplier network lowers costs, is rare, and depends on ten years of relationships, but procurement incentives prevent teams from using it. A machine-learning workflow improves retention, is rare, hard to imitate because it combines data, routines, and tacit know-how, and the organization has teams, incentives, systems, and metrics to exploit it. Apply VRIO and state evidence needed.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Classifies the generic CRM as valuable but not rare, implying competitive parity",
+        "Classifies the proprietary dataset as valuable and rare but not costly enough to imitate, implying temporary advantage",
+        "Classifies the supplier network as valuable, rare, and costly to imitate but not organized, implying under-exploited advantage or organization gap",
+        "Classifies the machine-learning workflow as a sustained advantage candidate",
+        "Names needed evidence for value, rarity, imitation cost, organization, or competitor comparison",
+        "Does not call every positive resource a moat"
+      ]
+    }
+  ]
+}

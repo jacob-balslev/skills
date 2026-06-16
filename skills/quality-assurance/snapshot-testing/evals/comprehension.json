@@ -1,0 +1,155 @@
+{
+  "skill_name": "snapshot-testing",
+  "subject": "Snapshot testing and reviewed baseline comparison",
+  "adjacent_concepts": [
+    "testing-strategy",
+    "property-based-testing",
+    "test-driven-development",
+    "test-doubles-design",
+    "e2e-test-design",
+    "diff-analysis"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define snapshot testing in 2-3 sentences. Include capture, stored baseline, comparison, diff review, and update approval.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Captures output from a known-good run",
+        "Stores the output as a baseline snapshot or golden file",
+        "Compares future output against that baseline",
+        "Treats a mismatch as a diff requiring human review",
+        "Updates the baseline only after confirming the change is intentional"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of snapshot testing. Name at least seven primitives and show how they relate.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "At least seven of: target output, snapshot artifact, serializer, baseline, comparison algorithm, diff, approval cycle, update command, deterministic input control, reviewer, version control",
+        "Explains the snapshot artifact is the assertion",
+        "Explains the diff is the decision surface",
+        "Explains approval changes the baseline and rejection means fixing production or test code",
+        "Explains deterministic output is a precondition for low-churn snapshots"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does snapshot testing exist? Name the output types and failure modes it is meant to handle.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Useful when complex output would be expensive to hand-specify",
+        "Names data, DOM/HTML, text/file/generated output, or visual/image snapshots",
+        "Surfaces structural or visual drift for review",
+        "Supports characterization of legacy behavior before refactoring",
+        "Prevents unnoticed output changes when reviewers actually inspect diffs",
+        "Does not replace explicit behavioral assertions"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish snapshot testing from testing strategy, property-based testing, test-driven development, test doubles, e2e test design, and diff analysis.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "testing-strategy chooses the overall mix, levels, and cadence",
+        "property-based-testing asserts universal properties over generated inputs",
+        "test-driven-development owns strict test-first workflow",
+        "test-doubles-design owns fake/stub/mock collaborators",
+        "e2e-test-design owns user-journey correctness across a running system",
+        "diff-analysis helps inspect changes but does not define snapshot baseline policy",
+        "snapshot-testing owns capture-and-compare baseline artifacts and approval discipline"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Classify data snapshots, DOM snapshots, text/file snapshots, and visual snapshots. What makes each stable or unstable?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Data snapshots serialize objects or API responses",
+        "DOM snapshots serialize markup or component trees",
+        "Text/file snapshots compare generated files, CLI output, SQL, or logs",
+        "Visual snapshots compare screenshots with pixel/perceptual thresholds",
+        "Stability requires controlling timestamps, random IDs, order, locale, environment, and rendering variance",
+        "Visual snapshots require stable browser/platform/font/rendering environment or service"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "application",
+      "prompt": "Novel scenario: A component snapshot changes in every PR because IDs, current time, and object key order appear in the snapshot. Developers now run update-snapshot automatically. Diagnose and repair the testing practice.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Identifies snapshot churn from nondeterministic output",
+        "Rejects automatic baseline update without review",
+        "Controls time, IDs, key/order, locale, or serializers",
+        "Keeps snapshots small/readable or replaces with targeted assertions",
+        "Requires reviewers to inspect diffs before accepting baseline changes"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Snapshot tests are automatic regression tests, so if they fail we can just run the update command and commit the new snapshot.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects update-without-review as removing test value",
+        "Requires reading the diff",
+        "Distinguishes intentional changes from bugs",
+        "Updates baseline only for intentional changes",
+        "Fixes production or test code when the diff is unintentional",
+        "Mentions snapshots should be committed and reviewed like other test assertions"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for snapshot testing that preserves baseline capture, comparison, diff review, and deliberate approval. Then name one bad analogy.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses photograph, blueprint, ledger, saved proof, or equivalent baseline analogy",
+        "Maps baseline capture to a stored artifact",
+        "Maps comparison to noticing differences from the saved artifact",
+        "Maps approval to deciding whether the difference is intended",
+        "Rejects a bad analogy that treats updating the record without looking as verification"
+      ]
+    }
+  ]
+}

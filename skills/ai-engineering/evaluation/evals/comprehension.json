@@ -1,0 +1,187 @@
+{
+  "skill_name": "evaluation",
+  "subject": "Completion evaluation",
+  "adjacent_concepts": [
+    "agent-eval-design",
+    "code-review",
+    "testing-strategy",
+    "methodology",
+    "debugging",
+    "epistemic-grounding",
+    "eval-driven-development"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define completion evaluation in 2-3 sentences. Include what evidence it compares before work can be called done.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Evaluation is a gate applied to a concrete artifact or task result",
+        "Compares the original request or acceptance criteria with the produced artifact",
+        "Requires verification evidence rather than confidence",
+        "Names residual risks or missing evidence",
+        "Ends with accept, accept-with-risk, revise, or block"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain why evaluation is a gate rather than a compliment, and name the minimum evidence packet before scoring.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects praise or plausibility as the purpose of evaluation",
+        "Names the original request",
+        "Names the artifact or changed files",
+        "Names verification evidence",
+        "Names residual risks, unrun checks, or accepted tradeoffs"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish evaluation from agent-eval-design, code-review, testing-strategy, methodology, debugging, and eval-driven-development. Give a mechanism-level boundary for each.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "agent-eval-design owns eval-suite, grader, threshold, and hard-negative design",
+        "code-review owns line-by-line diff findings",
+        "testing-strategy owns choosing test levels and regression targets",
+        "methodology owns process and gates before implementation exists",
+        "debugging owns root-cause analysis of a known failure",
+        "eval-driven-development owns iterative LLM-system change gating with eval suites",
+        "evaluation owns whole-deliverable completion scoring"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A teammate says, 'Tests passed, so the work is complete.' Use the evaluation skill to explain the misconception and apply a score ceiling.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Tests passing is evidence, not full completion",
+        "The artifact must still match the original request and acceptance criteria",
+        "Docs, state, publication, or reporting gaps can cap the score",
+        "Residual risks and unrun checks must be visible",
+        "A required action remaining caps the score at 3"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "An agent says it completed a documentation-and-code task. Tests passed, but the requested documentation update is missing and no final residual-risk note was written. Score the deliverable and name the required action.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Does not accept the task as fully complete",
+        "Applies a maximum score of 3 because required documentation or reporting remains unresolved",
+        "Names the missing documentation update as a required action",
+        "Names the missing residual-risk note as a reporting gap",
+        "Requires focused re-verification and rescoring after revision"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "application",
+      "prompt": "Before scoring a completed implementation, list the smallest sufficient evidence packet the evaluator must inspect and explain why missing inputs lower confidence.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names the original request or acceptance criteria",
+        "Names the produced artifact, changed files, document, UI, or report",
+        "Names verification evidence such as tests, commands, screenshots, traces, or source reads",
+        "Names relevant domain standards or skills when the artifact type requires them",
+        "Explains that missing inputs cap the score because completion claims become unverifiable"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "A deliverable appears polished, but the evaluator cannot find verification evidence and the original acceptance criteria were not checked. What score ceiling applies and why?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Applies a maximum score of 2",
+        "States that absent verification evidence prevents accepting quality claims",
+        "States that unchecked original request or acceptance criteria can reward the wrong artifact",
+        "Rejects polish or plausibility as a substitute for evidence",
+        "Requires checking the missing criteria and evidence before rescoring"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "During completion evaluation, you discover three material gaps with different severities. What information must each finding preserve so the report is actionable?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Preserves every material finding rather than summarizing them away",
+        "Includes severity for each finding",
+        "Includes the surface and concrete evidence for each finding",
+        "Explains the problem in terms of correctness, completeness, safety, maintainability, or verifiability",
+        "Names the required action and current status for each finding"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "application",
+      "prompt": "An evaluation finds required revisions. Describe the evaluation-revision loop that must happen before the task can be called done.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Lists the material findings and required revisions before acceptance",
+        "Applies the revisions inside the current scope",
+        "Runs focused verification against the revised surface",
+        "Rescores after verification rather than keeping the original score",
+        "Does not mark the work done between finding required actions and verifying the revisions"
+      ]
+    },
+    {
+      "id": 10,
+      "dimension": "application",
+      "prompt": "Write the completion evaluator's final reporting stance when some checks passed, one relevant check was not run, and a residual risk remains accepted by the user.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Separates passed checks from unrun checks",
+        "Names the accepted residual risk explicitly",
+        "Does not imply more certainty than the evidence supports",
+        "Uses accept-with-risk rather than unconditional acceptance when the risk is real but accepted",
+        "Applies a maximum score of 4 for known residual risk that is disclosed and accepted"
+      ]
+    }
+  ]
+}

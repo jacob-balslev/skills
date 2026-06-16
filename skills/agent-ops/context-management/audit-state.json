@@ -1,0 +1,312 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-05-06",
+  "drift_check": {
+    "last_verified": "2026-05-06"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-05-28",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-13",
+    "last_run": {
+      "at": "2026-06-13T11:17:27.181Z",
+      "operation": "evaluate",
+      "phase": "generator",
+      "agent": "representative-generator",
+      "status": "failed",
+      "duration_ms": 2568,
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "source": "unavailable"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 62,
+      "total_duration_ms": 7077155,
+      "total_tokens": 0,
+      "tokens_observed_count": 62
+    }
+  },
+  "model_run_coverage": {
+    "schema_version": 1,
+    "updated_at": "2026-06-13T11:17:11.612Z",
+    "registry_version": "2026-06-10",
+    "models": {
+      "opus": {
+        "model": "opus",
+        "provider": "anthropic",
+        "backend": "claude",
+        "tier": "mandatory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-13T11:17:11.612Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "mandatory",
+            "status": "degraded",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "completed",
+              "evaluate": "completed",
+              "apply": "completed",
+              "record": "completed"
+            },
+            "verdict": "UNVERIFIED",
+            "certifying": false,
+            "regrade_required": true,
+            "failure_reason": "non-certifying-run",
+            "failure_detail": "non-converged:round-budget(2)",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/context-management/runs/2026-06-13T1052--merge--opus--33687f/context-management.merge-ledger.json"
+          }
+        }
+      },
+      "gpt-5.5": {
+        "model": "gpt-5.5",
+        "provider": "openai",
+        "backend": "codex",
+        "tier": "mandatory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-13T11:17:11.612Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "mandatory",
+            "status": "degraded",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "completed",
+              "evaluate": "completed",
+              "apply": "completed",
+              "record": "completed"
+            },
+            "verdict": "UNVERIFIED",
+            "certifying": false,
+            "regrade_required": true,
+            "failure_reason": "non-certifying-run",
+            "failure_detail": "non-converged:round-budget(2)",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/context-management/runs/2026-06-13T1052--merge--opus--33687f/context-management.merge-ledger.json"
+          }
+        }
+      },
+      "gemini": {
+        "model": "gemini",
+        "provider": "google",
+        "backend": "gemini",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-13T11:17:11.612Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/context-management/runs/2026-06-13T1052--merge--opus--33687f/context-management.merge-ledger.json"
+          }
+        }
+      },
+      "deepseek-flash": {
+        "model": "deepseek-flash",
+        "provider": "opencode",
+        "backend": "opencode",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-13T11:17:11.612Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "failed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "failed",
+              "cross_review": "skipped",
+              "revise": "skipped",
+              "curate": "skipped",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "failure_reason": "error",
+            "failure_detail": "deepseek-flash: captured 0b of text (not document-shaped) and no file written; dispatch ok=false; reason=error",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/context-management/runs/2026-06-13T1052--merge--opus--33687f/context-management.merge-ledger.json"
+          }
+        }
+      },
+      "mimo": {
+        "model": "mimo",
+        "provider": "opencode",
+        "backend": "opencode",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-13T11:17:11.612Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "failed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "failed",
+              "cross_review": "skipped",
+              "revise": "skipped",
+              "curate": "skipped",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "failure_reason": "error",
+            "failure_detail": "mimo: captured 0b of text (not document-shaped) and no file written; dispatch ok=false; reason=error",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/context-management/runs/2026-06-13T1052--merge--opus--33687f/context-management.merge-ledger.json"
+          }
+        }
+      },
+      "gemini-flash": {
+        "model": "gemini-flash",
+        "provider": "google",
+        "backend": "gemini",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-13T11:17:11.612Z",
+            "operation": "panel",
+            "eval_mode": "application",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/context-management/runs/2026-06-13T1052--merge--opus--33687f/context-management.merge-ledger.json"
+          }
+        }
+      }
+    }
+  },
+  "last_changed": "2026-06-13",
+  "eval_last_run": {
+    "at": "2026-06-13T11:17:11.614Z",
+    "status": "pass",
+    "runner": "skill-audit-loop guardrail (bidirectional)",
+    "bidirectional": {
+      "frontier_pair": [
+        "opus",
+        "gpt-5.5"
+      ],
+      "measured_generator": "representative-generator",
+      "generator_population": "deployment-representative",
+      "reconciliation": "conservative",
+      "agreement": true,
+      "parity_ok": true,
+      "certifying_clean": false,
+      "synthesized_verdict": "UNVERIFIED",
+      "applicable_for": "neither",
+      "eval_slice": "all",
+      "registry_version": "2026-06-10",
+      "merge_ledger_ref": "skill-graph/skill-audit-loop/progress/skill-audits/context-management/runs/2026-06-13T1052--merge--opus--33687f/context-management.merge-ledger.json",
+      "directions": [
+        {
+          "role": "Claude",
+          "generator_model": "representative-generator",
+          "grader_model": "opus",
+          "generator_family": "representative-generator",
+          "grader_family": "opus",
+          "resolved_model": "latest-alias-unresolved",
+          "verdict": "UNVERIFIED",
+          "certification_tier": "certifying"
+        },
+        {
+          "role": "Codex",
+          "generator_model": "representative-generator",
+          "grader_model": "gpt-5.5",
+          "generator_family": "representative-generator",
+          "grader_family": "gpt-5.5",
+          "resolved_model": "latest-alias-unresolved",
+          "verdict": "UNVERIFIED",
+          "certification_tier": "certifying"
+        }
+      ],
+      "provisional_reason": null,
+      "fence_caveat": "fence: prompt-level only — the repoScope/answer-key boundary was the prompt + claim-filter, NOT an OS-isolated public-only checkout (isolated-eval-workspace.js). A certifying verdict here is honest only to that fence strength.",
+      "execution_profile": {
+        "tools": "full",
+        "research": "repo",
+        "repoScope": "skill-graph + skills ONLY",
+        "cwd": "skill-graph",
+        "fence": "prompt-level"
+      }
+    }
+  }
+}

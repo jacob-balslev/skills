@@ -1,0 +1,200 @@
+{
+  "skill_name": "scenario-planning",
+  "subject": "Scenario planning for strategy under deep uncertainty",
+  "adjacent_concepts": [
+    "strategic foresight",
+    "PESTEL",
+    "horizon scanning",
+    "critical uncertainties",
+    "2x2 scenario matrix",
+    "policy stress-testing",
+    "expected value",
+    "Bayesian reasoning",
+    "Three Horizons",
+    "SWOT/TOWS",
+    "Playing to Win"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define scenario planning in 2-3 sentences. Include why it differs from a single forecast.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines scenario planning as a strategic-foresight or strategy method for deep uncertainty",
+        "Mentions several plausible future worlds or scenarios",
+        "Explains that the scenarios are used to test or improve decisions",
+        "Distinguishes scenarios from a single forecast or prediction",
+        "Does not define the method as optimistic/base/pessimistic forecasting only"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of scenario planning. Name the primitives and how they relate.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names a focal decision or strategic question",
+        "Names a time horizon and scope",
+        "Names drivers or driving forces",
+        "Distinguishes predetermined elements from critical uncertainties",
+        "Names scenario narratives or logics",
+        "Names implications, signposts, robust actions, options, hedges, or contingencies",
+        "Explains that scenarios test choices across plausible futures"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a scenario-planning skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents collapsing uncertainty into one forecast",
+        "Prevents fake probabilities when uncertainty is deep",
+        "Prevents best/base/worst lists from substituting for distinct future worlds",
+        "Prevents strategy choices from ignoring signposts and contingencies",
+        "Prevents generic trend stories that do not affect decisions"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish scenario planning from PESTEL, expected value, Bayesian reasoning, Three Horizons, SWOT/TOWS, and Playing to Win. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "PESTEL scans macro-environment forces rather than constructing alternative future worlds",
+        "Expected value compares options with probabilities and payoffs",
+        "Bayesian reasoning updates belief after evidence",
+        "Three Horizons allocates innovation or transformation portfolios across horizons",
+        "SWOT/TOWS inventories factors and generates options",
+        "Playing to Win owns the integrated strategy cascade",
+        "Scenario planning owns critical-uncertainty-based future construction and stress-testing"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place scenario planning among strategy methods. What inputs can feed it, what outputs should it produce, and what methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies scenario planning as strategic foresight or strategy-under-uncertainty work",
+        "Names inputs such as PESTEL, horizon scanning, stakeholder interviews, market research, industry analysis, or weak signals",
+        "Names outputs such as scenarios, narratives, implications, signposts, robust actions, contingent actions, hedges, options, or research needs",
+        "Explains that strategy cascades, OKRs, roadmaps, expected-value comparisons, or policy stress-testing may follow",
+        "Explains that scenario planning informs but does not replace the final strategy choice"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for scenario planning that preserves the mechanism. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving rehearsing or preparing for several plausible conditions",
+        "Maps scenarios to distinct future conditions or worlds",
+        "Maps strategy testing to actions that survive or depend on conditions",
+        "Names signposts, triggers, or monitoring in the analogy",
+        "Rejects an analogy that treats scenario planning as a single prediction or best/worst forecast",
+        "Explains what the bad analogy loses"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "prompt": "Novel scenario: A B2B software company faces uncertainty about AI adoption speed and data-residency regulation over the next four years. Apply scenario planning and state what evidence is missing.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Frames the focal decision and time horizon",
+        "Treats AI adoption speed and regulation as candidate critical uncertainties",
+        "Builds or sketches distinct scenarios rather than one forecast",
+        "Names predetermined elements or evidence already known",
+        "Stress-tests strategy or product options across scenarios",
+        "Identifies robust actions, contingent actions, options, hedges, or stops",
+        "Names signposts and monitoring triggers",
+        "Names missing evidence without inventing facts"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "Novel scenario: A team gives you three scenarios named optimistic, base, and pessimistic. Review the quality and say how to repair them.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Flags optimistic/base/pessimistic as a weak scenario-planning pattern",
+        "Explains that the scenarios likely share one forecast axis",
+        "Recommends selecting high-impact critical uncertainties",
+        "Recommends building distinct internally consistent worlds",
+        "Recommends neutral names and causal narratives",
+        "Recommends stress-testing decisions and defining signposts"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "application",
+      "prompt": "Novel scenario: A public library is planning digital-skills services for the next decade. Uncertainties include local funding stability and community broadband access. Use scenario planning without making profit the only outcome.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Frames a public-service or mission-oriented focal decision",
+        "Uses funding stability and broadband access as candidate critical uncertainties",
+        "Creates or sketches multiple plausible scenarios",
+        "Considers beneficiary need, access, equity, partners, delivery capacity, and outcomes",
+        "Names robust or no-regret actions",
+        "Names contingent actions or monitoring triggers",
+        "Avoids profit-only attractiveness criteria"
+      ]
+    },
+    {
+      "id": 10,
+      "dimension": "misconception",
+      "prompt": "Correct this misconception: 'Scenario planning is just assigning probabilities to possible futures and picking the most likely one.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Rejects picking only the most likely future as the core mechanism",
+        "Explains that probabilities may be unavailable or misleading under deep uncertainty",
+        "Explains the goal is robust and contingent strategy across plausible futures",
+        "Mentions multiple internally consistent scenarios",
+        "Mentions signposts, monitoring, or strategic implications"
+      ]
+    }
+  ]
+}

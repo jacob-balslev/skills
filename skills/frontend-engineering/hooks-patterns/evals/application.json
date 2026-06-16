@@ -1,0 +1,519 @@
+{
+  "skill_name": "hooks-patterns",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, The Dependency Array, When useEffect Is the Wrong Primitive, Derived vs Stored Values, Custom Hooks, useMemo/useCallback Footgun Cases, React 18+ Semantics, Verification, Do NOT Use When) plus current React docs (Rules of Hooks, exhaustive-deps, You Might Not Need an Effect, useEffectEvent, React Compiler).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "effect-derived-state",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A ProductList component keeps `visibleItems` in useState, recomputes it in useEffect whenever `items` changes, and omits `filters` from the dependency array because adding it causes too many rerenders.",
+      "context": "visibleItems is fully determined by props and local filter state.",
+      "question": "How should the agent repair the hook pattern?",
+      "expected_flags": [
+        "Identifies visibleItems as derived state.",
+        "Removes state plus effect when render-time computation is sufficient.",
+        "Uses useMemo only if filtering is expensive and dependencies are honest.",
+        "Treats the missing dependency as a stale-closure bug, not a lint nuisance.",
+        "Does not disable exhaustive-deps to hide the problem."
+      ],
+      "expected_fix_hints": [
+        "Compute `const visibleItems = filterItems(items, filters)` during render.",
+        "Use `useMemo(() => filterItems(items, filters), [items, filters])` only with evidence or expensive work.",
+        "If adding a dependency loops, find the state/update cycle causing the loop."
+      ],
+      "absent_signals": [
+        "Do not keep an effect just to mirror derived values into state.",
+        "Do not omit filters from dependencies.",
+        "Do not claim useMemo is required for all filtering."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies visibleItems as derived state."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Removes state plus effect when render-time computation is sufficient."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses useMemo only if filtering is expensive and dependencies are honest."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treats the missing dependency as a stale-closure bug, not a lint nuisance."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Does not disable exhaustive-deps to hide the problem."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Compute `const visibleItems = filterItems(items, filters)` during render."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use `useMemo(() => filterItems(items, filters), [items, filters])` only with evidence or expensive work."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: If adding a dependency loops, find the state/update cycle causing the loop."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep an effect just to mirror derived values into state."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not omit filters from dependencies."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim useMemo is required for all filtering."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "effect-event-latest-read",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An analytics effect should send a page-view event when `url` changes, but the event payload should include the latest shopping cart count without sending a new page-view every time the cart changes.",
+      "context": "The project can use current React docs and wants to avoid stale closures.",
+      "question": "Which hook pattern should the agent choose?",
+      "expected_flags": [
+        "Makes `url` the reactive dependency for the page-view effect.",
+        "Uses an Effect Event to read the latest cart count without making cart count reactive for the effect.",
+        "Does not add Effect Events to dependency arrays.",
+        "Avoids lying about dependencies or using an unexplained lint disable.",
+        "Mentions a ref mirror only as a compatibility escape hatch when Effect Events are unavailable."
+      ],
+      "expected_fix_hints": [
+        "Define an Effect Event that reads cart count and sends analytics.",
+        "Call the Effect Event from a useEffect that depends on url.",
+        "Keep reactive and non-reactive reads explicit."
+      ],
+      "absent_signals": [
+        "Do not put cart count in the effect deps if the requirement is no resend on cart change.",
+        "Do not omit cart count from a normal closure without an Effect Event/ref explanation.",
+        "Do not treat useEffectEvent as a generic event handler replacement."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Makes `url` the reactive dependency for the page-view effect."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Uses an Effect Event to read the latest cart count without making cart count reactive for the effect."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Does not add Effect Events to dependency arrays."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Avoids lying about dependencies or using an unexplained lint disable."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Mentions a ref mirror only as a compatibility escape hatch when Effect Events are unavailable."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define an Effect Event that reads cart count and sends analytics."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Call the Effect Event from a useEffect that depends on url."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep reactive and non-reactive reads explicit."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not put cart count in the effect deps if the requirement is no resend on cart change."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not omit cart count from a normal closure without an Effect Event/ref explanation."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat useEffectEvent as a generic event handler replacement."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "memoization-footgun",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A component wraps every object literal in useMemo and every event handler in useCallback. Most children are ordinary components, React Compiler is enabled, and no profiler evidence exists.",
+      "context": "The team says this prevents rerenders.",
+      "question": "How should the agent audit the memoization?",
+      "expected_flags": [
+        "Distinguishes stable identity for memoized consumers from blanket performance optimization.",
+        "Removes memoization that has no memoized consumer, dependency benefit, or expensive computation.",
+        "Keeps memoization where the value is a dependency of another hook or prop to a memoized child.",
+        "Mentions React Compiler reduces need for manual memoization in covered code.",
+        "Requires profiler or benchmark evidence for performance claims."
+      ],
+      "expected_fix_hints": [
+        "Check whether children use memo or equivalent equality.",
+        "Check whether computed values are expensive enough to cache.",
+        "Prefer simpler code when memoization has no observable benefit."
+      ],
+      "absent_signals": [
+        "Do not say useCallback prevents parent rerenders.",
+        "Do not keep all memoization as harmless.",
+        "Do not remove memoization that preserves a dependency contract without checking."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes stable identity for memoized consumers from blanket performance optimization."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Removes memoization that has no memoized consumer, dependency benefit, or expensive computation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps memoization where the value is a dependency of another hook or prop to a memoized child."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Mentions React Compiler reduces need for manual memoization in covered code."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires profiler or benchmark evidence for performance claims."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check whether children use memo or equivalent equality."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check whether computed values are expensive enough to cache."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Prefer simpler code when memoization has no observable benefit."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not say useCallback prevents parent rerenders."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep all memoization as harmless."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not remove memoization that preserves a dependency contract without checking."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "custom-hook-extraction",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A 220-line component is split into five custom hooks, but each hook is used only once and has generic names like usePartOne and usePartTwo. One extracted hook hides an effect dependency warning.",
+      "context": "The team wants shorter component files.",
+      "question": "How should the agent decide whether the custom hooks are justified?",
+      "expected_flags": [
+        "Rejects extraction solely because the component body is long.",
+        "Keeps custom hooks when logic is reused, names a meaningful abstraction, or encapsulates a state machine.",
+        "Flags generic one-call-site hooks as indirection without value.",
+        "Pulls hidden effect dependencies back into view or documents a real exception.",
+        "Preserves Rules of Hooks and dependency correctness inside custom hooks."
+      ],
+      "expected_fix_hints": [
+        "Rename or collapse hooks that do not name a reusable concept.",
+        "Keep hooks such as useScrollPosition or useFormDraft if they name real stateful logic.",
+        "Run exhaustive-deps on extracted hooks as strictly as components."
+      ],
+      "absent_signals": [
+        "Do not treat shorter files as sufficient architecture.",
+        "Do not hide stale closures inside custom hooks.",
+        "Do not extract effects without their related state and cleanup."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Rejects extraction solely because the component body is long."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps custom hooks when logic is reused, names a meaningful abstraction, or encapsulates a state machine."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags generic one-call-site hooks as indirection without value."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Pulls hidden effect dependencies back into view or documents a real exception."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Preserves Rules of Hooks and dependency correctness inside custom hooks."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rename or collapse hooks that do not name a reusable concept."
+        },
+        {
+          "id": "c7",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep hooks such as useScrollPosition or useFormDraft if they name real stateful logic."
+        },
+        {
+          "id": "c8",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Run exhaustive-deps on extracted hooks as strictly as components."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat shorter files as sufficient architecture."
+        },
+        {
+          "id": "c10",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hide stale closures inside custom hooks."
+        },
+        {
+          "id": "c11",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not extract effects without their related state and cleanup."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "client-server-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A Next.js team asks whether a new page should be a Server Component or Client Component and where to place the `use client` boundary.",
+      "context": "The question is about serialization and component placement across server/client.",
+      "question": "Should hooks-patterns own this request?",
+      "expected_flags": [
+        "This is client-server-boundary work.",
+        "Hooks patterns apply after code is intentionally on the client side.",
+        "The key question is serialization and where interactivity begins."
+      ],
+      "expected_fix_hints": [
+        "Route boundary placement to client-server-boundary.",
+        "Return to hooks-patterns only for client-side hook implementation details."
+      ],
+      "absent_signals": [
+        "Do not decide server/client placement by starting with hook mechanics.",
+        "Do not use hooks in Server Components."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is client-server-boundary work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Hooks patterns apply after code is intentionally on the client side."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The key question is serialization and where interactivity begins."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route boundary placement to client-server-boundary."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Return to hooks-patterns only for client-side hook implementation details."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not decide server/client placement by starting with hook mechanics."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use hooks in Server Components."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "state-location-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team asks where an order list should live across routes: server cache, client store, URL params, or persistent storage.",
+      "context": "No particular component hook bug is being audited yet.",
+      "question": "Should hooks-patterns own this request?",
+      "expected_flags": [
+        "This is state-management work.",
+        "Hooks patterns owns local expression after state location is chosen.",
+        "The answer should compare ownership, lifetime, sharing, persistence, and synchronization needs."
+      ],
+      "expected_fix_hints": [
+        "Route to state-management.",
+        "Use hooks-patterns later for useState/useReducer/effect details inside client components."
+      ],
+      "absent_signals": [
+        "Do not reduce app-wide state location to useState versus useEffect.",
+        "Do not ignore route, server, URL, or persistence concerns."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is state-management work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Hooks patterns owns local expression after state location is chosen."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The answer should compare ownership, lifetime, sharing, persistence, and synchronization needs."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to state-management."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use hooks-patterns later for useState/useReducer/effect details inside client components."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not reduce app-wide state location to useState versus useEffect."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore route, server, URL, or persistence concerns."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "suspense-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A product asks how to place Suspense boundaries, loading fallbacks, and streamed data regions for a dashboard.",
+      "context": "The request concerns async UI boundary design rather than individual hook dependencies.",
+      "question": "Should hooks-patterns own this request?",
+      "expected_flags": [
+        "This is suspense-patterns or rendering-models work.",
+        "Hooks may appear in the implementation but do not own boundary/fallback architecture.",
+        "The key concepts are async boundaries, progressive reveal, and loading/error states."
+      ],
+      "expected_fix_hints": [
+        "Route to suspense-patterns for boundary design.",
+        "Use hooks-patterns only for local hook misuse discovered inside client components."
+      ],
+      "absent_signals": [
+        "Do not solve Suspense layout by editing dependency arrays.",
+        "Do not confuse data-fetching boundary design with useEffect usage."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is suspense-patterns or rendering-models work."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Hooks may appear in the implementation but do not own boundary/fallback architecture."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The key concepts are async boundaries, progressive reveal, and loading/error states."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route to suspense-patterns for boundary design."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use hooks-patterns only for local hook misuse discovered inside client components."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not solve Suspense layout by editing dependency arrays."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not confuse data-fetching boundary design with useEffect usage."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

@@ -1,0 +1,491 @@
+{
+  "skill_name": "server-actions-design",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (The 'use server' Contract, Form-First Mutation Pattern, useActionState/useFormStatus, Cache And Navigation After Writes, Bound Arguments And Closures, Security Discipline, Common Anti-Patterns, Verification, Do NOT Use When) and the current Next.js/React docs on Server Functions, data security, and cache primitives.",
+  "adjacent_concepts": [
+    "server-components-design",
+    "client-server-boundary",
+    "api-design",
+    "form-ux-architecture",
+    "hooks-patterns",
+    "security-fundamentals"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "missing-authorization",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A Client Component imports `deleteInvoice` from a module-level `'use server'` file and calls it from a button click with the invoice id. The action checks that `await auth()` returns a user, then deletes the invoice by id. It does not check that the user belongs to the invoice's organization.",
+      "context": "The UI hides the button unless the current user is an org admin, but the action can be invoked by direct POST with any invoice id.",
+      "question": "Review the design and recommend the first fixes.",
+      "expected_flags": [
+        "Identifies the action as a public endpoint despite function-like syntax.",
+        "Flags authentication without per-resource authorization.",
+        "Flags the invoice id as untrusted client-controlled input."
+      ],
+      "expected_fix_hints": [
+        "Validate the id shape server-side.",
+        "Authorize the current user against the invoice's org and delete permission before mutation.",
+        "Revalidate or refresh affected invoice/list paths after deletion."
+      ],
+      "absent_signals": [
+        "Must not rely on hidden/admin-only UI.",
+        "Must not suggest action ID obscurity as protection.",
+        "Must not route primarily to server-components-design."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies the action as a public endpoint despite function-like syntax."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags authentication without per-resource authorization."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags the invoice id as untrusted client-controlled input."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Validate the id shape server-side."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Authorize the current user against the invoice's org and delete permission before mutation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Revalidate or refresh affected invoice/list paths after deletion."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not rely on hidden/admin-only UI."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not suggest action ID obscurity as protection."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not route primarily to server-components-design."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "progressive-enhancement-regression",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A create-comment form uses `<button onClick={() => addComment(textareaValue)}>` and local React state for all field values. With JavaScript disabled or before hydration, the form cannot submit.",
+      "context": "The mutation is an ordinary in-app form submission and should work before hydration.",
+      "question": "Apply the skill and redesign the action integration.",
+      "expected_flags": [
+        "Flags JS-only invocation as losing progressive enhancement.",
+        "Recommends form-first `<form action={serverAction}>` or `formAction` wiring.",
+        "Keeps server-side validation and action state in the design."
+      ],
+      "expected_fix_hints": [
+        "Use named form fields and a FormData-consuming action.",
+        "Use `useActionState` for returned validation state when client enhancement is needed.",
+        "Use `useFormStatus` in a child submit button for pending UI."
+      ],
+      "absent_signals": [
+        "Must not require a separate API route for this ordinary in-app form.",
+        "Must not rely only on client state validation.",
+        "Must not ignore no-JavaScript behavior."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags JS-only invocation as losing progressive enhancement."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommends form-first `<form action={serverAction}>` or `formAction` wiring."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps server-side validation and action state in the design."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use named form fields and a FormData-consuming action."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use `useActionState` for returned validation state when client enhancement is needed."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use `useFormStatus` in a child submit button for pending UI."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not require a separate API route for this ordinary in-app form."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not rely only on client state validation."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore no-JavaScript behavior."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "stale-ui-after-mutation",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A Server Action updates a product title and returns `{ ok: true }`. The product detail page and product list are rendered by Server Components using cached fetches tagged `products`, but the action does not call any cache or router update primitive.",
+      "context": "Users report that the save succeeds but the old title remains visible until a hard refresh.",
+      "question": "What should a Server Actions design review flag and change?",
+      "expected_flags": [
+        "Flags missing cache invalidation or router refresh after mutation.",
+        "Chooses a path/tag/router primitive based on affected read paths.",
+        "Distinguishes immediate read-your-own-writes needs from stale-while-revalidate behavior."
+      ],
+      "expected_fix_hints": [
+        "Use `updateTag('products')` in the Server Action when immediate fresh tagged data is required.",
+        "Use `revalidatePath` for specific affected pages or route patterns.",
+        "Call cache updates before `redirect` when navigating after the write."
+      ],
+      "absent_signals": [
+        "Must not say the mutation result alone updates Server Component caches.",
+        "Must not use `refresh()` from a Route Handler or Client Component.",
+        "Must not ignore the list/detail split."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags missing cache invalidation or router refresh after mutation."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Chooses a path/tag/router primitive based on affected read paths."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes immediate read-your-own-writes needs from stale-while-revalidate behavior."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use `updateTag('products')` in the Server Action when immediate fresh tagged data is required."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use `revalidatePath` for specific affected pages or route patterns."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Call cache updates before `redirect` when navigating after the write."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not say the mutation result alone updates Server Component caches."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not use `refresh()` from a Route Handler or Client Component."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore the list/detail split."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "public-api-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A product team wants a documented endpoint that a mobile app, a Zapier integration, and external customers can call to create orders. They ask whether a Server Action is enough because it already runs on the server.",
+      "context": "The consumers need stable URLs, status codes, auth documentation, versioning, and observability independent of one App Router UI.",
+      "question": "Should server-actions-design own this as the primary solution? If not, where should it route?",
+      "expected_flags": [
+        "Routes the stable external contract to api-design or explicit route-handler design.",
+        "Explains that Server Actions are generated in-app UI endpoints, not public API contracts.",
+        "Keeps server-actions-design only for internal UI mutations."
+      ],
+      "expected_fix_hints": [
+        "Design a public API with stable route, auth, request/response schema, errors, and versioning.",
+        "Optionally share server-side mutation logic behind both the API and internal action."
+      ],
+      "absent_signals": [
+        "Must not expose generated action endpoints as the public contract.",
+        "Must not ignore API versioning/status code needs.",
+        "Must not route to form-ux-architecture."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes the stable external contract to api-design or explicit route-handler design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that Server Actions are generated in-app UI endpoints, not public API contracts."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps server-actions-design only for internal UI mutations."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Design a public API with stable route, auth, request/response schema, errors, and versioning."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Optionally share server-side mutation logic behind both the API and internal action."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not expose generated action endpoints as the public contract."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore API versioning/status code needs."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not route to form-ux-architecture."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "read-path-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user asks how to fetch a dashboard summary in a Server Component, where to place cached fetches, and how to avoid passing too much data into Client Components.",
+      "context": "There is no client-triggered mutation or form submission in scope.",
+      "question": "Should server-actions-design own the detailed work? If not, where should it route?",
+      "expected_flags": [
+        "Routes Server Component read-path architecture to server-components-design.",
+        "May mention client-server-boundary for prop serialization and data minimization.",
+        "Keeps server-actions-design out unless a mutation is introduced."
+      ],
+      "expected_fix_hints": [
+        "Use server-components-design for read-path fetching and caching.",
+        "Use client-server-boundary for safe data transfer into Client Components."
+      ],
+      "absent_signals": [
+        "Must not introduce Server Actions for read-only rendering.",
+        "Must not frame cache reads as mutation revalidation work.",
+        "Must not route primarily to api-design."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes Server Component read-path architecture to server-components-design."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: May mention client-server-boundary for prop serialization and data minimization."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps server-actions-design out unless a mutation is introduced."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use server-components-design for read-path fetching and caching."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use client-server-boundary for safe data transfer into Client Components."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not introduce Server Actions for read-only rendering."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not frame cache reads as mutation revalidation work."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not route primarily to api-design."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "validation-and-input-trust",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An edit-profile Server Action accepts a typed `UpdateProfileInput` argument and a hidden `role` input. It relies on the TypeScript signature and the hidden field to decide what to write, with no runtime parsing, and writes the submitted `role` directly.",
+      "context": "The action is reachable by direct POST; the browser fully controls the serialized argument bytes and any hidden field value.",
+      "question": "Apply the skill: what is unsafe and how should the action handle input and the role field?",
+      "expected_flags": [
+        "Flags reliance on the TypeScript signature as runtime validation — types do not run on hostile requests.",
+        "Flags the hidden `role` (and any client-supplied authority field) as attacker-controlled, not proof of authority.",
+        "Flags writing a client-submitted privilege/role value directly as privilege escalation."
+      ],
+      "expected_fix_hints": [
+        "Parse the serialized argument / FormData with a runtime schema at the action boundary.",
+        "Derive the actor and permitted role from the server session, never from client-submitted fields.",
+        "Authorize the specific update against server truth before mutating, and return only client-safe data."
+      ],
+      "absent_signals": [
+        "Must not accept the TypeScript signature as input validation.",
+        "Must not trust the hidden role / client-supplied authority field.",
+        "Must not return raw database records to the client."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags reliance on the TypeScript signature as runtime validation — types do not run on hostile requests."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags the hidden `role` (and any client-supplied authority field) as attacker-controlled, not proof of authority."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags writing a client-submitted privilege/role value directly as privilege escalation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Parse the serialized argument / FormData with a runtime schema at the action boundary."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Derive the actor and permitted role from the server session, never from client-submitted fields."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Authorize the specific update against server truth before mutating, and return only client-safe data."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not accept the TypeScript signature as input validation."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not trust the hidden role / client-supplied authority field."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not return raw database records to the client."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "useformstatus-placement",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A form component calls `useFormStatus()` in the same component that renders `<form action={formAction}>` to disable its submit button while pending, but `pending` is always false.",
+      "context": "The team wants a pending state on the submit button driven by the form's in-flight action.",
+      "question": "Why does this not work and how should the skill be applied?",
+      "expected_flags": [
+        "Flags that useFormStatus reads the status of the nearest PARENT form and does not observe a form rendered in the same component that calls the hook.",
+        "Identifies the placement (same component) as the cause of the always-false pending.",
+        "Keeps the action's server-side execution/security model unchanged — this is a hook-placement fix."
+      ],
+      "expected_fix_hints": [
+        "Move the submit button (and its useFormStatus call) into a child component nested inside the form.",
+        "Alternatively read isPending from useActionState if state is already wired through that hook."
+      ],
+      "absent_signals": [
+        "Must not route this to hooks-patterns as general hook debugging (it is the action-specific hook).",
+        "Must not suggest a JS-only click handler to track pending state."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags that useFormStatus reads the status of the nearest PARENT form and does not observe a form rendered in the same component that calls the hook."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies the placement (same component) as the cause of the always-false pending."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps the action's server-side execution/security model unchanged — this is a hook-placement fix."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move the submit button (and its useFormStatus call) into a child component nested inside the form."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Alternatively read isPending from useActionState if state is already wired through that hook."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not route this to hooks-patterns as general hook debugging (it is the action-specific hook)."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not suggest a JS-only click handler to track pending state."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

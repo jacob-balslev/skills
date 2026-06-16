@@ -1,0 +1,334 @@
+{
+  "skill_name": "codex",
+  "subject": "Selecting and scoping work for the Codex CLI agent harness",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "claude-code",
+    "gpt-5-5",
+    "autonomous-loop-patterns",
+    "eval-driven-development",
+    "claude-api"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "resume-vs-cold-restart",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An agent ran a multi-step migration in Codex yesterday, got interrupted, and wants to continue today. Its plan is to open a fresh `codex exec` run and re-paste the full prior context (transcript, plan, decisions) into the new prompt.",
+      "context": "The prior session exists with a stored transcript, plan, and approvals; the agent has the session id available.",
+      "question": "How should the agent continue this work, and what is wrong with the proposed approach?",
+      "expected_flags": [
+        "Cold one-shot re-priming wastes tokens and discards the stored plan and approval history",
+        "A resumable session reuses transcript/plan/approvals — continuation should resume by id, not re-paste"
+      ],
+      "expected_fix_hints": [
+        "Continue with `codex exec resume <SESSION_ID>` (or `--last`) to reuse the stored session state",
+        "Avoid re-sending the full context every turn when a resumable session exists"
+      ],
+      "absent_signals": [
+        "Do not recommend re-pasting full context into a fresh run as the continuation method",
+        "Do not claim resuming requires manually restating the prior plan"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cold one-shot re-priming wastes tokens and discards the stored plan and approval history."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A resumable session reuses transcript/plan/approvals — continuation should resume by id, not re-paste."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Continue with `codex exec resume <SESSION_ID>` (or `--last`) to reuse the stored session state."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Avoid re-sending the full context every turn when a resumable session exists."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not recommend re-pasting full context into a fresh run as the continuation method."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim resuming requires manually restating the prior plan."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "scripted-in-process-dispatch",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team wants to fold a GPT-driven consultation into a CI script and into an in-process dispatch path, and needs the agent's final plan + results captured to stdout so the surrounding script can parse them.",
+      "context": "The work must be automatable and non-interactive; a visible interactive TUI session is not usable here.",
+      "question": "Which Codex capability fits, and how should it be invoked?",
+      "expected_flags": [
+        "The non-interactive `exec` mode pipes the final plan + results to stdout, which is what makes it scriptable and dispatchable in-process",
+        "The interactive TUI is the wrong surface for automation"
+      ],
+      "expected_fix_hints": [
+        "Use `codex exec` (non-interactive) for the scripted/pipeline path and capture its stdout",
+        "Hold the thread across turns by capturing and resuming the session id rather than cold one-shots"
+      ],
+      "absent_signals": [
+        "Do not propose the interactive TUI for an automated pipeline",
+        "Do not assume cold one-shots are equivalent to a held, resumable session"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The non-interactive `exec` mode pipes the final plan + results to stdout, which is what makes it scriptable and dispatchable in-process."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The interactive TUI is the wrong surface for automation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use `codex exec` (non-interactive) for the scripted/pipeline path and capture its stdout."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hold the thread across turns by capturing and resuming the session id rather than cold one-shots."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not propose the interactive TUI for an automated pipeline."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume cold one-shots are equivalent to a held, resumable session."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "subagent-autonomy-misconception",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "An agent plans to hand Codex a large task whole, expecting it to 'automatically spawn subagents and fan the work out in parallel' with no explicit instruction to do so.",
+      "context": "The task is large and the agent is relying on automatic parallel fan-out to complete it on time.",
+      "question": "Is that expectation correct, and how should the agent plan the fan-out?",
+      "expected_flags": [
+        "Codex subagents are NOT autonomous — the harness spawns them only when explicitly asked",
+        "Assuming automatic fan-out will leave the large task running serially, not parallelized"
+      ],
+      "expected_fix_hints": [
+        "Explicitly request the subagents / configure them in `[agents]` rather than assuming automatic fan-out",
+        "Plan the parallelism deliberately instead of relying on implicit behavior"
+      ],
+      "absent_signals": [
+        "Do not state Codex spawns subagents autonomously",
+        "Do not design the plan around implicit automatic fan-out"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Codex subagents are NOT autonomous — the harness spawns them only when explicitly asked."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Assuming automatic fan-out will leave the large task running serially, not parallelized."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Explicitly request the subagents / configure them in `[agents]` rather than assuming automatic fan-out."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Plan the parallelism deliberately instead of relying on implicit behavior."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not state Codex spawns subagents autonomously."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the plan around implicit automatic fan-out."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "permission-mode-risk",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A task needs the agent to reach an external network endpoint. A teammate sets the session to Full Access for the whole run 'to avoid permission prompts,' for a session that also has write access to the working tree.",
+      "context": "Full Access opens network and cross-machine reach; the default safer modes are Auto and Read-only.",
+      "question": "Which permission mode is required and what is the safety implication of choosing it?",
+      "expected_flags": [
+        "Full Access is the mode that grants network/cross-machine reach and is the elevated-risk boundary, not a convenience default",
+        "Defaulting the whole run to Full Access to skip prompts widens the blast radius unnecessarily"
+      ],
+      "expected_fix_hints": [
+        "Use Full Access only for the step that genuinely needs network reach, and default to Auto/Read-only otherwise",
+        "Scope the elevated permission deliberately and narrowly rather than for the entire session"
+      ],
+      "absent_signals": [
+        "Do not treat Full Access as the routine default",
+        "Do not ignore the network/cross-machine risk of Full Access"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Full Access is the mode that grants network/cross-machine reach and is the elevated-risk boundary, not a convenience default."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Defaulting the whole run to Full Access to skip prompts widens the blast radius unnecessarily."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use Full Access only for the step that genuinely needs network reach, and default to Auto/Read-only otherwise."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Scope the elevated permission deliberately and narrowly rather than for the entire session."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat Full Access as the routine default."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore the network/cross-machine risk of Full Access."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "review-pass",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A developer wants a focused, prioritized review pass over a diff before merge and asks how to get ranked, actionable findings from Codex.",
+      "context": "The work is a dedicated diff-review pass, not implementation.",
+      "question": "Which Codex capability fits this need?",
+      "expected_flags": [
+        "Codex's `/review` is a dedicated diff-review agent that produces prioritized, actionable findings",
+        "A review pass is a distinct capability from running the implementation session"
+      ],
+      "expected_fix_hints": [
+        "Use the `/review` agent for the focused diff-review pass",
+        "Keep the review pass separate from the implementation/exec flow"
+      ],
+      "absent_signals": [
+        "Do not claim Codex has no review capability",
+        "Do not conflate the review pass with a general implementation run"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Codex's `/review` is a dedicated diff-review agent that produces prioritized, actionable findings."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A review pass is a distinct capability from running the implementation session."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use the `/review` agent for the focused diff-review pass."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the review pass separate from the implementation/exec flow."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim Codex has no review capability."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not conflate the review pass with a general implementation run."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "harness-vs-model-vs-loop-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A user asks: 'Is GPT-5 or Claude Opus the better model for reviewing this auth diff, and separately, can you design me a generic supervised resumable agent loop from scratch with retry and claim logic?'",
+      "context": "The first question is a GPT-vs-Claude model-routing decision; the second is generic agent-loop design. Neither is a decision about whether to use the Codex harness.",
+      "question": "How should the agent scope this request?",
+      "expected_flags": [
+        "GPT-vs-Claude model routing is owned by the gpt-5-5 skill, not the Codex harness skill",
+        "Designing a generic resumable/supervised agent loop is owned by the autonomous-loop-patterns skill — loop topology below any specific harness"
+      ],
+      "expected_fix_hints": [
+        "Route the GPT-vs-Claude review-model question to the gpt-5-5 skill",
+        "Route the generic agent-loop design to the autonomous-loop-patterns skill"
+      ],
+      "absent_signals": [
+        "Do not answer the model-routing question as if it were a Codex harness decision",
+        "Do not design the generic agent loop as within this skill's scope"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: GPT-vs-Claude model routing is owned by the gpt-5-5 skill, not the Codex harness skill."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Designing a generic resumable/supervised agent loop is owned by the autonomous-loop-patterns skill — loop topology below any specific harness."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the GPT-vs-Claude review-model question to the gpt-5-5 skill."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the generic agent-loop design to the autonomous-loop-patterns skill."
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer the model-routing question as if it were a Codex harness decision."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not design the generic agent loop as within this skill's scope."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

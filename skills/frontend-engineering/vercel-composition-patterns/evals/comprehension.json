@@ -1,0 +1,142 @@
+{
+  "skill_name": "vercel-composition-patterns",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "state-management",
+    "rendering-models",
+    "design-system-architecture",
+    "refactor",
+    "code-review"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define React composition patterns as a discipline in 2-3 sentences. Name the core patterns and what problem they solve.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Frames it as growing a component API by composition instead of accumulating boolean flags",
+        "Names the core patterns: compound components, explicit variants, children-over-render-props, and the provider state/actions/meta interface",
+        "States the problem solved: boolean prop proliferation / state-space explosion / fragile conditional rendering",
+        "Mentions composition keeps valid states explicit and enumerable as the component scales"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why is each boolean prop described as a multiplier on a component's state space, and what does that imply about adding 'just one more boolean'?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Each boolean doubles the combined state space (n booleans -> 2^n combinations)",
+        "Most of those combinations are impossible, unsupported, or contradictory",
+        "Adding a boolean is a cost (untested combinations, brittle conditionals), not a free feature",
+        "The real shape of the component is the set of named valid variants, not the cartesian product of flags"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "When should an agent reach for a compound component (shared-context children) versus an explicit variant component? What does each buy and cost?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Compound components fit a family of parts that share state (e.g. Tabs.List/Tab/Panel) coordinated through a provider",
+        "Explicit variants fit a fixed set of named modes that would otherwise be flag combinations",
+        "Compound components trade some API ceremony for flexible, prop-drill-free composition",
+        "Explicit variants trade a larger named surface for eliminating impossible flag combinations"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A Button component has props isPrimary, isLoading, isDisabled, isGhost, and isIcon. Walk through how the skill says to refactor it.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Run the boolean state-explosion audit: 5 booleans -> 32 combined states, most impossible",
+        "Inventory flags, enumerate valid combinations, delete impossible states",
+        "Name the remaining valid states as explicit variant components",
+        "Add an example or test per valid variant"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Describe the provider state/actions/meta interface and why decoupling implementation from consumers matters.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The provider is the single place that owns and knows how state is managed",
+        "It exposes a generic interface of state, actions, and meta",
+        "State is lifted into the provider so siblings access it without prop drilling",
+        "Consumers depend on the contract, not the implementation, enabling dependency injection / swapping internals"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks this skill to stop a component tree from re-rendering too often by adding memoization. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — render-performance optimization (memoization, suspense, profiling) belongs to a React performance skill (react-best-practices)",
+        "This skill owns the component's API shape, not its render speed",
+        "Correctly distinguishes API composition from rendering optimization",
+        "Offers to redirect performance work to the owning skill"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "An engineer says 'more props makes the component more flexible, so I'll just add another boolean.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "More booleans mostly add fragility, not flexibility — each one doubles the state space and most combinations are invalid",
+        "Real flexibility comes from composition: explicit variants, a provider, and children composition",
+        "At 3+ booleans, treat the API as broken until the state-explosion audit proves otherwise",
+        "Adding a boolean is a cost (untested combinations, brittle conditionals), not a free win"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a component has been correctly refactored using these composition patterns?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "No component has 3+ boolean props without an explicit variant refactor",
+        "State is lifted into a context provider, not drilled through props",
+        "Compound components use children composition, not renderX props",
+        "Impossible state combinations are documented and eliminated; each valid variant has an example or test",
+        "React 19 code passes ref as a regular prop and uses use() instead of useContext()"
+      ]
+    }
+  ]
+}

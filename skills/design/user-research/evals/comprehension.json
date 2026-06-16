@@ -1,0 +1,142 @@
+{
+  "skill_name": "user-research",
+  "subject": "design",
+  "adjacent_concepts": [
+    "problem-framing",
+    "research-synthesis",
+    "usability-testing",
+    "design-thinking",
+    "intent-recognition"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define generative qualitative user research in 2-3 sentences. Name its core method families and when it is typically done.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Learning what real people do, think, feel, and need in their own context — typically before a solution exists",
+        "Names method families: generative interviews, contextual methods (contextual inquiry, observation, shadowing), and longitudinal methods (diary studies, experience sampling)",
+        "States it is generative (discover needs/context), distinct from evaluating an existing artifact",
+        "Studies real users, not assumptions or imagined users"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does user research lean on 'tell me about the last time you…' rather than 'would you use…' questions?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "People are unreliable narrators of their own future/hypothetical behavior but reliable about concrete recent episodes",
+        "Episodic memory is more trustworthy than self-prediction",
+        "Hypothetical/future-tense questions invite speculation, not evidence",
+        "Anchoring on a real past event yields verifiable behavior rather than imagined behavior"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Compare contextual inquiry, fly-on-the-wall observation, and shadowing. What does each trade off?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Contextual inquiry: master-apprentice stance, researcher asks clarifying questions while the user works — more depth, more intrusion",
+        "Fly-on-the-wall: removes researcher questions entirely — most naturalistic, least interpretive depth",
+        "Shadowing: follows a single user through their day",
+        "The core trade-off is naturalism (less intrusion → more authentic behavior) vs depth (more questions → richer interpretation)"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "You are writing an interview guide. What construction rules keep it from producing biased data?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Open with broad context questions, then move to specific recent episodes",
+        "Avoid hypotheticals ('would you use…') and leading/solution-prompting questions ('don't you find it frustrating…')",
+        "Use silence and 'say more about that' rather than paraphrasing or finishing sentences",
+        "Use critical-incident technique and 5 Whys laddering to push past surface answers"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A behavior unfolds over weeks (how someone manages a chronic condition day to day). Which method fits and why?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "A diary study / longitudinal method, because the behavior does not surface in a single session",
+        "Daily prompts, photo diaries, or experience sampling capture in-context moments",
+        "Reduces recall bias by capturing the moment rather than relying on later memory",
+        "A single interview would miss the day-to-day variation"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A team has a working prototype and asks user-research to check whether users can complete the checkout flow on it. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — that is usability-testing (evaluative: watching users attempt tasks on an existing artifact to find defects)",
+        "User research is generative — it studies users before an artifact exists, to discover needs and context",
+        "Correctly distinguishes generative discovery from evaluative testing",
+        "Redirects to usability-testing rather than answering out of lane"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'just ask users what features they want and build the top ones.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "People cannot reliably predict their own future behavior or preferences",
+        "Asking for desired features yields speculation and solution-prompting, not evidence of real need",
+        "Better: ask about concrete recent episodes and observe behavior, since what people do and say they do differ",
+        "Research uncovers needs and context, which the team translates into solutions — users do not hand over the answer"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "After a round of interviews, how do you verify the research was sound rather than self-confirming?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "The guide contained no leading/hypothetical/solution-prompting questions; every question answerable by a real past event",
+        "At least one finding contradicts a hypothesis the team held going in (if all findings confirm, questions were probably leading)",
+        "Sessions recorded with consent so synthesis works from primary data, not memory",
+        "Sample composition documented including who was excluded and why; for contextual studies, observation in the real environment",
+        "The researcher can name what they still don't know, not just what they confirmed"
+      ]
+    }
+  ]
+}

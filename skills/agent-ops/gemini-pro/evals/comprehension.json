@@ -1,0 +1,99 @@
+{
+  "skill_name": "gemini-pro",
+  "subject": "When to route a task to Google's Gemini Pro frontier model versus Claude Opus or GPT-5",
+  "adjacent_concepts": [
+    "gemini-flash",
+    "agent-engineering",
+    "skill-router",
+    "autonomous-loop-patterns"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define what the gemini-pro skill decides in 2-3 sentences. Name the frontier alternatives it weighs against and the dominant signal that selects Gemini Pro.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must not describe it as a Gemini API integration tutorial or as choosing the cheap Flash tier."
+    },
+    {
+      "id": 2,
+      "dimension": "purpose",
+      "prompt": "A team always sends every task to Claude Opus out of habit. Give two concrete situations where that default is the wrong call and Gemini Pro is the better route, and say why for each.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must not claim Gemini Pro is universally better than Opus; the answer must be situation-specific (large context, native multimodal, capability-per-dollar)."
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "A task needs cross-document reasoning over a 600K-token corpus of mixed PDFs and transcripts. Apply the skill: which model, and what are the two specific Gemini-Pro properties that decide it? What pricing fact must you budget for?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not ignore the 200K context-tier pricing cliff (the whole request reprices at ~2x above 200K). Must not recommend chunk-and-retrieve when a 1M-window single call is the point."
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish gemini-pro from gemini-flash, agent-engineering, and skill-router by the MECHANISM each owns, not just the label.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not route a cheap-classification task, an agent-architecture task, or a local-skill-dispatch task to gemini-pro."
+    },
+    {
+      "id": 5,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'Gemini Pro has a 1M-token context window, so it is the best model for finding a specific fact buried inside a 1M-token document.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "critical",
+      "negative_expectation": "Must not conflate context capacity with long-context retrieval quality; must acknowledge GPT-5 leads retrieval quality even where Gemini holds more tokens."
+    },
+    {
+      "id": 6,
+      "dimension": "taxonomy",
+      "prompt": "Lay out the per-lane model map this skill teaches: which frontier model owns large-context single-call reasoning, which owns the hardest agentic code modification, and which owns long-context retrieval quality and hard math.",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must not claim one model dominates every lane."
+    },
+    {
+      "id": 7,
+      "dimension": "analogy",
+      "prompt": "Give an analogy that explains why Gemini Pro wins on capacity (context size) even when another model is faster or stronger on a specific task lane.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "router",
+      "criticality": "medium"
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "A task is a 25K-token prompt asking for a straightforward summary, run a few thousand times a day. Apply the skill: should this go to Gemini Pro? Justify using the skill's routing logic.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "high",
+      "negative_expectation": "Must NOT route this to Gemini Pro — small prompt, no large-context or multimodal signal; must escalate-down to the Flash tier (gemini-flash)."
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "skill_name": "layout-composition",
+  "subject": "design",
+  "adjacent_concepts": [
+    "task-analysis",
+    "information-architecture",
+    "visual-design-foundations",
+    "design-system-architecture",
+    "a11y"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define layout composition in 2-3 sentences. What runs first in the process and what runs second?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as assigning priority-ranked content to space across the viewport range",
+        "Hierarchy runs first, structure second",
+        "Names the chain: hierarchy -> scan pattern -> grid/flex skeleton -> content-driven breakpoints",
+        "States the goal is for the task hierarchy to survive every real viewport"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why are breakpoints defined where the content breaks rather than at named device widths?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Device-named breakpoints (375/768/1024) expire when new devices ship",
+        "Content-break points (column too narrow, table loses essential columns, card below usable width) are durable",
+        "Designing to devices dates the layout; designing to content keeps it robust",
+        "Breakpoints serve the content's legibility, not the device catalogue"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Why are stable dimensions on fixed-format elements important, and what is the cost of skipping them?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Tables, charts, media, toolbars must hold size so the layout does not reflow on load/hover/label change",
+        "Without them, the page jumps/shifts and breaks the user's spatial memory",
+        "Layout shift is a designed-out defect, not an inevitability",
+        "Reserve space / aspect-ratio for elements whose content arrives or updates"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A dashboard works on desktop but the mobile scan path is broken - users have to scroll past secondary widgets to reach the key metric. How do you fix the composition?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Re-derive the mobile scan order from the content hierarchy (primary metric first)",
+        "Decide what collapses/stacks/pins/hides at the narrow breakpoint so primary stays above the fold",
+        "Preserve action and recovery order as widgets stack",
+        "Design the narrow viewport deliberately rather than letting desktop shrink"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A page renders a chart and a table; while data loads, surrounding content jumps as they pop in. How should layout composition prevent this?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Reserve stable dimensions / aspect-ratio for the chart and table regions",
+        "Loading, empty, and error states must occupy the same structural slot as the loaded state",
+        "Responsive media must not overflow its container",
+        "Layout shift during loading is designed out"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the layout-composition skill to design the global navigation and sitemap. In scope or not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope - navigation, sitemap, and page grouping are information-architecture",
+        "layout-composition owns the structure WITHIN a single page/screen, not movement between screens",
+        "Correctly distinguishes within-page structure from cross-page taxonomy",
+        "Hands the navigation question to information-architecture"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Someone says 'just design it on the desktop canvas and let it shrink for mobile.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "That treats responsiveness as automatic degradation",
+        "Names failures: primary task buried on mobile, columns squeezed illegible, device-width breakpoints, content pop/shift",
+        "Corrected: start from hierarchy, design the narrow viewport deliberately, set content-break breakpoints, stable dimensions",
+        "Responsiveness is a designed sequence of compositions across the viewport range"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a layout composition is sound?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Primary task visible before supporting detail; breakpoints content-driven not device-named",
+        "Fixed-format elements have stable dimensions or aspect ratios",
+        "Mobile/narrow layouts preserve action and recovery order",
+        "Loading/empty/error states do not shift the core layout; media cannot overflow",
+        "Accessibility landmarks, heading order, and focus order match the visual order"
+      ]
+    },
+    {
+      "id": 9,
+      "dimension": "application",
+      "prompt": "What is the difference between layout composition and visual-design-foundations, and why keep them separate?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "layout-composition owns spatial structure and responsive behavior (where things go, how they reflow)",
+        "visual-design-foundations owns color, typography taste, spacing aesthetics, mood, polish (the finish)",
+        "A structurally sound layout can carry any visual finish; polish cannot rescue a broken structure",
+        "Separating them lets structure be verified independently of taste"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,358 @@
+{
+  "skill_name": "replication-patterns",
+  "subject": "Database replication patterns",
+  "mode": "application",
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "read-after-write-lag",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A product lets users update notification settings. Writes go to the primary database, while reads are load-balanced across read replicas. Support reports that a user can save settings, refresh immediately, and see the old values for a few seconds.",
+      "context": "The system uses asynchronous primary-replica replication for read scaling. There is no session stickiness or version token in the read path.",
+      "question": "Diagnose the likely cause and recommend changes.",
+      "expected_flags": [
+        "Identifies replication lag from asynchronous read replicas as the likely cause.",
+        "Flags the read-after-write consistency problem rather than treating it as query tuning.",
+        "Notes that default read-from-any-replica behavior can show stale data after a write."
+      ],
+      "expected_fix_hints": [
+        "Route the user's reads to the leader for a short window after writes.",
+        "Use sticky sessions or monotonic-read version tokens so the user reads from a sufficiently fresh replica.",
+        "Monitor replica lag and set an alert threshold tied to user-visible staleness."
+      ],
+      "absent_signals": [
+        "Must not say async replication provides strong read-after-write consistency by default.",
+        "Must not suggest sharding as the direct fix.",
+        "Must not treat backups as relevant to this stale-read symptom."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies replication lag from asynchronous read replicas as the likely cause."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags the read-after-write consistency problem rather than treating it as query tuning."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes that default read-from-any-replica behavior can show stale data after a write."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the user's reads to the leader for a short window after writes."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use sticky sessions or monotonic-read version tokens so the user reads from a sufficiently fresh replica."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Monitor replica lag and set an alert threshold tied to user-visible staleness."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not say async replication provides strong read-after-write consistency by default."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not suggest sharding as the direct fix."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat backups as relevant to this stale-read symptom."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "rpo-zero-requirement",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A payments ledger currently uses single-leader asynchronous replication to another availability zone. The product requirement says acknowledged commits must survive primary loss with RPO=0.",
+      "context": "The team cares more about correctness and durability than write latency. Replica failure may be tolerated by failing closed.",
+      "question": "Evaluate whether the current replication choice matches the requirement.",
+      "expected_flags": [
+        "Flags that asynchronous replication can lose acknowledged writes during the lag window.",
+        "Connects RPO=0 to synchronous or semi-synchronous replication with explicit durability semantics.",
+        "Names the latency and write-availability cost of waiting for replica acknowledgements."
+      ],
+      "expected_fix_hints": [
+        "Use synchronous replication or a consensus-backed commit path for the ledger.",
+        "Document what happens when the required replica acknowledgement is unavailable.",
+        "Test failover and commit durability under primary failure."
+      ],
+      "absent_signals": [
+        "Must not claim async primary-replica replication gives RPO=0.",
+        "Must not describe this as merely a CAP terminology problem.",
+        "Must not ignore the write-latency trade-off."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags that asynchronous replication can lose acknowledged writes during the lag window."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Connects RPO=0 to synchronous or semi-synchronous replication with explicit durability semantics."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names the latency and write-availability cost of waiting for replica acknowledgements."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use synchronous replication or a consensus-backed commit path for the ledger."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Document what happens when the required replica acknowledgement is unavailable."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Test failover and commit durability under primary failure."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not claim async primary-replica replication gives RPO=0."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not describe this as merely a CAP terminology problem."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore the write-latency trade-off."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "split-brain-failover",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A database HA script promotes a replica if it cannot reach the primary for 10 seconds. During a network partition, both the old primary and promoted replica accepted writes for 4 minutes.",
+      "context": "There is no quorum service, no fencing, and no operator confirmation before promotion.",
+      "question": "What replication/failover failure occurred, and what should change?",
+      "expected_flags": [
+        "Identifies split brain caused by heuristic auto-failover without quorum or fencing.",
+        "Flags silent divergence risk from two write-accepting primaries.",
+        "Distinguishes failover safety from replication topology alone."
+      ],
+      "expected_fix_hints": [
+        "Use quorum-based promotion with an odd voting set or a consensus system.",
+        "Use fencing or STONITH so the old leader cannot keep writing.",
+        "Rehearse failover and define a manual fallback if automatic promotion is not safe."
+      ],
+      "absent_signals": [
+        "Must not say faster failover alone solves the problem.",
+        "Must not suggest read-replica load balancing as the fix.",
+        "Must not ignore data reconciliation after the split-brain window."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies split brain caused by heuristic auto-failover without quorum or fencing."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags silent divergence risk from two write-accepting primaries."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes failover safety from replication topology alone."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use quorum-based promotion with an odd voting set or a consensus system."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use fencing or STONITH so the old leader cannot keep writing."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Rehearse failover and define a manual fallback if automatic promotion is not safe."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not say faster failover alone solves the problem."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not suggest read-replica load balancing as the fix."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore data reconciliation after the split-brain window."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "multi-leader-conflicts",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A collaboration app wants active-active writes in the US and EU. The team proposes multi-leader replication and says conflicts are unlikely, so last-write-wins is fine.",
+      "context": "Users can edit the same document from both regions, and document edits are business-critical.",
+      "question": "Assess the risk and recommend a replication design response.",
+      "expected_flags": [
+        "Flags that multi-leader replication requires explicit conflict resolution.",
+        "Calls out last-write-wins as a potentially lossy merge strategy.",
+        "Connects active-active writes to conflict tests and application merge semantics."
+      ],
+      "expected_fix_hints": [
+        "Choose and test a conflict-resolution strategy such as CRDTs, vector clocks with application merge, or single-writer routing per document.",
+        "Add concurrent-write scenarios to the test suite.",
+        "Document what data may be overwritten and what must be preserved."
+      ],
+      "absent_signals": [
+        "Must not treat multi-leader as a free active-active switch.",
+        "Must not recommend sharding as the main answer to conflict resolution.",
+        "Must not accept last-write-wins without naming data-loss risk."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flags that multi-leader replication requires explicit conflict resolution."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Calls out last-write-wins as a potentially lossy merge strategy."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Connects active-active writes to conflict tests and application merge semantics."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Choose and test a conflict-resolution strategy such as CRDTs, vector clocks with application merge, or single-writer routing per document."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add concurrent-write scenarios to the test suite."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Document what data may be overwritten and what must be preserved."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat multi-leader as a free active-active switch."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not recommend sharding as the main answer to conflict resolution."
+        },
+        {
+          "id": "c9",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not accept last-write-wins without naming data-loss risk."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "sharding-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A multi-tenant SaaS database has one primary node whose write throughput is saturated. Each tenant is independent, and almost every query includes tenant_id. The team asks whether tenant_id should decide which node owns each tenant's rows.",
+      "context": "The problem is write capacity and storage distribution, not copying the same data for availability.",
+      "question": "Should replication-patterns own this decision? If not, where should it route?",
+      "expected_flags": [
+        "Identifies this as horizontal partitioning/shard-key selection rather than replication.",
+        "Routes the decision to sharding-strategy.",
+        "Explains that replication copies the same data while sharding divides different data."
+      ],
+      "expected_fix_hints": [
+        "Use sharding-strategy to evaluate tenant_id as a shard key.",
+        "Consider replication separately per shard for high availability after the sharding decision."
+      ],
+      "absent_signals": [
+        "Must not force replication-patterns onto a sharding decision.",
+        "Must not discuss read-after-write lag as the central issue.",
+        "Must not claim replicas increase write capacity for one primary."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies this as horizontal partitioning/shard-key selection rather than replication."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes the decision to sharding-strategy."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that replication copies the same data while sharding divides different data."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use sharding-strategy to evaluate tenant_id as a shard key."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Consider replication separately per shard for high availability after the sharding decision."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not force replication-patterns onto a sharding decision."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not discuss read-after-write lag as the central issue."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not claim replicas increase write capacity for one primary."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

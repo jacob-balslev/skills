@@ -1,0 +1,37 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-08",
+  "drift_check": {
+    "last_verified": "2026-06-08",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/mckinsey-7s/references/mckinsey-7s-sources.md": "54da3fa58123108a40443968526cd886341b570529ad554ed068bdaef511b7ca",
+      "skills/reasoning-strategy/mckinsey-7s/references/upstream-displacement-2026-06-08.md": "9ea50de4a32cb34ec5ccdec9c8d1d67a7cc908ffa3c56119a3973a06b3997f5c"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_changed": "2026-06-08",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "SKIPPED_BASELINE_HIGH",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "drift_status": "EXTERNAL_UNHASHED",
+  "last_audited": "2026-06-08",
+  "eval_score": 4.38,
+  "eval_failed_ids": []
+}

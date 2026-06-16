@@ -1,52 +1,48 @@
 ---
 name: type-safety
-description: "Use when reasoning about types as a quality property of code: what guarantees the type system actually provides, the difference between sound and unsound systems, structural vs nominal typing, type narrowing and exhaustiveness, the runtime/compile-time boundary, and where validation must happen because the type system cannot. Covers TypeScript, Flow, Hindley-Milner languages, and gradual typing in general. Do NOT use for runtime input validation library choice (use api-design for API surface validation; use individual library docs for library mechanics), for SQL type mapping (use data-modeling), or for type system implementation (compilers — out of scope)."
+# description: routing-facing summary of when this skill activates and what it covers.
+description: "Use when reasoning about types as a quality property of code: what guarantees the type system actually provides, the difference between sound and unsound systems, structural vs nominal typing, type narrowing and exhaustiveness, the runtime/compile-time boundary, and where validation must happen because the type system cannot. Covers TypeScript, Flow, Hindley-Milner languages, and gradual typing in general. Do NOT use for runtime input validation library choice (use api-design for API surface validation; use individual library docs for library mechanics), for SQL type mapping (use entity-relationship-modeling), or for type system implementation (compilers — out of scope)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
 
 
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: quality-assurance
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
+  # scope: required free-text statement of what this skill teaches and what it does not.
+  scope: "Use when reasoning about types as a quality property of code: what guarantees the type system actually provides, the difference between sound and unsound systems, structural vs nominal typing, type narrowing and exhaustiveness, the runtime/compile-time boundary, and where validation must happen because the type system cannot. Covers TypeScript, Flow, Hindley-Milner languages, and gradual typing in general. Do NOT use for runtime input validation library choice (use api-design for API surface validation; use individual library docs for library mechanics), for SQL type mapping (use entity-relationship-modeling), or for type system implementation (compilers — out of scope)."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: quality/types
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-15"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-15\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -54,26 +50,23 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"type safety\",\"TypeScript\",\"sound type system\",\"unsound type system\",\"structural typing\",\"nominal typing\",\"type narrowing\",\"exhaustiveness check\",\"gradual typing\",\"runtime boundary\"]"
+  keywords: ["type safety","TypeScript","sound type system","unsound type system","structural typing","nominal typing","type narrowing","exhaustiveness check","gradual typing","runtime boundary"]
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
-  triggers: "[\"is this type-safe\",\"should this be `any` or `unknown`\",\"exhaustiveness check\",\"narrowing\",\"where does validation belong\"]"
+  triggers: ["is this type-safe","should this be `any` or `unknown`","exhaustiveness check","narrowing","where does validation belong"]
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
-  examples: "[\"review whether this discriminated union has an exhaustiveness check at the switch\",\"decide whether to use `any` or `unknown` for this third-party JSON payload\",\"explain why TypeScript's `as` cast doesn't actually validate at runtime\",\"design where Zod (or any validator) parses at the application boundary\"]"
+  examples: ["review whether this discriminated union has an exhaustiveness check at the switch","decide whether to use `any` or `unknown` for this third-party JSON payload","explain why TypeScript's `as` cast doesn't actually validate at runtime","design where Zod (or any validator) parses at the application boundary"]
   # anti_examples: near-miss prompts that should route ELSEWHERE.
-  # Pair with relations.boundary to indicate the confusable territory's owner.
-  anti_examples: "[\"implement HMAC verification for an inbound webhook (use webhook-integration)\",\"design the JSON shape of an API endpoint (use api-design)\",\"choose between Postgres column types (use data-modeling)\"]"
+  # Pair with relations.suppresses to indicate the confusable territory's owner.
+  anti_examples: ["implement HMAC verification for an inbound webhook (use webhook-integration)","design the JSON shape of an API endpoint (use api-design)","choose between Postgres column types (use entity-relationship-modeling)"]
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"related\":[\"api-design\",\"testing-strategy\",\"code-review\"],\"boundary\":[{\"skill\":\"api-design\",\"reason\":\"api-design owns the external request/response surface; type-safety owns the discipline of expressing internal program correctness as types.\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the runtime verification of behavior; type-safety owns the compile-time verification of structure. They cover different failure modes.\"},{\"skill\":\"data-modeling\",\"reason\":\"data-modeling owns persistence and entity shape; type-safety owns the in-memory type contracts that consume that shape.\"}],\"verify_with\":[\"testing-strategy\",\"code-review\"]}"
-
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
@@ -83,8 +76,8 @@ metadata:
     Distinguishes a syntactic claim from a semantic guarantee. Without type-safety as a discipline (not just a compiler flag), `JSON.parse(x) as User` looks identical to a validated parse — the cast is decoration, not verification. The alternative — "the compiler said it was fine, so it's fine" — fails because gradual systems like TypeScript are unsound by design (escape hatches: `any`, `as`, function bivariance, ambient declarations) and untrusted input arrives un-typed regardless of what annotation sits next to it. Type-safety replaces the "compiler-blessed" mental model with "compile-time guarantees stop at the I/O boundary, runtime validation takes over there."
   # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
   # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
-  boundary: |
-    Distinct from api-design, which owns the external request/response surface shape — type-safety owns the discipline of expressing internal program correctness as types, and where the type system stops at the boundary api-design defines. Distinct from testing-strategy, which owns runtime verification of behavior — type-safety owns compile-time verification of structure, and the two cover different failure modes (a function can be type-safe and behaviorally wrong, or behaviorally correct and type-unsafe). Distinct from data-modeling, which owns persistence and entity shape — type-safety owns the in-memory type contracts that consume that shape. Distinct from input validation libraries (Zod, Yup, io-ts), which provide the runtime parsing mechanism — type-safety is the discipline that decides *where* parsing must happen because the type system cannot.
+  concept_boundary: |
+    Distinct from api-design, which owns the external request/response surface shape — type-safety owns the discipline of expressing internal program correctness as types, and where the type system stops at the boundary api-design defines. Distinct from testing-strategy, which owns runtime verification of behavior — type-safety owns compile-time verification of structure, and the two cover different failure modes (a function can be type-safe and behaviorally wrong, or behaviorally correct and type-unsafe). Distinct from entity-relationship-modeling, which owns persistence and entity shape — type-safety owns the in-memory type contracts that consume that shape. Distinct from input validation libraries (Zod, Yup, io-ts), which provide the runtime parsing mechanism — type-safety is the discipline that decides *where* parsing must happen because the type system cannot.
   # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "Type safety is to programs what a passport check is to international travel — the document (type annotation) certifies identity within the issuing country's records, but on the way through customs (the I/O boundary), the document is re-verified against the actual traveler, and any mismatch is rejected before they enter the trusted zone."
   # misconception: the wrong mental model people bring; corrected explicitly.
@@ -92,42 +85,44 @@ metadata:
     The wrong mental model is that a TypeScript `as` cast is a form of validation. It is not. The cast is a programmer-asserted claim that compiles unchecked at runtime, and `JSON.parse(x) as User` produces a value typed as User with zero verification that it actually has the fields a User must have. The misconception conflates two layers — the compile-time claim (which the compiler accepts) and the runtime guarantee (which the cast does nothing to establish). The discipline is to use runtime validators (Zod, io-ts, manual parse functions) at every I/O boundary and treat `as` as an explicit, justified, rare escape hatch — not as the default way to silence a type error.
   # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
   # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"Type safety is the property of a program in which type errors — operations applied to values of the wrong kind — are detected before they cause incorrect behavior. A type system provides type safety to the extent that it formally rules out classes of errors at compile time. A sound type system rules out all errors of the kinds it tracks; an unsound system rules out some but allows others through escape hatches.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/type-safety/SKILL.md
+  skill_graph_canonical_skill: skills/quality-assurance/type-safety/SKILL.md
   # === Health Block (written by the audit loop, not hand-authored) ===
   # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+relations:
+  related: ["entity-relationship-modeling","api-design","testing-strategy","code-review","prompt-injection-defense"]
+  suppresses: ["testing-strategy"]
+  verify_with: ["code-review","testing-strategy","client-server-boundary"]
 ---
-
 # Type Safety
+
+## Concept of the skill
+
+Two-layer model: a compile-time layer where the type checker verifies internal consistency (claims about values are coherent across the codebase) and a runtime layer where values from outside the program (HTTP responses, environment variables, parsed JSON, untrusted user input) have NO type until parsed, regardless of what type annotation sits next to them. The discipline is the boundary contract between these two layers: validate at I/O boundaries (parse, never assert), then trust the type inside. Layered on top: soundness (does the system rule out ALL type errors of the kinds it tracks, or only some via escape hatches?), structural vs nominal typing (do shapes match by structure or by name?), narrowing (refine a broad type by control-flow evidence), and exhaustiveness checking (force the compiler to flag uncovered cases in a discriminated union).
+
+Distinguishes a syntactic claim from a semantic guarantee. Without type-safety as a discipline (not just a compiler flag), `JSON.parse(x) as User` looks identical to a validated parse — the cast is decoration, not verification. The alternative — "the compiler said it was fine, so it's fine" — fails because gradual systems like TypeScript are unsound by design (escape hatches: `any`, `as`, function bivariance, ambient declarations) and untrusted input arrives un-typed regardless of what annotation sits next to it. Type-safety replaces the "compiler-blessed" mental model with "compile-time guarantees stop at the I/O boundary, runtime validation takes over there."
+
+Distinct from api-design, which owns the external request/response surface shape — type-safety owns the discipline of expressing internal program correctness as types, and where the type system stops at the boundary api-design defines. Distinct from testing-strategy, which owns runtime verification of behavior — type-safety owns compile-time verification of structure, and the two cover different failure modes (a function can be type-safe and behaviorally wrong, or behaviorally correct and type-unsafe). Distinct from entity-relationship-modeling, which owns persistence and entity shape — type-safety owns the in-memory type contracts that consume that shape. Distinct from input validation libraries (Zod, Yup, io-ts), which provide the runtime parsing mechanism — type-safety is the discipline that decides *where* parsing must happen because the type system cannot. Type safety is to programs what a passport check is to international travel — the document (type annotation) certifies identity within the issuing country's records, but on the way through customs (the I/O boundary), the document is re-verified against the actual traveler, and any mismatch is rejected before they enter the trusted zone. The wrong mental model is that a TypeScript `as` cast is a form of validation. It is not. The cast is a programmer-asserted claim that compiles unchecked at runtime, and `JSON.parse(x) as User` produces a value typed as User with zero verification that it actually has the fields a User must have. The misconception conflates two layers — the compile-time claim (which the compiler accepts) and the runtime guarantee (which the cast does nothing to establish). The discipline is to use runtime validators (Zod, io-ts, manual parse functions) at every I/O boundary and treat `as` as an explicit, justified, rare escape hatch — not as the default way to silence a type error.
 
 ## Coverage
 
 The discipline of using a type system to rule out classes of runtime errors before they occur. Covers what soundness means and where TypeScript (and other gradual systems) is unsound, structural vs nominal typing, type narrowing and exhaustiveness checking, the runtime boundary problem, the difference between `any` and `unknown`, when to use type assertions (rarely) and when to validate (always at I/O boundaries), and the connection to runtime validation libraries.
 
-## Philosophy
-
+## Philosophy of the skill
 Types are claims about values; type-checking is proof-checking. A program that compiles is a program whose claims have been internally consistent — but a program is more than its compiler. Values that arrive from outside the program (HTTP responses, environment variables, parsed JSON, untrusted user input) have no type until you parse them, no matter what type annotation sits next to them.
 
 The discipline of type-safety is to take the compile-time guarantees seriously and to know exactly where they stop. A codebase that pretends `JSON.parse(x) as User` is safe has confused a syntactic claim with a semantic guarantee. A codebase that validates at the boundary and trusts the type inside has correctly aligned the two layers.
@@ -272,7 +267,7 @@ After applying this skill, verify:
 |---|---|---|
 | Designing the JSON shape of an API endpoint | `api-design` | api-design owns the external surface contract; this skill owns internal type discipline |
 | Verifying behavior at runtime with tests | `testing-strategy` | testing-strategy owns runtime verification; this skill owns compile-time |
-| Designing database schema and column types | `data-modeling` | data-modeling owns persistence shape; this skill owns in-memory type contracts |
+| Designing database schema and column types | `entity-relationship-modeling` | entity-relationship-modeling owns persistence shape; this skill owns in-memory type contracts |
 | Choosing between Zod / io-ts / valibot | individual library docs + `api-design` | Library choice is a tactical decision below this skill |
 | Implementing the compiler / type-checker | language compiler implementation references | Out of scope — this skill is about *using* type systems, not building them |
 

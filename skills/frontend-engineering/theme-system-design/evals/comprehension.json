@@ -1,0 +1,143 @@
+{
+  "skill_name": "theme-system-design",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "color-system-design",
+    "design-system-architecture",
+    "visual-design-foundations",
+    "dark-mode-implementation",
+    "typography-system"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a theme system in 2-3 sentences. Name its tiers and state which tiers components are allowed to consume.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A contract between design decisions and component code expressed as named tokens; appearance changes without editing components",
+        "Three tiers: reference tokens (raw values), system/semantic tokens (intent-named), component tokens (component-specific overrides)",
+        "Components consume only system and component tokens — never raw values or reference tokens",
+        "A theme provides the reference-to-system mapping; the indirection is what lets one swap repaint everything"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does a three-tier token system exist instead of a flat list of color variables? What does the indirection buy?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Separates three different rates of change: brand values (rare), theme assignments (occasional), components (continuous)",
+        "A flat system collapses them into one rate and forces every component to know every brand value",
+        "Each tier gives a rate of change its own surface to evolve on",
+        "Net effect: a single theme swap repaints the product; a new theme is just new system-token values"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Why are semantic token names (color.background.surface) preferred over descriptive names (color.gray.100), and what is the cost of the descriptive form?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Semantic names tell the component author what to use (intent) without knowing today's value",
+        "Descriptive names force the author to know that gray.100 happens to be the surface color today",
+        "Descriptive names leak appearance into the contract and break meaning when the theme flips",
+        "The discipline is to resist convenience names that encode appearance"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "How are CSS custom properties used to deliver themes at runtime, and how is a single subtree given a different theme (e.g. a dark hero inside a light app)?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A theme is a set of custom-property assignments scoped to a selector (:root for default, [data-theme=\"dark\"] for alternates)",
+        "Custom properties cascade and inherit, so a subtree override is a single attribute change on that subtree",
+        "Token definitions live in a single source-of-truth file (ideally DTCG JSON) generated into the CSS variable layer by a build step",
+        "Tooling (Style Dictionary, Tokens Studio, Terrazzo) transforms tokens into platform outputs"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "What are the three operational pieces of runtime theme switching, and why is a small inline script in the document head usually needed?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Persistence (localStorage, or a cookie if SSR-sensitive)",
+        "Application: a class or data attribute on the document root set before first paint to avoid a flash",
+        "Propagation: notify components that read theme imperatively (chart libraries, canvases)",
+        "A small inline head script runs before the stylesheet loads so the theme attribute is set pre-paint",
+        "SSR pages serialize the chosen theme into the initial HTML so first paint matches preference"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the theme-system-design skill to pick the exact hex value for the brand's primary blue and to handle prefers-color-scheme detection. Are those in scope? Route each correctly.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Picking the hex / designing the palette is out of scope — that is color-system-design",
+        "prefers-color-scheme detection and OS-preference / asset variants are out of scope — that is dark-mode-implementation",
+        "theme-system-design owns the token contract, indirection layer, and runtime switching mechanism that those values plug into",
+        "Correctly distinguishes owning the contract from owning the values and the platform detection"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'a theme system is just a set of color variables you toggle.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The value is the tiered indirection and semantic naming, not the variables themselves",
+        "A flat variable list with no tiers provides no separation of rates of change and no safe additive/breaking contract",
+        "Semantic intent names keep appearance out of the component contract; descriptive names break on theme flip",
+        "Components must stay off the reference layer; token rename/removal is a breaking change requiring a deprecation cycle"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a theme system is implemented correctly?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Components reference only system/component tokens; a grep for raw hex or reference tokens in component code returns zero matches",
+        "Runtime theme switch causes no full-page repaint flicker; the theme attribute is set before first paint",
+        "A new theme can be added by providing only new system-token values, with no component files modified",
+        "Removing/renaming a system token causes a build- or lint-time error, not a silent runtime fallback",
+        "SSR pages serialize the chosen theme into initial HTML; docs list every semantic token by intent, not appearance"
+      ]
+    }
+  ]
+}

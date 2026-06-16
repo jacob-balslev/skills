@@ -1,0 +1,100 @@
+{
+  "skill_name": "keywords",
+  "subject": "Keyword research and intent mapping",
+  "adjacent_concepts": [
+    "seo-strategy",
+    "writing-humanizer",
+    "information-architecture",
+    "etsy",
+    "shopify"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define keyword research for product, marketplace, and content surfaces. Include intent mapping, clustering, target assignment, and tracking.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Discovers search language or demand signals",
+        "Classifies search intent",
+        "Clusters related terms",
+        "Assigns each cluster to one page, listing, or content target",
+        "Establishes baseline and tracking cadence"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain why keywords are demand signals rather than ranking spells.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Treats queries as evidence of language and intent",
+        "Rejects keyword stuffing",
+        "Maps demand to one clear owner surface",
+        "Mentions platform constraints",
+        "Mentions measurement rather than guaranteed ranking"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish keywords from seo-strategy, writing-humanizer, and information-architecture. Give mechanism-level boundaries.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "keywords owns research, clustering, intent mapping, and field translation",
+        "seo-strategy owns page construction, schema, internal links, and implementation",
+        "writing-humanizer owns final prose quality and tone",
+        "information-architecture owns navigation, sitemap, hierarchy, and content grouping",
+        "Does not promise rankings"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A teammate wants to paste the same phrase into title, tags, description, and backend search terms. Explain the misconception using this skill.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "More repetition is not better",
+        "Each platform field has a distinct job",
+        "Constrained fields should avoid redundant terms",
+        "Readable and accurate terms matter",
+        "Irrelevant or repeated terms can waste space or confuse matching"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "You have 80 search queries for a new marketplace product line. Apply the keywords skill and outline the workflow before anyone writes listings.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "expected_elements": [
+        "Starts with seeds and query sources",
+        "Classifies intent",
+        "Clusters by meaning and likely result set",
+        "Assigns one owner surface per cluster",
+        "Translates terms into platform-specific fields",
+        "Checks cannibalization",
+        "Sets a baseline and re-check cadence"
+      ]
+    }
+  ]
+}

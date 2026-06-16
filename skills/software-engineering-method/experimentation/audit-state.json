@@ -1,0 +1,242 @@
+{
+  "schema_version": 8,
+  "version": "0.1.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-15",
+  "drift_check": {
+    "last_verified": "2026-06-15"
+  },
+  "eval_artifacts": "none",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-15",
+    "last_run": {
+      "at": "2026-06-15T17:28:44.232Z",
+      "operation": "panel",
+      "phase": "text",
+      "agent": "gpt-5.5",
+      "status": "completed",
+      "duration_ms": 293018,
+      "tokens": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "source": "input4.token_usage"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 52,
+      "total_duration_ms": 8428752,
+      "total_tokens": 0,
+      "tokens_observed_count": 52
+    }
+  },
+  "last_audited": "2026-06-15",
+  "lint_verdict": "PASS",
+  "model_run_coverage": {
+    "schema_version": 1,
+    "updated_at": "2026-06-15T17:28:44.425Z",
+    "registry_version": "2026-06-10",
+    "models": {
+      "opus": {
+        "model": "opus",
+        "provider": "anthropic",
+        "backend": "claude",
+        "tier": "mandatory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-15T17:28:44.425Z",
+            "operation": "panel",
+            "eval_mode": "comprehension",
+            "tier": "mandatory",
+            "status": "degraded",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "completed",
+              "evaluate": "skipped",
+              "apply": "completed",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": true,
+            "failure_reason": "non-certifying-run",
+            "failure_detail": "non-converged:round-budget(3)",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/experimentation/runs/2026-06-15T1711--merge--opus--511bab/experimentation.merge-ledger.json"
+          }
+        }
+      },
+      "gpt-5.5": {
+        "model": "gpt-5.5",
+        "provider": "openai",
+        "backend": "codex",
+        "tier": "mandatory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-15T17:28:44.425Z",
+            "operation": "panel",
+            "eval_mode": "comprehension",
+            "tier": "mandatory",
+            "status": "degraded",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "completed",
+              "evaluate": "skipped",
+              "apply": "completed",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": true,
+            "failure_reason": "non-certifying-run",
+            "failure_detail": "non-converged:round-budget(3)",
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/experimentation/runs/2026-06-15T1711--merge--opus--511bab/experimentation.merge-ledger.json"
+          }
+        }
+      },
+      "gemini": {
+        "model": "gemini",
+        "provider": "google",
+        "backend": "gemini",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-15T17:28:44.425Z",
+            "operation": "panel",
+            "eval_mode": "comprehension",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/experimentation/runs/2026-06-15T1711--merge--opus--511bab/experimentation.merge-ledger.json"
+          }
+        }
+      },
+      "deepseek-flash": {
+        "model": "deepseek-flash",
+        "provider": "opencode",
+        "backend": "opencode",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-15T17:28:44.425Z",
+            "operation": "panel",
+            "eval_mode": "comprehension",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/experimentation/runs/2026-06-15T1711--merge--opus--511bab/experimentation.merge-ledger.json"
+          }
+        }
+      },
+      "mimo": {
+        "model": "mimo",
+        "provider": "opencode",
+        "backend": "opencode",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-15T17:28:44.425Z",
+            "operation": "panel",
+            "eval_mode": "comprehension",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/experimentation/runs/2026-06-15T1711--merge--opus--511bab/experimentation.merge-ledger.json"
+          }
+        }
+      },
+      "gemini-flash": {
+        "model": "gemini-flash",
+        "provider": "google",
+        "backend": "gemini",
+        "tier": "advisory",
+        "operations": {
+          "panel": {
+            "at": "2026-06-15T17:28:44.425Z",
+            "operation": "panel",
+            "eval_mode": "comprehension",
+            "tier": "advisory",
+            "status": "completed",
+            "registry_version": "2026-06-10",
+            "phase_status": {
+              "budget": "completed",
+              "claim": "completed",
+              "propose": "completed",
+              "cross_review": "completed",
+              "revise": "completed",
+              "curate": "completed",
+              "verify": "not_applicable",
+              "evaluate": "not_applicable",
+              "apply": "not_applicable",
+              "record": "completed"
+            },
+            "certifying": false,
+            "regrade_required": false,
+            "receipt": "skill-graph/skill-audit-loop/progress/skill-audits/experimentation/runs/2026-06-15T1711--merge--opus--511bab/experimentation.merge-ledger.json"
+          }
+        }
+      }
+    }
+  },
+  "last_changed": "2026-06-15"
+}

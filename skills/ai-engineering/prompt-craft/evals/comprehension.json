@@ -1,0 +1,104 @@
+{
+  "skill_name": "prompt-craft",
+  "subject": "Prompt craft",
+  "adjacent_concepts": [
+    "instruction hierarchy",
+    "message roles",
+    "prompt template",
+    "structured output",
+    "few-shot examples",
+    "prompt injection",
+    "context engineering",
+    "agent eval design",
+    "skill scaffold",
+    "skill routing"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define prompt craft as a discipline for LLM-backed systems and name the evidence that decides whether a prompt revision should be kept.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Defines prompts as instruction contracts or reusable task templates",
+        "Includes instructions, examples, context boundaries, and output constraints",
+        "Says revisions are judged by evals, validation, traces, or measured behavior",
+        "Rejects one-plausible-output prompt-and-pray",
+        "Mentions provider/runtime features when implementation details matter"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the prompt-as-contract mental model, including stable instructions, variable user content, examples, output contracts, and validation.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Stable instructions define the task/function",
+        "Variable user content is data or arguments, not higher-authority instructions",
+        "Examples teach boundaries and output shape",
+        "Output contracts define schema, labels, tone, length, or fallback behavior",
+        "Validation/evals outside the model decide whether the contract works"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "boundary",
+      "prompt": "Distinguish prompt-craft from context-engineering, agent-eval-design, code-review, skill-scaffold, skill-router, and debugging.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "context-engineering owns retrieval, memory, compaction, and context budget",
+        "agent-eval-design owns eval datasets, graders, thresholds, and hard negatives",
+        "code-review owns judging generated or human-written code",
+        "skill-scaffold owns SKILL.md authoring and metadata structure",
+        "skill-router owns activation or routing decisions",
+        "debugging owns root-causing observed deployed failures"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "misconception",
+      "prompt": "A teammate says a clever system prompt can replace schema validation, evals, tool permissions, and prompt-injection defenses. Correct the misconception.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Rejects prompt wording as a substitute for runtime controls",
+        "Says structured outputs still need validation or native schema support",
+        "Says tool safety needs permission/guardrail controls",
+        "Says prompt-injection defense requires data/instruction separation and limited authority",
+        "Requires eval or trace evidence before claiming success"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Improve a reusable prompt for classifying support tickets into strict JSON while resisting user-provided instructions inside the ticket body. Describe the prompt structure and verification plan.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Separates stable instructions from ticket body data",
+        "Defines a strict JSON output contract or schema",
+        "Includes allowed labels and insufficient-evidence/fallback behavior",
+        "Adds boundary examples or few-shot cases if classification is nuanced",
+        "Specifies validation plus eval cases before keeping the revision"
+      ]
+    }
+  ]
+}

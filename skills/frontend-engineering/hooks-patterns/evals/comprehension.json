@@ -1,0 +1,144 @@
+{
+  "skill_name": "hooks-patterns",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "rendering-models",
+    "client-server-boundary",
+    "state-management",
+    "suspense-patterns",
+    "component-architecture",
+    "performance-engineering",
+    "code-review"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define React Hooks as a discipline in 2-3 sentences. Name the underlying call-order mechanism and how dependency arrays, effects, custom hooks, and memoization each relate to it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "React identifies hooks by call order (slot index on the fiber), which the Rules of Hooks keep stable",
+        "Dependency arrays encode a closure/rerender contract because callbacks capture render-time values",
+        "Effects synchronize with systems React does not own, rather than compute derived render data",
+        "Custom hooks reuse or name stateful logic; memoization is for stable identity or expensive computation, not a default fix"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain why the Rules of Hooks (top-level only, React-functions only) are a call-order invariant rather than a style convention. What concretely breaks when a hook is called conditionally?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Hooks are stored by call-order index (slot 0, slot 1, ...), not by name",
+        "A conditional hook shifts the slot index of every later hook across renders",
+        "State and effect state get reassigned to wrong slots — a memory-corruption-class bug masked by GC as silent bugs, not crashes",
+        "eslint-plugin-react-hooks / dev runtime enforce the rules to prevent undefined behavior, not to enforce aesthetics"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "When does wrapping a value in useMemo or a callback in useCallback actually pay off, and when is it net-negative? Give the cost it adds and the two cases that justify it.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Two valid jobs: stabilize referential identity for a downstream hook dependency or a React.memo'd child, OR skip a provably-expensive computation",
+        "Otherwise net-negative: adds a deps-check, an allocation, and a closure for no observable benefit",
+        "useCallback passed to a NON-memoized child does not prevent that child re-rendering when the parent re-renders",
+        "React Compiler auto-memoizes covered code, weakening 'wrap it just in case' further; memoize only with evidence (profiler/benchmark/memo'd consumer)"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A component stores filteredItems in useState, recomputes it in a useEffect when props change, omits the filter variable from the dependency array because adding it caused 'too many rerenders', and wraps every handler in useCallback. Diagnose and repair each issue.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "filteredItems is derived state — compute it during render (or useMemo only if expensive with honest deps), drop the state+effect pair",
+        "The missing filter dependency is a stale-closure bug; add it rather than disabling exhaustive-deps; if adding it loops, the loop was a latent bug",
+        "Remove useCallback wrappers that have no memoized consumer or dependency-contract benefit",
+        "Require profiler/benchmark evidence before keeping any memoization for performance"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Classify each as derived-during-render, effect-with-cleanup, useCallback-justified, Effect-Event/ref, or custom-hook: (a) a full name computed from firstName+lastName props; (b) a browser resize subscription; (c) a handler passed to a React.memo'd child; (d) reading the latest cart count inside a page-view effect without re-running on cart change; (e) form-draft logic shared by three components. Justify each through the underlying primitive.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "(a) Derived value — compute during render, no useState/useEffect needed",
+        "(b) Effect that synchronizes with an external system, with a cleanup (unsubscribe)",
+        "(c) useCallback is justified to keep the memo equality check from breaking",
+        "(d) Effect Event reads the latest non-reactive value without making it a dependency (ref mirror as the compatibility escape hatch); url stays the reactive dep",
+        "(e) Custom hook — logic reused across components earns extraction; explains each via its primitive, not by rote"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "Distinguish hooks-patterns from state-management, client-server-boundary, rendering-models, and suspense-patterns. Give a mechanism-level reason each differs, not just the label.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "state-management owns WHERE state lives (server / client UI / URL / persistence); hooks-patterns owns in-component expression once location is decided",
+        "client-server-boundary owns serialization and use-client/use-server placement; hooks-patterns owns hook rules on the client side of that boundary",
+        "rendering-models owns SSR/SSG/ISR/streaming/client-render choices; hooks-patterns is a discipline within the client render/interaction stage",
+        "suspense-patterns owns boundary and fallback architecture for async UI; hooks-patterns owns the lower-level effect/dependency/memoization/custom-hook decisions"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "Correct this statement: 'useEffect is how we run code when something changes, and useMemo/useCallback should wrap anything that might rerender.'",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "useEffect is for synchronizing with systems React does not own, not a general 'do this when X changes' primitive",
+        "Most 'when X changes' logic belongs in render (derived state) or in the event handler that caused the change",
+        "Memoization helps only for stable identity (downstream memo'd consumer or hook dependency) or expensive computation; blanket wrapping is overhead",
+        "React Compiler reduces the need for manual memoization; dependency arrays must honestly match closure inputs"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a component's hook usage is correct after applying this skill?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Every hook is called at the top level — no conditional/loop wrapping; dependency arrays are exhaustive (eslint passes) with documented exceptions only",
+        "Each useEffect synchronizes with something React does not own; computation lives in render or event handlers; no state holds a derivable value",
+        "Custom hooks have >=2 call sites or a meaningful name; useMemo/useCallback wrap only values that stabilize identity for a consumer or skip provably-expensive work",
+        "Effects clean up: every subscribe has unsubscribe, every fetch has abort, every timer has clear"
+      ]
+    }
+  ]
+}

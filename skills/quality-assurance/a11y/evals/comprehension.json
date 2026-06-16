@@ -1,0 +1,89 @@
+{
+  "skill_name": "a11y",
+  "subject": "interactive web accessibility",
+  "adjacent_concepts": [
+    "interaction-feedback",
+    "visual-design-foundations",
+    "form-ux-architecture",
+    "refactor"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "overlay",
+      "criticality": "high",
+      "prompt": "Define what the a11y skill is responsible for when reviewing a custom interactive component.",
+      "negative_expectation": "Must not reduce accessibility to visual polish, ARIA-only tagging, or a generic code-quality cleanup."
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "prompt": "A teammate says a styled div with role=\"button\" is accessible because a screen reader announces it as a button. Explain the missing mental model.",
+      "negative_expectation": "Must not approve role-only markup without keyboard behavior, focus behavior, and programmatic naming."
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "overlay",
+      "criticality": "high",
+      "prompt": "Why should accessibility checks happen while implementing a component rather than only after a final audit?",
+      "negative_expectation": "Must not frame accessibility as optional post-release compliance work."
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "router",
+      "criticality": "critical",
+      "prompt": "A request asks only to rewrite an error message at a sixth-grade reading level. Should the a11y skill own the task? Name the better owner and the condition that would bring a11y back into scope.",
+      "negative_expectation": "Must not claim every readability or wording task is an accessibility implementation task."
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "substance": "concept",
+      "calibration": "structural",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "prompt": "List the implementation surfaces the a11y skill checks for an interactive form and group them into structure, operation, perceivability, and preference handling.",
+      "negative_expectation": "Must not list only WCAG labels or only visual contrast."
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "low",
+      "prompt": "Give an analogy for why semantic structure and keyboard paths matter even when the UI looks visually correct.",
+      "negative_expectation": "Must not use an analogy that treats accessibility as decoration added after the structure is complete."
+    },
+    {
+      "id": 7,
+      "dimension": "application",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "overlay",
+      "criticality": "critical",
+      "prompt": "A React dialog traps pointer users correctly but lets Tab escape behind the overlay and does not return focus after close. What should the agent require?",
+      "negative_expectation": "Must not recommend only visual styling, only aria-modal, or only a screen-reader smoke test."
+    }
+  ]
+}

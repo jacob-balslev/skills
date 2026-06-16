@@ -1,0 +1,465 @@
+{
+  "skill_name": "visual-hierarchy",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Concept of the skill, Coverage, Philosophy of the skill, Verification, Do NOT Use When) and standard perception/Gestalt-based hierarchy practice (scale/weight/contrast/color/position/isolation as stacking signals, suppression over amplification, the squint and grayscale tests).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "noisy-dashboard",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A dashboard renders 14 widgets at the same size, weight, and color. Every number is bold, every card has a heavy border, and users say they 'don't know where to look.'",
+      "context": "No content can be removed; all 14 metrics are required by the business.",
+      "question": "How should the agent re-establish hierarchy?",
+      "expected_flags": [
+        "Suppress secondary widgets (lighter weight, lower contrast, smaller size) rather than amplifying a primary",
+        "Pick a single focal point / primary metric per region and quiet the rest",
+        "Use whitespace/isolation and proximity grouping to separate ranks without removing content",
+        "Reduce the number of competing loud signals; not everything can be bold"
+      ],
+      "expected_fix_hints": [
+        "Demote borders and bold to the few primary cards; make the rest quiet",
+        "Group related metrics so the eye reads clusters, not 14 equal items"
+      ],
+      "absent_signals": [
+        "Do not make the primary metric even louder while leaving the rest loud",
+        "Do not delete required metrics to reduce noise"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Suppress secondary widgets (lighter weight, lower contrast, smaller size) rather than amplifying a primary."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Pick a single focal point / primary metric per region and quiet the rest."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use whitespace/isolation and proximity grouping to separate ranks without removing content."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reduce the number of competing loud signals; not everything can be bold."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Demote borders and bold to the few primary cards; make the rest quiet."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Group related metrics so the eye reads clusters, not 14 equal items."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make the primary metric even louder while leaving the rest loud."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not delete required metrics to reduce noise."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "competing-ctas",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A pricing page shows three identical filled-blue buttons of equal size: 'Start trial', 'Contact sales', and 'See docs'. Conversion analytics show users hesitate.",
+      "context": "The business wants 'Start trial' to be the primary action.",
+      "question": "How should the agent order the actions visually?",
+      "expected_flags": [
+        "Make exactly one primary CTA ('Start trial') visibly dominant in fill/weight/size",
+        "Demote the other two to secondary treatment (outline/ghost/text link)",
+        "At most one primary CTA per view; secondary actions read as clearly subordinate",
+        "Increase the difference along one signal (fill) rather than nudging all three slightly"
+      ],
+      "expected_fix_hints": [
+        "Keep the filled style only on the primary; outline or text-link the rest",
+        "Optionally reduce secondary button size/weight to reinforce rank"
+      ],
+      "absent_signals": [
+        "Do not leave three equal-weight primary buttons",
+        "Do not make all three louder to 'help conversion'"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Make exactly one primary CTA ('Start trial') visibly dominant in fill/weight/size."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Demote the other two to secondary treatment (outline/ghost/text link)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: At most one primary CTA per view; secondary actions read as clearly subordinate."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Increase the difference along one signal (fill) rather than nudging all three slightly."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the filled style only on the primary; outline or text-link the rest."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Optionally reduce secondary button size/weight to reinforce rank."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave three equal-weight primary buttons."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not make all three louder to 'help conversion'."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "type-scale-ratio",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An article layout uses 11 type sizes between 13px and 19px so 'every level has its own size.' Readers can't tell H2 from H3 from body.",
+      "context": "Long-form content with multiple heading levels and pull quotes.",
+      "question": "How should the agent fix the type hierarchy?",
+      "expected_flags": [
+        "Collapse to ~5-7 sizes derived from a single ratio applied to a base size",
+        "Choose a ratio loud enough that adjacent levels are perceptibly different (e.g. 1.25-1.333 for long-form)",
+        "Too many near-identical sizes dilute hierarchy",
+        "Reinforce rank with weight/contrast, not just size, where sizes must stay close"
+      ],
+      "expected_fix_hints": [
+        "Pick a base (e.g. 16px) and a ratio; generate the steps",
+        "Map each step to a semantic level (body, h3, h2, h1, display)"
+      ],
+      "absent_signals": [
+        "Do not keep 11 hand-picked near-equal sizes",
+        "Do not add even more sizes to disambiguate"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Collapse to ~5-7 sizes derived from a single ratio applied to a base size."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Choose a ratio loud enough that adjacent levels are perceptibly different (e.g. 1.25-1.333 for long-form)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Too many near-identical sizes dilute hierarchy."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reinforce rank with weight/contrast, not just size, where sizes must stay close."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pick a base (e.g. 16px) and a ratio; generate the steps."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Map each step to a semantic level (body, h3, h2, h1, display)."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep 11 hand-picked near-equal sizes."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add even more sizes to disambiguate."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "color-dependence",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A status page conveys all hierarchy through hue alone — the important alert is red, everything else is gray-blue, but all elements are the same size and weight. In grayscale the page reads as flat.",
+      "context": "Some users have color-vision deficiency; the team only tested in color.",
+      "question": "How should the agent strengthen the hierarchy?",
+      "expected_flags": [
+        "Hierarchy must survive grayscale — add a non-color signal (size, weight, isolation) to the primary alert",
+        "Do not rely on hue alone to carry rank",
+        "Verify with a grayscale screenshot that the intended order is retained",
+        "Color can reinforce but should not be the sole ordering signal"
+      ],
+      "expected_fix_hints": [
+        "Increase the alert's size/weight and isolate it with whitespace",
+        "Keep color as a reinforcing cue, not the only one"
+      ],
+      "absent_signals": [
+        "Do not leave hierarchy carried by hue alone",
+        "Do not assume color-only ordering is accessible"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Hierarchy must survive grayscale — add a non-color signal (size, weight, isolation) to the primary alert."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Do not rely on hue alone to carry rank."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verify with a grayscale screenshot that the intended order is retained."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Color can reinforce but should not be the sole ordering signal."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Increase the alert's size/weight and isolate it with whitespace."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep color as a reinforcing cue, not the only one."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave hierarchy carried by hue alone."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume color-only ordering is accessible."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "dom-vs-visual-order",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A developer argues the landing page hierarchy is correct because the H1 is first in the DOM, but a full-bleed high-contrast promo banner sits visually above and around it, grabbing all attention.",
+      "context": "Users in tests look at the banner first and miss the headline.",
+      "question": "How should the agent respond?",
+      "expected_flags": [
+        "Reading order is a property of the rendered surface, not the markup",
+        "The eye follows visual cues (contrast, size, position, isolation) regardless of source order",
+        "The high-contrast banner outranks the H1 perceptually despite DOM order",
+        "Verify by what is noticed first (squint test), then quiet the banner or amplify the H1"
+      ],
+      "expected_fix_hints": [
+        "Reduce the banner's contrast/size or increase the H1's prominence",
+        "Re-run the squint test until the intended element is noticed first"
+      ],
+      "absent_signals": [
+        "Do not accept DOM order as proof of correct reading order",
+        "Do not leave a louder competing element above the intended focal point"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Reading order is a property of the rendered surface, not the markup."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The eye follows visual cues (contrast, size, position, isolation) regardless of source order."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The high-contrast banner outranks the H1 perceptually despite DOM order."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Verify by what is noticed first (squint test), then quiet the banner or amplify the H1."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reduce the banner's contrast/size or increase the H1's prominence."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-run the squint test until the intended element is noticed first."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not accept DOM order as proof of correct reading order."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave a louder competing element above the intended focal point."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the visual-hierarchy owner to choose the brand's heading typeface, define the modular type-scale ratio for the design system, and write the hero headline copy.",
+      "context": "The team conflates 'hierarchy' with all type and content decisions.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Typeface selection and defining the type-scale ratio are typography-system's job, not visual-hierarchy's",
+        "Writing the headline copy is copywriting/content, out of scope",
+        "Offer the in-scope part: how the existing levels should rank on the surface (what the eye sees first)",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand typeface + scale-ratio definition to typography-system",
+        "Hand headline copy to a copywriting/content skill"
+      ],
+      "absent_signals": [
+        "Do not select the typeface or define the scale ratio here",
+        "Do not write the headline copy"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Typeface selection and defining the type-scale ratio are typography-system's job, not visual-hierarchy's."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Writing the headline copy is copywriting/content, out of scope."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: how the existing levels should rank on the surface (what the eye sees first)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand typeface + scale-ratio definition to typography-system."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand headline copy to a copywriting/content skill."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not select the typeface or define the scale ratio here."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the headline copy."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "proximity-grouping",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A settings form spaces every field and its label with identical gaps, so labels appear to belong equally to the field above and below. Users mis-associate labels with the wrong inputs.",
+      "context": "The form has many fields grouped into logical sections.",
+      "question": "How should the agent use spacing to fix grouping?",
+      "expected_flags": [
+        "Apply Gestalt proximity: tighten the label-to-its-field gap and widen the gap between fields/sections",
+        "Items closer together read as grouped; equal gaps destroy grouping",
+        "Use whitespace/rhythm to signal section boundaries without explicit dividers",
+        "Snap spacing to a consistent baseline rhythm for predictable resting points"
+      ],
+      "expected_fix_hints": [
+        "Reduce intra-group spacing and increase inter-group spacing",
+        "Define spacing tokens that encode the grouping relationships"
+      ],
+      "absent_signals": [
+        "Do not keep uniform spacing that breaks grouping",
+        "Do not add dividers everywhere instead of using proximity"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Apply Gestalt proximity: tighten the label-to-its-field gap and widen the gap between fields/sections."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Items closer together read as grouped; equal gaps destroy grouping."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use whitespace/rhythm to signal section boundaries without explicit dividers."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Snap spacing to a consistent baseline rhythm for predictable resting points."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reduce intra-group spacing and increase inter-group spacing."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Define spacing tokens that encode the grouping relationships."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep uniform spacing that breaks grouping."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add dividers everywhere instead of using proximity."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

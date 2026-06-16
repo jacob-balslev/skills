@@ -1,0 +1,364 @@
+{
+  "skill_name": "github-copilot",
+  "subject": "deciding whether to spend GitHub Copilot's metered budget on a task vs a cheaper or free lane",
+  "mode": "application",
+  "schema_version": 1,
+  "source_evidence": "Grounded in the skill body (Concept, Coverage, Philosophy, the routing-decision table, the cost-model-and-plan-allowances table, Strengths and weaknesses, Verification, Do NOT Use When) and references/model-facts.md.",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "boilerplate-on-metered-surface",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A developer is running every routine task — reformatting files, renaming variables across a few files, generating obvious boilerplate — through Copilot's metered chat/agent surface, and is surprised their monthly premium allowance is nearly exhausted by mid-cycle.",
+      "context": "The work is low-complexity and largely mechanical. The account is on a plan with a finite monthly allowance and no rollover.",
+      "question": "Why is the allowance draining, and how should the agent change the routing?",
+      "expected_flags": [
+        "Low-complexity, mechanical work is being spent on the finite metered surface — that is the core waste this routing discipline prevents",
+        "Boilerplate, formatting, and repetitive transformations should go to a free/cheap lane or a deterministic script, not the metered surface",
+        "The allowance is finite and non-rolling, so wasted metered requests are gone at cycle end"
+      ],
+      "expected_fix_hints": [
+        "Route boilerplate/formatting/mechanical edits to a script or a free model lane",
+        "Reserve the metered surface for work an IDE-native frontier model genuinely earns"
+      ],
+      "absent_signals": [
+        "Do not recommend keeping mechanical work on the metered surface",
+        "Do not claim the metered allowance is effectively unlimited because a subscription is paid"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Low-complexity, mechanical work is being spent on the finite metered surface — that is the core waste this routing discipline prevents."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Boilerplate, formatting, and repetitive transformations should go to a free/cheap lane or a deterministic script, not the metered surface."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The allowance is finite and non-rolling, so wasted metered requests are gone at cycle end."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route boilerplate/formatting/mechanical edits to a script or a free model lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve the metered surface for work an IDE-native frontier model genuinely earns."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not recommend keeping mechanical work on the metered surface."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim the metered allowance is effectively unlimited because a subscription is paid."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "subscription-equals-unlimited-misconception",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team lead asserts that since everyone has a paid Copilot subscription, running large multi-file agentic refactors through Copilot 'costs nothing extra,' and plans to move all agent flows there.",
+      "context": "Agent flows are multi-file and token-heavy. The plan has a capped metered allowance.",
+      "question": "Is that assertion correct, and how should the agent respond?",
+      "expected_flags": [
+        "A paid subscription does not make metered agent flows free — it buys unmetered completions plus a capped, non-rolling metered allowance",
+        "Agentic multi-file flows burn the metered allowance fastest of all",
+        "Cost is token-based at a per-model rate (AI credits, 1 credit = $0.01), not zero and not a flat per-request charge"
+      ],
+      "expected_fix_hints": [
+        "Treat agent flows as the most expensive metered use and route only the ones that genuinely earn it through Copilot",
+        "Estimate cost token-based (input + output + cached x per-model rate), not as 'free because subscribed'"
+      ],
+      "absent_signals": [
+        "Do not affirm that a subscription makes metered agent flows free",
+        "Do not assume unlimited usage from the subscription"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A paid subscription does not make metered agent flows free — it buys unmetered completions plus a capped, non-rolling metered allowance."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Agentic multi-file flows burn the metered allowance fastest of all."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cost is token-based at a per-model rate (AI credits, 1 credit = $0.01), not zero and not a flat per-request charge."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Treat agent flows as the most expensive metered use and route only the ones that genuinely earn it through Copilot."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Estimate cost token-based (input + output + cached x per-model rate), not as 'free because subscribed'."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not affirm that a subscription makes metered agent flows free."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume unlimited usage from the subscription."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "free-completion-surface",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A developer asks whether they should ration their inline code completions and next-edit suggestions to preserve their premium allowance for the rest of the month.",
+      "context": "The question is specifically about the inline completion / next-edit surface, not chat or agent flows.",
+      "question": "Do completions consume the metered allowance, and what should the agent advise?",
+      "expected_flags": [
+        "Inline completions and next-edit suggestions are the always-free, unmetered surface — they are not billed in the metered allowance",
+        "There is no budgeting decision to make for the free completion surface; it is the cheapest, strongest value",
+        "Only the chat/agent surface draws from the finite metered allowance"
+      ],
+      "expected_fix_hints": [
+        "Use inline completions and next-edit suggestions freely — no rationing needed",
+        "Budget only the metered chat/agent surface"
+      ],
+      "absent_signals": [
+        "Do not claim inline completions consume the premium/credit allowance",
+        "Do not advise rationing the always-free surface"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Inline completions and next-edit suggestions are the always-free, unmetered surface — they are not billed in the metered allowance."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: There is no budgeting decision to make for the free completion surface; it is the cheapest, strongest value."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Only the chat/agent surface draws from the finite metered allowance."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use inline completions and next-edit suggestions freely — no rationing needed."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Budget only the metered chat/agent surface."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not claim inline completions consume the premium/credit allowance."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not advise rationing the always-free surface."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "legacy-multiplier-billing-model",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An engineer estimates Copilot cost for a current-month task using the old per-model premium-request multipliers (e.g. '1x for the premium model, 13x for code review') and concludes the task is cheap.",
+      "context": "The account is on the current usage-based billing introduced June 1 2026, not a legacy annual plan.",
+      "question": "Is that cost estimate using the right model, and how should the agent correct it?",
+      "expected_flags": [
+        "Post-June-1-2026 billing is token-based AI credits (1 credit = $0.01), computed from input + output + cached tokens x a per-model rate",
+        "The per-model premium-request multipliers were retired by the usage-based shift and should not be used for a current-month estimate",
+        "Cost reasoning must use the current model unless the account is explicitly on legacy annual billing"
+      ],
+      "expected_fix_hints": [
+        "Re-estimate cost using token-based AI credits at the model's per-token rate",
+        "Confirm whether the account is on the current usage-based model or a legacy annual plan before estimating"
+      ],
+      "absent_signals": [
+        "Do not use the retired per-request multipliers for a current usage-based account",
+        "Do not present the multiplier-based estimate as the current cost model"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Post-June-1-2026 billing is token-based AI credits (1 credit = $0.01), computed from input + output + cached tokens x a per-model rate."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The per-model premium-request multipliers were retired by the usage-based shift and should not be used for a current-month estimate."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Cost reasoning must use the current model unless the account is explicitly on legacy annual billing."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Re-estimate cost using token-based AI credits at the model's per-token rate."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Confirm whether the account is on the current usage-based model or a legacy annual plan before estimating."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use the retired per-request multipliers for a current usage-based account."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not present the multiplier-based estimate as the current cost model."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "ide-native-frontier-chat-justified",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A developer wants frontier-model help reasoning through a tricky refactor that depends heavily on context the editor already has open (the current file, its imports, the diagnostics), and asks whether this is a good use of Copilot's metered surface.",
+      "context": "The task genuinely benefits from in-editor context and a frontier model; it is not mechanical or high-volume.",
+      "question": "Is the metered surface the right place for this, and why?",
+      "expected_flags": [
+        "Genuine IDE-native frontier chat/refactor that needs context the editor already has is exactly what the metered allowance is for",
+        "This is the work that earns the metered spend — the in-editor flow and existing context are the value",
+        "It is not mechanical or high-volume, so routing it off to a script/free lane would lose the IDE-native benefit"
+      ],
+      "expected_fix_hints": [
+        "Spend metered Copilot budget here — the IDE-native frontier flow earns it",
+        "Keep mechanical/high-volume work off the metered surface, but not this"
+      ],
+      "absent_signals": [
+        "Do not route genuine IDE-native frontier work off Copilot purely to save credits",
+        "Do not treat every metered use as waste"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Genuine IDE-native frontier chat/refactor that needs context the editor already has is exactly what the metered allowance is for."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: This is the work that earns the metered spend — the in-editor flow and existing context are the value."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: It is not mechanical or high-volume, so routing it off to a script/free lane would lose the IDE-native benefit."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Spend metered Copilot budget here — the IDE-native frontier flow earns it."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep mechanical/high-volume work off the metered surface, but not this."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not route genuine IDE-native frontier work off Copilot purely to save credits."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat every metered use as waste."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "free-model-selection-red-herring",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A team has already decided to move a bulk classification job off Copilot to a free open-weight model lane, and now asks which specific free model to pick for the job and how to invoke the OpenCode CLI non-interactively for it.",
+      "context": "The Copilot spend decision is already made (off Copilot). The remaining questions are free-model choice and runtime invocation.",
+      "question": "How should the agent scope this request?",
+      "expected_flags": [
+        "Picking a specific free model is owned by a different skill (opencode-free-models), not Copilot routing",
+        "Invoking/operating the OpenCode runtime is owned by the opencode skill, not this one",
+        "The Copilot spend decision is already settled; the open questions sit outside this skill's lane"
+      ],
+      "expected_fix_hints": [
+        "Route the free-model selection to opencode-free-models",
+        "Route the OpenCode CLI invocation question to the opencode skill"
+      ],
+      "absent_signals": [
+        "Do not recommend a specific free model as if Copilot routing owned that choice",
+        "Do not answer the OpenCode runtime/CLI question as part of Copilot spend routing"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Picking a specific free model is owned by a different skill (opencode-free-models), not Copilot routing."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Invoking/operating the OpenCode runtime is owned by the opencode skill, not this one."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The Copilot spend decision is already settled; the open questions sit outside this skill's lane."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the free-model selection to opencode-free-models."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the OpenCode CLI invocation question to the opencode skill."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not recommend a specific free model as if Copilot routing owned that choice."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer the OpenCode runtime/CLI question as part of Copilot spend routing."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

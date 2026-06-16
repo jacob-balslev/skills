@@ -1,0 +1,141 @@
+{
+  "skill_name": "design-system-architecture",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "component-architecture",
+    "layout-composition",
+    "visual-design-foundations",
+    "information-architecture",
+    "a11y"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a design system architecture in 2-3 sentences. Name its layers and how components consume them.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as a governed, layered vocabulary that turns recurring UI decisions into reusable, enforceable parts",
+        "Names the layers: raw tokens (literal values), semantic tokens (product meaning pointing at raw tokens), and component contracts",
+        "States components consume only semantic tokens, never raw values",
+        "Mentions governance (forbidden overrides, migration paths, drift detection) as the rule layer over the three"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does a design system separate raw tokens from semantic tokens? What breaks if components consume raw tokens directly?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Semantic tokens encode product meaning (surface, danger, primary-action) and point at raw tokens",
+        "The semantic layer keeps meaning stable while the value behind it can change per theme",
+        "Consuming raw tokens directly leaks palette names into components",
+        "Leaked raw values break theming — a theme change becomes a component rewrite instead of a token reassignment"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "A team keeps adding component variants and per-screen override hooks to stay flexible. Why is that a governance cost rather than added flexibility?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A system with too many escape hatches is ungoverned, not flexible",
+        "Clear constraints are what make a system reusable and consistent",
+        "Each extra variant/override dilutes the constraints that make the system worth having",
+        "Variants should map to real use cases, not visual guesses; variety/hierarchy comes from the contract, not unbounded escape hatches"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "How would you migrate a codebase from scattered raw CSS variables to canonical design-system tokens without breaking product screens?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Inventory existing tokens, components, variants, and usage hotspots first",
+        "Separate raw tokens from semantic tokens; introduce a semantic layer that maps meaning to raw values",
+        "Define migration paths for deprecated tokens rather than deleting them outright",
+        "Mark forbidden local overrides and verify real screens can be built without one-off styling"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "What belongs in a component contract, and why is accessibility behavior part of it rather than a separate concern?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A contract declares purpose, props/slots, states, accessibility behavior, and composition rules",
+        "Accessibility is part of the API contract so it ships with the component, not bolted on per screen",
+        "Components have clear ownership and API boundaries",
+        "Contracts consume semantic tokens, not raw values"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the design-system-architecture skill to decide the page's navigation structure and sitemap. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — page hierarchy, navigation, sitemap, and wayfinding belong to information-architecture",
+        "Design-system-architecture owns the token taxonomy, component contracts, theming, and governance",
+        "Correctly distinguishes owning the reusable vocabulary from owning a specific page's structure",
+        "Redirects to information-architecture rather than answering out of lane"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'a design system is just a component library plus a color palette.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A pile of components plus colors is a convenience kit, not an architecture",
+        "The value lives in the semantic token layer and the component contracts, not the pieces",
+        "Raw tokens with no semantic layer leak palette names and break theming",
+        "Components without declared contracts (states, accessibility, composition rules, forbidden overrides) become a gallery of one-offs"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a design system architecture is sound rather than decorative?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Semantic tokens cover product meaning without leaking palette names",
+        "Components have clear ownership and API boundaries; accessibility behavior is part of the contract",
+        "Variants map to real use cases; theming does not require component-level rewrites",
+        "Deprecated tokens/components have migration paths; real screens build without local escape hatches"
+      ]
+    }
+  ]
+}

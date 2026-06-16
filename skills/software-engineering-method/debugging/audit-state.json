@@ -1,0 +1,57 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-04-18",
+  "drift_check": {
+    "last_verified": "2026-04-18"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "passing",
+  "routing_eval": "present",
+  "last_audited": "2026-05-28",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "REDUNDANT",
+  "lint_verdict": "PASS",
+  "eval_last_run": {
+    "at": "2026-05-31T13:46:54.722Z",
+    "status": "fail",
+    "runner": "node skill-graph/lib/audit/evaluate-skill.js --mode application",
+    "receipt": "agent-orchestration/logs/eval-results/debugging/2026-05-31T13-46-54-721Z.json"
+  },
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "runtime_telemetry": {
+    "feedback_source": "agent-telemetry.jsonl",
+    "run_receipts_source": "agent-telemetry.jsonl",
+    "last_updated": "2026-06-13",
+    "last_run": {
+      "at": "2026-06-13T07:04:14.231Z",
+      "operation": "evaluate",
+      "phase": "grader",
+      "agent": "gpt-5.5",
+      "status": "completed",
+      "duration_ms": 27030,
+      "tokens": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "source": "unavailable"
+      },
+      "line_delta": null,
+      "receipt": "agent-telemetry.jsonl"
+    },
+    "metrics": {
+      "agent_run_count": 82,
+      "total_duration_ms": 6553016,
+      "total_tokens": 0,
+      "tokens_observed_count": 82
+    }
+  }
+}

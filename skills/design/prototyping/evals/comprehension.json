@@ -1,0 +1,139 @@
+{
+  "skill_name": "prototyping",
+  "subject": "design",
+  "adjacent_concepts": [
+    "ideation",
+    "usability-testing",
+    "design-thinking",
+    "design-module-composition"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define a prototype as this skill uses the term, in 2-3 sentences. What makes it different from an early version of the product?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A prototype is an artifact built to answer a specific, written-down question — an instrument, not a draft of the product",
+        "Built at the lowest fidelity that can credibly answer that question",
+        "Disposable by design — its value is the learning, not the artifact",
+        "Distinct from an early product version, which is meant to become / ship as the real thing"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "What is 'fidelity matching' and why is choosing the lowest sufficient fidelity the core judgment in prototyping?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Fidelity matching = choosing the lowest fidelity that can credibly answer the learning question",
+        "Names the ladder (paper → wireframe → clickable → wizard-of-oz → role-play → service prototype → code spike)",
+        "Higher fidelity than needed wastes time",
+        "Higher fidelity prematurely anchors stakeholders on visual decisions"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "Why does the skill argue against polishing a prototype before showing it? What does polish cost?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Polish signals finality",
+        "Polish makes stakeholders evaluate fit-and-finish instead of the concept",
+        "Polish makes users reluctant to criticize; a rougher prototype invites honest reaction",
+        "The substitution effect ('a prototype is worth a thousand meetings') only holds if the prototype is cheap enough to build several and discard most"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A team wants to test whether users will trust an AI-suggested product category before any engine exists. Recommend a fidelity and approach, and explain why.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Recommend a wizard-of-oz prototype — a human secretly performs the function the system will later automate",
+        "Lets the team test trust/behavior before building the engine",
+        "Start from the written learning question (will users trust the suggestion?) and the evidence that answers it",
+        "Avoids building the real recommendation engine just to test the trust question"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "A designer proposes a two-week high-fidelity Figma build to test whether a new onboarding flow is understandable. Critique the plan.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Flow-understandability is answerable at low fidelity (paper sketch or rough wireframe)",
+        "Two weeks of high fidelity is over-building — construction time should be small relative to the cost of being wrong",
+        "High fidelity anchors stakeholders on visuals and risks the prototype becoming the product",
+        "Write the learning question first and pick the lowest fidelity that answers it"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the prototyping skill to build a reusable dashboard-widget component to add to the design system. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Not in scope — durable, reusable, ship-ready components are design-module-composition",
+        "Prototyping produces disposable artifacts for learning; different lifecycle, quality bar, and audience",
+        "Correctly redirects to design-module-composition rather than building a production component"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'a prototype is just an early version of the product, so make it as polished as we can.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A prototype is an instrument for a written question, not an early product version",
+        "Build at the lowest fidelity that answers the question; it is meant to be thrown away",
+        "Judging by visual quality inverts the value system — judge by what was learned",
+        "A rough prototype that produces a clear answer (even a negative one) beats a polished one that gets defended and anchors stakeholders"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "Before and after building a prototype, what would you check to verify it was done well?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "There is a written learning question agreed before construction, plus a definition of what evidence answers it",
+        "Fidelity matches the learning goal and the team can defend the choice",
+        "The prototype is disposable in the team's mind — no implicit commitment it becomes production; construction time small vs the cost of being wrong",
+        "It is testable by a real participant and there is a written plan for after testing (iterate / escalate fidelity / kill)"
+      ]
+    }
+  ]
+}

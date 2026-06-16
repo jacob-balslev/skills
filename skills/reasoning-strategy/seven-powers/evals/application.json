@@ -1,0 +1,454 @@
+{
+  "skill_name": "seven-powers",
+  "subject": "Hamilton Helmer's Seven Powers",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "porters-five-forces",
+    "playing-to-win",
+    "blue-ocean-strategy",
+    "vrio",
+    "swot-tows",
+    "expected-value",
+    "prioritization"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "growth-confused-with-power",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A founder says: \"We are growing fast in a huge market, so we have a moat.\"",
+      "context": "The memo gives adoption charts and TAM estimates, but does not name a specific durable mechanism.",
+      "question": "Apply Seven Powers and assess the claim.",
+      "expected_flags": [
+        "Rejects growth and market size as proof of Power.",
+        "Asks which of the seven powers is actually present.",
+        "Requires benefit and barrier before calling the moat proven."
+      ],
+      "expected_fix_hints": [
+        "Classify the claim as unproven or candidate until evidence shows a durable mechanism.",
+        "Request evidence for scale economies, network economies, switching costs, branding, cornered resource, counter-positioning, or process power."
+      ],
+      "absent_signals": [
+        "Must not infer durable Power from market size alone.",
+        "Must not call popularity or growth a moat without a mechanism."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Rejects growth and market size as proof of Power."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Asks which of the seven powers is actually present."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Requires benefit and barrier before calling the moat proven."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Classify the claim as unproven or candidate until evidence shows a durable mechanism."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Request evidence for scale economies, network economies, switching costs, branding, cornered resource, counter-positioning, or process power."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not infer durable Power from market size alone."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not call popularity or growth a moat without a mechanism."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "scale-economies",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A SaaS company has high fixed R&D and infrastructure costs, low marginal serving cost, and unit cost drops sharply as volume grows. Smaller rivals must charge more to survive.",
+      "context": "The company claims a moat from lower unit cost at scale.",
+      "question": "Diagnose the likely power and false-positive checks.",
+      "expected_flags": [
+        "Identifies scale economies as the candidate power.",
+        "Explains benefit through declining unit cost or better economics at volume.",
+        "Explains barrier through smaller rivals' scale disadvantage."
+      ],
+      "expected_fix_hints": [
+        "Check whether cloud costs, open-source substitutes, or funded rivals can neutralize the gap.",
+        "Verify the cost curve is material in the relevant arena."
+      ],
+      "absent_signals": [
+        "Must not treat scale as valid merely because the company is large."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies scale economies as the candidate power."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains benefit through declining unit cost or better economics at volume."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains barrier through smaller rivals' scale disadvantage."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check whether cloud costs, open-source substitutes, or funded rivals can neutralize the gap."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Verify the cost curve is material in the relevant arena."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat scale as valid merely because the company is large."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "network-economies",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A marketplace claims network effects because user count doubled. Buyers only benefit when more specialized suppliers join, and suppliers join only when buyer demand is concentrated.",
+      "context": "Participants may multi-home across competing marketplaces.",
+      "question": "What should the analysis say?",
+      "expected_flags": [
+        "Identifies possible network economies, specifically cross-side network effects.",
+        "Maps who creates value for whom.",
+        "Rejects user growth alone as sufficient."
+      ],
+      "expected_fix_hints": [
+        "Test cold-start and multi-homing risks.",
+        "Explain whether a rival network would be hard to bootstrap."
+      ],
+      "absent_signals": [
+        "Must not call every growing marketplace a network-effect moat."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies possible network economies, specifically cross-side network effects."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Maps who creates value for whom."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Rejects user growth alone as sufficient."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Test cold-start and multi-homing risks."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Explain whether a rival network would be hard to bootstrap."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not call every growing marketplace a network-effect moat."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "counter-positioning",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A new entrant offers a self-serve, low-margin subscription that customers prefer. Incumbents could technically copy it, but doing so would cannibalize their enterprise services revenue and partner channel.",
+      "context": "The entrant claims incumbents will rationally delay imitation.",
+      "question": "Which power is this?",
+      "expected_flags": [
+        "Identifies counter-positioning.",
+        "Explains incumbent self-harm from imitation.",
+        "Explains the entrant model's benefit for the chosen segment."
+      ],
+      "expected_fix_hints": [
+        "Check whether incumbents can isolate the response through a separate brand or acquisition.",
+        "Watch whether the advantage fades once incumbents accept cannibalization."
+      ],
+      "absent_signals": [
+        "Must not define counter-positioning as any low-price entrant."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies counter-positioning."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains incumbent self-harm from imitation."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains the entrant model's benefit for the chosen segment."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check whether incumbents can isolate the response through a separate brand or acquisition."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Watch whether the advantage fades once incumbents accept cannibalization."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not define counter-positioning as any low-price entrant."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "switching-costs",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An enterprise workflow tool has deep integrations, historical data, trained operators, compliance approvals, and customer-specific automations. Customers complain about price but rarely leave.",
+      "context": "Alternatives exist, but migration is risky and slow.",
+      "question": "Diagnose the power and risks.",
+      "expected_flags": [
+        "Identifies switching costs.",
+        "Names specific switching-cost mechanisms.",
+        "Explains retention or pricing benefit and customer disruption barrier."
+      ],
+      "expected_fix_hints": [
+        "Check whether rivals can automate migration, underwrite risk, or provide a superior enough offer to overcome the costs.",
+        "Separate customer satisfaction from trapped retention."
+      ],
+      "absent_signals": [
+        "Must not confuse customer satisfaction with switching costs."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies switching costs."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Names specific switching-cost mechanisms."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains retention or pricing benefit and customer disruption barrier."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check whether rivals can automate migration, underwrite risk, or provide a superior enough offer to overcome the costs."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Separate customer satisfaction from trapped retention."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not confuse customer satisfaction with switching costs."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "branding",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A premium product claims brand power because many people recognize the logo. Customers pay more for it even when blind tests show similar functional quality, and that perception has compounded for decades.",
+      "context": "The company wants to know whether this is branding power or just awareness.",
+      "question": "Analyze the claim.",
+      "expected_flags": [
+        "Identifies branding as plausible when perception changes willingness to pay or choice.",
+        "Distinguishes branding power from mere awareness or paid acquisition.",
+        "Explains benefit as price or preference and barrier as historically accumulated perception."
+      ],
+      "expected_fix_hints": [
+        "Request evidence of durable willingness-to-pay or choice behavior for objectively similar offers.",
+        "Check whether rivals can buy equivalent perception quickly."
+      ],
+      "absent_signals": [
+        "Must not treat logo recognition alone as Power."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Identifies branding as plausible when perception changes willingness to pay or choice."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Distinguishes branding power from mere awareness or paid acquisition."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains benefit as price or preference and barrier as historically accumulated perception."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Request evidence of durable willingness-to-pay or choice behavior for objectively similar offers."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Check whether rivals can buy equivalent perception quickly."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not treat logo recognition alone as Power."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "industry-structure-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A team asks for Seven Powers, but the real question is: \"Is this industry attractive given supplier power, buyer power, entrants, substitutes, and rivalry?\"",
+      "context": "The task is about profit-pool pressure across the industry, not a specific firm's durable moat mechanism.",
+      "question": "Should this skill own the answer?",
+      "expected_flags": [
+        "Routes industry-structure analysis to porters-five-forces.",
+        "Defines Seven Powers as firm-level durable power diagnosis.",
+        "Mentions Playing to Win if the task becomes integrated strategy formulation."
+      ],
+      "expected_fix_hints": [
+        "Use Seven Powers after industry analysis only if the question becomes whether a particular firm has durable Power within that industry.",
+        "Keep the methods composable without collapsing them."
+      ],
+      "absent_signals": [
+        "Must not force all strategy questions into Seven Powers."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes industry-structure analysis to porters-five-forces."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Defines Seven Powers as firm-level durable power diagnosis."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Mentions Playing to Win if the task becomes integrated strategy formulation."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use Seven Powers after industry analysis only if the question becomes whether a particular firm has durable Power within that industry."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep the methods composable without collapsing them."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not force all strategy questions into Seven Powers."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "strategy-cascade-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A leadership team asks for a full strategy cascade: winning aspiration, where to play, how to win, capabilities, and management systems.",
+      "context": "The prompt may later need moat diagnosis, but the requested artifact is the integrated strategy choice system.",
+      "question": "Should Seven Powers own the primary answer?",
+      "expected_flags": [
+        "Routes full strategy-cascade formulation to playing-to-win.",
+        "Explains that Seven Powers can support the how-to-win advantage diagnosis but does not own the whole cascade.",
+        "Keeps Power diagnosis as a focused mechanism test rather than a full planning framework."
+      ],
+      "expected_fix_hints": [
+        "Use playing-to-win for the main strategy cascade.",
+        "Use Seven Powers only when the team needs to test whether a claimed advantage can persist."
+      ],
+      "absent_signals": [
+        "Must not replace the strategy cascade with a seven-power checklist.",
+        "Must not ignore capabilities and management systems when those are explicitly requested."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes full strategy-cascade formulation to playing-to-win."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that Seven Powers can support the how-to-win advantage diagnosis but does not own the whole cascade."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps Power diagnosis as a focused mechanism test rather than a full planning framework."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use playing-to-win for the main strategy cascade."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use Seven Powers only when the team needs to test whether a claimed advantage can persist."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not replace the strategy cascade with a seven-power checklist."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Must not ignore capabilities and management systems when those are explicitly requested."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

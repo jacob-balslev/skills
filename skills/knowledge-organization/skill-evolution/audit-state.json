@@ -1,0 +1,44 @@
+{
+  "schema_version": 8,
+  "version": "2.0.2",
+  "owner": "skill-graph-maintainer",
+  "repo": [
+    {
+      "handle": "skill-graph",
+      "url": "https://github.com/jacob-balslev/skill-graph"
+    }
+  ],
+  "freshness": "2026-06-01",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "bin/skill-graph.js": "0fbb1a80e7cda04e21ba12f42bb5a2e05a6051c4aa94b1119ca551e386b1da81",
+      "lib/audit/skill-evolution-loop.js": "bfa586b8229f77b340bd7728a59c4ef3ae484ad42bc5f20911306719d1f80c12",
+      "lib/audit/run-skill-improvement-loop.js": "3d6ac85065bbfcfbce93256f93829bf0c06ef13ab9d3b4bee9c1d83da139237b",
+      "lib/audit/evaluate-skill.js": "8953267f928289b2d5272ce10cb6040e2bc56e73682d4a61ab263fbe449ef4b0",
+      "skill-audit-loop/SKILL_AUDIT_LOOP.md": "1574963dccf5bdecb48295d9257d41c11757fe2234f3c79752bd20d1dd769d18",
+      "README.md": "5ae9072a07bcc18e47c741b05f544bec68349aef51b05c88b7eee39e941f6cda"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "absent",
+  "last_audited": "2026-06-07",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "drift_status": "OK",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "declared",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 30,
+    "review_cadence": "quarterly"
+  }
+}

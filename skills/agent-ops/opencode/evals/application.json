@@ -1,0 +1,280 @@
+{
+  "skill_name": "opencode",
+  "subject": "Choosing and operating the OpenCode provider-agnostic agent runtime",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "opencode-free-models",
+    "github-copilot",
+    "autonomous-loop-patterns",
+    "ai-native-development"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "runtime-vs-engine-conflation",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team reports 'we ran the job on OpenCode, so it should have been high quality' after a run produced weak output, treating the runtime name as a quality guarantee.",
+      "context": "The run used whatever default model resolved; no explicit provider/model was set.",
+      "question": "What is the flaw in that reasoning and how should the team think about it?",
+      "expected_flags": [
+        "Naming the runtime says nothing about quality or cost — both come entirely from the routed provider/model",
+        "The runtime is the harness; the model is the swappable engine, and the two are separate decisions"
+      ],
+      "expected_fix_hints": [
+        "Attribute the run's quality/cost to the routed model, not to OpenCode itself",
+        "Choose the model explicitly via a provider/model string instead of leaving it to whatever default resolved"
+      ],
+      "absent_signals": [
+        "Do not treat 'OpenCode' as a quality tier or a model",
+        "Do not assume the runtime guarantees capability or cost"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Naming the runtime says nothing about quality or cost — both come entirely from the routed provider/model."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The runtime is the harness; the model is the swappable engine, and the two are separate decisions."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Attribute the run's quality/cost to the routed model, not to OpenCode itself."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Choose the model explicitly via a provider/model string instead of leaving it to whatever default resolved."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'OpenCode' as a quality tier or a model."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the runtime guarantees capability or cost."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "non-interactive-automation",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An automation script needs to invoke an agent run, parse the result programmatically, and continue a prior session — and someone tries to script against the interactive TUI.",
+      "context": "The run must be non-interactive and machine-parseable; it should resume earlier context.",
+      "question": "How should the agent invoke OpenCode for this automation?",
+      "expected_flags": [
+        "The interactive TUI is the wrong surface for automation — `opencode run` is the non-interactive scripting entry",
+        "Machine parsing needs `--format json`; resuming prior context needs `--continue`/`--session`"
+      ],
+      "expected_fix_hints": [
+        "Use `opencode run` with `--format json` for the parseable automated run",
+        "Resume or branch prior context with `--continue` / `--session <id>` / `--fork`"
+      ],
+      "absent_signals": [
+        "Do not script against the interactive TUI",
+        "Do not assume the result is parseable without `--format json`"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The interactive TUI is the wrong surface for automation — `opencode run` is the non-interactive scripting entry."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Machine parsing needs `--format json`; resuming prior context needs `--continue`/`--session`."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use `opencode run` with `--format json` for the parseable automated run."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Resume or branch prior context with `--continue` / `--session <id>` / `--fork`."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not script against the interactive TUI."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume the result is parseable without `--format json`."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "guessed-model-string",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "An agent hardcodes a `provider/model` string from memory and a stale list of free Zen models, then sends confidential data to one of the trial models.",
+      "context": "The OpenCode Zen free roster is promotional and changes; trial/free models warn against confidential data.",
+      "question": "What should the agent verify before relying on that model string?",
+      "expected_flags": [
+        "The provider/model id should be confirmed to exist via `opencode models [provider]` rather than guessed",
+        "The free Zen roster is promotional and changes — a remembered list may be stale; trial models warn against confidential data"
+      ],
+      "expected_fix_hints": [
+        "Confirm the live model id with `opencode models [provider]` (`--refresh`) before routing",
+        "Do not send confidential data to a trial/free model that warns against it"
+      ],
+      "absent_signals": [
+        "Do not treat a remembered Zen roster as the current live list",
+        "Do not assume a guessed provider/model string resolves"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The provider/model id should be confirmed to exist via `opencode models [provider]` rather than guessed."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The free Zen roster is promotional and changes — a remembered list may be stale; trial models warn against confidential data."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Confirm the live model id with `opencode models [provider]` (`--refresh`) before routing."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Do not send confidential data to a trial/free model that warns against it."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat a remembered Zen roster as the current live list."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume a guessed provider/model string resolves."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "harness-fit-decision",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A team needs to route the same task across several vendors to compare models, also wants a local/offline model option, and is debating whether to commit to a single-vendor CLI.",
+      "context": "The decision is about the harness's needs (multi-provider routing, local models, scriptability), not about which specific model.",
+      "question": "Is OpenCode the right runtime here, and on what basis?",
+      "expected_flags": [
+        "OpenCode fits when the harness needs multi-provider routing and local models without a per-vendor CLI or vendor lock-in",
+        "The decision is made on harness needs, not on an assumed model quality"
+      ],
+      "expected_fix_hints": [
+        "Choose OpenCode for the multi-provider comparison + local-model + scriptable harness needs",
+        "Then pick the model separately via an explicit provider/model string per task"
+      ],
+      "absent_signals": [
+        "Do not choose the runtime based on an assumed model quality",
+        "Do not assume a single-vendor CLI gives multi-provider routing"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: OpenCode fits when the harness needs multi-provider routing and local models without a per-vendor CLI or vendor lock-in."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The decision is made on harness needs, not on an assumed model quality."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Choose OpenCode for the multi-provider comparison + local-model + scriptable harness needs."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Then pick the model separately via an explicit provider/model string per task."
+        },
+        {
+          "id": "c5",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not choose the runtime based on an assumed model quality."
+        },
+        {
+          "id": "c6",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not assume a single-vendor CLI gives multi-provider routing."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "model-choice-red-herring",
+      "criticality": "high",
+      "red_herring": true,
+      "scenario": "A user asks: 'Which free model should I send this bulk classification job to — MiniMax M3 or Nemotron — and how many premium requests will a Copilot run of it cost?'",
+      "context": "The first question is a per-task model-choice decision among free models; the second is GitHub Copilot premium-request economics. Neither is about choosing or operating the OpenCode runtime.",
+      "question": "How should the agent scope this request?",
+      "expected_flags": [
+        "Choosing which specific free model fits a task is owned by the opencode-free-models skill, not the runtime skill",
+        "Copilot premium-request / AI-credit cost is owned by the github-copilot skill, a distinct IDE-native economics model"
+      ],
+      "expected_fix_hints": [
+        "Route the free-model choice to the opencode-free-models skill",
+        "Route the Copilot premium-request budgeting to the github-copilot skill"
+      ],
+      "absent_signals": [
+        "Do not answer the per-task free-model choice as a runtime decision",
+        "Do not treat Copilot credit economics as within this skill's scope"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Choosing which specific free model fits a task is owned by the opencode-free-models skill, not the runtime skill."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Copilot premium-request / AI-credit cost is owned by the github-copilot skill, a distinct IDE-native economics model."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the free-model choice to the opencode-free-models skill."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Route the Copilot premium-request budgeting to the github-copilot skill."
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not answer the per-task free-model choice as a runtime decision."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat Copilot credit economics as within this skill's scope."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

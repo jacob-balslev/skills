@@ -1,0 +1,146 @@
+{
+  "skill_name": "information-architecture",
+  "subject": "design",
+  "adjacent_concepts": [
+    "taxonomy-design",
+    "layout-composition",
+    "design-system-architecture",
+    "microcopy",
+    "a11y",
+    "task-analysis"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define information architecture in 2-3 sentences. Name its core parts and how it relates a user's goal to the system's structure.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Structures information so users (and agents) can find, understand, and move through it",
+        "Is the contract between a user's goal and the system's structure",
+        "Includes navigation/page hierarchy, grouping, labeling systems, and wayfinding",
+        "Optimizes for user tasks and findability"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why does good IA name the top user tasks first and choose structure second, rather than mirroring the product's internal categories?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Starts from user goals / top tasks and entry points before choosing structure",
+        "Groups by user goal first, implementation detail second",
+        "Internal/implementation categories are technically accurate but often user-invisible",
+        "Structure is validated against real task scenarios, not asserted"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "When deciding where a piece of content lives, what governs the choice between a top-level nav item, a tab, a section, a filter, and a cross-link?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Frequency of use and whether the item is a genuine task entry point drive placement",
+        "Raw importance alone does not earn a top-level nav slot",
+        "Navigation levels are kept limited and predictable; deep nesting hides content",
+        "Promoting everything to the top level dilutes the navigation's meaning"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A documentation site has setup, troubleshooting, billing, and admin-role pages scattered across product-feature categories, and users cannot find setup instructions. Apply IA and recommend the first changes.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "critical",
+      "expected_elements": [
+        "Names 'getting set up' as a top task / primary entry point",
+        "Inventories current content before restructuring",
+        "Regroups by user goal (a setup hub) rather than by product internals",
+        "Creates a clearer navigation/page hierarchy and adds cross-links/wayfinding from related pages",
+        "Tests the new structure against no-prior-knowledge task prompts"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Two dashboard sections overlap and users do not know where to look first. How would you use IA to resolve the overlap?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "procedure",
+      "criticality": "high",
+      "expected_elements": [
+        "Establishes a single canonical home for the overlapping content plus cross-links from the other location",
+        "Groups by the user goal each section actually serves rather than duplicating it",
+        "Adds wayfinding so the user knows where they are and what is nearby",
+        "Avoids duplicating the content into multiple homes (which fragments maintenance and confuses currency)"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "Distinguish information-architecture from taxonomy-design, layout-composition, design-system-architecture, microcopy, and a11y. Give mechanism-level boundaries, not just labels.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "taxonomy-design owns classification governance, facets, and assignment rules",
+        "layout-composition owns structure inside a single page or screen",
+        "design-system-architecture owns component, token, and theme systems",
+        "microcopy owns sentence-level wording once structure is settled",
+        "a11y owns accessibility compliance and assistive-technology behavior",
+        "information-architecture owns cross-page navigation, hierarchy, grouping, labeling, and wayfinding"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A teammate says, 'This feature is important, so it must be a top-level navigation item.' Correct the mental model using IA.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Importance alone does not determine top-level navigation",
+        "Frequency of use, task entry points, and findability decide placement",
+        "A tab, section, filter, or cross-link may be the better home",
+        "Promoting everything dilutes the navigation; structure should be tested against task scenarios"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify an information architecture is implemented correctly?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Top tasks have obvious entry points and labels use user language not implementation terms",
+        "Navigation levels are limited and predictable",
+        "Similar content has one canonical home plus cross-links where needed",
+        "Users can recover from a wrong turn without restarting; empty/low-data states still preserve structure",
+        "The IA was tested against real, no-prior-knowledge task prompts rather than assumed"
+      ]
+    }
+  ]
+}

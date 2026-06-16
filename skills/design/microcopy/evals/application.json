@@ -1,0 +1,459 @@
+{
+  "skill_name": "microcopy",
+  "subject": "design",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage; sections 1-8 Button Labels, Empty States, Tooltips, Confirmation Dialogs, Error Messages, Loading and Progress, Inline Validation, Toasts; Verification; Do NOT Use When).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "button-label-fix",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A form that saves account settings has a primary button labeled 'Submit' and a secondary labeled 'OK'. A destructive variant of the same dialog (delete account) also uses 'Submit' / 'OK'.",
+      "context": "The team wants labels that tell users exactly what each click does.",
+      "question": "How should the agent rewrite these button labels?",
+      "expected_flags": [
+        "Make labels verb-first and name the actual action ('Save Changes', not 'Submit')",
+        "Match the label to the consequence — the delete button says 'Delete Account', not 'OK'",
+        "Avoid generic labels (Submit / OK / Yes / Continue)",
+        "Destructive action gets explicit/permanent wording and a Cancel escape"
+      ],
+      "expected_fix_hints": [
+        "Replace 'Submit' with 'Save Changes' on the settings save",
+        "Replace the destructive 'OK' with 'Delete Account' and keep 'Cancel'"
+      ],
+      "absent_signals": [
+        "Do not keep generic labels like Submit/OK",
+        "Do not give the destructive and save buttons the same label"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Make labels verb-first and name the actual action ('Save Changes', not 'Submit')."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Match the label to the consequence — the delete button says 'Delete Account', not 'OK'."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Avoid generic labels (Submit / OK / Yes / Continue)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Destructive action gets explicit/permanent wording and a Cancel escape."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace 'Submit' with 'Save Changes' on the settings save."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace the destructive 'OK' with 'Delete Account' and keep 'Cancel'."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep generic labels like Submit/OK."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not give the destructive and save buttons the same label."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "empty-state",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A new user opens the Orders table and sees a centered message that just says 'No data'.",
+      "context": "Orders populate after the user connects a storefront and a sync runs.",
+      "question": "How should the agent rewrite the empty state?",
+      "expected_flags": [
+        "Use the three-part acknowledge → explain → guide structure",
+        "Acknowledge with 'yet' to imply future content ('No orders yet')",
+        "Explain why it's empty / when it won't be (orders appear after the storefront syncs)",
+        "Provide one primary action button that resolves it ('Connect Storefront')"
+      ],
+      "expected_fix_hints": [
+        "Replace 'No data' with 'No orders yet' + a one-line explanation",
+        "Add a 'Connect Storefront' primary action"
+      ],
+      "absent_signals": [
+        "Do not leave a dead-end 'No data' / 'Nothing to show'",
+        "Do not omit the next-step action"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use the three-part acknowledge → explain → guide structure."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Acknowledge with 'yet' to imply future content ('No orders yet')."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explain why it's empty / when it won't be (orders appear after the storefront syncs)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Provide one primary action button that resolves it ('Connect Storefront')."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace 'No data' with 'No orders yet' + a one-line explanation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add a 'Connect Storefront' primary action."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave a dead-end 'No data' / 'Nothing to show'."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not omit the next-step action."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "error-message",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "When a payment fails, the app shows 'An error has occurred while processing your request. Please try again later. (Error 500)'.",
+      "context": "The failure reason (declined card) is known to the system.",
+      "question": "How should the agent rewrite the error message?",
+      "expected_flags": [
+        "Follow What → Why → What-to-do ('Payment failed — your card was declined. Check your card details or try another method.')",
+        "Say what errored, not 'An error occurred'; say what/when to retry, not 'try again later'",
+        "Blame-free framing",
+        "Remove the user-facing error code"
+      ],
+      "expected_fix_hints": [
+        "State the failure, the specific reason, and a concrete next step",
+        "Keep error codes only in technical/log contexts"
+      ],
+      "absent_signals": [
+        "Do not keep 'An error occurred' / 'try again later'",
+        "Do not surface the raw error code to the user"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Follow What → Why → What-to-do ('Payment failed — your card was declined. Check your card details or try another method.')."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Say what errored, not 'An error occurred'; say what/when to retry, not 'try again later'."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Blame-free framing."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Remove the user-facing error code."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: State the failure, the specific reason, and a concrete next step."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep error codes only in technical/log contexts."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep 'An error occurred' / 'try again later'."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not surface the raw error code to the user."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "inline-validation",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "An email field shows 'Invalid input!' in a red alert box at the top of the form, and the message appears on every keystroke while the user is still typing.",
+      "context": "The team wants field-level, non-hostile validation.",
+      "question": "How should the agent change the validation behavior and message?",
+      "expected_flags": [
+        "Make the message specific ('Email must include @'), not generic 'Invalid input'",
+        "Show it on blur, not on keystroke; clear it as soon as the input is fixed",
+        "Place it below the field, not in a form-level alert box",
+        "Drop the exclamation mark; pair color with a non-color indicator for accessibility"
+      ],
+      "expected_fix_hints": [
+        "Move validation to blur and to field level",
+        "Write a specific, actionable message and remove the '!'"
+      ],
+      "absent_signals": [
+        "Do not validate on every keystroke",
+        "Do not keep a generic 'Invalid input' message"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Make the message specific ('Email must include @'), not generic 'Invalid input'."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Show it on blur, not on keystroke; clear it as soon as the input is fixed."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Place it below the field, not in a form-level alert box."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Drop the exclamation mark; pair color with a non-color indicator for accessibility."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move validation to blur and to field level."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Write a specific, actionable message and remove the '!'."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not validate on every keystroke."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep a generic 'Invalid input' message."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "loading-progress",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A bulk order export shows a full-screen spinner with the static text 'Loading...' for the entire operation, which can take anywhere from under a second to several minutes for large stores.",
+      "context": "The team wants users to understand long waits and not abandon the page.",
+      "question": "How should the agent stage the loading copy?",
+      "expected_flags": [
+        "Stage feedback by elapsed time, not a single static state",
+        "Show nothing under ~300ms; spinner/skeleton briefly; a descriptive message by a few seconds",
+        "Show progress for long waits ('Exporting orders… 47 of 312')",
+        "Add reassurance past ~30s ('This may take a few minutes for large stores. You can leave this page.')"
+      ],
+      "expected_fix_hints": [
+        "Replace static 'Loading...' with time-staged messages",
+        "Add determinate progress and a leave-the-page reassurance for long runs"
+      ],
+      "absent_signals": [
+        "Do not leave a single static 'Loading...' for the whole operation"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Stage feedback by elapsed time, not a single static state."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Show nothing under ~300ms; spinner/skeleton briefly; a descriptive message by a few seconds."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Show progress for long waits ('Exporting orders… 47 of 312')."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Add reassurance past ~30s ('This may take a few minutes for large stores. You can leave this page.')."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace static 'Loading...' with time-staged messages."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add determinate progress and a leave-the-page reassurance for long runs."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not leave a single static 'Loading...' for the whole operation."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the microcopy owner to (a) write the persuasive headline for the pricing landing page and (b) decide when the 'saved' confirmation should appear, how long it should persist, and where it sits relative to the loading spinner.",
+      "context": "The team conflates 'all the text and feedback' with microcopy.",
+      "question": "How should the agent scope this request?",
+      "expected_flags": [
+        "Pricing-page persuasion is out of scope — that is marketing copy / copywriting, not functional UI text",
+        "Timing/persistence/placement of the confirmation state is out of scope — that is interaction-feedback (the staging)",
+        "Offer the in-scope part: the words inside the confirmation toast/state",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand the headline to copywriting and the state staging to interaction-feedback",
+        "Provide the toast wording (action + context, undo for reversible actions)"
+      ],
+      "absent_signals": [
+        "Do not write the marketing headline",
+        "Do not decide feedback-state timing/placement/persistence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Pricing-page persuasion is out of scope — that is marketing copy / copywriting, not functional UI text."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Timing/persistence/placement of the confirmation state is out of scope — that is interaction-feedback (the staging)."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: the words inside the confirmation toast/state."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand the headline to copywriting and the state staging to interaction-feedback."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Provide the toast wording (action + context, undo for reversible actions)."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not write the marketing headline."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not decide feedback-state timing/placement/persistence."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "tooltip",
+      "criticality": "normal",
+      "red_herring": false,
+      "scenario": "A 'Confidence' badge on each order has a tooltip that reads 'Confidence. This shows the confidence. Click to learn how it works in our help center.' with a trailing link.",
+      "context": "The team wants tooltips that quickly answer 'what is this?'.",
+      "question": "How should the agent rewrite the tooltip?",
+      "expected_flags": [
+        "One sentence answering 'what is this?' (e.g. 'How complete the profit calculation is for this order')",
+        "No terminal period; sentence case",
+        "Do not repeat the label ('Confidence')",
+        "No links inside the tooltip — they disappear on mouseout"
+      ],
+      "expected_fix_hints": [
+        "Collapse to a single definitional sentence",
+        "Move any 'learn more' link out of the tooltip"
+      ],
+      "absent_signals": [
+        "Do not restate the attached label",
+        "Do not put a link in the tooltip"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: One sentence answering 'what is this?' (e.g. 'How complete the profit calculation is for this order')."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: No terminal period; sentence case."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Do not repeat the label ('Confidence')."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: No links inside the tooltip — they disappear on mouseout."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Collapse to a single definitional sentence."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Move any 'learn more' link out of the tooltip."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not restate the attached label."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not put a link in the tooltip."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

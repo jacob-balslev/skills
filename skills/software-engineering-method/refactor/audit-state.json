@@ -1,0 +1,24 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-04-18",
+  "drift_check": {
+    "last_verified": "2026-04-18"
+  },
+  "eval_artifacts": "present",
+  "eval_state": "passing",
+  "routing_eval": "present",
+  "last_audited": "2026-05-28",
+  "structural_verdict": "PASS",
+  "truth_verdict": "PASS",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "lint_verdict": "PASS",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  }
+}

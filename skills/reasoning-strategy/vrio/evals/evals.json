@@ -1,0 +1,143 @@
+{
+  "skill_name": "vrio",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A SaaS company lists four resources: a standard CRM implementation, a proprietary churn-prediction dataset, a founder-led enterprise sales motion, and a culture of rapid customer support. Build the minimum useful VRIO analysis without inventing facts.",
+      "expected_output": "The agent should define each resource, apply value, rarity, costly-to-imitate, and organization tests sequentially, mark evidence gaps, avoid calling every resource a moat, and produce competitive implications plus next actions.",
+      "type": "application",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Defines each resource or capability precisely enough to test",
+        "Applies all four VRIO tests in sequence",
+        "Marks missing evidence rather than inventing facts",
+        "Classifies competitive implications",
+        "Does not label every positive resource as sustained advantage"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 2,
+      "prompt": "A draft says: 'Our brand is VRIO because everyone knows it and we have great marketing.' Review the claim.",
+      "expected_output": "The agent should flag that the resource is under-defined and that value, rarity, imitation cost, and organizational support are asserted rather than evidenced. It should ask for customer willingness-to-pay or acquisition economics, competitor brand comparison, imitation barriers such as history or social complexity, and whether the organization converts the brand into pricing, retention, distribution, or trust.",
+      "type": "classification-review",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Identifies vague resource boundary",
+        "Requests value evidence",
+        "Requests competitor rarity evidence",
+        "Requests imitation-cost mechanism",
+        "Requests organization-to-capture-value evidence",
+        "Does not accept brand familiarity alone as sustained advantage"
+      ],
+      "substance": "mechanics",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 3,
+      "prompt": "A team asks for VRIO, but their real question is whether buyer power, supplier power, threat of entrants, substitutes, and rivalry make a market attractive. Should VRIO own this?",
+      "expected_output": "The agent should route industry attractiveness and profit-pressure analysis to Porter's Five Forces. It should explain that VRIO can test internal resources and capabilities in that industry, but the five external forces are not VRIO's mechanism.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Routes profit-pressure work to Porter's Five Forces",
+        "Explains what VRIO can still contribute",
+        "Names resources and capabilities as VRIO's unit of analysis",
+        "Does not substitute VRIO for industry-structure analysis"
+      ],
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 4,
+      "prompt": "An executive says a resource is valuable, rare, and costly to imitate, so it automatically creates sustained advantage even though the company has no process, incentives, system, or team to use it. Critique the reasoning.",
+      "expected_output": "The agent should explain that organization is the fourth VRIO test. A valuable, rare, hard-to-imitate resource can remain under-exploited if the firm is not organized to capture value. It should recommend fixing operating model, incentives, systems, governance, staffing, metrics, or go-to-market before claiming sustained advantage.",
+      "type": "anti-pattern",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Names organization as the fourth VRIO test",
+        "Explains under-exploited advantage or organization gap",
+        "Suggests concrete organization fixes",
+        "Does not certify sustained advantage without organization evidence"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "critical"
+    },
+    {
+      "id": 5,
+      "prompt": "A nonprofit has a donor relationship network, a public curriculum, a volunteer training routine, and a city permit. Produce a VRIO structure using nonprofit language and no invented facts.",
+      "expected_output": "The agent should adapt VRIO to nonprofit resources, define each resource, apply the four tests, mark missing evidence about mission value, rarity, imitation cost, and organizational support, and avoid forcing commercial moat language where mission or funding logic is more appropriate.",
+      "type": "safe-scaffold",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Uses nonprofit-resource language",
+        "Applies value, rarity, imitation cost, and organization tests",
+        "Marks missing evidence",
+        "Avoids invented claims",
+        "Names mission, funding, capability, or access evidence needs"
+      ],
+      "substance": "mechanics",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 6,
+      "prompt": "A strategy review has three resources left after VRIO: one parity resource, one temporary advantage, and one sustained advantage candidate. What should happen next?",
+      "expected_output": "The agent should recommend operating parity resources efficiently without over-claiming, exploiting or strengthening temporary advantages before imitation, protecting and deepening the sustained advantage candidate, fixing evidence gaps, and routing to Five Forces, Seven Powers, Playing to Win, Expected Value, BCG, or Ansoff as needed.",
+      "type": "handoff",
+      "grounding": "principle",
+      "difficulty": "applied",
+      "expectations": [
+        "Does not pick a strategy solely from labels",
+        "Names different actions for parity, temporary advantage, and sustained advantage candidate",
+        "Names evidence gaps",
+        "Routes to at least two appropriate downstream methods",
+        "Explains protection, investment, or organization implications"
+      ],
+      "substance": "domain",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "high"
+    },
+    {
+      "id": 7,
+      "prompt": "A company asks to classify its advantage using scale economies, network economies, counter-positioning, switching costs, branding, cornered resource, and process power. Is this VRIO?",
+      "expected_output": "The agent should say no. That classification is Seven Powers, not VRIO. VRIO tests a specific resource or capability for value, rarity, costly imitation, and organization; Seven Powers classifies the type of durable power source.",
+      "type": "boundary",
+      "grounding": "principle",
+      "difficulty": "basic",
+      "expectations": [
+        "Rejects VRIO ownership",
+        "Names the seven categories as Seven Powers mechanics",
+        "Explains VRIO's four tests",
+        "Does not force Seven Powers categories into VRIO"
+      ],
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "decision_quality",
+      "skill_type": "concept",
+      "criticality": "medium"
+    }
+  ]
+}

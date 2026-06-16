@@ -1,0 +1,142 @@
+{
+  "skill_name": "frontend-architecture",
+  "subject": "frontend-architecture",
+  "adjacent_concepts": [
+    "design-system-architecture",
+    "design-module-composition",
+    "refactor",
+    "testing-strategy",
+    "api-design"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define frontend architecture in 2-3 sentences. Name the three decisions it governs and what distinguishes the architecture from the folder tree.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names the three decisions: where code lives (module/folder structure), what may depend on what (import direction), who owns mutable state",
+        "States the import graph — not the folder tree — is the real architecture",
+        "Mentions the three component layers (primitives, composed, connected) and/or server-vs-client state as covered concerns",
+        "Frames it as making placement/dependency/ownership decisions reproducible and enforceable"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Why is a tidy, deeply-categorized folder tree NOT evidence of good frontend architecture? What is the load-bearing structure instead?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "The import graph, not the folder names, determines what can change independently",
+        "A pretty tree with cyclic feature imports is worse than a flat folder with strict one-way dependencies",
+        "Optimize for cohesion (what changes together stays together) and colocation (where would I look for this)",
+        "Direction must be enforced (boundary linter) or it degrades within months"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "A team mixes server-fetched data and ephemeral UI state in a single global store. What problem does this cause and how should the two be separated?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Mixing them produces cache-invalidation bugs that look like rendering bugs",
+        "Server state (remote, cache-managed) and client state (UI-only, ephemeral) are different problems with different requirements",
+        "Use one fetch/cache/revalidate tool for server data",
+        "Reserve global client state for genuinely cross-cutting UI concerns (theme, current user, route)"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "Describe the three component layers and identify which boundary most often produces dependency tangles, and why.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Primitives (no business knowledge, props-only — Button, Input, Stack)",
+        "Composed components (combine primitives with feature layout, no data fetching — OrderSummary, AddressForm)",
+        "Connected components (own fetching, mutation, routing — OrderDetailPage)",
+        "The composed↔connected boundary is the most common tangle source: a 'shared' composed component reaching into a feature store creates a back-edge"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "What four axes do state-shape decisions span, and what does the shape choice determine?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Location (component, context, store)",
+        "Normalization (entity-keyed vs nested)",
+        "Derivation (computed at read time vs stored)",
+        "Ownership (who can write)",
+        "The shape determines what re-renders, what stays consistent across views, and where mutation-misses become bugs"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the frontend-architecture skill to pick the brand color palette and decide whether to use CSS-in-JS or Tailwind. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Color palette is out of scope — that is visual design (color-system-design / visual-design-foundations)",
+        "CSS-in-JS vs Tailwind is a styling/framework-tactic choice, not structural — this skill is framework-neutral",
+        "Correctly distinguishes structure/dependency/ownership (in scope) from visual and framework-tactic decisions (out of scope)"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A lead says 'we have a clean, well-organized folder structure, so our architecture is solid.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Folder structure is not the architecture; the import graph is",
+        "A clean tree can still have cyclic feature imports and back-edges — architecturally worse than a flat tree with one-way deps",
+        "Real soundness requires enforced import direction (boundary linter at PR time) and cohesion, not categorization",
+        "A 'shared' component reaching into a feature store is a violation regardless of how tidy the folders look"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What concrete, checkable signals would you inspect to verify a frontend's architecture is sound?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "An import-boundary linter is configured and CI fails the build on violations",
+        "Any feature folder can be removed without touching code outside it except a single registration point",
+        "A new dev can name where any code lives in ~30 seconds given feature name + kind (UI/data/logic)",
+        "Server state is fetched through one mechanism (fetch call sites ≈ distinct endpoints, not multiples)",
+        "No feature-specific names in shared/ primitives; re-render counts can be measured and explained"
+      ]
+    }
+  ]
+}

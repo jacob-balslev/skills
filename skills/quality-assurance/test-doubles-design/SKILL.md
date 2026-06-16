@@ -1,52 +1,48 @@
 ---
 name: test-doubles-design
+# description: routing-facing summary of when this skill activates and what it covers.
 description: "Use when designing or reviewing test doubles — the stand-in objects that replace real collaborators in a test: the five-kind taxonomy (dummy, stub, spy, fake, mock) from Meszaros's xUnit Test Patterns, the difference between state verification (Detroit-school, classicist) and interaction verification (London-school, mockist) and how it determines which doubles fit, the cost of doubles (fragility, false confidence, divergence from real behavior), the role of fakes as the under-used middle ground, the verify_with relationship to test-driven-development, and the heuristics for when to use a real collaborator instead of any double. Do NOT use for choosing test levels or what to test (use testing-strategy), the design discipline of writing tests first (use test-driven-development), specific mocking-library API choice (library docs), or general production stubs and feature flags (use feature-gating or domain-specific skills)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
   # schema_version: protocol contract version this skill conforms to.
   # Integer 8. Prior contract retrievable via `git show schema-v7:schemas/skill.schema.json`.
-  schema_version: 8
   # version: skill content version (semver). Bumped when the instructional content changes.
-  version: "1.0.0"
 
 
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: quality-assurance
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
+  # scope: required free-text statement of what this skill teaches and what it does not.
+  scope: "Use when designing or reviewing test doubles — the stand-in objects that replace real collaborators in a test: the five-kind taxonomy (dummy, stub, spy, fake, mock) from Meszaros's xUnit Test Patterns, the difference between state verification (Detroit-school, classicist) and interaction verification (London-school, mockist) and how it determines which doubles fit, the cost of doubles (fragility, false confidence, divergence from real behavior), the role of fakes as the under-used middle ground, the verify_with relationship to test-driven-development, and the heuristics for when to use a real collaborator instead of any double. Do NOT use for choosing test levels or what to test (use testing-strategy), the design discipline of writing tests first (use test-driven-development), specific mocking-library API choice (library docs), or general production stubs and feature flags (use feature-gating or domain-specific skills)."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
   taxonomy_domain: quality/testing
   # owner: team handle, GitHub username, or tool name responsible for keeping this skill current.
-  owner: skill-graph-maintainer
   # freshness: ISO date the skill body was last reviewed or updated.
-  freshness: "2026-05-16"
   # drift_check: truth-source verification record. Object with required `last_verified`
   # (ISO date) and optional `truth_source_hashes`. Record hashes with:
   # `node scripts/skill-graph-drift.js --record --apply <skill-dir>`.
-  drift_check: "{\"last_verified\":\"2026-05-16\"}"
 
   # === Evaluation Status: three orthogonal axes ===
   # eval_artifacts: disk-truth — does an eval file exist on disk?
   # none (no intent) / planned (intent declared, no file yet) / present (file exists).
-  eval_artifacts: planned
   # eval_state: runtime-truth — has the eval been run and passed?
   # unverified (no run yet, or no file) / passing (one-shot green) / monitored (cadenced green).
   # `monitored` is strictly stronger than `passing` — a forward state for continuous runs.
-  eval_state: unverified
   # routing_eval: routing-coverage — is the skill's activation verified by the harness?
   # absent (not verified) / present (gated by lint check 12; harness must exit 0).
-  routing_eval: absent
   # comprehension_state: marker that this skill has populated v6+ Understanding fields
   # (mental_model, purpose, boundary, analogy, misconception). Value: `present` or absent.
-  comprehension_state: present
   # stability: lifecycle marker. One of:
   # experimental (active development) / stable (production-ready) /
   # frozen (no further changes expected) / deprecated.
@@ -54,26 +50,23 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"test double\",\"mock\",\"stub\",\"spy\",\"fake\",\"dummy\",\"test isolation\",\"interaction verification\",\"state verification\",\"mockist\"]"
+  keywords: ["test double","mock","stub","spy","fake","dummy","test isolation","interaction verification","state verification","mockist"]
   # triggers: explicit-match activation phrases the router fires on literally.
   # Use when label-based routing is intended; usually keywords + examples are enough.
-  triggers: "[\"should this be a mock or a stub\",\"are we using mocks correctly\",\"the test is brittle when I refactor\",\"do we need a fake here\",\"is this test really testing anything\"]"
+  triggers: ["should this be a mock or a stub","are we using mocks correctly","the test is brittle when I refactor","do we need a fake here","is this test really testing anything"]
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
-  examples: "[\"decide between a mock, a stub, and a fake for a database collaborator in a test\",\"explain why over-mocking produces fragile tests that change with every refactor\",\"diagnose a passing test that mirrors the implementation rather than specifying behavior\",\"design an in-memory fake for a repository interface that supports both classicist tests and integration tests\"]"
+  examples: ["decide between a mock, a stub, and a fake for a database collaborator in a test","explain why over-mocking produces fragile tests that change with every refactor","diagnose a passing test that mirrors the implementation rather than specifying behavior","design an in-memory fake for a repository interface that supports both classicist tests and integration tests"]
   # anti_examples: near-miss prompts that should route ELSEWHERE.
-  # Pair with relations.boundary to indicate the confusable territory's owner.
-  anti_examples: "[\"decide which test levels (unit/integration/e2e) the project should invest in (use testing-strategy)\",\"set up a production feature flag (use feature-gating)\",\"configure a specific mocking library — Jest, Sinon, Mockito (library docs)\"]"
+  # Pair with relations.suppresses to indicate the confusable territory's owner.
+  anti_examples: ["decide which test levels (unit/integration/e2e) the project should invest in (use testing-strategy)","set up a production feature flag (use feature-gating)","configure a specific mocking library — Jest, Sinon, Mockito (library docs)"]
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"related\":[\"testing-strategy\",\"test-driven-development\",\"refactor\",\"api-design\",\"type-safety\"],\"boundary\":[{\"skill\":\"test-driven-development\",\"reason\":\"test-driven-development owns the design discipline of writing the test before the production code; this skill owns the design of the stand-in objects those tests use. The two compose: TDD prescribes the rhythm; test-doubles-design prescribes the stand-ins.\"},{\"skill\":\"testing-strategy\",\"reason\":\"testing-strategy owns the strategic question of what to test at which level; this skill owns the tactical construction of the stand-ins that make a given test possible.\"},{\"skill\":\"refactor\",\"reason\":\"refactor owns behavior-preserving structural change; this skill owns the doubles whose over-use produces refactor-fragile tests. The two skills are read together when a test suite resists refactoring.\"},{\"skill\":\"api-design\",\"reason\":\"api-design owns the design of an interface as a production contract; this skill owns the doubles that exercise that interface in tests. When test doubles drive interface decisions (London-school TDD), this skill and api-design overlap heavily.\"}],\"verify_with\":[\"test-driven-development\",\"refactor\"]}"
-
   # === Understanding fields (when comprehension_state: present) ===
   # mental_model: the primitives of the concept and how they relate. One paragraph.
   mental_model: |
@@ -85,7 +78,7 @@ metadata:
     Replaces "real collaborator everywhere or test cannot run" with controllable stand-ins that make tests fast, isolated, deterministic, and free of side effects — but with each lie a place where the test's belief about the collaborator may diverge from reality. The discipline of test-doubles design is *choosing lies whose costs are worth the tests they enable*, and recognizing that the choice of *what kind* of lie shapes what the test actually verifies. Sub-purpose: surface the *under-acknowledged construct* of fakes — discourse is dominated by mocks (most distinctive, natural fit for interaction verification), but fakes (working implementations with shortcuts) often produce more robust tests with less long-term maintenance cost; a test suite that uses fakes for collaborators admitting in-memory stand-ins (databases via SQLite/H2, clocks via deterministic stubs, HTTP clients via recorded responders) and reserves mocks for true behavioral verification is usually better-aged than the equivalent mock-heavy suite. The *sociable-vs-solitary* trade-off: real collaborators (pure functions, value objects, in-process domain logic) should always be used real; databases and message buses are increasingly real-via-containerized-CI; only at true external boundaries (paid APIs, email/SMS providers) should fakes or stubs replace the real thing.
   # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
   # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
-  boundary: |
+  concept_boundary: |
     Distinct from test-driven-development, which owns the design discipline of writing the test before the production code — this skill owns the design of the stand-in objects those tests use; the two compose (TDD prescribes the rhythm; this skill prescribes the stand-ins). Distinct from testing-strategy, which owns the strategic question of what to test at which level — this skill owns the tactical construction of the stand-ins that make a given test possible. Distinct from refactor, which owns behavior-preserving structural change — this skill owns the doubles whose *over-use* produces refactor-fragile tests; the two are read together when a test suite resists refactoring. Distinct from api-design, which owns the design of an interface as a *production* contract — this skill owns the doubles that exercise that interface in *tests*; when test doubles drive interface decisions (London-school TDD), the two overlap heavily. Distinct from feature-gating (production runtime alternatives — this skill is about test-harness behavior) and from specific mocking-library API choice (Jest, Sinon, Mockito — library docs).
   # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A test double is to a unit under test what a Hollywood stunt-double is to a leading actor — the stunt-double looks like the actor enough that the camera believes the scene, performs the dangerous part the actor cannot or should not perform (slow networks, paid APIs, real emails), but is not the actor. The director's job is choosing the right kind of stunt-double for the scene: a dummy stands in the back of the shot (placeholder); a stub recites canned lines from off-camera (canned answers); a spy records which lines were spoken (call recording); a mock has a script that *fails the take* if the actor deviates (rigid interaction verification); a fake is a body-double trained to actually perform the action in a controlled way (working in-memory substitute). Casting mocks where a fake would do produces takes that pass when the stunt is performed exactly as written and fail catastrophically when the actor improvises a better line."
@@ -94,42 +87,44 @@ metadata:
     The wrong mental model is that *all stand-ins are "mocks"* and the choice is just which mocking library to use. They are not — there are *five distinct kinds*, each verifying something different, and the term "mock" used loosely (when the construct is really a stub or spy) is dialect, not the precise sense. Adjacent misconceptions: that *more mocking is better isolation* (it is not — mock-heavy test suites are refactor-fragile; tests pin call shapes that the next refactor will break, producing tests that fail even when the production code still produces correct behavior — the canonical mockist failure mode); that *fakes are exotic* (they are not — they are the under-used middle ground for collaborators admitting in-memory stand-ins: in-memory database fakes via SQLite/H2, deterministic clock fakes, recorded HTTP responders, in-memory FS fakes; production-grade test suites use fakes for databases/clocks/HTTP and reserve mocks for true interaction verification); that *mocking a database is fine* (it is not — database interaction should use an in-memory DB fake, a containerized real DB in CI via Testcontainers, or a contract test layer; mocking the database removes the precise boundary the test was for); that *the school being practiced (London/Detroit/hybrid) doesn't matter* (it does — the school determines whether the test suite is interaction-heavy or state-heavy, mock-rich or mock-sparse, refactor-resistant or refactor-fragile; a practitioner who has not chosen has chosen *by accident*, and the mock-to-fake ratio in the test suite reveals which they chose without knowing); and that *strict mocking pinning exact call sequences is a default* (it is not — strict mocks should be used only where the contract is *genuinely about the call sequence*, which is rare; default to relaxed verification of presence and arguments, and complement mock-isolated unit tests with contract tests, integration tests, or production observability to close the gap between mocks and real collaborator behavior).
   # concept: legacy v5 nested Understanding block. DEPRECATED — flat fields above
   # (mental_model, purpose, boundary, analogy, misconception) win when both are present.
-  concept: "{\"definition\":\"A test double is a stand-in object that replaces a real collaborator in a test so the test can run without the collaborator's real behavior. The term, from Meszaros's *xUnit Test Patterns*, generalizes a family of stand-ins — dummies, stubs, spies, fakes, and mocks — each defined by what the test expects of it. Doubles exist because real collaborators are often unavailable (external services), nondeterministic (time, network, randomness), slow (databases, file systems), expensive (paid APIs), or have side effects unacceptable in a test (sending email, charging cards). The discipline of test-doubles design is choosing the right kind of double for each test's purpose, recognizing that the choice determines what the test actually verifies — state or interaction — and what the test will reveal under refactoring.\",\"mental_model\":\"|\",\"purpose\":\"|\",\"boundary\":\"|\",\"taxonomy\":\"|\",\"analogy\":\"|\",\"misconception\":\"|\"}"
   # === Export provenance (set by the export pipeline; do not hand-author) ===
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/test-doubles-design/SKILL.md
+  skill_graph_canonical_skill: skills/quality-assurance/test-doubles-design/SKILL.md
   # === Health Block (written by the audit loop, not hand-authored) ===
   # See SKILL_AUDIT_LOOP.md § The Health Block. UNVERIFIED is the honest default.
   #
   # structural_verdict: form/export shape (gates 1-2, 7 — external mandates only).
   # PASS / PASS_WITH_FIXES / FAIL / UNVERIFIED.
-  structural_verdict: PASS
   # truth_verdict: truth sources vs declared hashes (gates 3-6).
   # PASS / DRIFT / BROKEN / UNVERIFIED.
-  truth_verdict: PASS
   # comprehension_verdict: gate 8 — cheap recitation smoke test. Never alone certifies.
   # PASS / SHALLOW / REDUNDANT / UNVERIFIED / PROVISIONAL / SKIPPED_BASELINE_HIGH / NA.
-  comprehension_verdict: UNVERIFIED
   # application_verdict: gate 9 — the primary quality signal. APPLICABLE is the only verdict
   # that certifies the skill is USEFUL (grader-confirmed). PROVISIONAL = one model self-assessed.
   # APPLICABLE / REDUNDANT / HARMFUL / MIXED / FALSE_POSITIVE / PROVISIONAL / UNVERIFIED.
-  application_verdict: UNVERIFIED
-  last_audited: 2026-05-28
-  lint_verdict: PASS
+relations:
+  related: ["api-design","type-safety","testing-strategy","test-driven-development","refactor"]
+  suppresses: ["test-driven-development","testing-strategy"]
+  verify_with: ["refactor","test-driven-development"]
 ---
-
 # Test-Doubles Design
+
+## Concept of the skill
+
+A test double is a *stand-in object that replaces a real collaborator in a test* so the test can run without the collaborator's real behavior. The term, from Meszaros's *xUnit Test Patterns* (2007), generalizes a family of stand-ins each defined by what the test expects of it: *dummy* (placeholder; never actually used; verifies nothing; for parameter slots the test path doesn't touch), *stub* (returns canned answers to calls; verifies state after the action; low fragility under refactor — only the canned answer matters), *spy* (stub + records calls received; verifies state and post-hoc which calls happened; medium fragility — call-shape changes break the spy assertion), *mock* (pre-programmed with expected calls; the double *itself* fails on deviation; verifies interaction built into the double; *high* fragility under refactor because call-shape changes break the test directly), *fake* (working implementation of the interface with production-unsuitable shortcuts — in-memory DB, deterministic clock, recorded HTTP responses; verifies state end-to-end through the fake; low fragility because behavior is verified through a working substitute).
+
+Replaces "real collaborator everywhere or test cannot run" with controllable stand-ins that make tests fast, isolated, deterministic, and free of side effects — but with each lie a place where the test's belief about the collaborator may diverge from reality. The discipline of test-doubles design is *choosing lies whose costs are worth the tests they enable*, and recognizing that the choice of *what kind* of lie shapes what the test actually verifies. Sub-purpose: surface the *under-acknowledged construct* of fakes — discourse is dominated by mocks (most distinctive, natural fit for interaction verification), but fakes (working implementations with shortcuts) often produce more robust tests with less long-term maintenance cost; a test suite that uses fakes for collaborators admitting in-memory stand-ins (databases via SQLite/H2, clocks via deterministic stubs, HTTP clients via recorded responders) and reserves mocks for true behavioral verification is usually better-aged than the equivalent mock-heavy suite. The *sociable-vs-solitary* trade-off: real collaborators (pure functions, value objects, in-process domain logic) should always be used real; databases and message buses are increasingly real-via-containerized-CI; only at true external boundaries (paid APIs, email/SMS providers) should fakes or stubs replace the real thing.
+
+Distinct from test-driven-development, which owns the design discipline of writing the test before the production code — this skill owns the design of the stand-in objects those tests use; the two compose (TDD prescribes the rhythm; this skill prescribes the stand-ins). Distinct from testing-strategy, which owns the strategic question of what to test at which level — this skill owns the tactical construction of the stand-ins that make a given test possible. Distinct from refactor, which owns behavior-preserving structural change — this skill owns the doubles whose *over-use* produces refactor-fragile tests; the two are read together when a test suite resists refactoring. Distinct from api-design, which owns the design of an interface as a *production* contract — this skill owns the doubles that exercise that interface in *tests*; when test doubles drive interface decisions (London-school TDD), the two overlap heavily. Distinct from feature-gating (production runtime alternatives — this skill is about test-harness behavior) and from specific mocking-library API choice (Jest, Sinon, Mockito — library docs). A test double is to a unit under test what a Hollywood stunt-double is to a leading actor — the stunt-double looks like the actor enough that the camera believes the scene, performs the dangerous part the actor cannot or should not perform (slow networks, paid APIs, real emails), but is not the actor. The director's job is choosing the right kind of stunt-double for the scene: a dummy stands in the back of the shot (placeholder); a stub recites canned lines from off-camera (canned answers); a spy records which lines were spoken (call recording); a mock has a script that *fails the take* if the actor deviates (rigid interaction verification); a fake is a body-double trained to actually perform the action in a controlled way (working in-memory substitute). Casting mocks where a fake would do produces takes that pass when the stunt is performed exactly as written and fail catastrophically when the actor improvises a better line. The wrong mental model is that *all stand-ins are "mocks"* and the choice is just which mocking library to use. They are not — there are *five distinct kinds*, each verifying something different, and the term "mock" used loosely (when the construct is really a stub or spy) is dialect, not the precise sense. Adjacent misconceptions: that *more mocking is better isolation* (it is not — mock-heavy test suites are refactor-fragile; tests pin call shapes that the next refactor will break, producing tests that fail even when the production code still produces correct behavior — the canonical mockist failure mode); that *fakes are exotic* (they are not — they are the under-used middle ground for collaborators admitting in-memory stand-ins: in-memory database fakes via SQLite/H2, deterministic clock fakes, recorded HTTP responders, in-memory FS fakes; production-grade test suites use fakes for databases/clocks/HTTP and reserve mocks for true interaction verification); that *mocking a database is fine* (it is not — database interaction should use an in-memory DB fake, a containerized real DB in CI via Testcontainers, or a contract test layer; mocking the database removes the precise boundary the test was for); that *the school being practiced (London/Detroit/hybrid) doesn't matter* (it does — the school determines whether the test suite is interaction-heavy or state-heavy, mock-rich or mock-sparse, refactor-resistant or refactor-fragile; a practitioner who has not chosen has chosen *by accident*, and the mock-to-fake ratio in the test suite reveals which they chose without knowing); and that *strict mocking pinning exact call sequences is a default* (it is not — strict mocks should be used only where the contract is *genuinely about the call sequence*, which is rare; default to relaxed verification of presence and arguments, and complement mock-isolated unit tests with contract tests, integration tests, or production observability to close the gap between mocks and real collaborator behavior).
 
 ## Coverage
 
 The discipline of choosing and constructing the stand-in objects that replace real collaborators in tests. Covers the five-kind taxonomy (dummy, stub, spy, mock, fake) from Meszaros's *xUnit Test Patterns*, the state-vs-interaction verification distinction that determines which kinds fit which tests, the solitary-vs-sociable test-shape trade-off, the under-use of fakes as the robust middle ground, the cost ledger of every double (divergence, maintenance, false confidence, fragility), and the heuristics for when to use a real collaborator instead of any double. Includes the connection to London/Detroit-school TDD and to the api-design surface that doubles often pressure.
 
-## Philosophy
-
+## Philosophy of the skill
 A test double is a small lie the test tells the unit under test. The lie is useful — it makes the test fast, isolated, deterministic, and free of side effects — but every lie is also a place where the test's belief about the collaborator may diverge from the collaborator's actual behavior. The discipline of test-doubles design is choosing lies whose costs are worth the tests they enable, and recognizing that the choice of *what kind* of lie shapes what the test actually verifies.
 
 The biggest design decision in test-doubles work is whether the test is verifying state ("after this action, the system looks like this") or interaction ("during this action, these calls were made to collaborators"). The choice is not a matter of preference; it determines the test suite's character, its fragility under refactoring, and its connection to the production design. London-school TDD favors interaction; Detroit-school favors state. Most working test suites mix both, and most working test suites have not chosen the mix consciously.

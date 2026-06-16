@@ -1,0 +1,143 @@
+{
+  "skill_name": "journey-mapping",
+  "subject": "design",
+  "adjacent_concepts": [
+    "task-analysis",
+    "research-synthesis",
+    "information-architecture",
+    "design-thinking",
+    "problem-framing",
+    "bounded-context-mapping"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define what a journey map is, and explain why it models a person's experience across time and channels rather than enumerating the screens of a single interface.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "A time-ordered model of one actor's lived experience across touchpoints and channels",
+        "Layers what the user does, thinks, and feels against front-stage and back-stage",
+        "Treats experience as one continuous arc, not isolated screens",
+        "Spans time and multiple channels, which a single-interface inventory cannot capture"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "In a service blueprint, explain how front-stage elements, the line of visibility, and back-stage processes relate, and why the emotional curve is modeled alongside the user's actions rather than left out.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Front-stage = what the user sees; back-stage = the employees, systems, and processes they do not see",
+        "The line of visibility separates front-stage from back-stage",
+        "Support processes sit below back-stage as enabling infrastructure",
+        "The emotional curve is modeled because moments of truth (peaks and troughs) disproportionately shape the overall impression"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "How do you choose the scope and granularity of a journey map, and what is the tradeoff between a coarse board-level alignment map and a detailed redesign brief?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Scope can be a single transaction, an entire lifecycle, or one moment-of-truth blown up in detail",
+        "Granularity should match the decision the map will inform",
+        "A board-level alignment map is intentionally coarser than a redesign brief",
+        "Current-state maps document reality/pain; future-state maps propose a redesigned experience to align stakeholders"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "Novel scenario: A team says 'let's map the checkout flow' and starts by listing the five checkout screens in order. Explain what is wrong with treating that screen list as a journey map, and what you would do instead to produce an actual journey map.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "A bare screen list is a task flow, not a journey map — it lacks the emotional curve, cross-channel/time span, and back-stage layer",
+        "Add stages from the user's perspective and lanes for actions, thoughts, and feelings",
+        "Render an emotional curve to find peaks and troughs / moments of truth",
+        "Ground it in research evidence and name opportunity areas at specific stages"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "Novel scenario: A SaaS product loses many customers during a multi-day onboarding that spans email, the web app, and a human customer-success call. Describe how you would map this experience to locate the moment of truth where churn is decided, including how the back-stage layer enters the map.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Lay out the onboarding as stages over multiple days and across channels (email, web app, the CS call)",
+        "Plot the emotional curve to find the trough — the moment of truth where churn is decided",
+        "Add a service-blueprint back-stage layer below the line of visibility (CS rep, systems, support processes) for the moments that depend on handoffs",
+        "Ground pain points in evidence and name opportunity areas at the trough stages"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "Distinguish journey-mapping from task-analysis and from a back-end service/architecture diagram. Name the MECHANISM that differs in each case, not just the label.",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "task-analysis decomposes a single interface / single session into goal-directed UI steps; journey-mapping spans touchpoints, channels, and time",
+        "A service/architecture diagram models system topology (services, calls, data); a journey map models human experience",
+        "The journey map's unit is a person's moment — including emotion and context — not a UI step or a service call",
+        "journey-mapping owns the cross-channel emotional arc and the back-stage processes behind it"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder presents a journey map where every stage has a positive verb and the emotional curve is a smooth gentle wave with no dips. Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "This is the anodyne happy-path map — it describes what the team hopes is true, not what research showed",
+        "A credible emotional curve has actual lows; a curve with no dips usually means the map omits the hard parts",
+        "Map credibility comes from grounding in research synthesis evidence, not assertion",
+        "A flow without real troughs (and the cross-channel/back-stage layers) is a task flow, not a journey map"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a journey map is sound and not decoration?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Each pain point and emotional trough cites at least one research source rather than being asserted",
+        "Stages are named from the user's perspective, not the business's funnel language",
+        "The emotional curve has real lows, not only highs and neutrals",
+        "For service blueprints, the line of visibility is explicit and back-stage includes human and system actors",
+        "Named opportunity areas at specific stages; a non-attendee can read the map and explain the arc and where it goes wrong"
+      ]
+    }
+  ]
+}

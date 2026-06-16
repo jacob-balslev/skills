@@ -1,0 +1,34 @@
+{
+  "schema_version": 8,
+  "version": "1.0.0",
+  "owner": "skill-graph-maintainer",
+  "freshness": "2026-06-06",
+  "drift_check": {
+    "last_verified": "2026-06-12",
+    "truth_source_hashes": {
+      "skills/reasoning-strategy/vrio/references/vrio-sources.md": "d5032fba1462c01c9ebe0e999b105379a7f2702018a9ae589fc26feca85bd829",
+      "skills/reasoning-strategy/vrio/references/upstream-displacement-2026-06-06.md": "ef012c03278912d29cd18daf4422f117e533a0a325ab6f6bb7adfe7d8e338907"
+    }
+  },
+  "eval_artifacts": "present",
+  "eval_state": "unverified",
+  "routing_eval": "present",
+  "last_changed": "2026-06-06",
+  "comprehension_state": "present",
+  "portability": {
+    "readiness": "scripted",
+    "targets": [
+      "skill-md"
+    ]
+  },
+  "lifecycle": {
+    "stale_after_days": 365,
+    "review_cadence": "quarterly"
+  },
+  "structural_verdict": "PASS",
+  "truth_verdict": "UNVERIFIED",
+  "comprehension_verdict": "UNVERIFIED",
+  "application_verdict": "UNVERIFIED",
+  "last_audited": "2026-06-13",
+  "lint_verdict": "PASS"
+}

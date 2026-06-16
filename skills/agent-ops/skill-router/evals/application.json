@@ -12,7 +12,7 @@
     {
       "id": 1,
       "scenario_type": "explicit-trigger-routing",
-      "criticality": "high",
+      "criticality": "critical",
       "red_herring": false,
       "scenario": "An agent request includes the trigger label skill-router and asks why a query activated the wrong skill.",
       "context": "The manifest contains trigger, path, keyword, description, scope, and relation signals. The request explicitly names skill-router.",
@@ -30,12 +30,54 @@
       "absent_signals": [
         "Do not rank by popularity, recency, or author preference.",
         "Do not let keyword overlap override a unique trigger hit."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Trigger-label matching is the highest-priority routing surface."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A unique trigger hit should stop the chain before path or keyword matching."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The answer should explain why lower-priority evidence is not used after a unique trigger hit."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Return skill-router as the owner."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Record trigger-label evidence in the explanation."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Treat any downstream disagreement as a routing-table audit concern, not a reason to ignore the trigger."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rank by popularity, recency, or author preference."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let keyword overlap override a unique trigger hit."
+        }
       ]
     },
     {
       "id": 2,
       "scenario_type": "coverage-gap-detection",
-      "criticality": "high",
+      "criticality": "critical",
       "red_herring": false,
       "scenario": "A user asks for a skill that no trigger, path, keyword, or description surface matches.",
       "context": "The router can either pick a weak nearest neighbor or surface a gap to the maintainer.",
@@ -53,6 +95,48 @@
       "absent_signals": [
         "Do not force-route to a default skill.",
         "Do not call the nearest semantic match correct without evidence."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: An explicit coverage gap is better than a silent wrong fallback."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The router should report the missing activation surface and suggest authoring or broadening a skill."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The explanation should preserve uncertainty instead of pretending there is a confident winner."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Return no confident winner."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Name candidate metadata to add, such as keywords or trigger labels."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Capture the query as a future routing-eval case."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not force-route to a default skill."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not call the nearest semantic match correct without evidence."
+        }
       ]
     },
     {
@@ -75,7 +159,358 @@
       "absent_signals": [
         "Do not add routing-table advice to a one-skill schema audit.",
         "Do not treat every SKILL.md task as skill-router work."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The correct owner is graph-audit, not skill-router."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: skill-router is for choosing between skills when ownership is unknown or ambiguous."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Known-target quality review should bypass the router."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Load graph-audit directly."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use skill-router only if the request is about dispatch logic or coverage gaps."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add routing-table advice to a one-skill schema audit."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat every SKILL.md task as skill-router work."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "project-fit-and-deployment-target",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "Two skills tie on keyword score for a query. One declares `deployment_target: project` and its `project[]` handle matches the active project; the other is portable.",
+      "context": "The router receives the project handle and both skills otherwise have equal activation scores.",
+      "question": "How should the router rank the tie and what explanation should it emit?",
+      "expected_flags": [
+        "Project membership is checked before scoring is accepted.",
+        "On a score tie, `deployment_target: project` outranks `portable`.",
+        "The explanation should identify the project-fit reason rather than treating the result as semantic popularity."
+      ],
+      "expected_fix_hints": [
+        "Use `project[]` handles for project filtering.",
+        "Use deployment-target rank as the current specificity tiebreaker.",
+        "Avoid the old `scope: codebase` vocabulary."
+      ],
+      "absent_signals": [
+        "Do not use legacy `scope` enum tiebreaking as current behavior.",
+        "Do not rank by skill age, usage count, or author preference."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Project membership is checked before scoring is accepted."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: On a score tie, `deployment_target: project` outranks `portable`."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The explanation should identify the project-fit reason rather than treating the result as semantic popularity."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use `project[]` handles for project filtering."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use deployment-target rank as the current specificity tiebreaker."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Avoid the old `scope: codebase` vocabulary."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use legacy `scope` enum tiebreaking as current behavior."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not rank by skill age, usage count, or author preference."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "behavior-verdict-routing",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "Two skills both match a query. One has `application_verdict: HARMFUL` from a recent evaluation; another has `application_verdict: PROVISIONAL`. Neither has structural failure or broken truth.",
+      "context": "The HARMFUL verdict has not expired and no later skill change supersedes it.",
+      "question": "What should the routing decision do with the behavior verdicts?",
+      "expected_flags": [
+        "Active proven-negative application verdicts are gated out.",
+        "PROVISIONAL gives a gentle rank boost but does not override real activation evidence.",
+        "UNVERIFIED remains routable and neutral."
+      ],
+      "expected_fix_hints": [
+        "Exclude active HARMFUL, REDUNDANT, or FALSE_POSITIVE application verdicts.",
+        "Apply only a small boost for APPLICABLE or PROVISIONAL.",
+        "Report the exclusion reason in the route explanation."
+      ],
+      "absent_signals": [
+        "Do not hard-block UNVERIFIED behavior.",
+        "Do not let quality boost override a stronger activation match."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Active proven-negative application verdicts are gated out."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: PROVISIONAL gives a gentle rank boost but does not override real activation evidence."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: UNVERIFIED remains routable and neutral."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Exclude active HARMFUL, REDUNDANT, or FALSE_POSITIVE application verdicts."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Apply only a small boost for APPLICABLE or PROVISIONAL."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Report the exclusion reason in the route explanation."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not hard-block UNVERIFIED behavior."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let quality boost override a stronger activation match."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "relation-aware-expansion",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A winning skill has `depends_on: [context-graph]`, `verify_with: [graph-audit]`, and `boundary: [skill-scaffold]`. The boundary target also scored weakly on the query.",
+      "context": "The router has already selected the top match.",
+      "question": "How should relation edges affect the final selected/co-loaded/excluded sets?",
+      "expected_flags": [
+        "Boundary exclusions remove conflicting independently matched skills when the declaring skill is strong enough.",
+        "`depends_on` expands transitively.",
+        "`verify_with` co-loads one hop for cross-checking."
+      ],
+      "expected_fix_hints": [
+        "Keep boundary-excluded skills out of the final selection and their own expansion.",
+        "Explain co-load role and reason separately from primary selection.",
+        "Do not treat `verify_with` as a transitive dependency."
+      ],
+      "absent_signals": [
+        "Do not treat all relation types as dependencies.",
+        "Do not let a boundary-excluded skill contribute its own co-loads."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Boundary exclusions remove conflicting independently matched skills when the declaring skill is strong enough."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: `depends_on` expands transitively."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: `verify_with` co-loads one hop for cross-checking."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep boundary-excluded skills out of the final selection and their own expansion."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Explain co-load role and reason separately from primary selection."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Do not treat `verify_with` as a transitive dependency."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat all relation types as dependencies."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not let a boundary-excluded skill contribute its own co-loads."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "new-skill-authoring-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A user asks: 'Author a brand-new skill from scratch for this new domain.'",
+      "context": "The task is not choosing among existing skills; it is creating a new skill artifact.",
+      "question": "Should skill-router own the task?",
+      "expected_flags": [
+        "Routes new-skill authoring to skill-scaffold.",
+        "Explains that skill-router dispatches among existing skills.",
+        "Keeps skill-router available only if the question becomes how the new skill should be routed."
+      ],
+      "expected_fix_hints": [
+        "Load skill-scaffold directly.",
+        "Use skill-router later to test examples, anti-examples, keywords, and boundaries."
+      ],
+      "absent_signals": [
+        "Do not use routing-table advice as the primary authoring method.",
+        "Do not collapse skill-scaffold into skill-router."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes new-skill authoring to skill-scaffold."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that skill-router dispatches among existing skills."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps skill-router available only if the question becomes how the new skill should be routed."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Load skill-scaffold directly."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use skill-router later to test examples, anti-examples, keywords, and boundaries."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not use routing-table advice as the primary authoring method."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not collapse skill-scaffold into skill-router."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "library-health-boundary",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A maintainer asks: 'Analyze routing-miss patterns across the whole skill library and tell us where the system is decaying.'",
+      "context": "The task is library-wide health analysis, not a single request dispatch.",
+      "question": "Should skill-router own this task?",
+      "expected_flags": [
+        "Routes library-wide routing-miss analysis to skill-infrastructure.",
+        "Explains that skill-router owns request-time dispatch behavior.",
+        "Keeps the methods composable: infrastructure findings may lead to router metadata changes."
+      ],
+      "expected_fix_hints": [
+        "Use skill-infrastructure for library-wide health and routing-miss patterns.",
+        "Use skill-router for specific dispatch rules or routing-table behavior fixes."
+      ],
+      "absent_signals": [
+        "Do not treat every routing-related corpus metric as request-time routing.",
+        "Do not ignore the whole-library scope."
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Routes library-wide routing-miss analysis to skill-infrastructure."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Explains that skill-router owns request-time dispatch behavior."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Keeps the methods composable: infrastructure findings may lead to router metadata changes."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use skill-infrastructure for library-wide health and routing-miss patterns."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Use skill-router for specific dispatch rules or routing-table behavior fixes."
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat every routing-related corpus metric as request-time routing."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not ignore the whole-library scope."
+        }
       ]
     }
-  ]
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
 }

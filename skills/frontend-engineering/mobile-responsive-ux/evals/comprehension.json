@@ -1,0 +1,143 @@
+{
+  "skill_name": "mobile-responsive-ux",
+  "subject": "frontend-engineering",
+  "adjacent_concepts": [
+    "layout-composition",
+    "a11y",
+    "interaction-patterns",
+    "design-system-architecture",
+    "data-table-ux"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define mobile responsive UX for dashboards in 2-3 sentences. Explain why it is more than shrinking the desktop dashboard.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines it as redesigning dashboard/operational workflows for small screens, coarse touch, one-handed reach, and quick-glance tasks",
+        "States mobile is a different task shape, not the same desktop table or sidebar compressed into a narrow viewport",
+        "Names the pocket-control-surface idea: the few readings and actions that matter, within reach",
+        "Does NOT define the skill as CSS breakpoints alone"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Name the primitives in the mental model for this skill and explain how they fit together in a mobile dashboard.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names at least five primitives: reach, target size, glanceable hierarchy, progressive disclosure, touch gestures with visible alternatives, mobile-appropriate inputs, recovery from interrupted use",
+        "Connects the primitives to concrete patterns (bottom nav, bottom sheet, card display, 2-up KPIs, pull-to-refresh)",
+        "Frames the phone as a control surface for status-check plus one short action",
+        "Does NOT treat mobile as a visual scale-down only"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "application",
+      "prompt": "On mobile, what is the trade-off between showing data density and serving the mobile user's task, and how should an agent resolve it for a dashboard?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Desktop optimizes for comparison/filtering/export density; mobile optimizes for a quick health check and one short action",
+        "Resolve by progressive disclosure: headline KPIs and a card summary first, detail on tap, full exploration deferred to desktop",
+        "A 375px screen cannot and should not show an 8-column table",
+        "Density is sacrificed deliberately in favor of glanceability and reach, not by accident"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "application",
+      "prompt": "A desktop dashboard has a sidebar, an 8-column orders table, hover-only row actions, and a complex filter modal. Apply this skill to propose the mobile redesign.",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Replace the sidebar with 3-5 bottom-navigation destinations (or a More pattern)",
+        "Transform the 8-column table into order cards with 3-4 priority fields each, no horizontal scroll",
+        "Give hover-only row actions a visible tap alternative (swipe with a button counterpart)",
+        "Move filtering into a bottom sheet rather than a desktop modal",
+        "Does NOT keep the 8-column table with horizontal scroll as the primary mobile experience"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "application",
+      "prompt": "What touch-target and thumb-zone rules should an agent enforce when placing controls on a mobile dashboard, and how are they implemented for a small icon?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Recurring interactive controls get at least a 44 x 44 CSS px hit area (mobile ergonomic floor), above WCAG 2.2 AA's 24 x 24 CSS px minimum",
+        "A small icon (e.g. 24px) extends its tap area with padding rather than enlarging the glyph",
+        "Primary actions go in the bottom 50% (natural thumb zone); rarely-used actions go top/menu",
+        "Bottom navigation lives in the natural zone and stays visible"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "boundary",
+      "prompt": "A teammate asks the mobile-responsive-ux skill to run a full WCAG accessibility audit (ARIA labels, keyboard order, screen-reader behavior) and to define the global responsive grid tracks across all breakpoints. Is that in scope? Why or why not?",
+      "substance": "boundary",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "WCAG audit breadth (ARIA, keyboard, screen reader, contrast, audit mechanics) is a11y's territory, not this skill's",
+        "Global responsive grid tracks across all breakpoints belong to layout-composition",
+        "This skill owns mobile-specific touch ergonomics and applies a target-size floor, but defers the compliance audit and cross-breakpoint structure",
+        "Correctly redirects rather than over-owning a11y auditing or token/grid architecture"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A stakeholder says 'responsive just means the same dashboard made narrower — add a horizontal scrollbar to the wide table and we're done.' Correct the mental model.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Responsive is not the same screen narrower — the task shape, density, navigation, input, and recovery paths change for touch and interruption",
+        "Horizontal-scroll tables are an anti-pattern: most users do not discover scrollable content; use card layouts instead",
+        "The mobile job is a health check plus one short action, not full desktop analysis",
+        "Moving a CTA to the top of the screen or compressing density is a misread of the mobile use case, not a layout detail"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "What would you check to verify a mobile dashboard redesign was implemented correctly?",
+      "substance": "procedure",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "All interactive elements are at least 44 x 44 CSS px and primary actions sit in the bottom 50%",
+        "Data tables are replaced with card layouts below 640px (no horizontal table scroll)",
+        "Bottom navigation has at most 5 items with icon + label; no hover-only interactions remain",
+        "KPI cards use a 2-up layout; pull-to-refresh exists for data lists",
+        "Verified on a real device, not just a DevTools resize"
+      ]
+    }
+  ]
+}

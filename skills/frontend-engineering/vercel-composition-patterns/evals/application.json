@@ -1,0 +1,459 @@
+{
+  "skill_name": "vercel-composition-patterns",
+  "subject": "frontend-engineering",
+  "mode": "application",
+  "schema_version": 8,
+  "source_evidence": "Grounded in the skill body (Coverage, the Boolean State Explosion Audit, the Refactor Playbook, Philosophy, Verification, and Do NOT Use When) and standard React composition practice (compound components, context providers, explicit variants, children-over-render-props, React 19 ref-as-prop / use()).",
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "boolean-prop-explosion",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A reviewer is asked to approve a PR that adds a fifth boolean prop (isCompact) to a Card component that already has isSelected, isLoading, isError, and isClickable. The rendering logic is a chain of nested ternaries.",
+      "context": "The team keeps shipping new card variations by adding flags; bugs appear in flag combinations QA never tested.",
+      "question": "How should the agent respond to the PR?",
+      "expected_flags": [
+        "Run the boolean state-explosion audit: 5 booleans -> 32 combinations, most impossible/untested",
+        "Treat the API as broken at 3+ booleans until the audit proves otherwise",
+        "Recommend enumerating valid states and naming them as explicit variant components",
+        "Flag the nested-ternary rendering chain as the symptom of the flag explosion"
+      ],
+      "expected_fix_hints": [
+        "Inventory flags, delete impossible states, extract explicit variants",
+        "Add one example or test per valid variant"
+      ],
+      "absent_signals": [
+        "Do not approve adding the fifth boolean as-is",
+        "Do not solve it by adding more conditional branches"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Run the boolean state-explosion audit: 5 booleans -> 32 combinations, most impossible/untested."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Treat the API as broken at 3+ booleans until the audit proves otherwise."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommend enumerating valid states and naming them as explicit variant components."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Flag the nested-ternary rendering chain as the symptom of the flag explosion."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Inventory flags, delete impossible states, extract explicit variants."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Add one example or test per valid variant."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not approve adding the fifth boolean as-is."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not solve it by adding more conditional branches."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "compound-component-design",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A team is building a Tabs component and the proposed API is <Tabs tabs={[{label, content}]} activeIndex={i} onChange={fn} renderTab={fn} renderPanel={fn} />.",
+      "context": "Consumers need to customize individual tab and panel markup and keep the active tab in sync.",
+      "question": "What component API should the agent recommend?",
+      "expected_flags": [
+        "Recommend a compound component: Tabs.List, Tabs.Tab, Tabs.Panel sharing state through a context provider",
+        "Lift active-tab state into the provider so siblings stay in sync without prop drilling",
+        "Replace renderTab/renderPanel render props with children composition",
+        "Provider owns state, actions, and meta; consumers compose around the contract"
+      ],
+      "expected_fix_hints": [
+        "Expose Tabs.* compound children backed by a context provider",
+        "Pass markup as children rather than renderX callbacks"
+      ],
+      "absent_signals": [
+        "Do not keep the flat data-array + render-prop API",
+        "Do not drill activeIndex/onChange through every level"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Recommend a compound component: Tabs.List, Tabs.Tab, Tabs.Panel sharing state through a context provider."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Lift active-tab state into the provider so siblings stay in sync without prop drilling."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replace renderTab/renderPanel render props with children composition."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Provider owns state, actions, and meta; consumers compose around the contract."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Expose Tabs.* compound children backed by a context provider."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Pass markup as children rather than renderX callbacks."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep the flat data-array + render-prop API."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not drill activeIndex/onChange through every level."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "render-props-to-children",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A Modal component takes renderHeader, renderBody, and renderFooter props, each a function returning JSX. New consumers find the API awkward and keep passing inline arrow functions.",
+      "context": "The slots are structurally static — header/body/footer always render in the same positions.",
+      "question": "How should the agent improve the Modal API?",
+      "expected_flags": [
+        "Replace the renderHeader/renderBody/renderFooter render props with children composition",
+        "Expose compound slots (e.g. Modal.Header, Modal.Body, Modal.Footer) or accept structured children",
+        "Children-over-render-props: use children for composition rather than renderX callbacks",
+        "Notes render props add ceremony where static structural slots only need children"
+      ],
+      "expected_fix_hints": [
+        "Convert renderX props into composable children / compound slots",
+        "Keep render props only where a child genuinely needs provider-derived values"
+      ],
+      "absent_signals": [
+        "Do not keep three renderX function props for static slots"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Replace the renderHeader/renderBody/renderFooter render props with children composition."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Expose compound slots (e.g. Modal.Header, Modal.Body, Modal.Footer) or accept structured children."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Children-over-render-props: use children for composition rather than renderX callbacks."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes render props add ceremony where static structural slots only need children."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Convert renderX props into composable children / compound slots."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep render props only where a child genuinely needs provider-derived values."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep three renderX function props for static slots."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "lift-state-vs-prop-drill",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A filter sidebar and a results grid are siblings that both need the current filter state. The current code threads filters and setFilters down through four intermediate components as props.",
+      "context": "Adding a new filter means editing every intermediate component's prop signature.",
+      "question": "How should the agent restructure the state?",
+      "expected_flags": [
+        "Lift the filter state into a context provider that both siblings consume",
+        "Provider exposes state, actions, and meta; consumers read the contract directly",
+        "Eliminates prop drilling through intermediate components",
+        "Decouples consumers from how the filter state is managed"
+      ],
+      "expected_fix_hints": [
+        "Introduce a FilterProvider owning state/actions/meta",
+        "Have sidebar and grid read from context instead of threaded props"
+      ],
+      "absent_signals": [
+        "Do not keep drilling filters/setFilters through intermediaries",
+        "Do not duplicate filter state in both siblings"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Lift the filter state into a context provider that both siblings consume."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Provider exposes state, actions, and meta; consumers read the contract directly."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Eliminates prop drilling through intermediate components."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Decouples consumers from how the filter state is managed."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Introduce a FilterProvider owning state/actions/meta."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Have sidebar and grid read from context instead of threaded props."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep drilling filters/setFilters through intermediaries."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not duplicate filter state in both siblings."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "react19-migration",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A component library targeting React 19 still wraps every component in forwardRef and reads context with useContext() throughout.",
+      "context": "The team has upgraded to React 19 and wants to adopt the current API surface.",
+      "question": "What React 19 changes should the agent apply?",
+      "expected_flags": [
+        "Drop forwardRef — pass ref as a regular prop in React 19",
+        "Use use() instead of useContext() to read context",
+        "Notes this section applies to React 19+ only (skip on React 18 or earlier)",
+        "Migration is API-shape modernization, not behavior change"
+      ],
+      "expected_fix_hints": [
+        "Remove forwardRef wrappers; accept ref as a normal prop",
+        "Replace useContext(Ctx) with use(Ctx)"
+      ],
+      "absent_signals": [
+        "Do not apply React 19 changes to a stated React 18 codebase",
+        "Do not keep forwardRef solely out of habit on React 19"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Drop forwardRef — pass ref as a regular prop in React 19."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Use use() instead of useContext() to read context."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Notes this section applies to React 19+ only (skip on React 18 or earlier)."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Migration is API-shape modernization, not behavior change."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Remove forwardRef wrappers; accept ref as a normal prop."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Replace useContext(Ctx) with use(Ctx)."
+        },
+        {
+          "id": "c7",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not apply React 19 changes to a stated React 18 codebase."
+        },
+        {
+          "id": "c8",
+          "polarity": "negative",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not keep forwardRef solely out of habit on React 19."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "boundary-redirect",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "A PM asks the composition-patterns owner to make a slow dashboard re-render less often and to restyle its cards with the new brand spacing tokens.",
+      "context": "The team conflates 'component work' with all component-related concerns — performance and styling included.",
+      "question": "How should the agent scope the request?",
+      "expected_flags": [
+        "Re-render performance is out of scope — route to a React performance skill (react-best-practices)",
+        "Brand spacing/styling is out of scope — route to a design/UI skill",
+        "Offer the in-scope part: whether the dashboard's component API has a composition problem worth refactoring",
+        "Correctly redirects rather than answering out of lane"
+      ],
+      "expected_fix_hints": [
+        "Hand performance to the performance skill and styling to the design skill",
+        "Keep this skill's contribution to API-shape composition"
+      ],
+      "absent_signals": [
+        "Do not add memoization as if it were this skill's job",
+        "Do not restyle the cards"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Re-render performance is out of scope — route to a React performance skill (react-best-practices)."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Brand spacing/styling is out of scope — route to a design/UI skill."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Offer the in-scope part: whether the dashboard's component API has a composition problem worth refactoring."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Correctly redirects rather than answering out of lane."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Hand performance to the performance skill and styling to the design skill."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep this skill's contribution to API-shape composition."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not add memoization as if it were this skill's job."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not restyle the cards."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "premature-provider",
+      "criticality": "normal",
+      "red_herring": true,
+      "scenario": "An engineer proposes wrapping a single leaf component that has one boolean (isOpen) used only by itself in a full context provider with state/actions/meta 'to follow the composition pattern.'",
+      "context": "The component has no siblings needing the state and no flag explosion.",
+      "question": "How should the agent respond?",
+      "expected_flags": [
+        "A single self-contained boolean with no shared-state need does not warrant a provider",
+        "Lift state into a provider only when siblings need it or a flag explosion exists",
+        "The audit (count reachable states) shows no explosion here — local state is fine",
+        "Applying the heaviest pattern by default is over-engineering, not the discipline"
+      ],
+      "expected_fix_hints": [
+        "Keep isOpen as local component state",
+        "Reserve the provider pattern for shared state or audited flag explosions"
+      ],
+      "absent_signals": [
+        "Do not introduce a context provider for purely local single-flag state",
+        "Do not treat 'use composition' as 'always add a provider'"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: A single self-contained boolean with no shared-state need does not warrant a provider."
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Lift state into a provider only when siblings need it or a flag explosion exists."
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: The audit (count reachable states) shows no explosion here — local state is fine."
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "Surfaces this expected flag: Applying the heaviest pattern by default is over-engineering, not the discipline."
+        },
+        {
+          "id": "c5",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Keep isOpen as local component state."
+        },
+        {
+          "id": "c6",
+          "polarity": "positive",
+          "statement": "Recommends this expected fix or action: Reserve the provider pattern for shared state or audited flag explosions."
+        },
+        {
+          "id": "c7",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not introduce a context provider for purely local single-flag state."
+        },
+        {
+          "id": "c8",
+          "polarity": "guard",
+          "statement": "Avoids this false-positive or out-of-scope signal: Do not treat 'use composition' as 'always add a provider'."
+        }
+      ]
+    }
+  ],
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist."
+}

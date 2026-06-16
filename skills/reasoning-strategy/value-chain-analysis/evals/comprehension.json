@@ -1,0 +1,170 @@
+{
+  "skill_name": "value-chain-analysis",
+  "subject": "Porter's Value Chain activity-level strategy analysis",
+  "adjacent_concepts": [
+    "Porter's Five Forces",
+    "strategic positioning",
+    "activity systems",
+    "primary activities",
+    "support activities",
+    "cost drivers",
+    "differentiation drivers",
+    "linkages",
+    "fit",
+    "margin",
+    "VRIO",
+    "SWOT/TOWS"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "dimension": "definition",
+      "prompt": "Define Value Chain analysis in 2-3 sentences. Include the unit of analysis, the activity decomposition, and the strategic question it answers.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Defines Value Chain analysis as Porter's activity-level strategy framework",
+        "Mentions primary activities",
+        "Mentions support activities",
+        "Explains that the analysis decomposes how a firm creates value and incurs cost",
+        "Connects activities to competitive advantage, cost position, differentiation, margin, or fit",
+        "Does not reduce the concept to supply-chain logistics only"
+      ]
+    },
+    {
+      "id": 2,
+      "dimension": "mental_model",
+      "prompt": "Explain the mental model of Value Chain analysis. Name the primitives and show how activity linkages affect advantage.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Names a business unit, offering, or operating model as the unit of analysis",
+        "Names activities as the basic units",
+        "Separates primary and support activities",
+        "Names cost effects",
+        "Names value, willingness-to-pay, or differentiation effects",
+        "Explains linkages or fit across activities",
+        "Explains that advantage is relative to competitors, substitutes, or a baseline"
+      ]
+    },
+    {
+      "id": 3,
+      "dimension": "purpose",
+      "prompt": "Why does a Value Chain Analysis skill exist for agents? Name the failure modes it prevents.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Prevents slogan-level strategy recommendations",
+        "Forces activity-by-activity evidence",
+        "Prevents confusing value chain with a generic supply chain or org chart",
+        "Prevents claiming competitive advantage without relative activity comparison",
+        "Forces linkages and fit rather than isolated activity lists",
+        "Distinguishes operational effectiveness from strategy",
+        "Connects findings to actions or downstream methods"
+      ]
+    },
+    {
+      "id": 4,
+      "dimension": "boundary",
+      "prompt": "Distinguish Value Chain analysis from Porter's Five Forces, VRIO, Seven Powers, BCG Matrix, Ansoff Matrix, SWOT/TOWS, and Expected Value. Give a mechanism-level reason each neighbor is different.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Porter's Five Forces analyzes external industry profit-pressure structure",
+        "VRIO tests resources and capabilities for value, rarity, imitation cost, and organization",
+        "Seven Powers classifies durable power-source categories",
+        "BCG Matrix allocates among portfolio units by market growth and relative market share",
+        "Ansoff Matrix classifies product-market growth paths",
+        "SWOT/TOWS inventories internal/external factors and generates options",
+        "Expected Value compares modeled outcomes by probability and value",
+        "Value Chain analysis maps internal activities, costs, value drivers, linkages, fit, and margin"
+      ]
+    },
+    {
+      "id": 5,
+      "dimension": "taxonomy",
+      "prompt": "Place Value Chain analysis among strategy methods. What inputs feed it, what outputs should it produce, and which methods can follow it?",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "Classifies it as internal activity-system or business-unit strategy analysis",
+        "Names inputs such as value proposition, activity list, cost evidence, competitor comparison, or operating metrics",
+        "Names outputs such as activity map, cost/value drivers, linkages, fit gaps, margin hypotheses, or operating changes",
+        "Explains Five Forces, VRIO, SWOT/TOWS, Playing to Win, Blue Ocean, Expected Value, or positioning can feed or follow it",
+        "Does not classify it as macro scanning, portfolio allocation, or standalone valuation"
+      ]
+    },
+    {
+      "id": 6,
+      "dimension": "analogy",
+      "prompt": "Give an analogy for Value Chain analysis that preserves activity decomposition and linkages. Then name a bad analogy and explain what it loses.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "medium",
+      "expected_elements": [
+        "Uses an analogy involving gears, a system, a machine, an operating system, or connected steps",
+        "Preserves decomposition into activities",
+        "Preserves linkages or fit across activities",
+        "Preserves cost and value effects",
+        "Rejects an analogy that treats the value chain as only shipping or procurement",
+        "Rejects an analogy that treats the value chain as a static org chart"
+      ]
+    },
+    {
+      "id": 7,
+      "dimension": "misconception",
+      "prompt": "A teammate says value-chain analysis is just listing supply-chain steps from raw materials to delivery. Correct the misconception and show what must be added for strategic analysis.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "high",
+      "expected_elements": [
+        "States that the supply-chain view is too narrow",
+        "Adds support activities such as infrastructure, HR, technology, or procurement",
+        "Adds value or willingness-to-pay effects",
+        "Adds cost or margin effects",
+        "Adds linkages and fit",
+        "Adds relative comparison to competitors, substitutes, or a baseline",
+        "Explains why activity labels alone are not strategic"
+      ]
+    },
+    {
+      "id": 8,
+      "dimension": "application",
+      "prompt": "Novel scenario: A subscription software company has expensive onboarding, a highly automated data pipeline, strong customer-success playbooks, weak procurement discipline for cloud spend, and a sales motion that discounts heavily despite strong retention. Apply Value Chain analysis. Identify activities, value/cost drivers, linkages, and downstream methods without switching to Five Forces or VRIO.",
+      "substance": "concept",
+      "calibration": "semantic",
+      "truth_mode": "conceptual_correctness_plus_repo_application",
+      "skill_type": "concept",
+      "criticality": "critical",
+      "expected_elements": [
+        "Maps onboarding, data pipeline, customer success, cloud procurement, and sales/pricing as activities",
+        "Identifies onboarding as a cost, speed, quality, or retention driver",
+        "Identifies the automated data pipeline as an operations or technology-development driver",
+        "Identifies customer-success playbooks as service or retention value driver",
+        "Identifies cloud procurement as a support activity affecting cost and margin",
+        "Identifies discounting as a marketing/sales and pricing activity affecting willingness to pay and margin",
+        "Traces linkages such as onboarding to retention, data pipeline to customer-success value, procurement to margin, or discounting to value capture",
+        "Recommends evidence and downstream methods without replacing the value-chain lens with Five Forces or VRIO"
+      ]
+    }
+  ]
+}

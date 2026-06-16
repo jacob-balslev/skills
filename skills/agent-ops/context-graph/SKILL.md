@@ -1,23 +1,27 @@
 ---
 name: context-graph
+# description: routing-facing summary of when this skill activates and what it covers.
 description: "Use when designing or auditing the multi-graph context architecture of an AI-coding workspace: skill graph, document routing graph, memory index, script registry, and the cross-graph edges between them. Covers edge typing, orphan detection, connectivity health, deterministic graph synthesis signals, change-propagation checks, and drift or hub-and-spoke anti-patterns. Do NOT use for authoring one SKILL.md (use `skill-scaffold`), validating one skill (use `skill-infrastructure`), live routing decisions (use `skill-router`), context-window budgeting (use `context-window`), or session load/drop choices (use `context-management`)."
+# license: SPDX-compatible license identifier for the skill content.
 license: MIT
+# compatibility: runtime and portability notes for this skill.
 compatibility:
   notes: "Architecture-level skill. Applies to any agent-coding workspace that has more than one skill / doc-routing / memory artifact and any way to traverse them — Claude Code, OpenCode, Cursor, Aider, Continue, Copilot Workspace, or a custom harness. The four-graph model and the orphan / connectivity metrics are independent of the specific runtime."
 allowed-tools: Read Grep
+# metadata: Skill Metadata Protocol fields encoded under Agent Skills-compatible frontmatter.
 metadata:
-  # === v8 Classification (subject + deployment_target; polyhierarchy via subjects[]) — see ADR-0017 ===
-  # subject: primary browse shelf — what the skill teaches. One of nine closed values:
-  # code-engineering / quality-assurance / frontend-ui / design-craft / agent-ops /
-  # product-domain / knowledge-organization / meta-methods / data-analytics.
+  # === v8 Classification (subject + public; polyhierarchy via subjects[]) — see ADR-0020 ===
+  # subject: primary browse shelf — what the skill teaches. One of twelve closed values:
+  # backend-engineering / frontend-engineering / software-architecture / data-engineering / agent-ops / ai-engineering /
+  # quality-assurance / design / reasoning-strategy / software-engineering-method / knowledge-organization / product-domain.
   subject: agent-ops
-  # deployment_target: where this skill applies. One of two closed values:
-  # portable (any project, repo-agnostic) /
-  # project (one or more specific projects; requires populated `grounding` and `project[]`).
-  deployment_target: portable
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  # Project anchoring lives in project[] and requires grounding when present.
   # scope: PRD-style free-text statement of what the skill teaches and what it does not.
-  # Not an enum (deployment targeting belongs to `deployment_target`).
+  # Not an enum (publishability belongs to `public`; project anchoring belongs to `project[]`).
   scope: "Designing and auditing the multi-graph context architecture of an AI-coding workspace: skill graph, document routing graph, memory index, script registry, and the cross-graph edges between them. Covers edge typing, orphan detection, connectivity health, deterministic graph-synthesis signals, change-propagation checks, and drift or hub-and-spoke anti-patterns. Excludes authoring one SKILL.md, validating one skill, live routing decisions, context-window budgeting, and session load/drop choices."
+  # public: publishability / private-data gate. true = safe for public release; false = private/internal.
+  public: true
   # taxonomy_domain: optional hierarchical sub-path within `subject`. Slash-delimited
   # lowercase kebab-case segments. rename of the original v8 `domain`. Remove when the flat
   # `subject` is sufficient.
@@ -29,23 +33,21 @@ metadata:
   stability: experimental
   # keywords: semantic phrases for fuzzy router activation. v8 cap: max 10.
   # Keep terms a user would actually type when starting a task in this skill's domain.
-  keywords: "[\"context graph architecture\",\"multi-graph context model\",\"skill knowledge graph\",\"document routing graph\",\"memory index graph\",\"script command registry graph\",\"cross-graph edges\",\"orphan detection skill graph\",\"graph connectivity metrics\",\"average node degree\"]"
+  keywords: ["context graph architecture","multi-graph context model","skill knowledge graph","document routing graph","memory index graph","script command registry graph","cross-graph edges","orphan detection skill graph","graph connectivity metrics","average node degree"]
   # examples: 2-5 realistic user prompts the skill SHOULD activate for.
   # Written in the user's voice. Improves retrieval recall beyond keywords alone.
-  examples: "[\"we have ~300 skills but the agent never finds half of them — what's the diagnostic frame?\",\"how do I measure whether our skill graph is actually navigable vs just present?\",\"I changed a webhook handler — what's the discipline for tracing the impact across docs, skills, memory, and scripts?\",\"we keep accumulating orphan skills and our connectivity drops every quarter — how do I make graph-health a deliberate gate?\",\"the agent is loading 15 skills per task and burning context — is the underlying graph too dense, too sparse, or wrong-shaped?\",\"design a deterministic recipe for synthesizing the skill graph from frontmatter without running an LLM\",\"what's the right cap on adjacent / boundary / verify_with relations per skill?\"]"
+  examples: ["we have ~300 skills but the agent never finds half of them — what's the diagnostic frame?","how do I measure whether our skill graph is actually navigable vs just present?","I changed a webhook handler — what's the discipline for tracing the impact across docs, skills, memory, and scripts?","we keep accumulating orphan skills and our connectivity drops every quarter — how do I make graph-health a deliberate gate?","the agent is loading 15 skills per task and burning context — is the underlying graph too dense, too sparse, or wrong-shaped?","design a deterministic recipe for synthesizing the skill graph from frontmatter without running an LLM","what's the right cap on adjacent / boundary / verify_with relations per skill?"]
   # anti_examples: near-miss prompts that should route ELSEWHERE.
-  # Pair with relations.boundary to indicate the confusable territory's owner.
-  anti_examples: "[\"scaffold a new SKILL.md from a template\",\"validate that this single skill's frontmatter matches the schema\",\"decide which skill to inject for this query right now\",\"this skill says 'use orgQuery'; that one says 'never use orgQuery' — fix the conflict\",\"decide what should and shouldn't be in this agent's context window for this task\",\"review this AI-generated PR for correctness\"]"
+  # Pair with relations.suppresses to indicate the confusable territory's owner.
+  anti_examples: ["scaffold a new SKILL.md from a template","validate that this single skill's frontmatter matches the schema","decide which skill to inject for this query right now","this skill says 'use orgQuery'; that one says 'never use orgQuery' — fix the conflict","decide what should and shouldn't be in this agent's context window for this task","review this AI-generated PR for correctness"]
   # relations: typed graph edges to sibling skills. Six edge types:
   # related (adjacency for browse / co-routing expansion) /
-  # boundary (exclude listed skills from co-routing when THIS skill wins — name is inverse
-  #           to mechanic; write reason as "I own this exclusively over X", not "use X instead";
-  #           rename to `suppresses` pending ADR-0018) /
+  # suppresses (exclude listed skills from co-routing when THIS skill wins;
+  #             write reason as "I own this exclusively over X", not "use X instead") /
   # verify_with (cross-check; co-loaded as one-hop expansion) /
   # depends_on (composition; transitive — A→B→C loads all three) /
   # broader / narrower (SKOS-style generalization; broader drives co-load, narrower does not).
-  relations: "{\"boundary\":[{\"skill\":\"skill-router\",\"reason\":\"skill-router is the per-query dispatch decision (which skill activates now); context-graph is the underlying graph the router traverses\"},{\"skill\":\"skill-infrastructure\",\"reason\":\"skill-infrastructure owns the live skill library tooling (census, conflict detection, routing-gap reporting); context-graph owns the architectural model behind it\"},{\"skill\":\"skill-scaffold\",\"reason\":\"skill-scaffold authors a single SKILL.md; context-graph designs the graph that those authored skills participate in\"}],\"related\":[\"skill-router\",\"skill-infrastructure\",\"skill-scaffold\"],\"verify_with\":[\"skill-infrastructure\"]}"
-  # grounding: required when `deployment_target: project`. Declares the truth sources
+  # grounding: required when non-empty `project[]`. Declares the truth sources
   # the skill anchors to and the failure modes those sources prevent. Omit when the
   # skill is universal-knowledge. `subject_matter` replaces v8 `domain_object`.
   grounding: "{\"subject_matter\":\"Agent workspace context topology and discovery model\",\"grounding_mode\":\"hybrid\",\"truth_sources\":[\"https://github.com/jacob-balslev/skill-graph/blob/main/SKILL_GRAPH.md\",\"https://github.com/jacob-balslev/skill-graph/blob/main/docs/PRIMER.md\",\"https://github.com/jacob-balslev/skill-graph/blob/main/docs/concept-map.md\",\"https://github.com/jacob-balslev/skill-graph/blob/main/docs/diagrams/starter-graph.mmd\",\"https://github.com/jacob-balslev/skill-graph/blob/main/scripts/generate-manifest.js\",\"https://github.com/jacob-balslev/skill-graph/blob/main/scripts/skill-overlap.js\"],\"failure_modes\":[\"inferred_edges_replace_authored_relations\",\"orphan_skills_remain_unreachable\",\"relation_caps_turn_into_hub_and_spoke_graph\",\"change_propagation_ignores_cross_graph_edges\"],\"evidence_priority\":\"repo_code_first\"}"
@@ -57,7 +59,7 @@ metadata:
   purpose: "Prevents large agent workspaces from becoming flat piles of disconnected files. Without a context graph, agents over-rely on exact-name recall, load overly broad context, miss nearby safety or correctness skills, and let documentation or memory drift because change propagation has no visible route. This skill replaces ad hoc \"search until something looks relevant\" with explicit topology, health checks, and propagation discipline."
   # boundary: what this concept is NOT. Distinguishes from adjacent skills by naming the
   # MECHANISM that differs, not just the label. Universal terms only — no repo-specific nouns.
-  boundary: "Distinct from skill routing, which decides what to load for one query; this skill designs the graph that routing traverses. Distinct from context-window budgeting, which decides how much selected material fits; this skill decides how material becomes discoverable. Distinct from single-skill audit, which validates one node; this skill evaluates library topology, edge discipline, orphan risk, and cross-graph propagation."
+  concept_boundary: "Distinct from skill routing, which decides what to load for one query; this skill designs the graph that routing traverses. Distinct from context-window budgeting, which decides how much selected material fits; this skill decides how material becomes discoverable. Distinct from single-skill audit, which validates one node; this skill evaluates library topology, edge discipline, orphan risk, and cross-graph propagation."
   # analogy: one-sentence metaphor preserving the core mechanism.
   analogy: "A context graph is a transit map for an agent workspace: individual stations can be excellent, but the system only works when routes connect them, transfer points are intentional, and isolated stops are visible enough to fix."
   # misconception: the wrong mental model people bring; corrected explicitly.
@@ -66,21 +68,27 @@ metadata:
   # skill_graph_protocol is a content-label claim distinct from `schema_version` semantics.
   # See AGENTS.md § Version Labels Are Earned, Not Bumped.
   skill_graph_source_repo: "https://github.com/jacob-balslev/skill-graph"
-  skill_graph_protocol: Skill Metadata Protocol v5
   skill_graph_project: Skill Graph
-  skill_graph_canonical_skill: skills/context-graph/SKILL.md
+  skill_graph_canonical_skill: skills/agent-ops/context-graph/SKILL.md
   skill_graph_export_description: shortened for Agent Skills 1024-character description limit; canonical source keeps the full routing contract
   skill_graph_canonical_description_length: "1597"
+# relations: typed graph edges to sibling skills.
+relations:
+  related: ["skill-router","skill-infrastructure","skill-scaffold","knowledge-modeling","refactor"]
+  suppresses: ["skill-router","skill-infrastructure","skill-scaffold","context-management","context-window"]
+  verify_with: ["skill-infrastructure","taxonomy-design"]
 ---
-
 # Context Graph
+
+## Concept of the skill
+
+Context discovery is a graph problem: agents start from the current task, then traverse typed edges to find the skills, docs, memory records, scripts, and command surfaces that are relevant but not explicitly named.
 
 ## Coverage
 
-The architectural model behind navigable context in an AI-coding workspace. Names the four interconnected graphs that any mature workspace accumulates — Skill Knowledge Graph, Document Routing Graph, Memory Index, Script / Command Registry — and the cross-graph edges that connect them (skill → script, skill → memory, doc-routing → doc, script → command). Specifies the three skill-graph edge types (`adjacent`, `boundary`, `verify_with`) and their per-edge-type caps. Defines orphan detection (a node with zero or near-zero incoming edges that agents cannot find by traversal) and the priority order for remediation (security skills first, then financial, integration, infrastructure, then UX). Specifies graph-connectivity metrics with healthy / unhealthy bands: connectivity, average degree, orphan rate, max degree, cluster count, hub-spoke ratio. Names the five deterministic signals that should drive graph synthesis (explicit prose references, manual `relations` frontmatter, bundle co-membership, shared routing labels, keyword overlap) — never an LLM at synthesis time. Walks the change-propagation checklist that traces a single edit across all four graphs. Catalogs the anti-patterns that quietly destroy graph quality: edge inflation, one-way edges, optional-metadata mindset, AI-inferred edges that drift on rebuild, ignoring cross-graph edges.
+The architectural model behind navigable context in an AI-coding workspace. Names the four interconnected graphs that any mature workspace accumulates — Skill Knowledge Graph, Document Routing Graph, Memory Index, Script / Command Registry — and the cross-graph edges that connect them (skill → script, skill → memory, doc-routing → doc, script → command). Specifies the three skill-graph edge types (`adjacent`, `boundary`, `verify_with`) and their per-edge-type caps. Defines orphan detection (a node with zero or near-zero incoming edges that agents cannot find by traversal) and the priority order for remediation (security skills first, then financial, integration, infrastructure, then UX). Specifies graph-connectivity metrics with locally calibrated healthy / unhealthy bands: connectivity, average degree, orphan rate, max degree, cluster count, hub-spoke ratio. Names the five deterministic signals that should drive graph synthesis (explicit prose references, manual `relations` frontmatter, bundle co-membership, shared routing labels, keyword overlap) — never an LLM at synthesis time. Walks the change-propagation checklist that traces a single edit across all four graphs. Catalogs the anti-patterns that quietly destroy graph quality: edge inflation, one-way edges, optional-metadata mindset, AI-inferred edges that drift on rebuild, ignoring cross-graph edges.
 
-## Philosophy
-
+## Philosophy of the skill
 Without a navigable graph, agents cannot discover context they did not already know existed. The original failure mode looks like this: a skill exists, the agent doesn't reference it by name in the current prompt, and the routing layer has no edge to find it from — so the skill might as well not exist. A workspace can ship hundreds of skills and still operate as if it had ten, because the other 290 are unreachable from any traversal an agent actually performs.
 
 Context discovery is therefore a precondition for context quality. If the right skill, doc, or memory file cannot be found by following edges from the current task, content quality is irrelevant. Graph maintenance — adding edges, fixing orphans, capping inflation, keeping cross-graph references current — is a quality gate, not optional metadata. Every new skill enters the system with a question attached: who reaches this from where, by which edges?
@@ -216,8 +224,7 @@ Each step exercises a different edge type. Skipping a step leaves a stale edge s
 - [ ] All four graphs in the workspace are named and have an authoritative source-of-truth file
 - [ ] Cross-graph edges are explicit (skill → script, skill → memory, doc-routing → doc, script → command) — not implicit
 - [ ] Graph rebuild is deterministic — same input artefacts produce identical edge set on every run
-- [ ] Orphan rate is below 10%; orphans above the threshold have been triaged by blast radius
-- [ ] Average degree is above 5; max degree is below 30; cluster count is 1 (or small with explicit reason)
+- [ ] Orphan-rate, average-degree, max-degree, and cluster-count thresholds have been calibrated from this workspace's graph history, then enforced consistently
 - [ ] Edge-type discipline is enforced — `adjacent` ≤ 5, `boundary` ≤ 5, `verify_with` ≤ 3 per skill
 - [ ] `boundary` is used for routing-exclusion only, not for "see also"
 - [ ] The change-propagation checklist has been applied for the most recent significant change, end-to-end across all four graphs

@@ -1,0 +1,565 @@
+{
+  "_doc": "The application evaluator runs each case as a baseline/no-skill arm and a with-skill arm, then grades behavior against expected_flags, expected_fix_hints, absent_signals, and the per-case criteria checklist.",
+  "skill_name": "value-chain-analysis",
+  "subject": "Porter's Value Chain analysis for organizations, business units, products, services, platforms, operating models, and…",
+  "mode": "application",
+  "schema_version": 1,
+  "adjacent_concepts": [
+    "playing-to-win",
+    "seven-powers",
+    "blue-ocean-strategy",
+    "positioning",
+    "porters-five-forces",
+    "vrio",
+    "swot-tows",
+    "expected-value"
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Map our value chain and show where we create customer value, incur cost, and may have differentiation opportunities.\"",
+      "context": "The agent has access to the value-chain-analysis skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is value-chain-analysis the right skill to apply?",
+      "expected_flags": [
+        "Recognizes value-chain-analysis as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against playing-to-win, seven-powers, blue-ocean-strategy",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the value-chain-analysis workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore value-chain-analysis",
+        "Does not route to playing-to-win, seven-powers, blue-ocean-strategy when the value-chain-analysis scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes value-chain-analysis as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore value-chain-analysis"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Use Porter's Value Chain to analyze this business unit and identify activity-level sources of competitive advantage.\"",
+      "context": "The agent has access to the value-chain-analysis skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is value-chain-analysis the right skill to apply?",
+      "expected_flags": [
+        "Recognizes value-chain-analysis as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against playing-to-win, seven-powers, blue-ocean-strategy",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the value-chain-analysis workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore value-chain-analysis",
+        "Does not route to playing-to-win, seven-powers, blue-ocean-strategy when the value-chain-analysis scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes value-chain-analysis as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore value-chain-analysis"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "scenario_type": "realistic-positive",
+      "criticality": "critical",
+      "red_herring": false,
+      "scenario": "A user asks: \"Review this operating model through primary activities, support activities, linkages, and margin.\"",
+      "context": "The agent has access to the value-chain-analysis skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is value-chain-analysis the right skill to apply?",
+      "expected_flags": [
+        "Recognizes value-chain-analysis as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against playing-to-win, seven-powers, blue-ocean-strategy",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the value-chain-analysis workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore value-chain-analysis",
+        "Does not route to playing-to-win, seven-powers, blue-ocean-strategy when the value-chain-analysis scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes value-chain-analysis as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore value-chain-analysis"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "scenario_type": "realistic-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"Compare our activity system to competitors and tell me where the cost or differentiation drivers differ.\"",
+      "context": "The agent has access to the value-chain-analysis skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is value-chain-analysis the right skill to apply?",
+      "expected_flags": [
+        "Recognizes value-chain-analysis as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against playing-to-win, seven-powers, blue-ocean-strategy",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the value-chain-analysis workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore value-chain-analysis",
+        "Does not route to playing-to-win, seven-powers, blue-ocean-strategy when the value-chain-analysis scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes value-chain-analysis as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore value-chain-analysis"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "scenario_type": "boundary-positive",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"We are a marketplace, not a factory. Decide whether the value-chain template fits and map the activity system that actually drives value.\"",
+      "context": "The agent has access to the value-chain-analysis skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is value-chain-analysis the right skill to apply?",
+      "expected_flags": [
+        "Recognizes value-chain-analysis as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against playing-to-win, seven-powers, blue-ocean-strategy",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the value-chain-analysis workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore value-chain-analysis",
+        "Does not route to playing-to-win, seven-powers, blue-ocean-strategy when the value-chain-analysis scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes value-chain-analysis as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore value-chain-analysis"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "scenario_type": "regression-prior-failure",
+      "criticality": "high",
+      "red_herring": false,
+      "scenario": "A user asks: \"Map the value system across our suppliers, channels, and the buyer's usage activities.\"",
+      "context": "The agent has access to the value-chain-analysis skill and must decide whether to use it, apply its procedure, and stay inside its boundaries.",
+      "question": "What should the agent do, and why is value-chain-analysis the right skill to apply?",
+      "expected_flags": [
+        "Recognizes value-chain-analysis as applicable to this request",
+        "Uses the skill-specific purpose or mental model instead of generic advice",
+        "Names the relevant boundary against playing-to-win, seven-powers, blue-ocean-strategy",
+        "Turns the request into concrete steps, checks, or decisions from the skill"
+      ],
+      "expected_fix_hints": [
+        "Apply the value-chain-analysis workflow to the concrete scenario",
+        "State the next action and the evidence or verification needed",
+        "Call out any adjacent skill that should own a different part of the request"
+      ],
+      "absent_signals": [
+        "Does not answer with generic advice that could ignore value-chain-analysis",
+        "Does not route to playing-to-win, seven-powers, blue-ocean-strategy when the value-chain-analysis scope is the owner",
+        "Does not invent certification, freshness, or runtime success claims without evidence"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes value-chain-analysis as applicable to this request"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Uses the skill-specific purpose or mental model instead of generic advice"
+        },
+        {
+          "id": "c3",
+          "polarity": "positive",
+          "statement": "Turns the request into concrete steps, checks, or decisions from the skill"
+        },
+        {
+          "id": "c4",
+          "polarity": "positive",
+          "statement": "State the next action and the evidence or verification needed"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not answer with generic advice that could ignore value-chain-analysis"
+        },
+        {
+          "id": "c6",
+          "polarity": "guard",
+          "statement": "Does not invent certification, freshness, or runtime success claims without evidence"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"Analyze buyer power, supplier power, substitutes, entrants, and rivalry for this industry.\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should value-chain-analysis be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside value-chain-analysis's ownership",
+        "Routes the work to playing-to-win or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying value-chain-analysis terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply value-chain-analysis as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if value-chain-analysis has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim value-chain-analysis should own the request",
+        "Does not use value-chain-analysis's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside value-chain-analysis's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim value-chain-analysis should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use value-chain-analysis's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"Use VRIO to decide whether our data, brand, process, or supplier network is a sustained competitive advantage.\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should value-chain-analysis be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside value-chain-analysis's ownership",
+        "Routes the work to playing-to-win or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying value-chain-analysis terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply value-chain-analysis as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if value-chain-analysis has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim value-chain-analysis should own the request",
+        "Does not use value-chain-analysis's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside value-chain-analysis's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim value-chain-analysis should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use value-chain-analysis's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"Classify whether our advantage is scale economies, network economies, switching costs, or another power.\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should value-chain-analysis be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside value-chain-analysis's ownership",
+        "Routes the work to playing-to-win or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying value-chain-analysis terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply value-chain-analysis as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if value-chain-analysis has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim value-chain-analysis should own the request",
+        "Does not use value-chain-analysis's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside value-chain-analysis's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim value-chain-analysis should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use value-chain-analysis's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "scenario_type": "hard-negative-boundary",
+      "criticality": "critical",
+      "red_herring": true,
+      "scenario": "A user asks: \"Write the full Playing to Win cascade from aspiration to management systems.\"",
+      "context": "This is a boundary test. The skill should avoid false-positive activation and route to the better owner when appropriate.",
+      "question": "Should value-chain-analysis be applied here? If not, what should happen instead?",
+      "expected_flags": [
+        "Recognizes the request is outside value-chain-analysis's ownership",
+        "Routes the work to playing-to-win or asks for the missing owner instead of forcing this skill",
+        "Preserves any real issue in the request without applying value-chain-analysis terminology incorrectly"
+      ],
+      "expected_fix_hints": [
+        "Decline to apply value-chain-analysis as the primary skill",
+        "Name the better owner or the boundary reason",
+        "Offer only a narrow handoff if value-chain-analysis has a secondary support role"
+      ],
+      "absent_signals": [
+        "Does not claim value-chain-analysis should own the request",
+        "Does not use value-chain-analysis's framework to solve an explicitly excluded problem",
+        "Does not suppress the correct adjacent owner"
+      ],
+      "criteria": [
+        {
+          "id": "c1",
+          "polarity": "positive",
+          "statement": "Recognizes the request is outside value-chain-analysis's ownership"
+        },
+        {
+          "id": "c2",
+          "polarity": "positive",
+          "statement": "Name the better owner or the boundary reason"
+        },
+        {
+          "id": "c3",
+          "polarity": "guard",
+          "statement": "Does not claim value-chain-analysis should own the request"
+        },
+        {
+          "id": "c4",
+          "polarity": "guard",
+          "statement": "Does not use value-chain-analysis's framework to solve an explicitly excluded problem"
+        },
+        {
+          "id": "c5",
+          "polarity": "guard",
+          "statement": "Does not suppress the correct adjacent owner"
+        }
+      ]
+    }
+  ]
+}
