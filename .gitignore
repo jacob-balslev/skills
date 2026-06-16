@@ -610,3 +610,9 @@ node_modules/
 !/writing-humanizer/evals/
 !/writing-humanizer/evals/**
 # <<< SH-6343 public-safe eval allowlist <<<
+
+# Agent run telemetry is local scratch — never publish. These .jsonl files carry
+# absolute /Users/... paths and are not part of a skill's public content (the
+# privacy gate scans SKILL.md + audit-state/comprehension/application.json, not
+# telemetry). Ignore repo-wide so a `git add -A` can never re-leak them (SKI-736).
+**/agent-telemetry.jsonl
